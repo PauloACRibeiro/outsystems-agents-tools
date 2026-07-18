@@ -1,0 +1,49 @@
+{
+  "build_date_utc": "2026-07-18",
+  "file_count": 8,
+  "files": [
+    {
+      "path": "skills/outsystems-plan-to-mentor/README.md",
+      "sha256": "d7dffacd78237af945ce7588118077e30c3616a81ea7265628cb56446df4dddd",
+      "size": 7027
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/SKILL.md",
+      "sha256": "9d69547556f13309ca48189e6d90a8ed5bb5e16cf40e6e14263faf67974e6dcf",
+      "size": 10730
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/agents/openai.yaml",
+      "sha256": "4b82a525b68ab1574e90bdf76ec8827b5c18f86f1ab08b076a63842179bf5c21",
+      "size": 275
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
+      "sha256": "a4dc1f1607dffe91bef3cf249caf9283861832f3814caa46822a00d95fe0f5e1",
+      "size": 2500
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
+      "sha256": "e49fa008903cf933c903f55ad27b5d175fd06728d4fc225310b5abf86f17ec20",
+      "size": 1366
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/references/mentor-implementation-invocation.md",
+      "sha256": "5b01fed4c691218a3ae5cd3b38b73c151e52e1e8430628de5200410ffaf10db9",
+      "size": 3374
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/references/mentor-spec-guardrails.md",
+      "sha256": "5773ce4efaf812e27c415e18de90a90a3215336d52bcb6a84d458d1669655e3d",
+      "size": 4031
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/scripts/check_plan_handoff.py",
+      "sha256": "f80d47e183e849ffe013cc92c36674f871c2625278f63739e4993a417499e918",
+      "size": 2355
+    }
+  ],
+  "pack_name": "outsystems-plan-to-mentor",
+  "source_commit": "cf6c2bbe9f49dbadba3c133914978dbe6e8aaa03",
+  "version": "2026-07-18"
+}

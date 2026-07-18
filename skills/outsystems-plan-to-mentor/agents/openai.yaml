@@ -1,0 +1,3 @@
+display_name: OutSystems Plan To Mentor
+short_description: Review, patch, and route OutSystems plans to Mentor.
+default_prompt: Use $outsystems-plan-to-mentor to coverage-review my saved OutSystems plan, patch gaps, and produce Mentor-ready prompts or optional MCP delivery.

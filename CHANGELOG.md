@@ -8,4 +8,10 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-- Repository scaffold created (structure only; no artifacts or skills published yet).
+## 2026-07-18
+
+- Added `skills/outsystems-plan-to-mentor/` — first public skill export. This
+  repo is now the go-forward canonical home for this skill (superseding the
+  earlier vendored copy). Derived export from `portable-agent-skills` at source
+  commit `cf6c2bb`; provenance recorded in `skills/EXPORT-MANIFEST.json`.
+- Repository scaffold created (structure only; no component artifact published yet).
