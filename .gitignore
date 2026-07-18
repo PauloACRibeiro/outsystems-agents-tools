@@ -1,0 +1,9 @@
+# OS / editor
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Export staging (created as a sibling by export_public_skills.py; belt-and-suspenders)
+.export-stage-*/
