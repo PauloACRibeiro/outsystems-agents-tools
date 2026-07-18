@@ -8,6 +8,12 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-07-19
+
+- Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`
+  at `b24cc05` — strips a trailing space in `references/delivery-modes.md` so the
+  tree passes `git diff --check`. No behavior change.
+
 ## 2026-07-18
 
 - Added `skills/outsystems-plan-to-mentor/` — first public skill export. This

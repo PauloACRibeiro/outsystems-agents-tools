@@ -11,7 +11,7 @@ Ask this question after the patched plan passes the handoff scanner:
 
 Use when the user chooses option 1 or when OutSystems MCP tools are unavailable.
 
-This is Paste mode. 
+This is Paste mode.
 
 - Write the Mentor-ready output file first.
 - Produce sequential prompts ready to paste into Mentor in ODC Studio.

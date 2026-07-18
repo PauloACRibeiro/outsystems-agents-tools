@@ -24,8 +24,8 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
-      "sha256": "e49fa008903cf933c903f55ad27b5d175fd06728d4fc225310b5abf86f17ec20",
-      "size": 1366
+      "sha256": "6c77363227116340c26109247d5e3a2e9296841d5467d6aefb913555290ebde3",
+      "size": 1365
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/mentor-implementation-invocation.md",
@@ -44,6 +44,6 @@
     }
   ],
   "pack_name": "outsystems-plan-to-mentor",
-  "source_commit": "cf6c2bbe9f49dbadba3c133914978dbe6e8aaa03",
+  "source_commit": "b24cc056267638b0ac5a2aba8d8e365031b1a2f8",
   "version": "2026-07-18"
 }
