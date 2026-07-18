@@ -20,8 +20,11 @@ not published here.
   flow for the component or the skills — improvements are made upstream and
   re-published.
 - **Generated, not hand-authored.** Everything under `outsystems-public-knowledge/`
-  and `skills/` is a build/export output. The only hand-written files in the repo
-  are this `README.md` and `CHANGELOG.md`. Do not hand-edit generated content.
+  and `skills/<name>/` is a build/export output. Do not hand-edit generated content —
+  a CI check (`.github/workflows/verify-export.yml`) fails any push/PR where the
+  generated `skills/` tree no longer matches the sha256 provenance in
+  `skills/EXPORT-MANIFEST.json`. Hand-authored files are limited to this `README.md`,
+  `CHANGELOG.md`, and the CI infrastructure (`scripts/`, `tests/`, `.github/`).
 - **The component and the skills install separately.** The component provides a
   public OutSystems knowledge MCP; the skills are the clients that use it. Getting
   one does not install the other.
