@@ -8,6 +8,14 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-07-28 (second export)
+
+- Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`
+  at `1ea6cb2` — the companion invocation contract now also requires reconcile
+  session phrasing, a per-session expected element delta and `Traps` list, and
+  a build-log table template in the Mentor package (session-packaging
+  hardening, cross-agent reviewed).
+
 ## 2026-07-28
 
 - Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`

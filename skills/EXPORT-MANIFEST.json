@@ -34,8 +34,8 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/mentor-implementation-invocation.md",
-      "sha256": "343e609d98c575ab6c5b4ef16d873878f4d0c55400016a6b1916916160ac41af",
-      "size": 4629
+      "sha256": "57e81db4f4a052d2e555ce2f80498d37040065441b051e255218b76b68dc2d89",
+      "size": 4896
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/mentor-spec-guardrails.md",
@@ -54,6 +54,6 @@
     }
   ],
   "pack_name": "outsystems-plan-to-mentor",
-  "source_commit": "1d39c6c190cf3181bb241d892d3ad13fe3b1ccee",
+  "source_commit": "1ea6cb24ce345d9f17cefb5392556296925dba9a",
   "version": "2026-07-28"
 }

@@ -29,6 +29,7 @@ The invoked skill must:
 - Include `Manual Setup Gate`, `Session Readiness Matrix`, `Studio-Native Pseudocode`, and `Mentor Executable Sessions`.
 - In `Studio-Native Pseudocode`, include `Data Model Pseudocode`, role, server action, client action, screen/UI, navigation, and verification pseudocode for every capability covered by the patched plan.
 - In the verification pseudocode, include a runtime smoke stage distinct from the acceptance cases, and surface test-app creation as an approval-gated manual prerequisite in the `Manual Setup Gate` when the smoke stage needs a generated test app.
+- Write every Mentor session as a reconcile (ensure the element exists with the specified shape, update to match when present, never a bare create), with an expected element delta and a `Traps` list per session, and include a build-log table template in the package.
 - Write the output file first.
 - Use the selected delivery mode without asking unrelated execution questions.
 
