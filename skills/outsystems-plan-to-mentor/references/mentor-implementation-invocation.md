@@ -10,19 +10,25 @@ Delivery mode: paste-prompts | outsystems-mcp
 Source PRD: docs/superpowers/specs/approved-prd.md
 Patched plan: docs/superpowers/plans/feature-patched.md
 Output file: docs/superpowers/plans/feature-mentor-output.md
+Target app state: new-app | template-scaffold | existing-app
+Target app inventory: docs/app-map.md
 Mentor spec guardrails: references/mentor-spec-guardrails.md
 ```
 
-When applying this template to another plan, replace the three file paths with the actual project-local source, patched plan, and output paths.
+When applying this template to another plan, replace the file paths with the actual project-local source, patched plan, output, and inventory paths. `Target app state:` is required. `Target app inventory:` is required whenever the target app state is not `new-app`; it names the scaffold inventory source (app map file, Studio observation notes, or OutSystems MCP context output).
 
 The invoked skill must:
 
 - Treat the patched plan as the implementation source.
+- Fail closed on target state: if `Target app state:` is missing or invalid, or the state is not `new-app` and `Target app inventory:` is missing, stop and ask before generating any output.
+- Do not assume a greenfield target. When `Target app state:` is `template-scaffold` or `existing-app`, inventory the existing scaffold before generating sessions, using the target app inventory plus live observation when available, and fold pre-existing elements into the package as modifications rather than creations.
+- Against that scaffold inventory, classify each Mentor session as create or modify in the required `Create Or Modify` column of the `Session Readiness Matrix`.
 - Apply the relevant 10-section Mentor spec format and anti-failure guardrails from `references/mentor-spec-guardrails.md`.
 - Preserve OutSystems implementation authority and evidence rules.
 - Produce Studio-native, deterministic Mentor content. The 10-section Mentor spec is a summary layer; it does not replace the detailed pseudocode package.
 - Include `Manual Setup Gate`, `Session Readiness Matrix`, `Studio-Native Pseudocode`, and `Mentor Executable Sessions`.
 - In `Studio-Native Pseudocode`, include `Data Model Pseudocode`, role, server action, client action, screen/UI, navigation, and verification pseudocode for every capability covered by the patched plan.
+- In the verification pseudocode, include a runtime smoke stage distinct from the acceptance cases, and surface test-app creation as an approval-gated manual prerequisite in the `Manual Setup Gate` when the smoke stage needs a generated test app.
 - Write the output file first.
 - Use the selected delivery mode without asking unrelated execution questions.
 

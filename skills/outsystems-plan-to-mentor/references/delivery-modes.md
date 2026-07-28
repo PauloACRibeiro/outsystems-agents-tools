@@ -17,6 +17,7 @@ This is Paste mode.
 - Produce sequential prompts ready to paste into Mentor in ODC Studio.
 - Stop after reporting the output path.
 - Do not attempt tenant mutation.
+- If the user then explicitly asks for supervised paste execution, follow `references/paste-mode-execution-protocol.md` for the per-block paste, verify, and recovery loop.
 
 ## MCP mode
 

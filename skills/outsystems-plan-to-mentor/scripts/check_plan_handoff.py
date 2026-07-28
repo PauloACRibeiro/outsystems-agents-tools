@@ -22,6 +22,24 @@ SUMMARY_ONLY_PATTERNS: tuple[str, ...] = (
     "patches applied in place",
 )
 
+# Section names forbidden in capability-level plans. Matched case-insensitively,
+# and only on markdown heading lines so that prose references to downstream
+# conversion stay legal.
+ELEMENT_RECIPE_HEADINGS: tuple[str, ...] = (
+    "ODC Element Map",
+    "ODC Elements",
+    "Business Logic",
+    "Screen Aggregates",
+    "Studio-Native Pseudocode",
+    "Data Model Pseudocode",
+    "Server Action Pseudocode",
+    "Client Action Pseudocode",
+    "Screen And UI Pseudocode",
+    "Screen/UI Pseudocode",
+    "Navigation Pseudocode",
+    "Verification Pseudocode",
+)
+
 
 def scan_text(text: str) -> list[tuple[int, str, str, str]]:
     findings: list[tuple[int, str, str, str]] = []
@@ -39,6 +57,18 @@ def scan_text(text: str) -> list[tuple[int, str, str, str]]:
                         line.strip(),
                     )
                 )
+        if line.lstrip().startswith("#"):
+            lowered = line.lower()
+            for pattern in ELEMENT_RECIPE_HEADINGS:
+                if pattern.lower() in lowered:
+                    findings.append(
+                        (
+                            line_no,
+                            pattern,
+                            "ODC element recipe section; keep the plan at capability level",
+                            line.strip(),
+                        )
+                    )
     return findings
 
 

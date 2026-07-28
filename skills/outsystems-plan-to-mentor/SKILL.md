@@ -1,6 +1,6 @@
 ---
 name: outsystems-plan-to-mentor
-description: Review and patch saved OutSystems implementation plans before Mentor conversion. Use when the user has a plan from superpowers:writing-plans, an OutSystems spec-driven workflow, or a hand-written plan and needs PRD coverage review, a patched plan, Mentor-ready prompts, or optional OutSystems MCP delivery through outsystems-mentor-implementation.
+description: Review and patch saved OutSystems implementation plans before Mentor conversion. Use when the user has a plan from superpowers:writing-plans, an OutSystems spec-driven workflow, or a hand-written plan and needs PRD coverage review, a patched plan, Mentor-ready prompts, or optional OutSystems MCP delivery through outsystems-mentor-implementation. Also use before the first OutSystems implementation plan is written from an approved PRD, so the plan generator receives the capability-plan brief.
 ---
 
 # OutSystems Plan To Mentor
@@ -11,9 +11,18 @@ This skill works for both Codex and Claude, writes a patched plan before Mentor 
 
 ## Routing Boundary
 
-Use this skill when the user has a saved OutSystems plan and asks to review it for coverage, patch gaps, produce Mentor-ready prompts, or optionally send the prepared prompt through OutSystems MCP.
+Use this skill when the user has a saved OutSystems plan and asks to review it for coverage, patch gaps, produce Mentor-ready prompts, or optionally send the prepared prompt through OutSystems MCP. Also use it in pre-plan mode when an approved PRD or original request exists but no saved plan does yet.
 
-Do not use this skill to write the original PRD, create the first implementation plan, or produce low-level Studio pseudocode directly. Use the relevant planner first, then use this skill. Delegate Studio-native conversion to `outsystems-mentor-implementation` after the patched plan is written.
+Do not use this skill to write the original PRD, create the first implementation plan, or produce low-level Studio pseudocode directly. Pre-plan mode hands the capability-plan brief to the selected plan generator; it never writes the plan itself. Delegate Studio-native conversion to `outsystems-mentor-implementation` after the patched plan is written.
+
+## Modes
+
+Route the request before applying the saved-plan input gate:
+
+- Pre-plan mode: an approved PRD or original request exists but no saved plan does. Required input: the source PRD or original request only. Load `references/capability-plan-brief.md`, hand it to the selected plan generator, and stop until the plan is saved. The saved-plan input gate does not apply in pre-plan mode.
+- Post-plan mode: a saved plan exists. Required inputs: the source PRD or original request plus the saved plan file. Run the workflow below.
+
+After pre-plan mode, restart in post-plan mode with the new saved plan path.
 
 Do not execute the plan with generic development skills. OutSystems Mentor delivery must go through this coverage gate and then `outsystems-mentor-implementation`.
 
@@ -21,14 +30,20 @@ Do not publish, deploy, rollback, promote, package, push, or create pull request
 
 ## Inputs
 
-Require both inputs before proceeding:
+In post-plan mode, require both inputs before proceeding:
 
 - Source PRD or original request: conversation context or file path.
 - Saved plan file: project-local path to the plan being reviewed.
 
 If either input is missing, stop and ask for the missing source. If the plan targets a live app and the user may choose MCP mode, also collect the target app name or app key before MCP delivery.
 
+Before invoking `outsystems-mentor-implementation`, collect the target app state: new-app, template-scaffold, or existing-app. For template-scaffold or existing-app targets, also collect a scaffold inventory source (app map file, Studio observation notes, or OutSystems MCP context output) and pass it in the invocation payload. Do not invoke the companion without a valid target app state; for non-new states, do not invoke without the scaffold inventory source.
+
 If the saved plan file is missing, do not continue coverage review and do not suggest `write-and-review-plan`. Offer to create the saved plan with `superpowers:writing-plans` or another explicit plan generator. After the plan is written, restart this workflow from step 1 with the new saved plan path.
+
+### Pre-Plan Brief
+
+When no saved plan exists yet, or the user asks to prepare for writing the first OutSystems plan, load `references/capability-plan-brief.md` and hand `references/capability-plan-brief.md` to the plan generator before it writes the first saved plan. The brief carries the capability boundary and the required OutSystems-specific handoff header, so the coverage gate does not force a plan rewrite later.
 
 ### Missing Plan Generator Boundary
 
@@ -56,12 +71,12 @@ Use an OutSystems-specific handoff header that points to `outsystems-plan-to-men
 
 1. Read the saved plan and the source PRD or original request.
 2. Load `references/coverage-review-prompt.md`.
-3. Audit the plan against the source of truth using the required coverage matrix.
+3. Audit the plan against the source of truth using the required coverage matrix. Extract the plan's platform-capability claims and audit them as platform feasibility rows in the same pass.
 4. If coverage ambiguity would change requirements, stop and ask before patching.
 5. Write the coverage review to `docs/superpowers/plans/{plan-stem}-coverage-review.md`.
 6. Write a minimally patched plan to `docs/superpowers/plans/{plan-stem}-patched.md`. The patched plan artifact must be a complete executable plan, not a change summary or wrapper. Copy the full patched plan content into `docs/superpowers/plans/{plan-stem}-patched.md`. Do not patch only the original plan in place and leave `-patched.md` as a short summary. Before writing the patched file, rewrite any generic Superpowers execution header to the OutSystems-specific handoff header.
 7. Run at least two coverage passes before delivery mode. Pass 2 audits the patched plan against the same source of truth, writes `docs/superpowers/plans/{plan-stem}-coverage-review-v2.md`, and patches the plan again if any row is Missing, Partial without accepted platform/runtime uncertainty, unsupported by evidence, or invalid for ODC/Mentor implementation.
-8. Repeat the coverage loop until convergence or max 3 passes. Convergence means no Missing rows, no Partial except explicitly accepted platform/runtime uncertainty, coverage >= 98, and all top gaps are closed or documented as accepted runtime risk. If a third pass is needed, write `docs/superpowers/plans/{plan-stem}-coverage-review-final.md`.
+8. Repeat the coverage loop until convergence or max 3 passes. Convergence means no Missing rows, no Partial except explicitly accepted platform/runtime uncertainty, no Infeasible or Unverified platform feasibility rows, coverage >= 98, and all top gaps are closed or documented as accepted runtime risk. If a third pass is needed, write `docs/superpowers/plans/{plan-stem}-coverage-review-final.md`.
 9. Write each coverage pass to a versioned review artifact and show the final `Coverage Audit -- Patched Plan vs Spec` table before asking how to deliver.
 10. Run `scripts/check_plan_handoff.py` against the same full patched plan file that will be sent to `outsystems-mentor-implementation`.
 11. If the scanner reports a forbidden generic handoff, patch the plan again and rerun the scanner.

@@ -64,6 +64,55 @@ explicitly requests it. This is a modification to an existing app - seeding is
 out of scope unless stated.
 ```
 
+## Known Platform Bounds
+
+Bounds worth designing around, split by authority.
+
+### Confirmed by current official ODC docs
+
+1. **A Setting default value is capped at 2,000 characters** (roughly 300
+   words) and is rejected outright above that. Any system prompt of real
+   substance will not fit; plan a different home up front — an entity row, a
+   Resource, or runtime assignment — instead of trimming at build time.
+2. **The ODC "Test agent" flow can create a generated test app in the
+   tenant** (see Runtime Verification below for the approval consequence).
+
+### Session-observed only
+
+Observed live on a single tenant; require current documentation or a fresh
+bounded observation of the target before treating them as load-bearing
+platform facts:
+
+3. **The ODC agentic template shipped `LoadMemory` with no Timestamp sort and
+   `Max. Records` 50.** Check it first in any agentic app: unsorted, memory
+   loads in unspecified order; sorted ascending, a conversation past the
+   record cap deterministically drops recent turns while keeping old ones.
+   Review `Max. Records` explicitly on every memory or list read path rather
+   than accepting aggregate defaults silently; record the accepted bound and
+   its failure mode when keeping it.
+4. **Changing an agent's Response type broke consumer service actions.**
+   Check every consumer of the public entry point when the response contract
+   changes, and update it in the same session.
+5. **Memory persistence needed a valid `AIMessage` assembled from a
+   structured answer.** When a call returns structured output, the flow must
+   build the assistant message explicitly before storing memory, or
+   persistence breaks silently.
+
+## Runtime Verification
+
+Compiling clean does not prove the pipeline executes. TrueChange and a clean
+publish prove shape, not behavior: a wrong identifier flowing between stages,
+an empty serialization, or an inverted filter all survive compilation.
+
+- Acceptance criteria (Section 9) must include a runtime smoke stage distinct
+  from the data-correctness acceptance cases: run one end-to-end request and
+  confirm the pipeline executes without runtime errors before judging answer
+  quality.
+- The ODC "Test agent" flow creates a new app in the tenant. That is tenant
+  mutation beyond the app being built: surface it in Section 10 as an
+  approval-gated manual prerequisite up front, not as a surprise at the end
+  of the build.
+
 ## Review Additions
 
 Before final Mentor-ready output, check:

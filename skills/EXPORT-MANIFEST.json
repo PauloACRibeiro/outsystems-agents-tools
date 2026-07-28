@@ -1,16 +1,16 @@
 {
-  "build_date_utc": "2026-07-18",
-  "file_count": 8,
+  "build_date_utc": "2026-07-28",
+  "file_count": 10,
   "files": [
     {
       "path": "skills/outsystems-plan-to-mentor/README.md",
-      "sha256": "d7dffacd78237af945ce7588118077e30c3616a81ea7265628cb56446df4dddd",
-      "size": 7027
+      "sha256": "0aef26e0239aedc3bf32234c59feb933e492d686df42db1a415d4de888840ae5",
+      "size": 7313
     },
     {
       "path": "skills/outsystems-plan-to-mentor/SKILL.md",
-      "sha256": "9d69547556f13309ca48189e6d90a8ed5bb5e16cf40e6e14263faf67974e6dcf",
-      "size": 10730
+      "sha256": "889418ad1f27606765cfdbac8acc22e4e9c7973cd43d945ee0bc4a46e5e11464",
+      "size": 12721
     },
     {
       "path": "skills/outsystems-plan-to-mentor/agents/openai.yaml",
@@ -18,32 +18,42 @@
       "size": 275
     },
     {
+      "path": "skills/outsystems-plan-to-mentor/references/capability-plan-brief.md",
+      "sha256": "06f429f6debf6b40dd384fb9f2f1fb6766dce5775d93471236d9b517b51ed467",
+      "size": 2637
+    },
+    {
       "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-      "sha256": "a4dc1f1607dffe91bef3cf249caf9283861832f3814caa46822a00d95fe0f5e1",
-      "size": 2500
+      "sha256": "829b7d1118e8ab9024e8d29d2a104d484440282a70f56f5cf25edabe7c089113",
+      "size": 4054
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
-      "sha256": "6c77363227116340c26109247d5e3a2e9296841d5467d6aefb913555290ebde3",
-      "size": 1365
+      "sha256": "73ad5eb17945384bbe24450432549d9f58d73804dbc35090cb94469ff44b537a",
+      "size": 1537
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/mentor-implementation-invocation.md",
-      "sha256": "5b01fed4c691218a3ae5cd3b38b73c151e52e1e8430628de5200410ffaf10db9",
-      "size": 3374
+      "sha256": "343e609d98c575ab6c5b4ef16d873878f4d0c55400016a6b1916916160ac41af",
+      "size": 4629
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/mentor-spec-guardrails.md",
-      "sha256": "5773ce4efaf812e27c415e18de90a90a3215336d52bcb6a84d458d1669655e3d",
-      "size": 4031
+      "sha256": "3f3865b75ca1544c68231d2a174a5043965014c7b6a661d85a9c006704329083",
+      "size": 6459
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/references/paste-mode-execution-protocol.md",
+      "sha256": "42aed22c7c6f4fed559c06d28c52ab846c83485bdcde5497a5d58f953b95c064",
+      "size": 4224
     },
     {
       "path": "skills/outsystems-plan-to-mentor/scripts/check_plan_handoff.py",
-      "sha256": "f80d47e183e849ffe013cc92c36674f871c2625278f63739e4993a417499e918",
-      "size": 2355
+      "sha256": "8505796f507935d71fe245330fd8b9d2d7434e68b0f00a35f9736d039d9994b2",
+      "size": 3416
     }
   ],
   "pack_name": "outsystems-plan-to-mentor",
-  "source_commit": "b24cc056267638b0ac5a2aba8d8e365031b1a2f8",
-  "version": "2026-07-18"
+  "source_commit": "1d39c6c190cf3181bb241d892d3ad13fe3b1ccee",
+  "version": "2026-07-28"
 }

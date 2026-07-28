@@ -8,6 +8,20 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-07-28
+
+- Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`
+  at `1d39c6c` — six workflow improvements from a live build retrospective,
+  cross-agent reviewed: pre-plan capability brief handed to the plan generator
+  (new `references/capability-plan-brief.md`) with pre-plan/post-plan mode
+  routing; platform-feasibility rows in the coverage loop with an
+  official-source authority rule; fail-closed `Target app state` +
+  scaffold-inventory fields in the companion invocation contract; supervised
+  paste execution protocol (new
+  `references/paste-mode-execution-protocol.md`); Known Platform Bounds and
+  Runtime Verification guardrails; scanner now also rejects ODC
+  element-recipe section headings case-insensitively.
+
 ## 2026-07-19
 
 - Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`

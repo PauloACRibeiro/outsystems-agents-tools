@@ -23,6 +23,13 @@ reviewable gate before Mentor conversion:
 Do not use it to write the first PRD or the first plan. Create or save the plan
 first, then run this skill as the post-plan gate.
 
+## Pre-Plan Brief
+
+Hand the plan generator `references/capability-plan-brief.md` before the first
+plan is written. The brief keeps the first plan at
+capability level and injects the required OutSystems-specific handoff header,
+so the coverage gate does not force a plan rewrite later.
+
 ## Missing Plan Behavior
 
 If the source PRD exists but the saved plan file does not, stop before coverage

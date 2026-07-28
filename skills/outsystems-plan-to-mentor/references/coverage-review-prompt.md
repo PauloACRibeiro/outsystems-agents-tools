@@ -20,6 +20,18 @@ Write the coverage matrix in this exact shape:
 | Requirement | Status | Evidence | Patch / Risk |
 |---|---|---|---|
 
+## Platform Feasibility
+
+In the same pass, extract the plan's platform-capability claims: anything the plan assumes the platform can do, such as agent call configuration, structured output, action calling, AI model connections, integration patterns, timers, workflows, or offline behavior.
+
+Add each claim as an extra matrix row marked **Feasible / Infeasible / Unverified**:
+
+* **Feasible** only with evidence from a current official OutSystems source retrieved this session: `workspace-knowledge-cc`, `outsystems-tech-content`, or live official docs. The companion constraint references from `outsystems-mentor-implementation` (start with its `agentic-routing.md` reference for agentic claims) may route to the official source, but a companion summary alone is not authority. If the official source cannot be retrieved, keep the row Unverified.
+* **Infeasible** when the docs forbid the claimed configuration. Known example: action calling and structured output cannot be combined on the same agent call; a plan that assumes both on one call must be restructured before conversion.
+* **Unverified** when no evidence was found either way. Say what was checked.
+
+Do not declare convergence while any platform feasibility row is Infeasible or Unverified. An Infeasible row is an architecture decision for the user, not a silent patch; stop and present options. Feasibility checked here is cheap; the same discovery inside `outsystems-mentor-implementation` ripples back into spec and plan rework.
+
 Then:
 
 1. Give a simple **coverage score (0-100)** and a 1-2 sentence rationale.
@@ -42,6 +54,7 @@ Convergence requires:
 
 * no Missing rows.
 * no Partial except explicitly accepted platform/runtime uncertainty.
+* no Infeasible or Unverified platform feasibility rows.
 * coverage >= 98.
 * top gaps either closed in the patched plan or documented as accepted runtime risk.
 * the final matrix is ready to show in the assistant response before delivery mode.
