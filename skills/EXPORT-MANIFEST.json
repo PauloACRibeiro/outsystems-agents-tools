@@ -1,5 +1,5 @@
 {
-  "build_date_utc": "2026-07-28",
+  "build_date_utc": "2026-07-29",
   "file_count": 10,
   "files": [
     {
@@ -44,8 +44,8 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/paste-mode-execution-protocol.md",
-      "sha256": "42aed22c7c6f4fed559c06d28c52ab846c83485bdcde5497a5d58f953b95c064",
-      "size": 4224
+      "sha256": "62e77a129d15db49470d4bf3616619dd4ec5dfebb129f0912ad7588aeb61ff02",
+      "size": 4740
     },
     {
       "path": "skills/outsystems-plan-to-mentor/scripts/check_plan_handoff.py",
@@ -54,6 +54,6 @@
     }
   ],
   "pack_name": "outsystems-plan-to-mentor",
-  "source_commit": "1ea6cb24ce345d9f17cefb5392556296925dba9a",
-  "version": "2026-07-28"
+  "source_commit": "2cac278911200e83e6e5712dd45abad066dd74fd",
+  "version": "2026-07-29"
 }

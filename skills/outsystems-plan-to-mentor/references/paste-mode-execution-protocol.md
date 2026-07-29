@@ -62,6 +62,16 @@ block:
   Studio using the package as the spec is a new mutation scope that needs
   its own separate confirmation.
 
+## Verbatim literal entry
+
+Long literals (prompt texts, Setting values, expressions) are where typed
+entry corrupts silently: typing over a selection drops the opening quote,
+and line-start keys land repair characters mid-string. Enter them from the
+clipboard when clipboard access is grantable. Either way, after the field
+commits, read the stored value back (clipboard round-trip or field read)
+and compare it to the source text before proceeding; the field accepting
+the commit is not proof of verbatim storage.
+
 ## Duplicate and lost-input guards
 
 - Never resubmit a creating prompt because the panel looks stuck; verify the

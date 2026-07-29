@@ -8,6 +8,15 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-07-29
+
+- Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`
+  at `2cac278` — the paste-mode execution protocol gains a verbatim-literal
+  entry rule (clipboard entry where grantable, then read the stored value
+  back and compare it to the source text; a committed field is not proof of
+  verbatim storage). Part of the driving-Mentor lessons batch from the
+  PlayRight runtime phase, cross-agent reviewed (AH-2026-07-29-001).
+
 ## 2026-07-28 (second export)
 
 - Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`
