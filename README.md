@@ -7,6 +7,63 @@ not published here.
 > **Status: pre-release scaffold.** No release artifacts or skills have been
 > published yet. Distribution details (hosting, visibility, remote) are not final.
 
+## Install the OutSystems Public Knowledge MCP server
+
+Paste this into Claude Code or Codex:
+
+```text
+Install the OutSystems Public Knowledge MCP server on this machine.
+
+Detect my OS, then download and follow the matching instructions:
+  macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-MACOS.md
+  Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-WINDOWS.md
+
+Follow that document literally. Confirm the install root and the
+prerequisites with me before you write anything to disk. The install takes
+6-10 minutes, so run it backgrounded. When you are done, verify it and tell
+me the version, the install root, the doctor result and the tool count.
+```
+
+That is all a human needs. The agent reads the rest.
+
+### Keeping it up to date, and removing it
+
+Paste whichever you need:
+
+```text
+Refresh my OutSystems Public Knowledge MCP server to the latest OutSystems
+documentation. Follow the REFRESH section of the instructions for my OS at
+https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest
+Tell me the document count before and after.
+```
+
+```text
+Uninstall the OutSystems Public Knowledge MCP server from this machine.
+Follow the UNINSTALL section of the instructions for my OS at
+https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest
+Show me what will be removed before you remove anything.
+```
+
+### Read the instructions before running anything
+
+You do not have to take the prompt on trust. The exact instructions the agent
+will follow are published with every release, and you can read them first:
+
+- [macOS instructions](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-MACOS.md)
+- [Windows instructions](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-WINDOWS.md)
+
+**The component ships as a Release asset, not as a file in this repository.**
+Cloning this repo gives you the skills and this prompt — not the component.
+
+### What this is, and what it isn't
+
+It serves OutSystems **public** documentation — the same pages published on the
+OutSystems docs sites — indexed locally and cited by commit. It holds nothing
+internal, private or customer-specific, and exposes exactly six read-only tools.
+
+It is shared as-is, with no support commitment and no service level. If it
+breaks, open an issue; it may or may not be picked up.
+
 ## What's here
 
 | Area | Contents | Source of truth |
