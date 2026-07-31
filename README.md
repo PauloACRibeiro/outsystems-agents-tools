@@ -68,7 +68,8 @@ breaks, open an issue; it may or may not be picked up.
 
 | Area | Contents | Source of truth |
 |---|---|---|
-| [`outsystems-public-knowledge/`](outsystems-public-knowledge/) | The `outsystems-public-knowledge` MCP component, as a downloadable release ZIP + checksum + install README | Built from `workspace-knowledge-cc` |
+| [Releases](../../releases/latest) | The `outsystems-public-knowledge` MCP component — ZIP, `.sha256`, and the per-OS install instructions, published together per version | Built from `workspace-knowledge-cc` |
+| [`outsystems-public-knowledge/`](outsystems-public-knowledge/) | Intentionally empty — a pointer to the Releases page. The component is **not** stored in this tree | — |
 | [`skills/`](skills/) | Public versions of selected OutSystems agent skills | Derived from `portable-agent-skills` |
 
 ## How to think about this repo
@@ -76,8 +77,12 @@ breaks, open an issue; it may or may not be picked up.
 - **Consume-only.** Colleagues download and use what's here. There is no PR-back
   flow for the component or the skills — improvements are made upstream and
   re-published.
-- **Generated, not hand-authored.** Everything under `outsystems-public-knowledge/`
-  and `skills/<name>/` is a build/export output. Do not hand-edit generated content —
+- **The component ships as a Release asset, not as a file in this tree.** Cloning
+  this repo gives you the prompt and the skills, not the component. Keeping the
+  binary out of git means no 186 KB blob accumulates per version, and an agent can
+  read the current version and digest as data rather than as a file.
+- **Generated, not hand-authored.** Everything under `skills/<name>/` is an export
+  output, as are the per-OS install documents published with each Release. Do not hand-edit generated content —
   a CI check (`.github/workflows/verify-export.yml`) fails any push/PR where the
   generated `skills/` tree no longer matches the sha256 provenance in
   `skills/EXPORT-MANIFEST.json`. Hand-authored files are limited to this `README.md`,
@@ -92,10 +97,8 @@ breaks, open an issue; it may or may not be picked up.
 outsystems-agents-tools/
 ├── README.md                         # this file (hand-authored)
 ├── CHANGELOG.md                      # release history (hand-authored)
-├── outsystems-public-knowledge/      # component drop — LATEST VERSION ONLY
-│   ├── README.md                     # install/verify/update (build-generated)
-│   ├── outsystems-public-knowledge-<version>.zip
-│   └── outsystems-public-knowledge-<version>.zip.sha256
+├── outsystems-public-knowledge/      # INTENTIONALLY EMPTY
+│   └── README.md                     # points at the Releases page
 └── skills/                           # public skill exports (one per skill)
     └── <skill-name>/
 ```

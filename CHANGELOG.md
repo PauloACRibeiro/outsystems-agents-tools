@@ -10,6 +10,11 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## 2026-07-31
 
+- **Distribution authorization.** World-public distribution of this component was
+  authorized by Paulo on 2026-07-30. Before that date, distribution beyond a
+  hand-picked pilot was explicitly un-granted. Recorded here because this file is
+  the governing release record; the cross-agent review (AH-2026-07-31-001) did not
+  itself establish that authorization.
 - **First component release: `v31` (OutSystems Public Knowledge 1.3.0).**
   Published as a GitHub Release with four assets — the component ZIP, its
   `.sha256`, `INSTALL-MACOS.md` and `INSTALL-WINDOWS.md`. ZIP digest
@@ -71,6 +76,11 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
   tree passes `git diff --check`. No behavior change.
 
 ## 2026-07-18
+
+> **Superseded on 2026-07-31 — read this section as history, not as current
+> layout.** The in-tree component drop described below was replaced by
+> Release-asset delivery; `outsystems-public-knowledge/` is now intentionally
+> empty. See the 2026-07-31 entry.
 
 - Added `skills/outsystems-plan-to-mentor/` — first public skill export. This
   repo is now the go-forward canonical home for this skill (superseding the
