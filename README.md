@@ -69,7 +69,6 @@ breaks, open an issue; it may or may not be picked up.
 | Area | Contents | Source of truth |
 |---|---|---|
 | [Releases](../../releases/latest) | The `outsystems-public-knowledge` MCP component — ZIP, `.sha256`, and the per-OS install instructions, published together per version | Built from `workspace-knowledge-cc` |
-| [`outsystems-public-knowledge/`](outsystems-public-knowledge/) | Intentionally empty — a pointer to the Releases page. The component is **not** stored in this tree | — |
 | [`skills/`](skills/) | Public versions of selected OutSystems agent skills | Derived from `portable-agent-skills` |
 
 ## How to think about this repo
@@ -97,12 +96,8 @@ breaks, open an issue; it may or may not be picked up.
 outsystems-agents-tools/
 ├── README.md                         # this file (hand-authored)
 ├── CHANGELOG.md                      # release history (hand-authored)
-├── outsystems-public-knowledge/      # INTENTIONALLY EMPTY
-│   └── README.md                     # points at the Releases page
 └── skills/                           # public skill exports (one per skill)
     └── <skill-name>/
 ```
 
-The component folder holds **only the latest version** — a new release overwrites
-the previous ZIP, checksum, and README in place. Version history is tracked in
-`CHANGELOG.md`, not by keeping old artifacts.
+Each Release carries its own component ZIP, checksum and per-OS install instructions. The prompt always resolves `/releases/latest`, so it never needs a version in it.
