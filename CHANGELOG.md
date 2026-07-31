@@ -8,6 +8,31 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-07-31
+
+- **First component release: `v31` (OutSystems Public Knowledge 1.3.0).**
+  Published as a GitHub Release with four assets — the component ZIP, its
+  `.sha256`, `INSTALL-MACOS.md` and `INSTALL-WINDOWS.md`. ZIP digest
+  `cc2200c7b6a83d3e9e53b757f208ffeed9bef8c72093d3a00d39079255546957`.
+- **The component ships as a Release asset, not in the repository tree.**
+  This supersedes the 2026-07-18 decision to commit the ZIP under
+  `outsystems-public-knowledge/`, which now holds only a pointer to the
+  Releases page. The tree therefore never accumulates a binary per version,
+  and the agent gets a version and digest as data rather than as a file.
+- **Install is now agent-native.** `README.md` carries one short, version-free
+  prompt a colleague pastes into Claude Code or Codex; the agent resolves
+  `/releases/latest`, reads the instructions for its own OS, confirms the
+  install root and prerequisites with the human, then installs and verifies.
+  Prompts for refresh and uninstall are alongside it. This replaces a
+  605-line setup document that had to be sent by hand.
+- **Both platforms verified by execution before publication.** The macOS
+  document was walked end to end on a real install; the Windows document was
+  walked end to end inside a disposable VM, including the uninstall ordering
+  guard firing with a live server holding the install root. Nine document
+  defects were found and fixed in the process — five of them invisible on
+  macOS by construction, including a command form that is valid in bash and
+  inert in PowerShell.
+
 ## 2026-07-29
 
 - Regenerated `skills/outsystems-plan-to-mentor/` from `portable-agent-skills`
