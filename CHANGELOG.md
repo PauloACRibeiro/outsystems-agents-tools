@@ -8,6 +8,78 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-07-31 (v32)
+
+**Every change below was found by watching real coding agents use v31 on real
+machines — Claude Code and Codex, on Windows and macOS. None came from a code
+review.** Component `1.3.0`, ZIP digest
+`640d7b0d76e1f7549288a179283551b77a89668148fd4c213d06d56425d46d8f`, built twice
+byte-identical. Supersedes v31 `cc2200c7…`.
+
+### Product fixes
+
+- **`update` no longer breaks a running server silently.** It replaces the index
+  atomically, so a server already bound to the old file rejected the new one
+  permanently — still answering health checks while every query failed. It now
+  warns before and after, naming the processes, and says that a client restart
+  may not stop them. It also prints a success line: the previous silence is what
+  made this take a day to diagnose.
+- **A partial uninstall is now recoverable.** If removal fails part way — a file
+  held by an indexer, antivirus, or a shell sitting inside the root — the tree was
+  left half-deleted, and re-running refused because the receipt had already been
+  removed. A resume marker lets the same command finish the job, with a bounded
+  retry for momentary locks and, on Windows, the name of what holds the file.
+- **The printed MCP removal command carries the scope it registered with.** The
+  unscoped form crashed with an access violation and left the registration behind.
+- **`doctor` reports how old the mirrored content is** and flags it past a week.
+  It measures when content was last actually fetched, so a reindex cannot make a
+  stale corpus look fresh.
+- **`refresh_index` and `ping` no longer describe themselves as things they are
+  not.** `refresh_index` reindexes local files and fetches nothing; `ping` reports
+  liveness and identity and cannot detect a broken index binding.
+
+### Instruction fixes
+
+- Installer path, interpreter, digest verification and extraction commands are now
+  correct and concrete on both platforms. Several were valid in bash and inert in
+  PowerShell — something no macOS test could have caught.
+- The Windows document declares PowerShell as its shell. The two shells need
+  opposite forms for the same command; no single form works in both.
+- Uninstall deregisters and stops the server **first**. The previous order failed
+  for everyone, because the agent's own server holds the root it is about to delete.
+- A copy of the operations document is written into the install root at install
+  time. Without it, an agent asked months later to "follow the instructions" has
+  nothing to follow — one invented a procedure that removed the package and left
+  1.4 GB of mirrors and index behind.
+- The agent verifies prerequisites itself and asks the human only about the install
+  root — the one thing that is a decision rather than a measurement.
+
+### Verified, and not
+
+Verified by execution on both platforms against this build: digest, install,
+`doctor` (15 on macOS, 19 on Windows), `update` including the live-server guard,
+the staleness warning clearing after an update, and uninstall.
+
+**Fixed but not proven on a real machine:** partial-uninstall recovery (unit tests
+only), Windows holder identification (written from the API contract, never
+executed on Windows), and the update runner script — which is
+**specified, not standardized**: the instructions say what it must do rather than
+giving literal source, so each agent writes its own and none have been compared.
+
+The automated Windows walkthrough runs the eight documented commands. It does not
+exercise keeping the extraction directory, writing the local `INSTALL.md`, or
+writing the runner script — those are instructions to an agent, and the harness is
+not one.
+
+### Known issues, carried forward unchanged
+
+- **Windows install intermittency**: two failures in three attempts on one pilot
+  machine, unexplained, undiagnosable because logs were deleted before the retry.
+  Both documents require preserving logs before retrying.
+- **A fresh install reports STALE immediately** when the release is more than a
+  week old. That is accurate, not a fault — the shipped corpus is pinned at build
+  time — and `update` clears it.
+
 ## 2026-07-31
 
 - **Distribution authorization.** World-public distribution of this component was
