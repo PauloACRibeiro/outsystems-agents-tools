@@ -4,8 +4,11 @@ Public, colleague-facing distribution of OutSystems agent tooling. This repo is 
 **curated, consume-only subset** — the working/full estate lives elsewhere and is
 not published here.
 
-> **Status: pre-release scaffold.** No release artifacts or skills have been
-> published yet. Distribution details (hosting, visibility, remote) are not final.
+> **Status: published.** The component ships as a Release asset, and every link
+> below resolves to the [latest release](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest)
+> rather than to a fixed version — so the prompts stay correct as new versions
+> ship, and there is nothing for you to keep in sync by hand. One skill is
+> published so far; the rest of the estate is not public.
 
 ## Install the OutSystems Public Knowledge MCP server
 
