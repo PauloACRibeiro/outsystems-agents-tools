@@ -70,41 +70,42 @@ Use an OutSystems-specific handoff header that points to `outsystems-plan-to-men
 ## Workflow
 
 1. Read the saved plan and the source PRD or original request.
-2. Load `references/coverage-review-prompt.md`.
-3. Audit the plan against the source of truth using the required coverage matrix. Extract the plan's platform-capability claims and audit them as platform feasibility rows in the same pass.
+2. Load `references/coverage-review-prompt.md` and `references/requirement-id-conventions.md`.
+3. Establish the Requirement Inventory: use the source's stable requirement IDs when it carries them, otherwise assign `BR-`/`UC-`/`C-` IDs per the conventions and record the inventory at the top of the coverage review artifact. Then audit the plan against the source of truth using the required ID-keyed coverage matrix. Extract the plan's platform-capability claims and audit them as platform feasibility rows in the same pass.
 4. If coverage ambiguity would change requirements, stop and ask before patching.
 5. Write the coverage review to `docs/superpowers/plans/{plan-stem}-coverage-review.md`.
-6. Write a minimally patched plan to `docs/superpowers/plans/{plan-stem}-patched.md`. The patched plan artifact must be a complete executable plan, not a change summary or wrapper. Copy the full patched plan content into `docs/superpowers/plans/{plan-stem}-patched.md`. Do not patch only the original plan in place and leave `-patched.md` as a short summary. Before writing the patched file, rewrite any generic Superpowers execution header to the OutSystems-specific handoff header.
-7. Run at least two coverage passes before delivery mode. Pass 2 audits the patched plan against the same source of truth, writes `docs/superpowers/plans/{plan-stem}-coverage-review-v2.md`, and patches the plan again if any row is Missing, Partial without accepted platform/runtime uncertainty, unsupported by evidence, or invalid for ODC/Mentor implementation.
-8. Repeat the coverage loop until convergence or max 3 passes. Convergence means no Missing rows, no Partial except explicitly accepted platform/runtime uncertainty, no Infeasible or Unverified platform feasibility rows, coverage >= 98, and all top gaps are closed or documented as accepted runtime risk. If a third pass is needed, write `docs/superpowers/plans/{plan-stem}-coverage-review-final.md`.
-9. Write each coverage pass to a versioned review artifact and show the final `Coverage Audit -- Patched Plan vs Spec` table before asking how to deliver.
-10. Run `scripts/check_plan_handoff.py` against the same full patched plan file that will be sent to `outsystems-mentor-implementation`.
-11. If the scanner reports a forbidden generic handoff, patch the plan again and rerun the scanner.
-12. Load `references/delivery-modes.md`.
-13. Do not ask the delivery mode question until the final coverage matrix is written and the patched plan passes the handoff scanner.
-14. Ask the delivery mode question exactly once:
+6. Write a minimally patched plan to `docs/superpowers/plans/{plan-stem}-patched.md`. The patched plan cites each requirement ID inline where it is addressed, including deferred IDs in its scope boundaries. The patched plan artifact must be a complete executable plan, not a change summary or wrapper. Copy the full patched plan content into `docs/superpowers/plans/{plan-stem}-patched.md`. Do not patch only the original plan in place and leave `-patched.md` as a short summary. Before writing the patched file, rewrite any generic Superpowers execution header to the OutSystems-specific handoff header.
+7. In every pass, run `scripts/check_requirement_coverage.py` with the requirement inventory (or ID-carrying PRD) and the plan under review, and copy its output verbatim into the review artifact. The coverage numbers and the coverage verdict are computed, never hand-authored.
+8. Run at least two coverage passes before delivery mode. Pass 2 audits the patched plan against the same source of truth, writes `docs/superpowers/plans/{plan-stem}-coverage-review-v2.md`, and patches the plan again if any row is Missing, Partial without accepted platform/runtime uncertainty, unsupported by evidence, or invalid for ODC/Mentor implementation, or if the checker reports NOT READY.
+9. Repeat the coverage loop until convergence or max 3 passes. Convergence means the checker reports `coverage verdict: READY` on the patched plan (no uncovered IDs, no dangling references), no Missing rows, no Partial except explicitly accepted platform/runtime uncertainty, no Infeasible or Unverified platform feasibility rows, and all top gaps are closed or documented as accepted runtime risk. If a third pass is needed, write `docs/superpowers/plans/{plan-stem}-coverage-review-final.md`.
+10. Write each coverage pass to a versioned review artifact and show the final `Coverage Audit -- Patched Plan vs Spec` table plus the checker's verdict output before asking how to deliver.
+11. Run `scripts/check_plan_handoff.py` against the same full patched plan file that will be sent to `outsystems-mentor-implementation`.
+12. If the scanner reports a forbidden generic handoff, patch the plan again and rerun the scanner.
+13. Load `references/delivery-modes.md`.
+14. Do not ask the delivery mode question until the final coverage matrix is written and the patched plan passes the handoff scanner.
+15. Ask the delivery mode question exactly once:
 
 ```text
 1 - Create prompts ready to paste sequentially in Mentor in ODC Studio
 2 - Send to Mentor using the OutSystems MCP
 ```
 
-15. Load `references/mentor-spec-guardrails.md`.
-16. Load `references/mentor-implementation-invocation.md`.
-17. Companion Availability Gate: Before invoking `outsystems-mentor-implementation`, determine whether `outsystems-mentor-implementation` is available in the active agent's skill catalog or local skill roots.
-18. Prefer the full companion flow whenever `outsystems-mentor-implementation` is available. If `outsystems-mentor-implementation` is available, use the full companion flow. Invoke `outsystems-mentor-implementation` with that same full patched plan path, source PRD or request, selected delivery mode, output file path, and relevant Mentor spec guardrails.
-19. Require `outsystems-mentor-implementation` to write the Mentor-ready output file before any MCP send.
-20. If `outsystems-mentor-implementation` is not available, ask the missing-companion fallback choice exactly once, separate from the delivery mode question:
+16. Load `references/mentor-spec-guardrails.md`.
+17. Load `references/mentor-implementation-invocation.md`.
+18. Companion Availability Gate: Before invoking `outsystems-mentor-implementation`, determine whether `outsystems-mentor-implementation` is available in the active agent's skill catalog or local skill roots.
+19. Prefer the full companion flow whenever `outsystems-mentor-implementation` is available. If `outsystems-mentor-implementation` is available, use the full companion flow. Invoke `outsystems-mentor-implementation` with that same full patched plan path, source PRD or request, selected delivery mode, output file path, and relevant Mentor spec guardrails.
+20. Require `outsystems-mentor-implementation` to write the Mentor-ready output file before any MCP send.
+21. If `outsystems-mentor-implementation` is not available, ask the missing-companion fallback choice exactly once, separate from the delivery mode question:
 
 ```text
 1 - Stop after the patched plan and install or use outsystems-mentor-implementation for the full deterministic Mentor package
 2 - Write a DEGRADED OUTPUT paste-mode 10-section Mentor spec
 ```
 
-21. If the user chooses option 1, stop after the patched plan. Report the patched plan path and explain that the full flow requires installing or using `outsystems-mentor-implementation`. State: Install or use `outsystems-mentor-implementation` for the full deterministic Mentor package.
-22. If the user chooses option 2, write `docs/superpowers/plans/{plan-stem}-mentor-output.md` as a DEGRADED OUTPUT using only the 10-section Mentor spec format from `references/mentor-spec-guardrails.md`. This is a degraded paste-mode Mentor spec.
-23. Degraded paste-mode Mentor spec output must be paste mode only. Do not send degraded output through OutSystems MCP, and do not label degraded output as Studio-native pseudocode.
-24. At the top of degraded output, state: `DEGRADED OUTPUT: outsystems-mentor-implementation was not available. This file is a 10-section Mentor spec for paste mode only. It does not include Studio-native pseudocode packages and does not include Data Model Pseudocode, Server Action Pseudocode, Client Action Pseudocode, Screen/UI Pseudocode, Navigation Pseudocode, or Verification Pseudocode. Install or use outsystems-mentor-implementation for the full deterministic Mentor package.`
+22. If the user chooses option 1, stop after the patched plan. Report the patched plan path and explain that the full flow requires installing or using `outsystems-mentor-implementation`. State: Install or use `outsystems-mentor-implementation` for the full deterministic Mentor package.
+23. If the user chooses option 2, write `docs/superpowers/plans/{plan-stem}-mentor-output.md` as a DEGRADED OUTPUT using only the 10-section Mentor spec format from `references/mentor-spec-guardrails.md`. This is a degraded paste-mode Mentor spec.
+24. Degraded paste-mode Mentor spec output must be paste mode only. Do not send degraded output through OutSystems MCP, and do not label degraded output as Studio-native pseudocode.
+25. At the top of degraded output, state: `DEGRADED OUTPUT: outsystems-mentor-implementation was not available. This file is a 10-section Mentor spec for paste mode only. It does not include Studio-native pseudocode packages and does not include Data Model Pseudocode, Server Action Pseudocode, Client Action Pseudocode, Screen/UI Pseudocode, Navigation Pseudocode, or Verification Pseudocode. Install or use outsystems-mentor-implementation for the full deterministic Mentor package.`
 
 ## Artifact Rules
 
@@ -138,7 +139,7 @@ Keep the canonical workflow compatible with both Codex and Claude:
 
 Report:
 
-- Coverage score and rationale.
+- The computed coverage verdict from `scripts/check_requirement_coverage.py`, copied verbatim: covered/defined counts plus the uncovered and dangling lists (both empty at convergence).
 - Final `Coverage Audit -- Patched Plan vs Spec` table.
 - Top gaps closed.
 - Coverage review paths.

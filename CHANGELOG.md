@@ -8,6 +8,16 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 2026-08-05 — outsystems-plan-to-mentor: mechanical coverage gate
+
+Skill export from PAS `f8482d5`. The self-reported coverage score (0–100,
+converge at ≥98) is replaced by a mechanical gate: stable `BR-`/`UC-`/`C-`
+requirement IDs (new `references/requirement-id-conventions.md`), a stdlib
+checker `scripts/check_requirement_coverage.py` (uncovered = defined −
+referenced, dangling = referenced − defined, verdict `READY`/`NOT READY`),
+and a computed — never hand-authored — readiness verdict. Deferrals must cite
+their ID in the plan's scope boundaries; there is no waiver mechanism.
+
 ## 2026-07-31 (v32)
 
 **Every change below was found by watching real coding agents use v31 on real

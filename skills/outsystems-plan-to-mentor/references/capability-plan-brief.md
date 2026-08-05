@@ -18,7 +18,15 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
 
 - Use capability headings such as users and goals, workflows, business rules,
   acceptance criteria, dependencies, open decisions, and scope boundaries.
-- State scope boundaries and deliberately excluded concepts explicitly.
+- Cite the source's stable requirement IDs (`BR-` business rules, `UC-` use
+  cases, `C-` acceptance criteria; see
+  `references/requirement-id-conventions.md`) inline in the section that
+  addresses each requirement. If the source PRD carries no IDs yet, the
+  coverage gate will assign them in pass 1; a plan that already cites them
+  converges faster.
+- State scope boundaries and deliberately excluded concepts explicitly, and
+  cite the ID of every deferred or excluded requirement with its disposition
+  -- the coverage checker treats an uncited ID as uncovered.
 - Keep verification at acceptance-criteria level: what observable behavior
   proves each capability works, not which tool checks it.
 - Record open decisions the user still owns, with what each decision blocks.

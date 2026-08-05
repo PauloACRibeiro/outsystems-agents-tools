@@ -1,16 +1,16 @@
 {
-  "build_date_utc": "2026-07-29",
-  "file_count": 10,
+  "build_date_utc": "2026-08-05",
+  "file_count": 12,
   "files": [
     {
       "path": "skills/outsystems-plan-to-mentor/README.md",
-      "sha256": "0aef26e0239aedc3bf32234c59feb933e492d686df42db1a415d4de888840ae5",
-      "size": 7313
+      "sha256": "cdd259846991db0d73a54ed0c7ade81b78c9129fb90c1673a578e39f914349ec",
+      "size": 7946
     },
     {
       "path": "skills/outsystems-plan-to-mentor/SKILL.md",
-      "sha256": "889418ad1f27606765cfdbac8acc22e4e9c7973cd43d945ee0bc4a46e5e11464",
-      "size": 12721
+      "sha256": "8e2b71717ed4aa6aa76583c6a6e87c0bb0803a5df21e99fe6a70045fd98eacb0",
+      "size": 13725
     },
     {
       "path": "skills/outsystems-plan-to-mentor/agents/openai.yaml",
@@ -19,13 +19,13 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/capability-plan-brief.md",
-      "sha256": "06f429f6debf6b40dd384fb9f2f1fb6766dce5775d93471236d9b517b51ed467",
-      "size": 2637
+      "sha256": "faece4c68cb01114aaead385add1795178fad8e483078583b21bfefea70ed898",
+      "size": 3134
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-      "sha256": "829b7d1118e8ab9024e8d29d2a104d484440282a70f56f5cf25edabe7c089113",
-      "size": 4054
+      "sha256": "b234952fb9362cb5cbf65541110eeee15391c3a7c7775178e0748fe3ce7f150a",
+      "size": 6208
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
@@ -48,12 +48,22 @@
       "size": 4740
     },
     {
+      "path": "skills/outsystems-plan-to-mentor/references/requirement-id-conventions.md",
+      "sha256": "31ee20beb85766d2723b846949b4357065fbe5ac518c49d7ff669ac51059cc0f",
+      "size": 2723
+    },
+    {
       "path": "skills/outsystems-plan-to-mentor/scripts/check_plan_handoff.py",
       "sha256": "8505796f507935d71fe245330fd8b9d2d7434e68b0f00a35f9736d039d9994b2",
       "size": 3416
+    },
+    {
+      "path": "skills/outsystems-plan-to-mentor/scripts/check_requirement_coverage.py",
+      "sha256": "907cbb15b06bfe13e36a383e585ceb8b9d37a0e8adc959aceaebdbc7bbc31218",
+      "size": 2444
     }
   ],
   "pack_name": "outsystems-plan-to-mentor",
-  "source_commit": "2cac278911200e83e6e5712dd45abad066dd74fd",
-  "version": "2026-07-29"
+  "source_commit": "f8482d57bc4425412addffd41ce5f532e18d9c5e",
+  "version": "2026-08-05"
 }

@@ -123,19 +123,29 @@ Install or use `outsystems-mentor-implementation` for the full deterministic Men
 
 ## Coverage Loop
 
-The skill always runs at least two passes before delivery mode. Each pass writes
-a visible matrix headed `Coverage Audit -- Patched Plan vs Spec`:
+The skill always runs at least two passes before delivery mode. Every
+requirement in the source gets a stable ID (`BR-` business rule, `UC-` use
+case, `C-` acceptance criterion; see
+`references/requirement-id-conventions.md`), and each pass writes a visible
+matrix headed `Coverage Audit -- Patched Plan vs Spec`, one row per ID:
 
 ```markdown
-| Requirement | Status | Evidence | Patch / Risk |
-|---|---|---|---|
+| ID | Requirement | Status | Evidence | Patch / Risk |
+|---|---|---|---|---|
 ```
+
+Coverage itself is mechanical, not self-reported:
+`scripts/check_requirement_coverage.py` computes the set difference between
+the IDs the source defines and the IDs the plan references, and its
+`READY` / `NOT READY` verdict is computed, never hand-authored. The matrix's
+Evidence column stays the judgement layer on top: the checker proves every ID
+is cited, the reviewer verifies each citation is honest.
 
 Pass 1 reviews the original plan and writes the first full patched plan. Pass 2
 reviews the patched plan as if it came from someone else. A third pass is used
 only when remaining Missing or Partial rows, weak evidence, or ODC/Mentor
 precision issues still need closure. The delivery mode question comes after the
-final matrix and scanner pass, not before.
+final matrix, the checker's READY verdict, and the scanner pass, not before.
 
 The `-patched.md` artifact is the full patched plan, not a summary wrapper. If
 the original plan is also edited in place, the full final content still needs to
