@@ -41,15 +41,39 @@ and `outsystems-runtime-ui-audit` (score the published app from its live URL).
   Both agents are covered — Claude Code reads `~/.claude/skills/`, Codex reads
   `~/.agents/skills/`, and neither needs a config file edited.
 
-**The bundles now address you, not a named individual.** 81 lines across 24
-files told the reading agent to "ask Paulo before proceeding" or "Tell Paulo
-when a manual dependency update is required" — wording that made sense inside
-one person's workspace and reads as an instruction to consult a stranger in a
-pack you installed. Those are now "the user", matching the voice the same
-bundles already used elsewhere. Where the distinction is genuinely between the
-maintainer and you, it is kept and said plainly: the knowledge-provider
-contract still explains that the maintainer binds an internal index while a
-colleague binds the public one.
+### Rewritten for a reader outside the maintainer's workspace
+
+Most of this content existed before, but only ever went to an invite-only
+repository. Going world-visible surfaced four things that were fine in a
+personal workspace and wrong in a pack a stranger installs. **All four were
+found by grepping the exported tree, not by the gates** — and two of them the
+gates could not have caught, for reasons given under "Repository changes".
+
+- **The bundles address you, not a named individual.** 81 lines across 24 files
+  told the reading agent to "ask Paulo before proceeding" or "Tell Paulo when a
+  manual dependency update is required" — an instruction to consult a stranger
+  the page never introduces. Those are now "the user", matching the voice the
+  same bundles already used 98 times. Where the distinction is genuinely
+  between the maintainer and you it is kept and said plainly: the
+  knowledge-provider contract still explains that the maintainer binds an
+  internal index while a colleague binds the public one.
+- **A tenant name is gone.** One provenance line read "read-only inspection of
+  the professionalservices tenant". It now says "an ODC tenant"; the line never
+  needed the name to do its job.
+- **Three citations pointed into a directory that does not ship.** The audit
+  rubric and two prompt templates cited a source-repo-only path as the evidence
+  behind the C15/C16 redesign and the converge contract, so following them from
+  this tree found nothing. The findings stay and are now stated in place: what
+  the first live converge run showed about scoring C15 and C16 from a single
+  observation, and the 13 fix instructions across 3 iterations that produced no
+  scope drift.
+- **`outsystems-ui-design` named a knowledge provider you cannot get.** It
+  referred to the maintainer's internal index four times and never once named
+  the public alternative, so there was no way to know what to use instead. It
+  now names the role and both bindings, matching what
+  `outsystems-mentor-implementation` already did everywhere else. Nothing here
+  is required — both providers are optional enrichment, and the skill runs on
+  its bundled catalog without either.
 
 **One file is deliberately withheld.** `outsystems-ui-design` normally carries a
 generated inventory of the built-in platform widgets' runtime properties. It is
@@ -84,6 +108,18 @@ worked-example blueprints it now ships — both validate.
 only the most recent one. Before this, exporting a second skill overwrote the
 manifest, and the CI integrity check kept passing while covering nothing but the
 last export. `docs/` is generated output too, and is covered by the same check.
+
+Two of the four scrubs above got through gates that were built to stop exactly
+that, and both for the same reason: **the check only ever finds what its
+pattern describes.** The tenant rule required a full `…outsystems.dev`
+hostname, so a tenant named in prose scanned clean. The reference checker only
+treats a quoted token as a path when it starts with one of five known
+directories, so a citation into a sixth was invisible to it by construction.
+Both gaps are closed — a rule for the bare tenant name, one for the
+maintainer's own name, and the internal-only source directories added to the
+non-shipped reference triggers — and there is now a test that watches each new
+guard actually fail on a planted violation, rather than trusting that a clean
+run means a working check.
 
 ## 2026-08-05 — outsystems-plan-to-mentor: mechanical coverage gate
 
