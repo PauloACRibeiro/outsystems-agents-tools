@@ -47,7 +47,7 @@ Always record:
 
 ## Evidence Capture - Elastic Search Sandbox
 
-Source: OutSystems MCP read-only inspection of the professionalservices tenant on 2026-05-23.
+Source: OutSystems MCP read-only inspection of an ODC tenant on 2026-05-23.
 
 Read-only tools used: `auth_status`, `env_list`, `app_list`, `app_info`, `app_refs`, `context_screens`, `context_actions`, `context_entities`, `context_structures`, `context_themes`, `context_roles`, and `context_search`.
 

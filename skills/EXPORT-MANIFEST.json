@@ -148,8 +148,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-ui-real-app-evidence.md",
-      "sha256": "9019c043bf45b8aea621d722a63e6029a54f333ca4311d2780e6bf23c4a84774",
-      "size": 11270
+      "sha256": "37ba11a55c00ac50ea8e55422d4affc181e3984218f79401ec6baf4a6d64e6f3",
+      "size": 11252
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-visual-source-enriched-blueprint.md",
@@ -785,8 +785,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-ui-real-app-evidence.md",
-          "sha256": "9019c043bf45b8aea621d722a63e6029a54f333ca4311d2780e6bf23c4a84774",
-          "size": 11270
+          "sha256": "37ba11a55c00ac50ea8e55422d4affc181e3984218f79401ec6baf4a6d64e6f3",
+          "size": 11252
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-visual-source-enriched-blueprint.md",
@@ -970,7 +970,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "ba875744804e99bfba3aa3d4ed1ea41c6c3c9728",
+      "source_commit": "247b8a7879532b0cf1314bfddd8b2d05077b3205",
       "version": "2026-08-07"
     },
     {
@@ -1049,7 +1049,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "ba875744804e99bfba3aa3d4ed1ea41c6c3c9728",
+      "source_commit": "247b8a7879532b0cf1314bfddd8b2d05077b3205",
       "version": "2026-08-07"
     },
     {
@@ -1083,7 +1083,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "ba875744804e99bfba3aa3d4ed1ea41c6c3c9728",
+      "source_commit": "247b8a7879532b0cf1314bfddd8b2d05077b3205",
       "version": "2026-08-07"
     },
     {
@@ -1107,7 +1107,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "ba875744804e99bfba3aa3d4ed1ea41c6c3c9728",
+      "source_commit": "247b8a7879532b0cf1314bfddd8b2d05077b3205",
       "version": "2026-08-07"
     },
     {
@@ -1336,7 +1336,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "ba875744804e99bfba3aa3d4ed1ea41c6c3c9728",
+      "source_commit": "247b8a7879532b0cf1314bfddd8b2d05077b3205",
       "version": "2026-08-07"
     }
   ]
