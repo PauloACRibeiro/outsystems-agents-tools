@@ -1,6 +1,6 @@
 # UI Quality Assessment — Rules and Guidelines
 
-> Canonical rubric for the [`runtime-ui-audit`](SKILL.md) skill. Last rubric version: 12 May 2026; **C15 and C16 redesigned 2026-08-07** after the first live converge run (diagnosis: `prototypes/first-live-converge/C15-C16-DESIGN-PASS.md`). When a criterion's intent or tier boundary seems ambiguous, this file wins.
+> Canonical rubric for the [`runtime-ui-audit`](SKILL.md) skill. Last rubric version: 12 May 2026; **C15 and C16 redesigned 2026-08-07**, after a first live converge run showed both criteria were being scored from a single observation rather than from the dimensions they name. When a criterion's intent or tier boundary seems ambiguous, this file wins.
 
 ## What are we measuring?
 

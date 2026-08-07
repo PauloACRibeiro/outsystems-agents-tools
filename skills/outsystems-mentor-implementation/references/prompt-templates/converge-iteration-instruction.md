@@ -1,6 +1,6 @@
 # Converge iteration instruction (prompt template)
 
-- version: 1 (2026-08-07 — authored for the rules-only converge surface from `SKILL.md` § "Mentor invocation discipline" → "Converge iteration (audit-driven)" (Enzyme adoption #2, AH-2026-08-06-008) and the 2026-08-06 first live converge run (`prototypes/first-live-converge/RUN-REPORT.md`: 13 fix instructions across 3 iterations, zero scope drift); prompts-as-data follow-up — no literal template existed before, so this is new wording, not an extraction)
+- version: 1 (2026-08-07 — authored for the rules-only converge surface from `SKILL.md` § "Mentor invocation discipline" → "Converge iteration (audit-driven)" (Enzyme adoption #2, AH-2026-08-06-008) and the 2026-08-06 first live converge run (13 fix instructions across 3 iterations, zero scope drift); prompts-as-data follow-up — no literal template existed before, so this is new wording, not an extraction)
 - owner: `outsystems-mentor-implementation/SKILL.md` § "Mentor invocation discipline" — Converge iteration (audit-driven)
 - placeholders: `<N>` (item count — exactly the handoff's, never more), `<fix instruction 1 — the handoff item's screen-scoped imperative text, verbatim>`, `<fix instruction 2 — next handoff item, handoff order preserved>`
 

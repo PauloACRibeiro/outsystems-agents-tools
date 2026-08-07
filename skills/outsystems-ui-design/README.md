@@ -80,8 +80,9 @@ neither is ever required:
 
 - `outsystems-tech-content` — consulted to verify widget nesting rules and
   pattern API facts for the blocks chosen during inference and refinement
-- `workspace-knowledge-cc` — consulted only if you ask a product-behavior
-  question mid-loop
+- a public knowledge provider — `workspace-knowledge-cc` or
+  `outsystems-public-knowledge`, whichever you have bound — consulted only if
+  you ask a product-behavior question mid-loop
 
 When neither is reachable (off-VPN, a colleague's machine, no MCP configured),
 the skill degrades gracefully: it discloses the degraded mode in a single line

@@ -1,7 +1,7 @@
 ---
 name: outsystems-ui-design
 description: Use when the user brings a wireframe screenshot, screen sketch, or screen-design ask and wants to iterate on the design interactively before anything is built — an interactive wireframe-to-blueprint loop that maps every visual region to a named OutSystems UI web block, renders a local HTML preview per round, and emits a validated enriched blueprint.json on approval. Route to outsystems-design-to-app instead for a one-shot, non-interactive build straight from a design source (Figma URL, image, HTML mockup). Route to outsystems-mentor-implementation instead for Mentor/tenant execution of an already-approved blueprint.
-compatibility: Agent-neutral (Codex and Claude Code). Python 3.7+ stdlib only. No MCP server required — outsystems-tech-content and workspace-knowledge-cc are optional enrichment only.
+compatibility: Agent-neutral (Codex and Claude Code). Python 3.7+ stdlib only. No MCP server required — outsystems-tech-content and a public knowledge provider (workspace-knowledge-cc or outsystems-public-knowledge) are optional enrichment only.
 allowed-tools: AskUserQuestion, Bash, Read, Write, Edit
 ---
 
@@ -573,11 +573,13 @@ into any other skill.
   queried at Step 2 and whenever a refinement round introduces a thinly covered
   pattern. It verifies nesting rules and pattern API facts. It is enrichment,
   **never a hard gate**.
-- **`workspace-knowledge-cc`** is **reactive-only**: call it if and only if the
+- **The public knowledge provider** — `workspace-knowledge-cc` or
+  `outsystems-public-knowledge`, whichever is bound; they expose the same
+  public retrieval role — is **reactive-only**: call it if and only if the
   user's own message in this turn asks a product-behavior question. Do not call
   it during Step 2 inference, during a refinement round, or anywhere else on
   the default path "for extra grounding" — `outsystems-tech-content` is the
-  enrichment tool for pattern/nesting facts; `workspace-knowledge-cc` has no
+  enrichment tool for pattern/nesting facts; the public provider has no
   role in the default intake → inference → refinement loop at all. A Phase 4
   Codex run called it proactively during Step 2 with no product-behavior
   question asked — that is the exact mistake this bullet exists to prevent.

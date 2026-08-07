@@ -203,8 +203,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/prompt-templates/converge-iteration-instruction.md",
-      "sha256": "bda7e77c44ca03aa8c3c1b688da165870597b807e5a907a7697203bb0b620e24",
-      "size": 1913
+      "sha256": "679b9a972153003981b6edf9ab025969198bbcde059a8374ee912b533dd07b4e",
+      "size": 1865
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/prompt-templates/dependency-safe-order.md",
@@ -408,8 +408,8 @@
     },
     {
       "path": "skills/outsystems-runtime-ui-audit/references/prompt-templates/mentor-handoff.md",
-      "sha256": "6952609fab6df81853d3644e1abbdbec8e737abf33e124ce3344180063115997",
-      "size": 3560
+      "sha256": "7da553fd9d3c095e3c3e5d54361203fadb5ddc2cc0c5ade14b79041cd2dbc693",
+      "size": 3454
     },
     {
       "path": "skills/outsystems-runtime-ui-audit/references/prompt-templates/runtime-audit-report.md",
@@ -418,18 +418,18 @@
     },
     {
       "path": "skills/outsystems-runtime-ui-audit/rubric.md",
-      "sha256": "14d6ef4296204e5b1fa9d1ebcca4bf9726056409dd45cbe9b9530aecc40b3575",
-      "size": 32287
+      "sha256": "1e3ef3c257c99f5d116bd957d9563caa0900b6ded8b6bd240bf22f6324579ee4",
+      "size": 32324
     },
     {
       "path": "skills/outsystems-ui-design/README.md",
-      "sha256": "c74cdc1a856eddcc8452ffa4c16c1585667094f39ef4d816af730d6c612d5375",
-      "size": 5458
+      "sha256": "5e0468d6e143ac1ff4bad2a31b00a1cd609855514f1ce07666505981a098b1a6",
+      "size": 5551
     },
     {
       "path": "skills/outsystems-ui-design/SKILL.md",
-      "sha256": "e2bac31ed52254c5ae60ef12c5115ef534d1cfa2f174ad00680e3f395e296c7c",
-      "size": 38488
+      "sha256": "87c7b12620f536b29aacd9021c15345600e79c2703d5ab98de19f2526008040c",
+      "size": 38683
     },
     {
       "path": "skills/outsystems-ui-design/references/blocks-index.md",
@@ -840,8 +840,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/prompt-templates/converge-iteration-instruction.md",
-          "sha256": "bda7e77c44ca03aa8c3c1b688da165870597b807e5a907a7697203bb0b620e24",
-          "size": 1913
+          "sha256": "679b9a972153003981b6edf9ab025969198bbcde059a8374ee912b533dd07b4e",
+          "size": 1865
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/prompt-templates/dependency-safe-order.md",
@@ -970,7 +970,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "d91c4654bf81cf0e0a8f1d184e0efe21ae36c9d4",
+      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
       "version": "2026-08-07"
     },
     {
@@ -1049,7 +1049,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "d91c4654bf81cf0e0a8f1d184e0efe21ae36c9d4",
+      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
       "version": "2026-08-07"
     },
     {
@@ -1068,8 +1068,8 @@
         },
         {
           "path": "skills/outsystems-runtime-ui-audit/references/prompt-templates/mentor-handoff.md",
-          "sha256": "6952609fab6df81853d3644e1abbdbec8e737abf33e124ce3344180063115997",
-          "size": 3560
+          "sha256": "7da553fd9d3c095e3c3e5d54361203fadb5ddc2cc0c5ade14b79041cd2dbc693",
+          "size": 3454
         },
         {
           "path": "skills/outsystems-runtime-ui-audit/references/prompt-templates/runtime-audit-report.md",
@@ -1078,12 +1078,12 @@
         },
         {
           "path": "skills/outsystems-runtime-ui-audit/rubric.md",
-          "sha256": "14d6ef4296204e5b1fa9d1ebcca4bf9726056409dd45cbe9b9530aecc40b3575",
-          "size": 32287
+          "sha256": "1e3ef3c257c99f5d116bd957d9563caa0900b6ded8b6bd240bf22f6324579ee4",
+          "size": 32324
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "d91c4654bf81cf0e0a8f1d184e0efe21ae36c9d4",
+      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
       "version": "2026-08-07"
     },
     {
@@ -1107,7 +1107,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "d91c4654bf81cf0e0a8f1d184e0efe21ae36c9d4",
+      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
       "version": "2026-08-07"
     },
     {
@@ -1116,13 +1116,13 @@
       "files": [
         {
           "path": "skills/outsystems-ui-design/README.md",
-          "sha256": "c74cdc1a856eddcc8452ffa4c16c1585667094f39ef4d816af730d6c612d5375",
-          "size": 5458
+          "sha256": "5e0468d6e143ac1ff4bad2a31b00a1cd609855514f1ce07666505981a098b1a6",
+          "size": 5551
         },
         {
           "path": "skills/outsystems-ui-design/SKILL.md",
-          "sha256": "e2bac31ed52254c5ae60ef12c5115ef534d1cfa2f174ad00680e3f395e296c7c",
-          "size": 38488
+          "sha256": "87c7b12620f536b29aacd9021c15345600e79c2703d5ab98de19f2526008040c",
+          "size": 38683
         },
         {
           "path": "skills/outsystems-ui-design/references/blocks-index.md",
@@ -1336,7 +1336,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "d91c4654bf81cf0e0a8f1d184e0efe21ae36c9d4",
+      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
       "version": "2026-08-07"
     }
   ]
