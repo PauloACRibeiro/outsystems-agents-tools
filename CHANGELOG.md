@@ -121,14 +121,16 @@ source directories added to the non-shipped reference triggers — and there is
 now a test that watches each new guard actually fail on a planted violation,
 rather than trusting that a clean run means a working check.
 
-**The maintainer's catalog-refresh tooling no longer ships.** Six scripts
+**The maintainer's catalog-refresh tooling no longer ships, and the catalogs it
+produces no longer point at a machine you cannot reach.** Six scripts
 regenerated the bundled reference catalogs from a documentation mirror that
-exists only on the maintainer's machine, so they could not run here and
-nothing in the pack referenced them. Two generated catalogs still carry inert
-`doc_path` provenance naming that mirror; no code reads those fields, they
-name public OutSystems documentation, and they are now recorded as a reviewed
-exception rather than left invisible — the gates could not see them at all.
-Regenerating them with source-neutral provenance is a follow-up.
+exists only on the maintainer's machine; they could not run here and nothing in
+the pack referenced them, so they are gone. The two catalogs themselves recorded
+their provenance as paths into that same mirror — 57 references that resolved
+for nobody reading them. Both are regenerated: provenance is now relative to the
+harvest root (`Interface/Block Widget/Block Widget.md`), and the mirror is named
+by role rather than by its path on one machine. The regeneration was verified
+field by field to change provenance and nothing else.
 
 ## 2026-08-05 — outsystems-plan-to-mentor: mechanical coverage gate
 
