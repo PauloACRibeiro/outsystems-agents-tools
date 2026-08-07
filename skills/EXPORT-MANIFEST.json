@@ -1,5 +1,5 @@
 {
-  "file_count": 129,
+  "file_count": 123,
   "files": [
     {
       "path": "docs/colleague-feedback/FEEDBACK.md",
@@ -257,11 +257,6 @@
       "size": 5180
     },
     {
-      "path": "skills/outsystems-mentor-implementation/scripts/check_catalog_freshness.py",
-      "sha256": "47fd7682b4f21eabf74344ede203ca913e882211aa2ab0b05d4c58170eadefa5",
-      "size": 3864
-    },
-    {
       "path": "skills/outsystems-mentor-implementation/scripts/deterministic_quality_scorer.py",
       "sha256": "c46f30d3b943e584428103ba7b5db45931a973430878d36dd0b818a20a0631b4",
       "size": 9996
@@ -290,31 +285,6 @@
       "path": "skills/outsystems-mentor-implementation/scripts/omi_telemetry_report.py",
       "sha256": "5ef9ddc120385b12e433d9e3e37189a35d5f923ae2a905b446325aa67085f977",
       "size": 4863
-    },
-    {
-      "path": "skills/outsystems-mentor-implementation/scripts/refresh_o11_designing_screens_catalog.py",
-      "sha256": "74b09eebaaca1ba62a1324a4c6394ae1d88790373037a5e893b4841248ee65ed",
-      "size": 16249
-    },
-    {
-      "path": "skills/outsystems-mentor-implementation/scripts/refresh_odc_data_grid_reference.py",
-      "sha256": "47b600ef21d50036f53a9ac516201e1efe757260bfbff2991b7b0e58ac512156",
-      "size": 22596
-    },
-    {
-      "path": "skills/outsystems-mentor-implementation/scripts/refresh_odc_studio_widget_catalog.py",
-      "sha256": "c499f005efeb3a972a3f9a28c1fc16dea956cee8c5419c053d2300125b053a1e",
-      "size": 60726
-    },
-    {
-      "path": "skills/outsystems-mentor-implementation/scripts/refresh_odc_ui_catalog.py",
-      "sha256": "ca673b5a56160bf63cf92413def443204a706a4ef25c104d31d80546ed2e20db",
-      "size": 11171
-    },
-    {
-      "path": "skills/outsystems-mentor-implementation/scripts/refresh_outsystems_ui_reference.py",
-      "sha256": "38f1928df20997f0b05f5311559c1eeacd86c271a2bd9150ca1adb3440b6277c",
-      "size": 29096
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/response_contract_lint.py",
@@ -651,7 +621,7 @@
   "packs": [
     {
       "build_date_utc": "2026-08-07",
-      "file_count": 63,
+      "file_count": 57,
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
@@ -894,11 +864,6 @@
           "size": 5180
         },
         {
-          "path": "skills/outsystems-mentor-implementation/scripts/check_catalog_freshness.py",
-          "sha256": "47fd7682b4f21eabf74344ede203ca913e882211aa2ab0b05d4c58170eadefa5",
-          "size": 3864
-        },
-        {
           "path": "skills/outsystems-mentor-implementation/scripts/deterministic_quality_scorer.py",
           "sha256": "c46f30d3b943e584428103ba7b5db45931a973430878d36dd0b818a20a0631b4",
           "size": 9996
@@ -929,31 +894,6 @@
           "size": 4863
         },
         {
-          "path": "skills/outsystems-mentor-implementation/scripts/refresh_o11_designing_screens_catalog.py",
-          "sha256": "74b09eebaaca1ba62a1324a4c6394ae1d88790373037a5e893b4841248ee65ed",
-          "size": 16249
-        },
-        {
-          "path": "skills/outsystems-mentor-implementation/scripts/refresh_odc_data_grid_reference.py",
-          "sha256": "47b600ef21d50036f53a9ac516201e1efe757260bfbff2991b7b0e58ac512156",
-          "size": 22596
-        },
-        {
-          "path": "skills/outsystems-mentor-implementation/scripts/refresh_odc_studio_widget_catalog.py",
-          "sha256": "c499f005efeb3a972a3f9a28c1fc16dea956cee8c5419c053d2300125b053a1e",
-          "size": 60726
-        },
-        {
-          "path": "skills/outsystems-mentor-implementation/scripts/refresh_odc_ui_catalog.py",
-          "sha256": "ca673b5a56160bf63cf92413def443204a706a4ef25c104d31d80546ed2e20db",
-          "size": 11171
-        },
-        {
-          "path": "skills/outsystems-mentor-implementation/scripts/refresh_outsystems_ui_reference.py",
-          "sha256": "38f1928df20997f0b05f5311559c1eeacd86c271a2bd9150ca1adb3440b6277c",
-          "size": 29096
-        },
-        {
           "path": "skills/outsystems-mentor-implementation/scripts/response_contract_lint.py",
           "sha256": "c27c64ff2349d22ed7e17976e1024d76e9d1d316827611e1438604d2b28d4478",
           "size": 14795
@@ -970,7 +910,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
+      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
       "version": "2026-08-07"
     },
     {
@@ -1049,7 +989,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
+      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
       "version": "2026-08-07"
     },
     {
@@ -1083,7 +1023,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
+      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
       "version": "2026-08-07"
     },
     {
@@ -1107,7 +1047,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
+      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
       "version": "2026-08-07"
     },
     {
@@ -1336,7 +1276,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "db766585524c0093d1c7b869ca46e95b1b032591",
+      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
       "version": "2026-08-07"
     }
   ]

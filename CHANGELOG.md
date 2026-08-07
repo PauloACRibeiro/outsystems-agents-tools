@@ -50,15 +50,16 @@ found by grepping the exported tree, not by the gates** — and two of them the
 gates could not have caught, for reasons given under "Repository changes".
 
 - **The bundles address you, not a named individual.** 81 lines across 24 files
-  told the reading agent to "ask Paulo before proceeding" or "Tell Paulo when a
-  manual dependency update is required" — an instruction to consult a stranger
-  the page never introduces. Those are now "the user", matching the voice the
+  told the reading agent to ask the maintainer by name before proceeding, or to
+  tell him when a manual dependency update was required — an instruction to
+  consult a stranger the page never introduces. Those are now "the user",
+  matching the voice the
   same bundles already used 98 times. Where the distinction is genuinely
   between the maintainer and you it is kept and said plainly: the
   knowledge-provider contract still explains that the maintainer binds an
   internal index while a colleague binds the public one.
-- **A tenant name is gone.** One provenance line read "read-only inspection of
-  the professionalservices tenant". It now says "an ODC tenant"; the line never
+- **A tenant name is gone.** One provenance line named the specific tenant an
+  inspection was run against. It now says "an ODC tenant"; the line never
   needed the name to do its job.
 - **Three citations pointed into a directory that does not ship.** The audit
   rubric and two prompt templates cited a source-repo-only path as the evidence
@@ -111,15 +112,23 @@ last export. `docs/` is generated output too, and is covered by the same check.
 
 Two of the four scrubs above got through gates that were built to stop exactly
 that, and both for the same reason: **the check only ever finds what its
-pattern describes.** The tenant rule required a full `…outsystems.dev`
-hostname, so a tenant named in prose scanned clean. The reference checker only
-treats a quoted token as a path when it starts with one of five known
-directories, so a citation into a sixth was invisible to it by construction.
-Both gaps are closed — a rule for the bare tenant name, one for the
-maintainer's own name, and the internal-only source directories added to the
-non-shipped reference triggers — and there is now a test that watches each new
-guard actually fail on a planted violation, rather than trusting that a clean
-run means a working check.
+pattern describes.** The tenant rule required a full hostname, so a tenant
+named in prose scanned clean. The reference checker only treats a quoted token
+as a path when it starts with one of five known directories, so a citation into
+a sixth was invisible to it by construction. Both gaps are closed — a rule for
+the bare tenant name, one for the maintainer's own name, and the internal-only
+source directories added to the non-shipped reference triggers — and there is
+now a test that watches each new guard actually fail on a planted violation,
+rather than trusting that a clean run means a working check.
+
+**The maintainer's catalog-refresh tooling no longer ships.** Six scripts
+regenerated the bundled reference catalogs from a documentation mirror that
+exists only on the maintainer's machine, so they could not run here and
+nothing in the pack referenced them. Two generated catalogs still carry inert
+`doc_path` provenance naming that mirror; no code reads those fields, they
+name public OutSystems documentation, and they are now recorded as a reviewed
+exception rather than left invisible — the gates could not see them at all.
+Regenerating them with source-neutral provenance is a follow-up.
 
 ## 2026-08-05 — outsystems-plan-to-mentor: mechanical coverage gate
 
