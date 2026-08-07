@@ -114,8 +114,8 @@ Before any live UI or Data Grid Mentor Studio prompt, confirm:
 
 - The app type and framework dependency, such as Web app + OutSystems UI.
 - The required app dependency, such as OutSystems Data Grid for ODC, is already added through Manage Dependencies when the prompt uses dependency-backed widgets.
-- The target screen name and flow name are verified through `context_screens` or Paulo's explicit input.
-- The entity name and producer action names are verified through `context_entities`, `context_actions`, or Paulo's schema.
+- The target screen name and flow name are verified through `context_screens` or the user's explicit input.
+- The entity name and producer action names are verified through `context_entities`, `context_actions`, or the user's schema.
 - The attribute and column names are verified before binding widgets, table columns, or Data Grid columns.
 
 Do not emit a live Data Grid consumer prompt until the required app dependency, target screen name, entity name, and attribute and column names are confirmed. If any item is unknown, stop with `Unknowns And Fallback Behavior`, label the live-specific claim `Unverified gap`, and ask for the missing dependency or schema evidence.
@@ -250,7 +250,7 @@ Always create producers before consumers:
 4. Reusable UI producers: Web Blocks
 5. Screen consumers: Screens that bind to the producers
 6. Event wiring consumers: Button handlers, OnChanged, OnClick, Refresh Data, navigation, feedback messages
-7. Review notes: what Paulo must verify in ODC Studio after Mentor applies changes
+7. Review notes: what the user must verify in ODC Studio after Mentor applies changes
 
 If a screen prompt references a producer that has not been created or confirmed as existing, move that producer into an earlier prompt block.
 
@@ -282,7 +282,7 @@ For saved prompt packs, run `scripts/validate_screen_navigation_order.py <prompt
 
 - Mentor Studio works on web apps.
 - Mentor Studio does not detect the current screen, selected widget, or active element. Name every target Screen, Block, Action, Entity, Aggregate, and dependency explicitly.
-- Mentor Studio cannot add public dependencies itself. Tell Paulo to add dependencies manually through Manage Dependencies before asking Mentor to use public elements.
+- Mentor Studio cannot add public dependencies itself. Tell the user to add dependencies manually through Manage Dependencies before asking Mentor to use public elements.
 - Screen generation and editing is less reliable than logic or data generation. Keep UI prompts atomic and review the result in ODC Studio.
 - Do not include real personal data in prompts.
 
@@ -363,7 +363,7 @@ When this fallback materially affects the answer:
 1. Say `OutSystems-public implementation evidence` near the affected fact.
 2. State that the fact is not current ODC product-contract authority unless current ODC docs, Forge routing/version evidence, or tenant observations confirm the exposed behavior.
 3. Include a review note to verify the property, event, placeholder, or dependency in ODC Studio.
-4. Prefer the commit-pinned `source_url` from the generated reference when Paulo asks for provenance.
+4. Prefer the commit-pinned `source_url` from the generated reference when the user asks for provenance.
 
 ### Approved Pattern Review Note Matrix
 
@@ -469,7 +469,7 @@ Outputs that rely materially on real app evidence must use `Course/example-backe
 
 ## Real-App Pseudocode Comparison Mode
 
-Use this mode when Paulo asks whether a generated UI prompt matches a real ODC app or asks to compare skill output against observed app evidence.
+Use this mode when the user asks whether a generated UI prompt matches a real ODC app or asks to compare skill output against observed app evidence.
 
 This mode is not a paste-ready Mentor Studio prompt. It is a review and benchmarking output.
 

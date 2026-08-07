@@ -414,7 +414,7 @@ generation.
 
 ## Post-Mentor Preservation Decision Gate
 
-After an approved Mentor execution succeeds, stop and ask which preservation route Paulo wants:
+After an approved Mentor execution succeeds, stop and ask which preservation route the user wants:
 
 - publish to a specific environment, requiring explicit current approval before `publish_start` unless the current request already clearly approved implementation plus publish to that exact environment
 - stop with the newest Mentor session id/token details and session-expiry risk recorded

@@ -5,7 +5,7 @@ This manifest is the audit ledger for the ODC pseudocode knowledge base. It prov
 ## Portability boundary
 
 This file is an audit ledger, not portable runtime guidance. Some historical
-provenance rows intentionally preserve Paulo-specific archived evidence paths
+provenance rows intentionally preserve maintainer-specific archived evidence paths
 from the workspace where the manifest was generated. Colleagues should use the
 routed handbooks, source map, current official docs, and available retrieval
 tools for runtime grounding instead of treating those archived local paths as
@@ -99,7 +99,7 @@ This targeted delta adds
 Mentor Web, Mentor Studio, known limitations, capability, route, and constraint
 claims. Keep product-contract wording grounded in current OutSystems
 documentation, approved internal docs, current tool observations, or explicit
-Paulo-supplied evidence. Do not promote generated, dry-run, fixture-only, or
+user-supplied evidence. Do not promote generated, dry-run, fixture-only, or
 screenshot-only evidence into product-contract authority by itself.
 
 Runtime files should route to the Mentor Capability And Constraint Matrix

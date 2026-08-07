@@ -80,7 +80,7 @@ Shape queries accordingly:
   synonym before calling it a gap, and say which queries were run when you do.
 
 Do not run live tenant mutation tools from these bundles. Tenant evidence is
-read-only unless Paulo gives exact current approval for a separate live action.
+read-only unless the user gives exact current approval for a separate live action.
 
 ## Authority Classes
 
@@ -341,7 +341,7 @@ roles, or tenant-specific facts, stop rather than speculate.
 ## Degraded retrieval behavior
 
 - Exact search intent: decide whether a retrieval gap blocks output, permits a
-  conservative review-only answer, or requires Paulo to approve degraded quality.
+  conservative review-only answer, or requires the user to approve degraded quality.
 - Preferred tool order: check the selected bundle's preferred tools first, then
   run available health/filter/discovery checks for the missing source. Do not
   mix direct docs or local mirrors into the normal provider-available order.

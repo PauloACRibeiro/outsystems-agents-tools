@@ -107,7 +107,7 @@ Studio`, which will "Open an empty app in the visual editor"; the Hello World
 tutorial repeats the same path and says ODC Studio opens with an empty app.
 Source:
 https://success.outsystems.com/documentation/outsystems_developer_cloud/getting_started/.
-Paulo's 2026-07-02 Documentation Assistant screenshot adds the practical
+A 2026-07-02 Documentation Assistant screenshot adds the practical
 default-template clarification: there is no single preselected default
 application template for this manual Web app path. Treat that as user-provided
 evidence unless a current official page is fetched that says otherwise.
@@ -171,7 +171,7 @@ Classify the shell before first-scaffold prompt generation:
   product-template assets are absent.
 - `template-incomplete`: the shell has some user-facing structure, but the
   expected product-template assets are missing, incomplete, or unverified.
-- `intentionally empty shell`: Paulo explicitly accepts that the app is not a
+- `intentionally empty shell`: the user explicitly accepts that the app is not a
   normal Studio-created template shell and wants a minimal scaffold anyway.
 
 The OMI1/OMI2 campaign evidence is the regression example: `RequestPulse`,
@@ -190,7 +190,7 @@ default-entry proof. If the expected target is product-template-backed and the
 only available target is a bare MCP-created shell or template-incomplete shell,
 stop before broad scaffold generation and either:
 
-- ask Paulo to create the shell in ODC Studio and provide the verified app key;
+- ask the user to create the shell in ODC Studio and provide the verified app key;
 - ask for explicit acceptance of the intentionally empty shell risk; or
 - ask for a separate approved shell-normalization step.
 
@@ -282,7 +282,7 @@ shells, first data-bound screen, integration stubs, then review fixes.
 ## Iterative App Identity And Delta Discipline
 
 For iterative shell-first reruns, reuse the same canonical app key; do not call `app_create` again
-for the same logical app unless Paulo explicitly asks to
+for the same logical app unless the user explicitly asks to
 create a separate app.
 
 Before writing a follow-up prompt, classify source sections as:
@@ -305,7 +305,7 @@ buried inside screen-level prompts.
 ## Post-Mentor Preservation Decision Gate
 
 After an approved Mentor execution succeeds, stop and ask which preservation
-route Paulo wants:
+route the user wants:
 
 - publish to a specific environment, requiring explicit current approval before
   `publish_start` unless the current request already clearly approved

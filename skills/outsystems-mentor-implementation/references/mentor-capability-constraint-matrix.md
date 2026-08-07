@@ -9,13 +9,13 @@ Mentor can create, refine, or modify.
 - Current OutSystems documentation authority controls product-contract claims.
 - Product-contract facts must come from current OutSystems public docs,
   approved internal docs, current tool observations, or explicit
-  Paulo-supplied evidence.
+  user-supplied evidence.
 - Generated references, dry-runs, fixtures, and screenshots are not
   product-contract authority by themselves.
 - Do not promote generated, dry-run, fixture-only, or screenshot-only evidence
   into product-contract wording unless it is separately grounded by current
   official documentation, approved internal documentation, current tool
-  observation, or explicit Paulo-supplied evidence.
+  observation, or explicit user-supplied evidence.
 - Treat complex full-scope input as a requirement document or source plan first,
   then decompose it into focused requests.
 
@@ -50,7 +50,7 @@ Use Mentor Web when the source asks for:
 
 Do not use OMI to imply that Mentor Studio creates no-shell apps. OMI may
 prepare shell-first or Studio-native handoff content only after a target shell
-exists or after Paulo explicitly approves the exact shell-creation action.
+exists or after the user explicitly approves the exact shell-creation action.
 
 ## Mentor Studio
 
@@ -103,7 +103,7 @@ Use these labels for capability and constraint claims:
 | --- | --- |
 | Current official | Grounded in current OutSystems public documentation or an approved current official mirror. |
 | Tenant-observed | Observed through a current read-only tenant/tool check; use as observation evidence, not universal product contract. |
-| Unverified gap | Not confirmed by current official docs, approved internal docs, current tool observations, or explicit Paulo-supplied evidence. |
+| Unverified gap | Not confirmed by current official docs, approved internal docs, current tool observations, or explicit user-supplied evidence. |
 
 When a claim depends only on generated references, dry-runs, fixtures, or
 screenshots, use `Unverified gap` until stronger evidence is available.
@@ -133,7 +133,7 @@ Stop and ask before producing confident OMI output when:
 ## Refresh Procedure
 
 Refresh this matrix when any current OutSystems Mentor documentation changes or
-when Paulo supplies newer explicit evidence.
+when the user supplies newer explicit evidence.
 
 1. Re-check the current OutSystems public or approved internal docs listed in
    `Authority Rules`.

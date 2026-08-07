@@ -41,6 +41,16 @@ and `outsystems-runtime-ui-audit` (score the published app from its live URL).
   Both agents are covered — Claude Code reads `~/.claude/skills/`, Codex reads
   `~/.agents/skills/`, and neither needs a config file edited.
 
+**The bundles now address you, not a named individual.** 81 lines across 24
+files told the reading agent to "ask Paulo before proceeding" or "Tell Paulo
+when a manual dependency update is required" — wording that made sense inside
+one person's workspace and reads as an instruction to consult a stranger in a
+pack you installed. Those are now "the user", matching the voice the same
+bundles already used elsewhere. Where the distinction is genuinely between the
+maintainer and you, it is kept and said plainly: the knowledge-provider
+contract still explains that the maintainer binds an internal index while a
+colleague binds the public one.
+
 **One file is deliberately withheld.** `outsystems-ui-design` normally carries a
 generated inventory of the built-in platform widgets' runtime properties. It is
 derived from an OutSystems-internal repository that publishes no licence, so it

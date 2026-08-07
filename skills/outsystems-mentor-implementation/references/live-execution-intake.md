@@ -116,7 +116,7 @@ Minimum live-campaign tool set for broad OMI live execution:
 If a row needs only a narrower read-only subset, document the subset and why the
 missing tools are outside that row's approved scope. If the approved row needs a
 missing tool, do not start the live campaign row; mark it
-`blocked-tool-unavailable` or ask Paulo for a different approved execution
+`blocked-tool-unavailable` or ask the user for a different approved execution
 route.
 
 When the runner is Codex CLI or Codex Desktop, acceptable preflight evidence can

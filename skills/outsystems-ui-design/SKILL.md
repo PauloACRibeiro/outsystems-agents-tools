@@ -27,7 +27,7 @@ deploy. Everything it produces is files on disk plus chat.
 - **No logic or data design** beyond naming data producers in the blueprint's
   `entities` and `screens` sections. Do not design server actions, aggregates,
   integrations, or business rules.
-  **Boundary contract (decided 2026-07-29, Paulo + Codex review AH-2026-07-29-005):
+  **Boundary contract (decided 2026-07-29, maintainer + cross-agent review AH-2026-07-29-005):
   this guard governs what the skill DESIGNS and EMITS** — the conversation, the
   pattern tree, and `blueprint.json`. The bundled `references/` may state
   implementation facts about blocks (event payloads, binding requirements,

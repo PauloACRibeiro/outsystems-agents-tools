@@ -6,7 +6,7 @@ pseudocode mode, deterministic Mentor plans, or a demo that compares ambiguous
 PRD input with a Mentor-ready structured plan.
 
 This is a proposed capability. It is not a current Mentor Web or Mentor Studio API
-unless Paulo provides a real API contract in the active task. Current
+unless the user provides a real API contract in the active task. Current
 official Mentor Web behavior remains prompt or requirement-document input,
 blueprint review, generation, and refinement. Phrase outputs accordingly.
 Do not imply Mentor has a private structured-intent API unless the active task

@@ -2,7 +2,7 @@
 
 Owned by outsystems-mentor-implementation; SKILL.md routes here for app-snapshot.yaml / studio-handoff.md intake.
 
-Use this mode when Paulo asks to continue from generated app review, use an
+Use this mode when the user asks to continue from generated app review, use an
 `app-snapshot.yaml`, use a `studio-handoff.md`, create surgical fixes from a
 generated app snapshot, or turn a Mentor Web post-generation review into Mentor
 Studio / ODC Studio prompts.
@@ -17,11 +17,11 @@ bridge reference:
 Before producing Studio-native output:
 
 1. Read `app-snapshot.yaml`. If `app-snapshot.yaml` is missing, block and ask
-   Paulo for the snapshot path before continuing.
+   the user for the snapshot path before continuing.
 2. Read `studio-handoff.md` when present.
 3. Check `decision.recommendation`.
 4. Emit Studio-native prompts only when `decision.recommendation` is
-   `continue_in_mentor_studio`, or when Paulo explicitly overrides the snapshot
+   `continue_in_mentor_studio`, or when the user explicitly overrides the snapshot
    decision.
 5. If the recommendation is `regenerate_in_mentor_web`, route the work back to
    `mentor-app-generator` for regeneration prompts instead of producing Studio

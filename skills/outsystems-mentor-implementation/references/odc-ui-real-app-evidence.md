@@ -12,12 +12,12 @@ Observed app evidence can show how a working app combines producers, dependencie
 - Do not claim a curated recipe exists because one app uses a pattern.
 - Do not infer exact widget trees, widget ids, local variables, bindings, or events unless the source explicitly exposes them.
 - Treat inferred UI structure as inferred and include a review note.
-- If exact screen widget trees are needed, ask Paulo before using Mentor or another OML-deep inspection path.
+- If exact screen widget trees are needed, ask the user before using Mentor or another OML-deep inspection path.
 - Use observed app evidence to improve prompt order, naming realism, dependency inventory, pseudocode comparison, and recipe-candidate triage.
 
 ## Read-Only MCP Evidence Workflow
 
-Use this workflow when Paulo asks to use a real ODC app as UI prompt evidence.
+Use this workflow when the user asks to use a real ODC app as UI prompt evidence.
 
 If the target app identity comes from tenant inventory or cached tenant evidence, open `tenant-context-guardrails.md` first and record a Tenant Context Packet before app-specific evidence capture. Use the packet for target identity, freshness, dependency inventory, and unknowns; do not treat it as proof of exact widget trees or Studio internals.
 
@@ -32,7 +32,7 @@ If the target app identity comes from tenant inventory or cached tenant evidence
 9. Use `context_search` only for narrow follow-up questions against the same app.
 10. Summarize what was observed, what was inferred, and what remains missing.
 
-Do not use Mentor, publish, deploy, or external library tools for evidence gathering unless Paulo explicitly approves a separate tenant-changing or deeper-inspection action.
+Do not use Mentor, publish, deploy, or external library tools for evidence gathering unless the user explicitly approves a separate tenant-changing or deeper-inspection action.
 
 Always record:
 
@@ -191,7 +191,7 @@ If the candidate needs exact screen layout, exact bindings, exact local variable
 
 Current MCP evidence is enough for producer-first pseudocode comparison and recipe-candidate triage.
 
-Ask Paulo for screenshots, Studio inspection, export, or approval for deeper read-only inspection when the output requires:
+Ask the user for screenshots, Studio inspection, export, or approval for deeper read-only inspection when the output requires:
 
 - exact widget tree
 - exact widget names or ids

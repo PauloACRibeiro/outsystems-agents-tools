@@ -111,7 +111,7 @@ Required rule: merge only after coverage audit passes.
 
 ## Stop Conditions
 
-Stop and ask Paulo before output generation when:
+Stop and ask the user before output generation when:
 
 - a source requirement cannot be assigned to a block without losing meaning;
 - a block cannot be made paste-safe without assuming an unverified target;

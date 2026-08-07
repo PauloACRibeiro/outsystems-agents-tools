@@ -2,11 +2,11 @@
 
 Use this guide before generating ODC Studio or Mentor Studio output that includes SQL, data writes, JSON parsing, status or enum values, dependency-sensitive paste blocks, or any pattern known to be fragile in Mentor Studio.
 
-This guide captures real corrections from the Recording Music Elasticsearch Bulk PoC and turns them into reusable generation rules. Apply these rules to future output. Do not silently rewrite historical plans unless Paulo explicitly asks for plan reconciliation.
+This guide captures real corrections from the Recording Music Elasticsearch Bulk PoC and turns them into reusable generation rules. Apply these rules to future output. Do not silently rewrite historical plans unless the user explicitly asks for plan reconciliation.
 
 ## Evidence Classes
 
-- **Real PoC correction**: learned from Paulo's successful Mentor Studio correction during the Recording Music Elasticsearch Bulk PoC.
+- **Real PoC correction**: learned from a successful Mentor Studio correction during the Recording Music Elasticsearch Bulk PoC.
 - **Official SQL syntax**: supported by OutSystems SQL documentation or current `OutSystems/docs-odc` source.
 - **Existing skill rule**: already present in `outsystems-mentor-implementation` and consolidated here.
 - **Ask-required gap**: depends on the active ODC model or naming, so the skill must ask or emit an explicit substitution note.
@@ -903,11 +903,11 @@ Common screens in ODC system-generated apps that are NOT in MainFlow:
 
 **When to ask**
 
-When `context_screens` is unavailable or returns no match, ask Paulo for the exact flow name before writing the prompt.
+When `context_screens` is unavailable or returns no match, ask the user for the exact flow name before writing the prompt.
 
-If the lookup returns `context_screens=[]` or zero matching rows, the screen name is unverifiable. Use `Evidence Status: Unverified gap`, add `Unknowns And Fallback Behavior`, and ask Paulo whether to proceed with a new-screen assumption before any prompt continues.
+If the lookup returns `context_screens=[]` or zero matching rows, the screen name is unverifiable. Use `Evidence Status: Unverified gap`, add `Unknowns And Fallback Behavior`, and ask the user whether to proceed with a new-screen assumption before any prompt continues.
 
-Do not emit a confident existing-screen Mentor Studio prompt from a zero-row lookup. If Paulo confirms a new-screen path, include a substitution note such as:
+Do not emit a confident existing-screen Mentor Studio prompt from a zero-row lookup. If the user confirms a new-screen path, include a substitution note such as:
 
 ```text
 Screen lookup returned context_screens=[].
@@ -1286,7 +1286,7 @@ The mandatory audit category "Interactive widgets" must flag any Button with no 
 
 **When to ask**
 
-When no appropriate existing action exists and the correct action name is unclear, ask Paulo before inventing a name.
+When no appropriate existing action exists and the correct action name is unclear, ask the user before inventing a name.
 
 **Evidence**
 
@@ -1651,7 +1651,7 @@ files directly.
 **When to ask**
 
 If OS-APPS-40028 appears after a prompt involving RadioGroup or ButtonGroup,
-inspect publish logs and generated widget children before retrying. Ask Paulo
+inspect publish logs and generated widget children before retrying. Ask the user
 before guessing if the failing construct is unclear.
 
 ---
@@ -1715,7 +1715,7 @@ When Mentor creates a SA with a name that conflicts with an existing entity acti
 
 **When to ask**
 
-Before naming any Server Action, check whether the entity has an action with the same name. This commonly happens with entity actions like `CreateX`, `UpdateX`, `GetX`, `DeleteX`. If the SA must be named the same, ask Paulo before proceeding.
+Before naming any Server Action, check whether the entity has an action with the same name. This commonly happens with entity actions like `CreateX`, `UpdateX`, `GetX`, `DeleteX`. If the SA must be named the same, ask the user before proceeding.
 
 **Evidence**
 
@@ -1830,7 +1830,7 @@ mentor_start(app_key=..., prompt="[corrected prompt without offending element]")
 
 **When to ask**
 
-When the root cause of OS-APPS-40028 is not clear: inspect `publish_logs` for the failed publication, examine the Mentor session summary for clues, then ask Paulo before guessing.
+When the root cause of OS-APPS-40028 is not clear: inspect `publish_logs` for the failed publication, examine the Mentor session summary for clues, then ask the user before guessing.
 
 **Evidence**
 
@@ -1922,7 +1922,7 @@ Mentor resolves TrueChange errors autonomously. When a SA references attributes 
 
 **When to ask**
 
-When the Mentor session summary mentions entity changes not in the original prompt, confirm with Paulo whether to accept or revert.
+When the Mentor session summary mentions entity changes not in the original prompt, confirm with the user whether to accept or revert.
 
 **Evidence**
 

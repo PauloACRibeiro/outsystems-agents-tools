@@ -7,7 +7,7 @@ approved public repositories (`docs-odc`, `docs-howtos`, `docs-product`, and
 `outsystems-ui`), builds the local index, and prints registration commands. It
 does not read or change Claude Code or Codex configuration.
 
-The public provider is intentionally narrower than Paulo's personal provider.
+The public provider is intentionally narrower than the maintainer's personal provider.
 OMI uses its `outsystems-public-knowledge` alias for public search and document
 fetching only. Internal, private, course, archive, and workshop material is not
 in this component.

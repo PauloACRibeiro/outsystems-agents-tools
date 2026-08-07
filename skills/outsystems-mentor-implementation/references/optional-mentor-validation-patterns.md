@@ -1,6 +1,6 @@
 # Optional Mentor Validation Patterns
 
-Use this reference when Paulo asks for optional post-OMI validation, an
+Use this reference when the user asks for optional post-OMI validation, an
 app-level audit after approved Mentor execution, a post-Mentor report, a
 publish handoff without publish approval, or an AI model migration review
 after OMI output. It owns optional post-OMI validation checklists, the
@@ -73,7 +73,7 @@ Post-Mentor Preservation Decision Gate.
   affected actions and agents, expected behavior differences, prompt
   adjustments, and a testing checklist before publishing. Keep this as review
   guidance; do not execute the migration, call Mentor, or mutate a tenant
-  unless Paulo gives explicit current approval for the target and action.
+  unless the user gives explicit current approval for the target and action.
 - Authenticated runtime smoke check: read-only browser inspection of approved
   routes with approved credentials/session context, secret-safe handling, role
   expectations, settled URL, visible state, and console/runtime summary.
@@ -107,7 +107,7 @@ evidence.
 
 ## Deployment Preview Gate
 
-Use this when Paulo asks for a deploy preview, safe-to-promote check,
+Use this when the user asks for a deploy preview, safe-to-promote check,
 promotion readiness, or publish/deploy-adjacent readiness after OMI output or
 after approved Mentor execution. For prompt-only OMI output or unpublished
 Mentor changes, use the preview as current-state baseline only; it must not be
@@ -257,7 +257,7 @@ Stop or warning conditions:
   impact-analysis review.
 - These thresholds are an OMI-owned heuristic, not final ODC approval.
 - If the target environment revision is ahead of the source revision, mark the
-  result `concerning`, stop confident deployment guidance, and ask Paulo to
+  result `concerning`, stop confident deployment guidance, and ask the user to
   confirm the intended baseline.
 - If the preview is a `fresh deploy`, call out that this is a first deployment,
   not a normal update, and require stronger route, dependency, role, and smoke

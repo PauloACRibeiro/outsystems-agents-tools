@@ -166,11 +166,11 @@ Producer-first implication:
 ```text
 1. Create or confirm the producer Library or Mobile Library.
 2. Confirm the public UI or logic elements exposed by that producer.
-3. Tell Paulo to update the consumer dependency in ODC Studio when needed.
+3. Tell the user to update the consumer dependency in ODC Studio when needed.
 4. Generate consumer app guidance only after the producer and dependency are available.
 ```
 
-Mentor Studio cannot add public dependencies by itself. Tell Paulo when a manual dependency update is required.
+Mentor Studio cannot add public dependencies by itself. Tell the user when a manual dependency update is required.
 
 ## CSP And Security Review Notes
 

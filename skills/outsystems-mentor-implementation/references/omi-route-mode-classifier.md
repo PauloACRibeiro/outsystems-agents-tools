@@ -4,7 +4,7 @@ Use this source owner before choosing an OMI output form. The classifier keeps
 route selection deterministic, makes stop conditions explicit, and prevents a
 prompt-only request from drifting into live tenant work.
 
-Every mode is read-only unless Paulo gives explicit current approval for a
+Every mode is read-only unless the user gives explicit current approval for a
 specific tenant target and action. This reference authorizes no tenant mutation:
 no `app_create`, no `mentor_start`, no `publish_start`, no deploy, no rollback,
 no cleanup, and no live write action.
@@ -96,7 +96,7 @@ For no-shell new-app asks such as "create a new app", "generate an app from requ
 | input signals | The user names an existing app, screen, reusable asset, tenant evidence packet, cached structure artifact, app overview, dependency inventory, or asks where a change belongs in an existing app. |
 | required preflights | Open `source-map.md`; classify with this Route Mode Classifier; use tenant-context guardrails as read-only evidence; run structured intent normalization for existing-app work; verify target identity, named element confidence, and dependency inventory before app-targeted prompt output. |
 | allowed outputs | Read-only target grounding, dependency inventory, named-element confidence notes, change-mode selection, and bounded Studio-native prompts only when the target and required names are confirmed or explicitly marked as assumptions. |
-| required evidence labels | Use the main OMI evidence labels for product and implementation claims; describe tenant observations or Paulo-provided target facts separately, and use `Unverified gap` for exact Studio internals that tenant summaries do not expose. |
+| required evidence labels | Use the main OMI evidence labels for product and implementation claims; describe tenant observations or user-provided target facts separately, and use `Unverified gap` for exact Studio internals that tenant summaries do not expose. |
 | stop and ask conditions | Stop and ask when app identity or freshness is unclear, a named existing screen/action/variable cannot be verified, scope expands across many apps, or a shared producer impact strategy is missing. |
 | fallback behavior | Fall back to review-only grounding, a Tenant Context Packet request, or a new-screen/new-element assumption question; do not emit confident existing-app prompts from weak evidence. |
 | disallowed tenant actions | no tenant mutation: tenant context is read-only and does not authorize `mentor_start`, app creation, publish, deploy, rollback, cleanup, or any live write action. |

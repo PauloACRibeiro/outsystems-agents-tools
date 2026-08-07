@@ -108,7 +108,7 @@ without credentials. If corrective access is needed, treat it as a separate
 corrective access Mentor edit with separate exact approval.
 
 Do not quietly set a real application screen to accessible to Everyone. For a
-dedicated test fixture, it can be acceptable when Paulo explicitly approves it,
+dedicated test fixture, it can be acceptable when the user explicitly approves it,
 the page has no sensitive data, and any server calls are validated server-side.
 For non-fixture apps, prefer Authenticated Users or a browser session that can
 authenticate without exposing secrets.
@@ -119,7 +119,7 @@ If visual inspection returns `This application does not contain a default
 entry`, classify the target before accepting the result.
 
 - Empty app path: accept this only when read-only context evidence proves no
-  owned screens or actions exist and Paulo accepts the empty-app limitation.
+  owned screens or actions exist and the user accepts the empty-app limitation.
 - non-empty app with no default screen: treat this as a no-default-entry repair
   case, not as an accepted empty-app risk.
 - Documentation grounding: OutSystems ODC UI flows docs state that the Default
@@ -143,7 +143,7 @@ entry`, classify the target before accepting the result.
   both actions.
 - Prefer an existing low-risk `MainFlow` screen such as `Home` only when
   read-only context proves it exists. If no obvious MainFlow user screen exists,
-  ask Paulo to choose or create the screen instead of inventing one.
+  ask the user to choose or create the screen instead of inventing one.
 - After a terminal default-screen repair, publish only with exact current
   approval, then publish and re-inspect the approved runtime URL.
 - Do not change access, roles/security, data model, dependencies,
@@ -153,7 +153,7 @@ entry`, classify the target before accepting the result.
 ## Minimal MainFlow Home Default-Entry Bootstrap
 
 Use the minimal MainFlow > Home default-entry bootstrap only when a live
-fixture or intentionally empty shell needs runtime-entry proof and Paulo has
+fixture or intentionally empty shell needs runtime-entry proof and the user has
 approved a separate scaffold/create-screen step. This is narrower than
 a product scaffold: it creates the smallest user-facing route needed to prove
 that the app can render a default entry.
@@ -166,7 +166,7 @@ Before preparing the prompt, verify:
 - shell classification and whether the app is a fixture, intentionally empty
   shell, ODC manual empty shell, bare MCP-created shell, or template-incomplete
   shell
-- no suitable `MainFlow` user screen already exists, or Paulo explicitly chose
+- no suitable `MainFlow` user screen already exists, or the user explicitly chose
   to create/replace the named empty fixture screen
 - approved baseline text
 - whether publish and browser reinspection are approved as part of the same
@@ -239,7 +239,7 @@ wording, say do not print or store token values. Artifact evidence should name
 operation IDs, app keys, environment keys, revision/build/deployment, and
 sanitized statuses only.
 
-If direct Codex OutSystems tenant tools are unavailable but Paulo approves a
+If direct Codex OutSystems tenant tools are unavailable but the user approves a
 bounded execution route through Claude, use the Claude authenticated MCP route
 only for the named operation set, such as `mentor_start` and `mentor_get_run`
 for an in-memory edit. Do not touch Claude-private config, plugin cache,
@@ -285,7 +285,7 @@ Stop or warn:
 - `noop`: if target already matches source, record that no promotion handoff is
   needed; do not describe it as safe-to-promote for a pending unpublished change.
 - `target-ahead`: if the target environment revision is ahead of source, stop
-  and ask Paulo to confirm the intended baseline.
+  and ask the user to confirm the intended baseline.
 - `fresh deploy`: warn that this is first deployment to the target environment.
 - `1 <= revision gap <= 5`: record low risk when Portal impact analysis is clear.
 - `6 <= revision gap <= 50`: record medium risk and require broader smoke-test

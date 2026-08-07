@@ -290,7 +290,7 @@ client-specific integration wording, or automatic tenant mutation.
 
 ## Full implementation plan workflow for colleagues
 
-For colleague use, do not depend on Paulo's personal planning shortcuts. Use the
+For colleague use, do not depend on the maintainer's personal planning shortcuts. Use the
 portable capability instead:
 
 1. Write a saved implementation plan with the Superpowers `writing-plans` skill
@@ -335,7 +335,7 @@ and adjusts what it is willing to claim; nothing to configure.
   UI pattern APIs. Employee-only, and the MCP itself sits behind the OutSystems
   VPN.
 - **`provider: public-grounded`** — a public knowledge-provider role is callable
-  (see `references/knowledge-provider-contract.md`): Paulo may bind
+  (see `references/knowledge-provider-contract.md`): the maintainer may bind
   `workspace-knowledge-cc`; a colleague may bind `outsystems-public-knowledge`.
   Public OutSystems documentation only, no VPN, no employee account. The skill
   still produces pseudocode and Mentor Studio prompts, under a narrower and
@@ -375,7 +375,7 @@ Current sharing position:
 ## Porting the retrieval stack to another machine
 
 For public OutSystems grounding, use the available public knowledge-provider
-role. Paulo may bind it to `workspace-knowledge-cc`; a colleague may bind it to
+role. The maintainer may bind it to `workspace-knowledge-cc`; a colleague may bind it to
 `outsystems-public-knowledge`. Both expose the same public retrieval role.
 Provider availability determines the mode, not the machine owner or alias.
 

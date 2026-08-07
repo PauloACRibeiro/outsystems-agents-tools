@@ -103,7 +103,7 @@ Manual setup required before this prompt:
 - Add dependency on [ProducerName] through Manage Dependencies.
 ```
 
-Mentor Studio cannot add public dependencies by itself. Tell Paulo when a manual dependency update is required.
+Mentor Studio cannot add public dependencies by itself. Tell the user when a manual dependency update is required.
 
 ## Selection Checklist
 

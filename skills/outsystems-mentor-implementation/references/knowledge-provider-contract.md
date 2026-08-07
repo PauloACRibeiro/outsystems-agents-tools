@@ -2,7 +2,7 @@
 
 `outsystems-mentor-implementation` (OMI) depends on a **knowledge-provider
 role**, not on a named MCP server. For public OutSystems grounding, use the
-available public knowledge-provider role. Paulo may bind it to
+available public knowledge-provider role. The maintainer may bind it to
 `workspace-knowledge-cc`; a colleague may bind it to
 `outsystems-public-knowledge`. Both expose the same public retrieval role.
 Provider availability determines the mode, not the machine owner or alias.
@@ -98,7 +98,7 @@ Fetch the full content of a document previously returned by
 
 ## Binding Table
 
-| Role | Paulo binding — `workspace-knowledge-cc` | Colleague binding — `outsystems-public-knowledge` |
+| Role | Maintainer binding — `workspace-knowledge-cc` | Colleague binding — `outsystems-public-knowledge` |
 |---|---|---|
 | `grounding_search(query, scope="public")` | `search_outsystems_public` | `search_outsystems_public` (same tool name, served over the cloned public repos) |
 | `fetch(doc_id)` | `fetch_doc` | `fetch_doc` |

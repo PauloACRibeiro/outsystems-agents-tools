@@ -127,7 +127,7 @@ Tenant Context Packet
 
 Before emitting a confident Mentor Studio prompt for an existing app or app
 shell, verify the target app name, canonical app key, environment, and evidence
-freshness. If multiple apps match, ask Paulo to choose the exact app. If the
+freshness. If multiple apps match, ask the user to choose the exact app. If the
 evidence is stale, missing, or ambiguous, keep the prompt blocked and use
 `Unknowns And Fallback Behavior`.
 
@@ -180,7 +180,7 @@ confident Mentor Studio prompt.
 For tenant-wide requests, produce tenant-only inventory first. In short, do not
 auto-chain tenant -> every app -> Mentor. If the user asks for every app, all
 apps, deep dives for the whole tenant, or implementation across many apps, ask
-Paulo to select the exact apps or confirm the cost and scope before any per-app
+the user to select the exact apps or confirm the cost and scope before any per-app
 deep dive or Mentor prompt work.
 
 Use `perAppDeepDiveNeeded: yes` only as a routing signal. It is not approval to
@@ -206,7 +206,7 @@ verified, use `Unknowns And Fallback Behavior`.
 
 ## Existing App Structure Evidence
 
-Use this optional intake when Paulo supplies or approves read-only app
+Use this optional intake when the user supplies or approves read-only app
 structure evidence before an app-targeted prompt. Examples include a reduced
 app overview artifact, app documentation artifact, app architecture summary
 artifact, architecture-style summary, or cached/live MCP context summary. Treat
@@ -422,7 +422,7 @@ event wiring.
 
 If any required existing element is `inferred` or `unverified`, do not emit a
 confident paste-ready instruction for that element. Add a substitution note or
-ask Paulo for current app-specific evidence.
+ask the user for current app-specific evidence.
 
 ## Optional Reverse Dependency Evidence
 
@@ -461,14 +461,14 @@ coverage, and unknown freshness in `Unknowns And Fallback Behavior` or
 
 Use reverse dependency evidence as a scope brake. If a shared producer has many
 consumers, stale references, failed coverage, or unknown freshness, do not emit
-a confident Mentor Studio prompt that changes producer behavior until Paulo
+a confident Mentor Studio prompt that changes producer behavior until the user
 chooses the compatibility strategy, target consumers, or bounded app scope.
 
 ## Shared Producer Compatibility Gate
 
 When optional reverse dependency evidence shows that a shared producer has many
 consumers, stale references, failed coverage, unknown freshness, or a material
-revision gap, require Paulo to choose a compatibility strategy before OMI emits
+revision gap, require the user to choose a compatibility strategy before OMI emits
 a confident Mentor Studio prompt that changes producer behavior.
 
 Allowed compatibility strategies:
@@ -486,7 +486,7 @@ If no compatibility strategy is selected, keep the producer change in `Unknowns
 And Fallback Behavior`. OMI may still produce prompt-only consumer-local work
 when the bounded app scope is clear.
 
-In short, do not perform a tenant-wide scan unless Paulo explicitly confirms
+In short, do not perform a tenant-wide scan unless the user explicitly confirms
 scope and cost after the actual candidate count is known. Reuse generic
 freshness, timeout, partial coverage, and large-payload discipline, but OMI
 does not require a sibling skill, does not require an HTML report, and does
@@ -570,7 +570,7 @@ role-protected unless the role mapping is explicitly observed or specified.
 
 For demo readiness and demo warmup, prewarm tenant inventory before the live
 demo when tenant context will be shown or used for target selection. In short,
-do not run a first-time tenant scan during a live demo unless Paulo accepts the
+do not run a first-time tenant scan during a live demo unless the user accepts the
 delay.
 
 The warmed packet may make target selection faster, but it does not expand
@@ -579,7 +579,7 @@ mutation.
 
 ## Optional Read-Only Smoke Test
 
-Use this only when Paulo explicitly asks to validate current tenant context
+Use this only when the user explicitly asks to validate current tenant context
 behavior. Keep it read-only and stop before any Mentor or tenant-changing
 operation.
 
