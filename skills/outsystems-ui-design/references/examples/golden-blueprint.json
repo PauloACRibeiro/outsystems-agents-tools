@@ -1,0 +1,213 @@
+{
+  "schema_version": "2",
+  "name": "WorkQueueDemo",
+  "description": "Demo dashboard blueprint emitted by outsystems-ui-design for validator testing.",
+  "primary_color": "#2563EB",
+  "target_context": {
+    "target_mode": "shell-first scaffold",
+    "readable_app_name": "Work Queue Demo",
+    "canonical_app_key": "unresolved",
+    "verified_shell_required": true,
+    "existing_assets": [],
+    "target_surfaces": [
+      "Screen"
+    ],
+    "review_notes": [
+      "target_context left unresolved by design; OMI resolves the app key."
+    ]
+  },
+  "evidence_boundary": {
+    "evidence_status": "Catalog-backed official",
+    "grounding_notes": [
+      "Pattern facts from the bundled outsystems-ui-design reference catalog."
+    ],
+    "review_notes": [
+      "No MCP enrichment in this fixture."
+    ]
+  },
+  "app_chrome": {
+    "layout_block": "LayoutSideMenu",
+    "app_title": "Work Queue Demo",
+    "menu": [
+      {
+        "label": "Overview",
+        "active": true
+      }
+    ],
+    "user_info": "UserInfo"
+  },
+  "blocks": [
+    {
+      "name": "MetricCard",
+      "description": "Compact KPI card with title, value, and delta.",
+      "inputs": [
+        "Title",
+        "Value",
+        "Delta"
+      ],
+      "extended_class": "metric-card"
+    }
+  ],
+  "design_system": {
+    "colors": {
+      "page_bg": "#F8FAFC",
+      "text_primary": "#0F172A"
+    },
+    "typography": [
+      {
+        "role": "page-title",
+        "size": "24px",
+        "weight": "600"
+      }
+    ],
+    "spacing": {
+      "base_unit": "8px"
+    },
+    "visual_rules": [
+      "Prefer OutSystems UI utilities before custom classes."
+    ]
+  },
+  "entities": [
+    {
+      "name": "WorkItem",
+      "type": "transaction",
+      "attributes": [
+        {
+          "name": "Id",
+          "data_type": "integerIdentifier",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "Title",
+          "data_type": "text",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "DueDate",
+          "data_type": "dateTime",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "Count",
+          "data_type": "integer",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "StatusId",
+          "data_type": "WorkItemStatus Identifier",
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "enum_values": [
+            "Draft",
+            "InProgress",
+            "Done"
+          ]
+        }
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "name": "Overview",
+      "type": "dashboard",
+      "description": "Operational overview of work items.",
+      "entities": [
+        "WorkItem"
+      ],
+      "assertions": {
+        "links": 0,
+        "buttons": 0,
+        "inputs": 0
+      },
+      "main_content": [
+        {
+          "id": "1",
+          "name": "KPI Summary",
+          "description": "Top-level KPI cards.",
+          "data_source": {
+            "entity": "WorkItem"
+          },
+          "content": [
+            {
+              "element": "MetricCard web block x3",
+              "data": "Aggregate counts",
+              "binds": {
+                "entity": "WorkItem",
+                "attribute": "Count"
+              }
+            }
+          ],
+          "outsystems_hints": {
+            "block": "Columns3"
+          }
+        },
+        {
+          "id": "2",
+          "type": "group",
+          "name": "Queue And Notes",
+          "columns": "ColumnsMediumRight",
+          "items": [
+            {
+              "id": "2a",
+              "column": 1,
+              "name": "Priority queue",
+              "data_source": {
+                "entity": "WorkItem"
+              },
+              "content": [
+                {
+                  "element": "ListRecords card row",
+                  "data": "Title, owner, due date",
+                  "binds": {
+                    "entity": "WorkItem",
+                    "attribute": "Title"
+                  }
+                }
+              ],
+              "outsystems_hints": {
+                "block": "Card"
+              }
+            },
+            {
+              "id": "2b",
+              "column": 2,
+              "name": "Review notes",
+              "content": [
+                "Static review notes panel."
+              ],
+              "outsystems_hints": {
+                "block": "Card"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "icon_mapping": [
+    {
+      "role": "navigation-overview",
+      "outsystems_icon": "house"
+    }
+  ],
+  "roles": [
+    {
+      "name": "Admin",
+      "description": "Full access."
+    }
+  ],
+  "acceptance_checklist": [
+    "Every region maps to a named OutSystems UI block.",
+    "Exactly one layout block.",
+    "No Container nodes in the skeleton.",
+    "Every repeated-content region names a data producer."
+  ]
+}

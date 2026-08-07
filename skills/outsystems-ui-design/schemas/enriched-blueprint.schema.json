@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OMI Visual-Source Enriched Blueprint (outsystems-ui-design projection)",
+  "x_omi_reference": {
+    "source": "skills/outsystems-mentor-implementation/references/odc-visual-source-enriched-blueprint.md",
+    "asset": "skills/outsystems-mentor-implementation/assets/visual-source-enriched-blueprint.json",
+    "harvested": "2026-07-13",
+    "note": "Mechanical projection of the OMI contract. OMI's reference doc is the semantic authority; on conflict, fix this schema, never OMI."
+  },
+  "type": "object",
+  "required": ["schema_version", "name", "description", "primary_color", "target_context", "evidence_boundary", "app_chrome", "blocks", "design_system", "entities", "screens", "icon_mapping", "roles", "acceptance_checklist"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["2"]},
+    "name": {"type": "string"},
+    "description": {"type": "string"},
+    "primary_color": {"type": "string"},
+    "target_context": {
+      "type": "object",
+      "required": ["target_mode", "readable_app_name", "canonical_app_key", "verified_shell_required", "existing_assets", "target_surfaces", "review_notes"],
+      "properties": {
+        "target_mode": {"type": "string", "enum": ["existing-app", "verified blank shell", "shell-first scaffold"]},
+        "readable_app_name": {"type": "string"},
+        "canonical_app_key": {"type": "string"},
+        "verified_shell_required": {"type": "boolean"},
+        "existing_assets": {"type": "array", "items": {"type": "string"}},
+        "target_surfaces": {"type": "array", "items": {"type": "string"}},
+        "review_notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "evidence_boundary": {
+      "type": "object",
+      "required": ["evidence_status", "grounding_notes", "review_notes"],
+      "properties": {
+        "evidence_status": {"type": "string"},
+        "grounding_notes": {"type": "array", "items": {"type": "string"}},
+        "review_notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "app_chrome": {
+      "type": "object",
+      "required": ["layout_block"],
+      "properties": {
+        "layout_block": {"type": "string"}
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "items": {"type": "object", "required": ["name", "description"]}
+    },
+    "design_system": {
+      "type": "object",
+      "required": ["colors", "typography", "visual_rules"]
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "attributes"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "exists": {"type": "boolean", "description": "Optional existing-asset binding: this entity is already in the target app, so its attributes are the shape to VERIFY, not to create. Valid only under target_mode 'existing-app'. Absent means create (the default)."},
+          "records": {"type": "array", "items": {"type": "string"}},
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "data_type", "is_primary_key", "is_foreign_key", "enum_values"],
+              "properties": {
+                "name": {"type": "string"},
+                "data_type": {"type": "string"},
+                "is_primary_key": {"type": "boolean"},
+                "is_foreign_key": {"type": "boolean"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "screens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "description", "main_content"],
+        "properties": {
+          "name": {"type": "string"},
+          "main_content": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "reuse": {
+                  "type": "object",
+                  "description": "Optional existing-asset binding: this region IS an app-local block the target app already has. `block` names the asset and may be flow-qualified ('MainFlow/RecentQueriesPanel'), unlike the bare catalog token in outsystems_hints.block. Satisfies the Block Mapping Gate on its own and must not coexist with outsystems_hints.block or custom_block_needed. Valid only under target_mode 'existing-app'.",
+                  "properties": {"block": {"type": "string"}}
+                },
+                "items": {
+                  "type": "array",
+                  "description": "Children of a group region. Each item is itself a region and may carry the same optional `reuse` binding as a direct main_content entry; the validator applies every reuse rule at both levels.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "reuse": {
+                        "type": "object",
+                        "description": "Same existing-asset binding as at the top level, for a region nested inside a group.",
+                        "properties": {"block": {"type": "string"}}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "icon_mapping": {
+      "type": "array",
+      "items": {"type": "object", "required": ["role", "outsystems_icon"]}
+    },
+    "roles": {
+      "type": "array",
+      "items": {"type": "object", "required": ["name", "description"]}
+    },
+    "acceptance_checklist": {"type": "array", "items": {"type": "string"}, "description": "Advisory, human-facing prose only. NOT authoritative: main_content is the source of truth. Any count that must be enforced belongs in a screen's optional `assertions` object, which the validator recomputes from main_content."}
+  }
+}

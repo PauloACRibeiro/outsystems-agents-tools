@@ -2,18 +2,14 @@
 
 Invoke `outsystems-mentor-implementation` only after the coverage review is written and the patched plan passes `scripts/check_plan_handoff.py`.
 
-Use this invocation payload:
-
-```text
-Invocation mode: outsystems-plan-to-mentor
-Delivery mode: paste-prompts | outsystems-mcp
-Source PRD: docs/superpowers/specs/approved-prd.md
-Patched plan: docs/superpowers/plans/feature-patched.md
-Output file: docs/superpowers/plans/feature-mentor-output.md
-Target app state: new-app | template-scaffold | existing-app
-Target app inventory: docs/app-map.md
-Mentor spec guardrails: references/mentor-spec-guardrails.md
-```
+Use the invocation payload template in
+[prompt-templates/mentor-implementation-invocation-payload.md](prompt-templates/mentor-implementation-invocation-payload.md).
+Its fields, one per line: `Invocation mode: outsystems-plan-to-mentor` (fixed),
+`Delivery mode: paste-prompts | outsystems-mcp` (pick one), `Source PRD:`,
+`Patched plan:`, `Output file:`,
+`Target app state: new-app | template-scaffold | existing-app` (pick one),
+`Target app inventory:`, and
+`Mentor spec guardrails: references/mentor-spec-guardrails.md` (fixed).
 
 When applying this template to another plan, replace the file paths with the actual project-local source, patched plan, output, and inventory paths. `Target app state:` is required. `Target app inventory:` is required whenever the target app state is not `new-app`; it names the scaffold inventory source (app map file, Studio observation notes, or OutSystems MCP context output).
 
@@ -48,12 +44,9 @@ Full flow desired:
 Degraded paste mode acceptable:
 
 - Write `docs/superpowers/plans/{plan-stem}-mentor-output.md`.
-- Begin the file with this exact notice:
-
-```text
-DEGRADED OUTPUT: outsystems-mentor-implementation was not available. This file is a 10-section Mentor spec for paste mode only. It does not include Studio-native pseudocode packages and does not include Data Model Pseudocode, Server Action Pseudocode, Client Action Pseudocode, Screen/UI Pseudocode, Navigation Pseudocode, or Verification Pseudocode. Install or use outsystems-mentor-implementation for the full deterministic Mentor package.
-```
-
+- Begin the file with the DEGRADED OUTPUT notice in
+  [prompt-templates/degraded-output-notice.md](prompt-templates/degraded-output-notice.md),
+  emitted verbatim (no placeholders).
 - Use only the 10-section Mentor spec format from `references/mentor-spec-guardrails.md`.
 - Do not send degraded output through OutSystems MCP.
 - Do not label degraded output as Studio-native pseudocode.

@@ -1,0 +1,241 @@
+{
+  "schema_version": "2",
+  "name": "QueryHistoryExplorer",
+  "description": "Existing-app blueprint emitted by outsystems-ui-design: a new screen over a data model and a reusable block the target app already has.",
+  "primary_color": "#2563EB",
+  "target_context": {
+    "target_mode": "existing-app",
+    "readable_app_name": "Search Console",
+    "canonical_app_key": "unresolved",
+    "verified_shell_required": false,
+    "existing_assets": [
+      "MainFlow/RecentQueriesPanel",
+      "QueryHistory",
+      "QueryStatus"
+    ],
+    "target_surfaces": [
+      "Screen"
+    ],
+    "review_notes": [
+      "Existing assets verified from an offline scaffold inventory of the published revision.",
+      "target_context left unresolved by design; OMI resolves the app key."
+    ]
+  },
+  "evidence_boundary": {
+    "evidence_status": "Catalog-backed official",
+    "grounding_notes": [
+      "Pattern facts from the bundled outsystems-ui-design reference catalog."
+    ],
+    "review_notes": [
+      "Reused block and existing entities are bound here, not recreated."
+    ]
+  },
+  "app_chrome": {
+    "layout_block": "LayoutTopMenu",
+    "app_title": "Search Console",
+    "menu": [
+      {
+        "label": "History",
+        "active": true
+      },
+      {
+        "label": "Console"
+      }
+    ]
+  },
+  "blocks": [],
+  "design_system": {
+    "colors": {
+      "page_bg": "#F8FAFC",
+      "text_primary": "#0F172A"
+    },
+    "typography": [
+      {
+        "role": "page-title",
+        "size": "24px",
+        "weight": "600"
+      }
+    ],
+    "spacing": {
+      "base_unit": "8px"
+    },
+    "visual_rules": [
+      "Match the existing console screens: quiet, dense, scan-friendly."
+    ]
+  },
+  "entities": [
+    {
+      "name": "QueryHistory",
+      "type": "transaction",
+      "exists": true,
+      "attributes": [
+        {
+          "name": "Id",
+          "data_type": "integerIdentifier",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "QueryText",
+          "data_type": "text",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "RunAt",
+          "data_type": "dateTime",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "StatusId",
+          "data_type": "QueryStatus Identifier",
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "enum_values": null
+        }
+      ]
+    },
+    {
+      "name": "QueryStatus",
+      "type": "static",
+      "exists": true,
+      "attributes": [
+        {
+          "name": "Id",
+          "data_type": "integerIdentifier",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "Label",
+          "data_type": "text",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        }
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "name": "QueryHistoryExplorer",
+      "type": "list",
+      "description": "Browse, filter and remove past queries for the current context.",
+      "entities": [
+        "QueryHistory",
+        "QueryStatus"
+      ],
+      "assertions": {
+        "links": 0,
+        "buttons": 1,
+        "inputs": 1
+      },
+      "main_content": [
+        {
+          "id": "1",
+          "type": "group",
+          "name": "Filters",
+          "columns": "Columns2",
+          "items": [
+            {
+              "id": "1a",
+              "column": 1,
+              "name": "Query filter",
+              "content": [
+                {
+                  "element": "Input with a magnifying-glass icon",
+                  "data": "Free-text filter over the query column"
+                }
+              ],
+              "outsystems_hints": {
+                "block": "Card"
+              }
+            },
+            {
+              "id": "1b",
+              "column": 2,
+              "name": "Status filter",
+              "data_source": {
+                "entity": "QueryStatus"
+              },
+              "content": [
+                {
+                  "element": "Dropdown",
+                  "data": "Status values from the existing static entity",
+                  "binds": {
+                    "entity": "QueryStatus",
+                    "attribute": "Label"
+                  }
+                }
+              ],
+              "outsystems_hints": {
+                "block": "Card"
+              }
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "name": "Recent queries",
+          "description": "The app's existing history panel, placed on this screen and fed by it.",
+          "reuse": {
+            "block": "MainFlow/RecentQueriesPanel"
+          },
+          "data_source": {
+            "entity": "QueryHistory"
+          },
+          "content": [
+            {
+              "element": "TableRecords",
+              "data": "Query text, status and run time, newest first",
+              "binds": {
+                "entity": "QueryHistory",
+                "attribute": "QueryText"
+              }
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "name": "Bulk actions",
+          "content": [
+            {
+              "element": "Button",
+              "data": "Remove the selected entry, confirmed before it runs"
+            }
+          ],
+          "outsystems_hints": {
+            "block": "Card"
+          }
+        }
+      ]
+    }
+  ],
+  "icon_mapping": [
+    {
+      "role": "filter-search",
+      "outsystems_icon": "magnifying-glass"
+    },
+    {
+      "role": "row-remove",
+      "outsystems_icon": "trash"
+    }
+  ],
+  "roles": [
+    {
+      "name": "SearchConsoleUser",
+      "description": "Existing app role; the screen is gated on it."
+    }
+  ],
+  "acceptance_checklist": [
+    "Every region maps to a named OutSystems UI block or binds an existing app block.",
+    "Exactly one layout block.",
+    "No Container nodes in the skeleton.",
+    "Nothing flagged existing is created: the reused block and both entities are verified, not built."
+  ]
+}

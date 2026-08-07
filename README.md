@@ -4,11 +4,51 @@ Public, colleague-facing distribution of OutSystems agent tooling. This repo is 
 **curated, consume-only subset** — the working/full estate lives elsewhere and is
 not published here.
 
-> **Status: published.** The component ships as a Release asset, and every link
-> below resolves to the [latest release](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest)
+> **Status: published.** Two things ship here, and they install separately: the
+> **OutSystems Public Knowledge MCP server** (a local documentation server) and
+> the **OutSystems sprint loop pack** (four agent skills). Both are Release
+> assets, and every link below resolves to the
+> [latest release](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest)
 > rather than to a fixed version — so the prompts stay correct as new versions
-> ship, and there is nothing for you to keep in sync by hand. One skill is
-> published so far; the rest of the estate is not public.
+> ship, and there is nothing for you to keep in sync by hand.
+
+## Install the OutSystems sprint loop pack
+
+Four skills that take an OutSystems screen from an idea to a published, graded
+revision. Paste this into Claude Code or Codex:
+
+```text
+Install the OutSystems sprint loop pack on this machine.
+
+Detect my OS, then download and follow the matching instructions:
+  macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md
+  Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md
+
+Follow that document literally. Confirm with me which agents to install for
+before you write anything to disk. When you are done, verify it and tell me the
+pack version, the skills roots you installed into, and where you put the docs.
+```
+
+Then read [the sprint loop entry doc](docs/sprint-loop-for-colleagues.md) before
+your first run. It is short, and it covers the two things that cost people the
+most time: the order the steps have to run in, and the six points where the loop
+stops and waits for a person.
+
+**This loop does not run unattended.** If you were planning to hand it a backlog
+and walk away, read that document first — it explains why.
+
+You can read the install instructions before running anything:
+[macOS](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md)
+· [Windows](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md).
+
+### Telling us what broke
+
+There is a friction-log template and an offline bundler under
+[`docs/colleague-feedback/`](docs/colleague-feedback/). Fill in the template as
+you work, run the bundler, and send the single archive it produces. The bundler
+makes no network calls and redacts your home directory, tenant hostnames and
+anything GUID-shaped before writing; `--dry-run` shows exactly what it would
+include. Friction reports from real runs are what change these skills.
 
 ## Install the OutSystems Public Knowledge MCP server
 
@@ -71,8 +111,12 @@ breaks, open an issue; it may or may not be picked up.
 
 | Area | Contents | Source of truth |
 |---|---|---|
-| [Releases](../../releases/latest) | The `outsystems-public-knowledge` MCP component — ZIP, `.sha256`, and the per-OS install instructions, published together per version | Built from `workspace-knowledge-cc` |
-| [`skills/`](skills/) | Public versions of selected OutSystems agent skills | Derived from `portable-agent-skills` |
+| [Releases](../../releases/latest) | Both products' assets — the `outsystems-public-knowledge` component (ZIP + `.sha256`) and the sprint loop pack (`.tgz` + `.sha256`), each with its own per-OS install instructions | Component built from `workspace-knowledge-cc`; pack built from `portable-agent-skills` |
+| [`skills/`](skills/) | Browsable source for the four published skills | Derived from `portable-agent-skills` |
+| [`docs/`](docs/) | The sprint loop entry doc, the feedback kit, and the knowledge-provider setup notes | Derived from `portable-agent-skills` |
+
+Every release carries **both** products' assets, so `/releases/latest/download/…`
+resolves for either one regardless of which product a given release was cut for.
 
 ## How to think about this repo
 
@@ -83,10 +127,11 @@ breaks, open an issue; it may or may not be picked up.
   this repo gives you the prompt and the skills, not the component. Keeping the
   binary out of git means no 186 KB blob accumulates per version, and an agent can
   read the current version and digest as data rather than as a file.
-- **Generated, not hand-authored.** Everything under `skills/<name>/` is an export
-  output, as are the per-OS install documents published with each Release. Do not hand-edit generated content —
+- **Generated, not hand-authored.** Everything under `skills/<name>/` and `docs/`
+  is an export output, as are the per-OS install documents published with each
+  Release. Do not hand-edit generated content —
   a CI check (`.github/workflows/verify-export.yml`) fails any push/PR where the
-  generated `skills/` tree no longer matches the sha256 provenance in
+  generated tree no longer matches the sha256 provenance in
   `skills/EXPORT-MANIFEST.json`. Hand-authored files are limited to this `README.md`,
   `CHANGELOG.md`, and the CI infrastructure (`scripts/`, `tests/`, `.github/`).
 - **The component and the skills install separately.** The component provides a
@@ -99,8 +144,14 @@ breaks, open an issue; it may or may not be picked up.
 outsystems-agents-tools/
 ├── README.md                         # this file (hand-authored)
 ├── CHANGELOG.md                      # release history (hand-authored)
-└── skills/                           # public skill exports (one per skill)
-    └── <skill-name>/
+├── docs/                             # generated — entry doc + feedback kit
+└── skills/                           # generated — one directory per skill
+    ├── EXPORT-MANIFEST.json          # per-pack provenance + per-file sha256
+    ├── outsystems-ui-design/
+    ├── outsystems-plan-to-mentor/
+    ├── outsystems-mentor-implementation/
+    ├── outsystems-runtime-ui-audit/
+    └── shared/                       # not a skill; a file the build skill references
 ```
 
 Each Release carries its own component ZIP, checksum and per-OS install instructions. The prompt always resolves `/releases/latest`, so it never needs a version in it.

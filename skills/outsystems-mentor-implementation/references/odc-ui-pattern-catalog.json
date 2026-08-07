@@ -1,0 +1,2069 @@
+{
+  "generated_at_utc": "2026-05-20T23:13:03+00:00",
+  "patterns": [
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/adaptive/columns.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "adaptive",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "GutterSize",
+        "PhoneBehavior",
+        "TabletBehavior"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Columns pattern and configure its documented properties before wiring events.",
+      "name": "Columns",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) offers a Columns UI Pattern to enhance on-screen content organization by splitting it into separate columns.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/adaptive/columns.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/adaptive/displayondevice.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "adaptive",
+      "important_optional_properties": [],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Display on Device pattern and configure its documented properties before wiring events.",
+      "name": "Display on Device",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) supports the Display on Device UI pattern for device-specific content rendering.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/adaptive/displayondevice.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/adaptive/gallery.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "adaptive",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "ItemsGap",
+        "RowItemsDesktop"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Gallery pattern and configure its documented properties before wiring events.",
+      "name": "Gallery",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to implement and customize the Gallery UI Pattern in OutSystems Developer Cloud (ODC) to display content effectively.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/adaptive/gallery.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/adaptive/masterdetail.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "adaptive",
+      "important_optional_properties": [
+        "Height",
+        "LeftPercentage",
+        "OpenedOnPhone"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Master Detail pattern and configure its documented properties before wiring events.",
+      "name": "Master Detail",
+      "placeholders": [
+        "LeftContent",
+        "Pattern placeholders described in source",
+        "RightContent"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) supports the Master Detail Pattern for displaying lists and their details in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/adaptive/masterdetail.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only.",
+        "**Note:** By default, the Accordion widget contains 3 **AccordionItem** widgets. You can add or delete Accordion Items as required."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/accordion.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Icon",
+        "IconPosition",
+        "IsDisabled",
+        "MultipleItems",
+        "StartsExpanded"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Accordion pattern and configure its documented properties before wiring events.",
+      "name": "Accordion",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to implement and customize the Accordion UI Pattern in OutSystems Developer Cloud (ODC) to enhance application interfaces.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/accordion.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/alert.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [
+        "AlertType"
+      ],
+      "mentor_prompt_fragment": "Use the Alert pattern and configure its documented properties before wiring events.",
+      "name": "Alert",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to implement and customize the Alert UI Pattern in OutSystems Developer Cloud (ODC) to display important messages in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/alert.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/blankslate.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "FullHeight"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Blank Slate pattern and configure its documented properties before wiring events.",
+      "name": "Blank Slate",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to implement the Blank Slate UI Pattern in OutSystems Developer Cloud (ODC) to enhance user interfaces when no data is available.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/blankslate.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/card.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "UsePadding"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Card pattern and configure its documented properties before wiring events.",
+      "name": "Card",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to effectively utilize the Cards UI Pattern in OutSystems Developer Cloud (ODC) to organize and display information.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/card.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/cardbackground.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "Height",
+        "MinHeight"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Card Background pattern and configure its documented properties before wiring events.",
+      "name": "Card Background",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn to enhance app interfaces using the Card Background UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/cardbackground.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/carditem.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Card Item pattern and configure its documented properties before wiring events.",
+      "name": "Card Item",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement the Card Item UI Pattern in OutSystems Developer Cloud (ODC) to enhance mobile app interfaces.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/carditem.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/cardsectioned.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "ImagePadding",
+        "IsVertical",
+        "UsePadding"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Card Sectioned pattern and configure its documented properties before wiring events.",
+      "name": "Card Sectioned",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn to organize information using the Card Sectioned UI pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/cardsectioned.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/chatmessage.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "DisplayOnRight",
+        "ExtendedClass",
+        "MessageStatus",
+        "Time"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Chat Message pattern and configure its documented properties before wiring events.",
+      "name": "Chat Message",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to integrate and customize the Chat Message UI Pattern in OutSystems Developer Cloud (ODC) for enhanced chat functionalities.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/chatmessage.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/flipcontent.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "FlipOnClick",
+        "StartsFlipped"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Flip Content pattern and configure its documented properties before wiring events.",
+      "name": "Flip Content",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Flip Content UI Pattern for interactive content display in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/flipcontent.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/floatingcontent.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "UseFullHeight",
+        "UseFullWidth",
+        "UseMargin"
+      ],
+      "mandatory_properties": [
+        "Position"
+      ],
+      "mentor_prompt_fragment": "Use the Floating Content pattern and configure its documented properties before wiring events.",
+      "name": "Floating Content",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) supports the Floating Content UI Pattern for overlaying content on screen elements.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/floatingcontent.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/listitemcontent.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the List Item Content pattern and configure its documented properties before wiring events.",
+      "name": "List Item Content",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the List Item Content UI Pattern for organizing and displaying content efficiently in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/listitemcontent.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/section.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "UsePadding"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Section pattern and configure its documented properties before wiring events.",
+      "name": "Section",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to organize on-screen content using the Section UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/section.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/sectiongroup.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "HasStickyTitles",
+        "TopPosition"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Section Group pattern and configure its documented properties before wiring events.",
+      "name": "Section Group",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to implement and customize the Section Group UI Pattern in OutSystems Developer Cloud (ODC) to enhance application interfaces.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/sectiongroup.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/tag.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "IsLight",
+        "Shape",
+        "Size"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Tag pattern and configure its documented properties before wiring events.",
+      "name": "Tag",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to style and implement the Tag UI Pattern in OutSystems Developer Cloud (ODC) to enhance user interfaces with customizable tags.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/tag.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/tooltip.md",
+      "events": [
+        "OnClick"
+      ],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Position",
+        "StartsOpen",
+        "Trigger"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Tooltip pattern and configure its documented properties before wiring events.",
+      "name": "Tooltip",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to dynamically display tooltips in your applications using OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/tooltip.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only.",
+        "Note: You can also add the expression by navigating through the Expression Editor's **Scope** tree and double-clicking on the **Name** output parameter."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/content/useravatar.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "content",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "Image",
+        "IsLight",
+        "Name",
+        "Shape",
+        "Size"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the User Avatar pattern and configure its documented properties before wiring events.",
+      "name": "User Avatar",
+      "placeholders": [],
+      "purpose": "Explore how to implement the User Avatar UI Pattern in OutSystems Developer Cloud (ODC) to display user initials or images.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/useravatar.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/actionsheet.md",
+      "events": [
+        "OnClick",
+        "OnClose"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [],
+      "mandatory_properties": [
+        "IsOpen"
+      ],
+      "mentor_prompt_fragment": "Use the Action Sheet pattern and configure its documented properties before wiring events.",
+      "name": "Action Sheet",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement and customize the Action Sheet UI Pattern in OutSystems Developer Cloud (ODC) to enhance mobile app interfaces.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/actionsheet.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/animate.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "Delay",
+        "ExtendedClass",
+        "Speed"
+      ],
+      "mandatory_properties": [
+        "AnimationType"
+      ],
+      "mentor_prompt_fragment": "Use the Animate pattern and configure its documented properties before wiring events.",
+      "name": "Animate",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Animate UI Pattern for enhancing app usability by animating elements on screen.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/animate.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/animatedlabel.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Animated Label pattern and configure its documented properties before wiring events.",
+      "name": "Animated Label",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to animate user input labels using the Animated Label UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/animatedlabel.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps"
+      ],
+      "compatibility_notes": [
+        "Applies to Mobile Apps only.",
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/bottomsheet.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Shape",
+        "ShowHandler"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Bottom Sheet pattern and configure its documented properties before wiring events.",
+      "name": "Bottom Sheet",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) enables the use of the Bottom Sheet UI pattern in mobile apps.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/bottomsheet.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/carousel.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Height",
+        "ItemsPerSlide",
+        "Navigation",
+        "OptionalConfigs.AutoPlay",
+        "OptionalConfigs.ItemsGap",
+        "OptionalConfigs.Loop",
+        "OptionalConfigs.Padding",
+        "OptionalConfigs.StartingPosition"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Carousel pattern and configure its documented properties before wiring events.",
+      "name": "Carousel",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) offers a Carousel UI Pattern for displaying images horizontally, utilizing Splide.js library.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/carousel.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/datepicker.md",
+      "events": [
+        "OnSelect"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "DateFormat",
+        "ExtendedClass",
+        "OptionalConfigs.FirstWeekDay",
+        "OptionalConfigs.InitialDate",
+        "OptionalConfigs.MaxDate",
+        "OptionalConfigs.MinDate",
+        "ShowTodayButton",
+        "TimeFormat"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Date Picker pattern and configure its documented properties before wiring events.",
+      "name": "Date Picker",
+      "placeholders": [],
+      "purpose": "Explore the Date Picker UI Pattern in OutSystems Developer Cloud (ODC) for selecting dates using a calendar interface.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/datepicker.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/datepickerrange.md",
+      "events": [
+        "OnSelect"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "DateFormat",
+        "ExtendedClass",
+        "OptionalConfigs.FirstWeekDay",
+        "OptionalConfigs.InitialEndDate",
+        "OptionalConfigs.InitialStartDate",
+        "OptionalConfigs.MaxDate",
+        "OptionalConfigs.MinDate",
+        "ShowTodayButton"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Date Picker Range pattern and configure its documented properties before wiring events.",
+      "name": "Date Picker Range",
+      "placeholders": [],
+      "purpose": "Learn how to implement a Date Picker Range in OutSystems Developer Cloud (ODC) using the flatpickr library for selecting date ranges.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/datepickerrange.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented",
+        "requires an options list structure",
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/dropdownsearch.md",
+      "events": [
+        "OnChanged"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.AllowMultipleSelection",
+        "OptionalConfigs.IsDisabled",
+        "OptionalConfigs.NoOptionsText",
+        "OptionalConfigs.NoResultsText",
+        "OptionalConfigs.SanitizeDropdownValues",
+        "OptionalConfigs.SearchPrompt",
+        "Prompt",
+        "SelectedOptions"
+      ],
+      "mandatory_properties": [
+        "OptionsList"
+      ],
+      "mentor_prompt_fragment": "Use the Dropdown Search pattern and configure its documented properties before wiring events.",
+      "name": "Dropdown Search",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) includes a Dropdown Search UI Pattern for searchable option selection in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/dropdownsearch.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented",
+        "requires an options list structure",
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/dropdowntags.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.IsDisabled",
+        "OptionalConfigs.NoOptionsText",
+        "OptionalConfigs.NoResultsText",
+        "OptionalConfigs.SanitizeDropdownValues",
+        "OptionalConfigs.SearchPrompt",
+        "Prompt",
+        "SelectedOptions"
+      ],
+      "mandatory_properties": [
+        "OptionsList"
+      ],
+      "mentor_prompt_fragment": "Use the Dropdown Tags pattern and configure its documented properties before wiring events.",
+      "name": "Dropdown Tags",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Dropdown Tags UI Pattern, enabling users to select multiple options from a dropdown list.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/dropdowntags.md"
+    },
+    {
+      "applies_to": [
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-edit.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Edit data in OutSystems Data Grid pattern and configure its documented properties before wiring events.",
+      "name": "Edit data in OutSystems Data Grid",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to enable and configure data editing in OutSystems Developer Cloud (ODC) Data Grid by setting the AllowColumnEdit property to true and adding column widgets.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-edit.md"
+    },
+    {
+      "applies_to": [
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-fetch-data.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Fetch data for OutSystems Data Grid pattern and configure its documented properties before wiring events.",
+      "name": "Fetch data for OutSystems Data Grid",
+      "placeholders": [
+        "MainContent",
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn to fetch and display data in the OutSystems Data Grid (ODC) for reactive web apps, including configuration and customization properties.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-fetch-data.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/floatingactions.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "IsExpanded",
+        "IsHover"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Floating Actions pattern and configure its documented properties before wiring events.",
+      "name": "Floating Actions",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement the Floating Actions UI Pattern in OutSystems Developer Cloud (ODC) to enhance user interface design.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/floatingactions.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/inputwithicon.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "AlignIconRight",
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Input with Icon pattern and configure its documented properties before wiring events.",
+      "name": "Input with Icon",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Input with Icon UI Pattern to enhance user data entry with visual hints.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/inputwithicon.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/lightboximage.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Group",
+        "ImageURL",
+        "ImageZoom",
+        "Title"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Lightbox Image pattern and configure its documented properties before wiring events.",
+      "name": "Lightbox Image",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore the Lightbox Image UI Pattern in OutSystems Developer Cloud (ODC) for creating detailed image galleries in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/lightboximage.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/monthpicker.md",
+      "events": [
+        "OnSelect"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "DateFormat",
+        "ExtendedClass",
+        "InitialMonth",
+        "MaxMonth",
+        "MinMonth"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Month Picker pattern and configure its documented properties before wiring events.",
+      "name": "Month Picker",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) features a Month Picker UI Pattern that leverages the flatpickr library for user-friendly month selection in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/monthpicker.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/notification.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.CloseAfterTime",
+        "OptionalConfigs.InteractToClose",
+        "Position",
+        "StartsOpen",
+        "Width"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Notification pattern and configure its documented properties before wiring events.",
+      "name": "Notification",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement and configure the Notification UI Pattern in OutSystems Developer Cloud (ODC) to enhance user communication.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/notification.md"
+    },
+    {
+      "applies_to": [
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-overview.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the OutSystems Data Grid for ODC pattern and configure its documented properties before wiring events.",
+      "name": "OutSystems Data Grid for ODC",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Data Grid component for efficient data manipulation with sorting and virtual scrolling.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-overview.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/rangeslider.md",
+      "events": [
+        "OnChange"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.IsDisabled",
+        "OptionalConfigs.ShowFloatingLabel",
+        "OptionalConfigs.ShowTickMarks",
+        "OptionalConfigs.Step",
+        "OptionalConfigs.TickMarksInterval",
+        "Orientation",
+        "Size"
+      ],
+      "mandatory_properties": [
+        "MaxValue",
+        "MinValue",
+        "StartingValue"
+      ],
+      "mentor_prompt_fragment": "Use the Range Slider pattern and configure its documented properties before wiring events.",
+      "name": "Range Slider",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) supports the Range Slider UI Pattern, enabling users to select values within a defined range.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/rangeslider.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/rangesliderinterval.md",
+      "events": [
+        "OnValueChange"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.IsDisabled",
+        "OptionalConfigs.ShowFloatingLabel",
+        "OptionalConfigs.ShowTickMarks",
+        "OptionalConfigs.Step",
+        "OptionalConfigs.TickMarksInterval",
+        "Orientation",
+        "Size"
+      ],
+      "mandatory_properties": [
+        "MaxValue",
+        "MinValue",
+        "StartingValueFrom",
+        "StartingValueTo"
+      ],
+      "mentor_prompt_fragment": "Use the Range Slider Interval pattern and configure its documented properties before wiring events.",
+      "name": "Range Slider Interval",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore the Range Slider Interval Pattern in OutSystems Developer Cloud (ODC) for selecting values within a defined range using the noUiSlider library.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/rangesliderinterval.md"
+    },
+    {
+      "applies_to": [
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only.",
+        "**Note:** It is necessary to select the correct **Data Type** to deserialize the changed data."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-save.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Save changes in OutSystems Data Grid pattern and configure its documented properties before wiring events.",
+      "name": "Save changes in OutSystems Data Grid",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to save edited data from the OutSystems Developer Cloud (ODC) Data Grid to a database using client and server actions.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-save.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/scrollablearea.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Height",
+        "Orientation",
+        "ScrollbarType",
+        "Width"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Scrollable Area pattern and configure its documented properties before wiring events.",
+      "name": "Scrollable Area",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features a Scrollable Area Pattern for creating scrollable content blocks in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/scrollablearea.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/search.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Search pattern and configure its documented properties before wiring events.",
+      "name": "Search",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features a Search UI Pattern that enables users to find content within applications by entering queries.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/search.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only.",
+        "**Note:** To avoid conflicts with the browser native gestures, the Sidebar pattern only works with gestures on Native Apps not running as PWA."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/sidebar.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "Direction",
+        "ExtendedClass",
+        "HasOverlay",
+        "StartsOpen",
+        "Width"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Sidebar pattern and configure its documented properties before wiring events.",
+      "name": "Sidebar",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) enhances app functionality with a Sidebar UI Pattern for displaying additional content.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/sidebar.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/stackedcards.md",
+      "events": [
+        "OnLeftSwipe"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "Items",
+        "Rotate",
+        "StackedOptions",
+        "UseOverlays"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Stacked Cards pattern and configure its documented properties before wiring events.",
+      "name": "Stacked Cards",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore the Stacked Cards UI Pattern in OutSystems Developer Cloud (ODC) for creating swipeable, multi-directional event-triggering cards.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/stackedcards.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/timepicker.md",
+      "events": [
+        "OnSelect"
+      ],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "InitialTime",
+        "Is24Hours",
+        "OptionalConfigs.MaxTime",
+        "OptionalConfigs.MinTime"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Time Picker pattern and configure its documented properties before wiring events.",
+      "name": "Time Picker",
+      "placeholders": [],
+      "purpose": "Explore how to implement and configure the Time Picker UI Pattern in OutSystems Developer Cloud (ODC) for user time input.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/timepicker.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/interaction/video.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "interaction",
+      "important_optional_properties": [
+        "Autoplay",
+        "Controls",
+        "Height",
+        "Loop",
+        "Muted",
+        "PosterURL",
+        "Width"
+      ],
+      "mandatory_properties": [
+        "VideoURL"
+      ],
+      "mentor_prompt_fragment": "Use the Video pattern and configure its documented properties before wiring events.",
+      "name": "Video",
+      "placeholders": [],
+      "purpose": "Explore how to embed a native video player in your application using the Video UI pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/video.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/bottombaritem.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Bottom Bar Item pattern and configure its documented properties before wiring events.",
+      "name": "Bottom Bar Item",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Bottom Bar Item UI Pattern for easy navigation and feature access in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/bottombaritem.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/breadcrumbs.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Breadcrumbs pattern and configure its documented properties before wiring events.",
+      "name": "Breadcrumbs",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement and customize the Breadcrumbs UI Pattern in OutSystems Developer Cloud (ODC) to enhance app navigation.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/breadcrumbs.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result",
+        "list source binding is documented"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/pagination.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "ShowGoToPage"
+      ],
+      "mandatory_properties": [
+        "MaxRecords",
+        "StartIndex",
+        "TotalCount"
+      ],
+      "mentor_prompt_fragment": "Use the Pagination pattern and configure its documented properties before wiring events.",
+      "name": "Pagination",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement and configure the Pagination UI pattern in OutSystems Developer Cloud (ODC) to manage long listings efficiently.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/pagination.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/sectionindex.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "IsFixed",
+        "SmoothScrolling"
+      ],
+      "mandatory_properties": [
+        "ScrollToWidgetId"
+      ],
+      "mentor_prompt_fragment": "Use the Section Index pattern and configure its documented properties before wiring events.",
+      "name": "Section Index",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features a Section Index UI Pattern for efficient content organization and navigation within app screens.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/sectionindex.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/submenu.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Submenu pattern and configure its documented properties before wiring events.",
+      "name": "Submenu",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement a submenu within an application using the Submenu UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/submenu.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/tabs.md",
+      "events": [
+        "OnTabChange"
+      ],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "Height",
+        "OptionalConfigs.JustifyHeaders",
+        "StartingTab",
+        "TabsOrientation",
+        "TabsVerticalPosition"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Tabs pattern and configure its documented properties before wiring events.",
+      "name": "Tabs",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to implement and customize the Tabs UI Pattern in OutSystems Developer Cloud (ODC) to enhance application navigation and content organization.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/tabs.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/timelineitem.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "IsActive"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Timeline Item pattern and configure its documented properties before wiring events.",
+      "name": "Timeline Item",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Timeline Item UI Pattern for displaying events in chronological order.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/timelineitem.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/navigation/wizard.md",
+      "events": [
+        "OnClick"
+      ],
+      "evidence_status": "Current official",
+      "family": "navigation",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "IsVertical",
+        "UseTopLabel"
+      ],
+      "mandatory_properties": [
+        "Status"
+      ],
+      "mentor_prompt_fragment": "Use the Wizard pattern and configure its documented properties before wiring events.",
+      "name": "Wizard",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to create and manage a Wizard UI Pattern in OutSystems Developer Cloud (ODC) to streamline complex tasks into simpler steps.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/wizard.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only.",
+        "Note: You can also add the expression by navigating through the Expression Editor's **Scope** tree and double-clicking on the **Count** output parameter."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/numbers/badge.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "numbers",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "IsLight",
+        "Number",
+        "Shape",
+        "Size"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Badge pattern and configure its documented properties before wiring events.",
+      "name": "Badge",
+      "placeholders": [],
+      "purpose": "Learn how to use the Badge UI Pattern in OutSystems Developer Cloud (ODC) to display numerical notifications such as unread messages or registered users.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/badge.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/numbers/counter.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "numbers",
+      "important_optional_properties": [
+        "BackgroundColor",
+        "ExtendedClass",
+        "Height",
+        "IsVertical"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Counter pattern and configure its documented properties before wiring events.",
+      "name": "Counter",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to use the Counter UI Pattern in OutSystems Developer Cloud (ODC) to display numerical data effectively.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/counter.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "usually binds to an Aggregate or Data Action result"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/numbers/iconbadge.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "numbers",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "IsLight"
+      ],
+      "mandatory_properties": [
+        "Number"
+      ],
+      "mentor_prompt_fragment": "Use the Icon Badge pattern and configure its documented properties before wiring events.",
+      "name": "Icon Badge",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Icon Badge UI Pattern for displaying notifications such as unread messages or user counts.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/iconbadge.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/numbers/progressbar.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "numbers",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.AnimateInitialProgress",
+        "OptionalConfigs.Shape",
+        "ProgressColor",
+        "Thickness",
+        "TrailColor"
+      ],
+      "mandatory_properties": [
+        "Progress"
+      ],
+      "mentor_prompt_fragment": "Use the Progress Bar pattern and configure its documented properties before wiring events.",
+      "name": "Progress Bar",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) features a Progress Bar UI pattern for visually tracking task completion percentages.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/progressbar.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/numbers/progresscircle.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "numbers",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "OptionalConfigs.AnimateInitialProgress",
+        "OptionalConfigs.Shape",
+        "ProgressColor",
+        "Thickness",
+        "TrailColor"
+      ],
+      "mandatory_properties": [
+        "Progress"
+      ],
+      "mentor_prompt_fragment": "Use the Progress Circle pattern and configure its documented properties before wiring events.",
+      "name": "Progress Circle",
+      "placeholders": [],
+      "purpose": "Explore how to implement and customize the Progress Circle UI Pattern in OutSystems Developer Cloud (ODC) to visually represent operation flow progress.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/progresscircle.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/numbers/rating.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "numbers",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "IsEdit",
+        "RatingScale",
+        "Size"
+      ],
+      "mandatory_properties": [
+        "RatingValue"
+      ],
+      "mentor_prompt_fragment": "Use the Rating pattern and configure its documented properties before wiring events.",
+      "name": "Rating",
+      "placeholders": [],
+      "purpose": "Explore how to implement and customize the Rating UI Pattern in OutSystems Developer Cloud (ODC) to enhance user interaction.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/rating.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/aligncenter.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "IsHorizontal"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Align Center pattern and configure its documented properties before wiring events.",
+      "name": "Align Center",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to horizontally or vertically center content using the Align Center UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/aligncenter.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/buttonloading.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "ShowLabelOnLoading"
+      ],
+      "mandatory_properties": [
+        "IsLoading"
+      ],
+      "mentor_prompt_fragment": "Use the Button Loading pattern and configure its documented properties before wiring events.",
+      "name": "Button Loading",
+      "placeholders": [],
+      "purpose": "Explore the Button Loading UI Pattern in OutSystems Developer Cloud (ODC) for enhanced user feedback.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/buttonloading.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/centercontent.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Center Content pattern and configure its documented properties before wiring events.",
+      "name": "Center Content",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "OutSystems Developer Cloud (ODC) features the Center Content UI Pattern for vertically aligning content within an application's container.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/centercontent.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [
+        "requires value and label bindings"
+      ],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/inlinesvg.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "ExtendedClass",
+        "SVGCode"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Inline SVG pattern and configure its documented properties before wiring events.",
+      "name": "Inline SVG",
+      "placeholders": [],
+      "purpose": "OutSystems Developer Cloud (ODC) supports the Inline SVG UI Pattern for customizing SVG properties and animations in applications.",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/inlinesvg.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/margincontainer.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "ExtendedClass"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Margin Container pattern and configure its documented properties before wiring events.",
+      "name": "Margin Container",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Learn how to add symmetrical padding in your applications using the Margin Container UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/margincontainer.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/mouseevents.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "PreventDefaults"
+      ],
+      "mandatory_properties": [
+        "WidgetId"
+      ],
+      "mentor_prompt_fragment": "Use the Mouse Events pattern and configure its documented properties before wiring events.",
+      "name": "Mouse Events",
+      "placeholders": [
+        "Pattern placeholders described in source"
+      ],
+      "purpose": "Explore how to implement precise element selection using the Mouse Events UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/mouseevents.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/separator.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [
+        "Color",
+        "ExtendedClass",
+        "IsVertical",
+        "Space"
+      ],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Separator pattern and configure its documented properties before wiring events.",
+      "name": "Separator",
+      "placeholders": [],
+      "purpose": "Learn how to visually organize content in your applications using the Separator UI Pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/separator.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/swipeevents.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [],
+      "mandatory_properties": [
+        "WidgetId"
+      ],
+      "mentor_prompt_fragment": "Use the Swipe Events pattern and configure its documented properties before wiring events.",
+      "name": "Swipe Events",
+      "placeholders": [],
+      "purpose": "Learn how to implement swipe gestures to manipulate data in your app using the Swipe Events UI pattern in OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/swipeevents.md"
+    },
+    {
+      "applies_to": [
+        "mobile apps",
+        "reactive web apps"
+      ],
+      "compatibility_notes": [
+        "Applies to the OutSystems UI framework only."
+      ],
+      "data_binding_shape": [],
+      "doc_path": "src/eap/building-apps/ui/patterns/utilities/touchevents.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "family": "utilities",
+      "important_optional_properties": [],
+      "mandatory_properties": [],
+      "mentor_prompt_fragment": "Use the Touch Events pattern and configure its documented properties before wiring events.",
+      "name": "Touch Events",
+      "placeholders": [],
+      "purpose": "Explore touch event customization in mobile apps using OutSystems Developer Cloud (ODC).",
+      "security_or_sanitization_notes": [],
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/touchevents.md"
+    }
+  ],
+  "source_family": "official_outsystems_docs_odc",
+  "source_pattern_root": "src/eap/building-apps/ui/patterns",
+  "summary": {
+    "families": {
+      "adaptive": 4,
+      "content": 16,
+      "interaction": 26,
+      "navigation": 8,
+      "numbers": 6,
+      "utilities": 9
+    },
+    "pattern_count": 69,
+    "warning_count": 6
+  },
+  "warnings": [
+    "src/eap/building-apps/ui/patterns/adaptive/displayondevice.md: missing properties table",
+    "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-edit.md: missing properties table",
+    "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-fetch-data.md: missing properties table",
+    "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-overview.md: missing properties table",
+    "src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-save.md: missing properties table",
+    "src/eap/building-apps/ui/patterns/utilities/touchevents.md: missing properties table"
+  ]
+}

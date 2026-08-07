@@ -1,0 +1,4737 @@
+{
+  "branch_aliases": [
+    "dev"
+  ],
+  "gap_analysis": {
+    "scss": {
+      "deprecated_file_count": 23,
+      "families": [
+        {
+          "family": "animate",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_animate.scss",
+            "src/scss/07-keyframes/_animate.scss"
+          ]
+        },
+        {
+          "family": "feedback-message",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_feedback-message.scss",
+            "src/scss/07-keyframes/_feedback-message.scss"
+          ]
+        },
+        {
+          "family": "icon-library",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/01-foundations/_icon-library-o11.scss",
+            "src/scss/01-foundations/_icon-library-odc.scss"
+          ]
+        },
+        {
+          "family": "list-item",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_list-item.scss",
+            "src/scss/07-keyframes/_list-item.scss"
+          ]
+        },
+        {
+          "family": "miscellaneous",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_miscellaneous.scss",
+            "src/scss/07-keyframes/_miscellaneous.scss"
+          ]
+        },
+        {
+          "family": "placeholder-empty",
+          "file_count": 2,
+          "markers": [
+            "preview"
+          ],
+          "sample_paths": [
+            "src/scss/08-servicestudio-preview/_placeholder-empty-o11.scss",
+            "src/scss/08-servicestudio-preview/_placeholder-empty-odc.scss"
+          ]
+        },
+        {
+          "family": "popover",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_popover-odc.scss",
+            "src/scss/03-widgets/_popover.scss"
+          ]
+        },
+        {
+          "family": "pull-to-refresh",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_pull-to-refresh.scss",
+            "src/scss/07-keyframes/_pull-to-refresh.scss"
+          ]
+        },
+        {
+          "family": "section",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_section.scss",
+            "src/scss/04-patterns/02-content/_section.scss"
+          ]
+        },
+        {
+          "family": "a11y",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_a11y.scss"
+          ]
+        },
+        {
+          "family": "accordion",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_accordion-deprecated.scss"
+          ]
+        },
+        {
+          "family": "action-sheet",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_action-sheet.scss"
+          ]
+        },
+        {
+          "family": "alert",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_alert.scss"
+          ]
+        },
+        {
+          "family": "align-center",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_align-center.scss"
+          ]
+        },
+        {
+          "family": "badge",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/05-numbers/_badge.scss"
+          ]
+        },
+        {
+          "family": "blank-slate",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_blank-slate.scss"
+          ]
+        },
+        {
+          "family": "border-color",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_border-color.scss"
+          ]
+        },
+        {
+          "family": "border-radius",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_border-radius.scss"
+          ]
+        },
+        {
+          "family": "border-size",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_border-size.scss"
+          ]
+        },
+        {
+          "family": "bottom-bar-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/04-navigation/_bottom-bar-item.scss"
+          ]
+        },
+        {
+          "family": "box-height",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_box-height.scss"
+          ]
+        },
+        {
+          "family": "box-width",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_box-width.scss"
+          ]
+        },
+        {
+          "family": "breadcrumbs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/04-navigation/_breadcrumbs.scss"
+          ]
+        },
+        {
+          "family": "btn",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_btn.scss"
+          ]
+        },
+        {
+          "family": "btn-loading",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/07-keyframes/_btn-loading.scss"
+          ]
+        },
+        {
+          "family": "bulk-actions",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_bulk-actions.scss"
+          ]
+        },
+        {
+          "family": "button-group",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_button-group.scss"
+          ]
+        },
+        {
+          "family": "button-loading",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_button-loading-deprecated.scss"
+          ]
+        },
+        {
+          "family": "card",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_card.scss"
+          ]
+        },
+        {
+          "family": "card-background",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_card-background.scss"
+          ]
+        },
+        {
+          "family": "card-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_card-item.scss"
+          ]
+        },
+        {
+          "family": "card-sectioned",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_card-sectioned.scss"
+          ]
+        },
+        {
+          "family": "carousel",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_carousel-deprecated.scss"
+          ]
+        },
+        {
+          "family": "center-content",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_center-content.scss"
+          ]
+        },
+        {
+          "family": "chat-message",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_chat-message.scss"
+          ]
+        },
+        {
+          "family": "checkbox",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_checkbox.scss"
+          ]
+        },
+        {
+          "family": "colors-brand",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_colors-brand.scss"
+          ]
+        },
+        {
+          "family": "colors-neutral",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_colors-neutral.scss"
+          ]
+        },
+        {
+          "family": "colors-others",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_colors-others.scss"
+          ]
+        },
+        {
+          "family": "colors-palette",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_colors-palette.scss"
+          ]
+        },
+        {
+          "family": "colors-semantic",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_colors-semantic.scss"
+          ]
+        },
+        {
+          "family": "columns",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/01-adaptive/_columns.scss"
+          ]
+        },
+        {
+          "family": "content",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_content.scss"
+          ]
+        },
+        {
+          "family": "counter",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/05-numbers/_counter.scss"
+          ]
+        },
+        {
+          "family": "date-picker",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_date-picker-deprecated.scss"
+          ]
+        },
+        {
+          "family": "deprecated",
+          "file_count": 1,
+          "markers": [
+            "deprecated",
+            "preview"
+          ],
+          "sample_paths": [
+            "src/scss/08-servicestudio-preview/deprecated-preview.scss"
+          ]
+        },
+        {
+          "family": "display",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_display.scss"
+          ]
+        },
+        {
+          "family": "display-align",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_display-align.scss"
+          ]
+        },
+        {
+          "family": "display-flex",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_display-flex.scss"
+          ]
+        },
+        {
+          "family": "dropdown",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_dropdown.scss"
+          ]
+        },
+        {
+          "family": "dropdown-search",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_dropdown-search-deprecated.scss"
+          ]
+        },
+        {
+          "family": "dropdown-search-and-tags",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_dropdown-search-and-tags-deprecated.scss"
+          ]
+        },
+        {
+          "family": "dropdown-tags",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_dropdown-tags-deprecated.scss"
+          ]
+        },
+        {
+          "family": "excluders",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/09-excluders/_excluders.scss"
+          ]
+        },
+        {
+          "family": "flip-content",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_flip-content-deprecated.scss"
+          ]
+        },
+        {
+          "family": "floating-actions",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_floating-actions.scss"
+          ]
+        },
+        {
+          "family": "floating-content",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_floating-content.scss"
+          ]
+        },
+        {
+          "family": "form",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_form.scss"
+          ]
+        },
+        {
+          "family": "functions",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/00-abstract/_functions.scss"
+          ]
+        },
+        {
+          "family": "gallery",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_gallery-deprecated.scss"
+          ]
+        },
+        {
+          "family": "header",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_header.scss"
+          ]
+        },
+        {
+          "family": "header-layout-native",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_header-layout-native.scss"
+          ]
+        },
+        {
+          "family": "header-layout-side",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_header-layout-side.scss"
+          ]
+        },
+        {
+          "family": "horizontal-scroll",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_horizontal-scroll-deprecated.scss"
+          ]
+        },
+        {
+          "family": "html-elements-headings",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/01-foundations/_html-elements-headings.scss"
+          ]
+        },
+        {
+          "family": "html-elements-img",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/01-foundations/_html-elements-img.scss"
+          ]
+        },
+        {
+          "family": "html-elements-link",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/01-foundations/_html-elements-link.scss"
+          ]
+        },
+        {
+          "family": "icon-badge",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/05-numbers/_icon-badge.scss"
+          ]
+        },
+        {
+          "family": "images",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_images.scss"
+          ]
+        },
+        {
+          "family": "input-with-icon",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_input-with-icon.scss"
+          ]
+        },
+        {
+          "family": "inputs-and-textareas",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_inputs-and-textareas.scss"
+          ]
+        },
+        {
+          "family": "ios-bounce",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_ios-bounce.scss"
+          ]
+        },
+        {
+          "family": "layout",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_layout.scss"
+          ]
+        },
+        {
+          "family": "lightbox-image",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_lightbox-image.scss"
+          ]
+        },
+        {
+          "family": "list",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_list.scss"
+          ]
+        },
+        {
+          "family": "list-item-content",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_list-item-content.scss"
+          ]
+        },
+        {
+          "family": "list-updating",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_list-updating.scss"
+          ]
+        },
+        {
+          "family": "login",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_login.scss"
+          ]
+        },
+        {
+          "family": "margin-container",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_margin-container.scss"
+          ]
+        },
+        {
+          "family": "master-detail",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/01-adaptive/_master-detail.scss"
+          ]
+        },
+        {
+          "family": "menu",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_menu.scss"
+          ]
+        },
+        {
+          "family": "menu-app-login-info",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_menu-app-login-info.scss"
+          ]
+        },
+        {
+          "family": "menu-app-menu-links",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_menu-app-menu-links.scss"
+          ]
+        },
+        {
+          "family": "menu-header-logo",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_menu-header-logo.scss"
+          ]
+        },
+        {
+          "family": "menu-layout-native",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_menu-layout-native.scss"
+          ]
+        },
+        {
+          "family": "menu-layout-side",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_menu-layout-side.scss"
+          ]
+        },
+        {
+          "family": "mixins",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/00-abstract/_mixins.scss"
+          ]
+        },
+        {
+          "family": "notification",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_notification-deprecated.scss"
+          ]
+        },
+        {
+          "family": "o-d-c-out-systems-u-i",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/ODC.OutSystemsUI.scss"
+          ]
+        },
+        {
+          "family": "o11-out-systems-u-i",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/O11.OutSystemsUI.scss"
+          ]
+        },
+        {
+          "family": "overflow",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_overflow.scss"
+          ]
+        },
+        {
+          "family": "pagination",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/04-navigation/_pagination.scss"
+          ]
+        },
+        {
+          "family": "popup",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_popup.scss"
+          ]
+        },
+        {
+          "family": "positioning",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_positioning.scss"
+          ]
+        },
+        {
+          "family": "positioning-absolute",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_positioning-absolute.scss"
+          ]
+        },
+        {
+          "family": "progress-bar",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_progress-bar-deprecated.scss"
+          ]
+        },
+        {
+          "family": "progress-circle",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_progress-circle-deprecated.scss"
+          ]
+        },
+        {
+          "family": "progress-circle-fraction",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_progress-circle-fraction-deprecated.scss"
+          ]
+        },
+        {
+          "family": "provider-login-button",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_provider-login-button.scss"
+          ]
+        },
+        {
+          "family": "radio-button",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_radio-button.scss"
+          ]
+        },
+        {
+          "family": "range-slider",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_range-slider-deprecated.scss"
+          ]
+        },
+        {
+          "family": "rangeslider",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_rangeslider-odc.scss"
+          ]
+        },
+        {
+          "family": "rating",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/05-numbers/_rating.scss"
+          ]
+        },
+        {
+          "family": "resets",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/01-foundations/_resets.scss"
+          ]
+        },
+        {
+          "family": "root",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/01-foundations/_root.scss"
+          ]
+        },
+        {
+          "family": "screen-transitions",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/06-screen-transitions/_screen-transitions.scss"
+          ]
+        },
+        {
+          "family": "scrollable-area",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_scrollable-area.scss"
+          ]
+        },
+        {
+          "family": "search",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_search-deprecated.scss"
+          ]
+        },
+        {
+          "family": "section-index",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_section-index-deprecated.scss"
+          ]
+        },
+        {
+          "family": "separator",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/06-utilities/_separator.scss"
+          ]
+        },
+        {
+          "family": "servicestudiopreview",
+          "file_count": 1,
+          "markers": [
+            "preview"
+          ],
+          "sample_paths": [
+            "src/scss/08-servicestudio-preview/_servicestudiopreview.scss"
+          ]
+        },
+        {
+          "family": "setup-border-vars",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/00-abstract/_setup-border-vars.scss"
+          ]
+        },
+        {
+          "family": "setup-color-vars",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/00-abstract/_setup-color-vars.scss"
+          ]
+        },
+        {
+          "family": "setup-global-typography-vars",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/00-abstract/_setup-global-typography-vars.scss"
+          ]
+        },
+        {
+          "family": "setup-global-vars",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/00-abstract/_setup-global-vars.scss"
+          ]
+        },
+        {
+          "family": "shadow",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_shadow.scss"
+          ]
+        },
+        {
+          "family": "sidebar",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_sidebar-deprecated.scss"
+          ]
+        },
+        {
+          "family": "space-margin",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_space-margin.scss"
+          ]
+        },
+        {
+          "family": "space-padding",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_space-padding.scss"
+          ]
+        },
+        {
+          "family": "stacked-cards",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/03-interaction/_stacked-cards.scss"
+          ]
+        },
+        {
+          "family": "submenu",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_submenu-deprecated.scss"
+          ]
+        },
+        {
+          "family": "switch",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_switch.scss"
+          ]
+        },
+        {
+          "family": "table",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_table.scss"
+          ]
+        },
+        {
+          "family": "tabs",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_tabs-deprecated.scss"
+          ]
+        },
+        {
+          "family": "tag",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_tag.scss"
+          ]
+        },
+        {
+          "family": "text",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_text.scss"
+          ]
+        },
+        {
+          "family": "themegrid-container",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/02-layout/_themegrid-container.scss"
+          ]
+        },
+        {
+          "family": "timeline",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/04-navigation/_timeline.scss"
+          ]
+        },
+        {
+          "family": "tooltip",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_tooltip-deprecated.scss"
+          ]
+        },
+        {
+          "family": "typography",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_typography.scss"
+          ]
+        },
+        {
+          "family": "upload",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/03-widgets/_upload.scss"
+          ]
+        },
+        {
+          "family": "user-avatar",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/02-content/_user-avatar.scss"
+          ]
+        },
+        {
+          "family": "video",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scss/10-deprecated/_video-deprecated.scss"
+          ]
+        },
+        {
+          "family": "visibility",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/05-useful/_visibility.scss"
+          ]
+        },
+        {
+          "family": "wizard",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scss/04-patterns/04-navigation/_wizard.scss"
+          ]
+        }
+      ],
+      "file_count": 144,
+      "platform_variants": {
+        "o11": [
+          "src/scss/01-foundations/_icon-library-o11.scss",
+          "src/scss/08-servicestudio-preview/_placeholder-empty-o11.scss",
+          "src/scss/O11.OutSystemsUI.scss"
+        ],
+        "odc": [
+          "src/scss/01-foundations/_icon-library-odc.scss",
+          "src/scss/03-widgets/_popover-odc.scss",
+          "src/scss/04-patterns/03-interaction/_rangeslider-odc.scss",
+          "src/scss/08-servicestudio-preview/_placeholder-empty-odc.scss",
+          "src/scss/ODC.OutSystemsUI.scss"
+        ]
+      },
+      "preview_file_count": 4
+    },
+    "ts": {
+      "api_file_count": 32,
+      "families": [
+        {
+          "family": "error-codes",
+          "file_count": 6,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/ErrorCodes.ts",
+            "src/scripts/OutSystems/OSUI/ErrorCodes.ts",
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/ErrorCodes.ts"
+          ]
+        },
+        {
+          "family": "bottom-sheet",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/BottomSheet/BottomSheet.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/BottomSheet/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/BottomSheet/Enum.ts"
+          ]
+        },
+        {
+          "family": "dropdown-server-side-item",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/DropdownServerSideItem.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/Enum.ts"
+          ]
+        },
+        {
+          "family": "flatpickr",
+          "file_count": 4,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/Enum.ts",
+            "src/scripts/Providers/OSUI/SharedProviderResources/Flatpickr/Enum.ts",
+            "src/scripts/Providers/OSUI/SharedProviderResources/Flatpickr/Utils.ts"
+          ]
+        },
+        {
+          "family": "inline-svg",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/InlineSvg/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/InlineSvg/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/InlineSvg/InlineSvg.ts"
+          ]
+        },
+        {
+          "family": "notification",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Notification/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Notification/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Notification/Notification.ts"
+          ]
+        },
+        {
+          "family": "overflow-menu",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/OverflowMenu.ts"
+          ]
+        },
+        {
+          "family": "sidebar",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Sidebar/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Sidebar/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Sidebar/Sidebar.ts"
+          ]
+        },
+        {
+          "family": "tabs",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Tabs/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Tabs/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Tabs/Tabs.ts"
+          ]
+        },
+        {
+          "family": "video",
+          "file_count": 4,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Video/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Video/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Video/Video.ts"
+          ]
+        },
+        {
+          "family": "accordion",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Accordion/Accordion.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Accordion/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/AccordionAPI.ts"
+          ]
+        },
+        {
+          "family": "accordion-item",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AccordionItem/AccordionItem.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/AccordionItem/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/AccordionItemAPI.ts"
+          ]
+        },
+        {
+          "family": "animated-label",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/AnimatedLabel.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/AnimatedLabelAPI.ts"
+          ]
+        },
+        {
+          "family": "button-loading",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/ButtonLoading/ButtonLoading.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/ButtonLoading/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/ButtonLoadingAPI.ts"
+          ]
+        },
+        {
+          "family": "carousel",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Carousel/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Carousel/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/CarouselAPI.ts"
+          ]
+        },
+        {
+          "family": "date-picker",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/DatePicker/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/DatePicker/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/DatePickerAPI.ts"
+          ]
+        },
+        {
+          "family": "dropdown",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/DropdownAPI.ts"
+          ]
+        },
+        {
+          "family": "flip-content",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/FlipContent/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/FlipContent/FlipContent.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/FlipContentAPI.ts"
+          ]
+        },
+        {
+          "family": "gallery",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Gallery/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Gallery/Gallery.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/GalleryAPI.ts"
+          ]
+        },
+        {
+          "family": "month-picker",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/MonthPicker/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/MonthPicker/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/MonthPickerAPI.ts"
+          ]
+        },
+        {
+          "family": "range-slider",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/RangeSlider/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/RangeSlider/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/RangeSliderAPI.ts"
+          ]
+        },
+        {
+          "family": "rating",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Rating/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Rating/Rating.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/RatingAPI.ts"
+          ]
+        },
+        {
+          "family": "search",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Search/Search.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/SearchAPI.ts",
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Search/Enum.ts"
+          ]
+        },
+        {
+          "family": "section-index",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/SectionIndex/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/SectionIndex/SectionIndex.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/SectionIndexAPI.ts"
+          ]
+        },
+        {
+          "family": "section-index-item",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/SectionIndexItem/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/SectionIndexItem/SectionIndexItem.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/SectionIndexItemAPI.ts"
+          ]
+        },
+        {
+          "family": "splide",
+          "file_count": 3,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Carousel/Splide/Enum.ts",
+            "src/scripts/Providers/OSUI/Carousel/Splide/Splide.ts",
+            "src/scripts/Providers/OSUI/Carousel/Splide/Utils.ts"
+          ]
+        },
+        {
+          "family": "submenu",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Submenu/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Submenu/Submenu.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/SubmenuAPI.ts"
+          ]
+        },
+        {
+          "family": "swipe-events",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/SwipeEvents/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/SwipeEvents/SwipeEvents.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/SwipeEventsAPI.ts"
+          ]
+        },
+        {
+          "family": "time-picker",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TimePicker/Callbacks.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/TimePicker/Enum.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/TimePickerAPI.ts"
+          ]
+        },
+        {
+          "family": "tooltip",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Tooltip/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/Tooltip/Tooltip.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/TooltipAPI.ts"
+          ]
+        },
+        {
+          "family": "touch-events",
+          "file_count": 3,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TouchEvents/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Pattern/TouchEvents/TouchEvents.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/TouchEventsAPI.ts"
+          ]
+        },
+        {
+          "family": "a11y-container-info",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/l10ns/A11yContainerInfo.ts",
+            "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/l10ns/A11yContainerInfo.ts"
+          ]
+        },
+        {
+          "family": "balloon",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Feature/Balloon/Balloon.ts",
+            "src/scripts/OSFramework/OSUI/Feature/Balloon/Enum.ts"
+          ]
+        },
+        {
+          "family": "dates",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/Dates.ts",
+            "src/scripts/OutSystems/OSUI/Utils/Dates.ts"
+          ]
+        },
+        {
+          "family": "floating-position",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Utils/FloatingPosition/Enum.ts",
+            "src/scripts/OSFramework/OSUI/Utils/FloatingPosition/FloatingPosition.ts"
+          ]
+        },
+        {
+          "family": "floating-u-i",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Utils/FloatingUI/Enum.ts",
+            "src/scripts/Providers/OSUI/Utils/FloatingUI/FloatingUI.ts"
+          ]
+        },
+        {
+          "family": "focus-first-invalid-input",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/FocusFirstInvalidInput.ts",
+            "src/scripts/OutSystems/OSUI/Utils/FocusFirstInvalidInput.ts"
+          ]
+        },
+        {
+          "family": "i-gesture-event",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/GestureEvents/IGestureEvent.ts",
+            "src/scripts/OSFramework/OSUI/Interface/IGestureEvent.ts"
+          ]
+        },
+        {
+          "family": "language",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/Language.ts",
+            "src/scripts/OutSystems/OSUI/Utils/Language.ts"
+          ]
+        },
+        {
+          "family": "log-message",
+          "file_count": 2,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/LogMessage.ts",
+            "src/scripts/OutSystems/OSUI/Utils/LogMessage.ts"
+          ]
+        },
+        {
+          "family": "tabs-content-item",
+          "file_count": 2,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TabsContentItem/TabsContentItem.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/TabsContentItemAPI.ts"
+          ]
+        },
+        {
+          "family": "tabs-header-item",
+          "file_count": 2,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TabsHeaderItem/TabsHeaderItem.ts",
+            "src/scripts/OutSystems/OSUI/Patterns/TabsHeaderItemAPI.ts"
+          ]
+        },
+        {
+          "family": "abstract-carousel",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Carousel/AbstractCarousel.ts"
+          ]
+        },
+        {
+          "family": "abstract-child",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AbstractChild.ts"
+          ]
+        },
+        {
+          "family": "abstract-configuration",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AbstractConfiguration.ts"
+          ]
+        },
+        {
+          "family": "abstract-date-picker",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/DatePicker/AbstractDatePicker.ts"
+          ]
+        },
+        {
+          "family": "abstract-dropdown",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/AbstractDropdown.ts"
+          ]
+        },
+        {
+          "family": "abstract-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/AbstractEvent.ts"
+          ]
+        },
+        {
+          "family": "abstract-events-manager",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/AbstractEventsManager.ts"
+          ]
+        },
+        {
+          "family": "abstract-feature",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Feature/AbstractFeature.ts"
+          ]
+        },
+        {
+          "family": "abstract-flatpickr",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/AbstractFlatpickr.ts"
+          ]
+        },
+        {
+          "family": "abstract-gesture-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/GestureEvents/AbstractGestureEvent.ts"
+          ]
+        },
+        {
+          "family": "abstract-listener",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/AbstractListener.ts"
+          ]
+        },
+        {
+          "family": "abstract-month-picker",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/MonthPicker/AbstractMonthPicker.ts"
+          ]
+        },
+        {
+          "family": "abstract-mutation-observer",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/MutationObserver/AbstractMutationObserver.ts"
+          ]
+        },
+        {
+          "family": "abstract-no-ui-slider",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/AbstractNoUiSlider.ts"
+          ]
+        },
+        {
+          "family": "abstract-observer",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/AbstractObserver.ts"
+          ]
+        },
+        {
+          "family": "abstract-parent",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AbstractParent.ts"
+          ]
+        },
+        {
+          "family": "abstract-pattern",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AbstractPattern.ts"
+          ]
+        },
+        {
+          "family": "abstract-progress",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/AbstractProgress.ts"
+          ]
+        },
+        {
+          "family": "abstract-progress-configuration",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/AbstractProgressConfiguration.ts"
+          ]
+        },
+        {
+          "family": "abstract-provider-configuration",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AbstractProviderConfiguration.ts"
+          ]
+        },
+        {
+          "family": "abstract-provider-pattern",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AbstractProviderPattern.ts"
+          ]
+        },
+        {
+          "family": "abstract-range-slider",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/RangeSlider/AbstractRangeSlider.ts"
+          ]
+        },
+        {
+          "family": "abstract-time-picker",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TimePicker/AbstractTimePicker.ts"
+          ]
+        },
+        {
+          "family": "abstract-virtual-select",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/AbstractVirtualSelect.ts"
+          ]
+        },
+        {
+          "family": "abstract-virtual-select-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/AbstractVirtualSelectEnum.ts"
+          ]
+        },
+        {
+          "family": "accessibility",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/Accessibility.ts"
+          ]
+        },
+        {
+          "family": "animate-on-drag",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Behaviors/AnimateOnDrag.ts"
+          ]
+        },
+        {
+          "family": "application",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/Application.ts"
+          ]
+        },
+        {
+          "family": "async-invocation",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/AsyncInvocation.ts"
+          ]
+        },
+        {
+          "family": "balloon-on-toggle",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/BalloonOnToggle.ts"
+          ]
+        },
+        {
+          "family": "body-on-click",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/BodyOnClick.ts"
+          ]
+        },
+        {
+          "family": "body-on-mouse-down",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/BodyOnMouseDown.ts"
+          ]
+        },
+        {
+          "family": "buttons-effect",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/ButtonsEffect.ts"
+          ]
+        },
+        {
+          "family": "carousel-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Carousel/CarouselFactory.ts"
+          ]
+        },
+        {
+          "family": "children-matches",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/ChildrenMatches.ts"
+          ]
+        },
+        {
+          "family": "circle",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/Circle/Enum.ts"
+          ]
+        },
+        {
+          "family": "create-api-response",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/CreateApiResponse.ts"
+          ]
+        },
+        {
+          "family": "date-picker-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/DatePicker/DatePickerFactory.ts"
+          ]
+        },
+        {
+          "family": "device",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/Device.ts"
+          ]
+        },
+        {
+          "family": "device-detection",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/DeviceDetection.ts"
+          ]
+        },
+        {
+          "family": "dom",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/Dom.ts"
+          ]
+        },
+        {
+          "family": "drag-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/GestureEvents/DragEvent.ts"
+          ]
+        },
+        {
+          "family": "dropdown-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/DropdownFactory.ts"
+          ]
+        },
+        {
+          "family": "dropdown-server-side",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/ServerSide/DropdownServerSide.ts"
+          ]
+        },
+        {
+          "family": "dropdown-server-side-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/ServerSide/DropdownServerSideEnum.ts"
+          ]
+        },
+        {
+          "family": "flatpickr-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/FlatpickrEnum.ts"
+          ]
+        },
+        {
+          "family": "flatpickr-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/FlatpickrFactory.ts"
+          ]
+        },
+        {
+          "family": "flatpickr-month",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/FlatpickrMonth.ts"
+          ]
+        },
+        {
+          "family": "flatpickr-range-date",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/RangeDate/FlatpickrRangeDate.ts"
+          ]
+        },
+        {
+          "family": "flatpickr-single-date",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/SingleDate/FlatpickrSingleDate.ts"
+          ]
+        },
+        {
+          "family": "flatpickr-time",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Timepicker/Flatpickr/FlatpickrTime.ts"
+          ]
+        },
+        {
+          "family": "floating-position-configs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Utils/FloatingPosition/FloatingPositionConfigs.ts"
+          ]
+        },
+        {
+          "family": "floating-position-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Utils/FloatingPosition/FloatingPositionFactory.ts"
+          ]
+        },
+        {
+          "family": "floating-u-i-configs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Utils/FloatingUI/FloatingUIConfigs.ts"
+          ]
+        },
+        {
+          "family": "focus-manager",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Behaviors/FocusManager.ts"
+          ]
+        },
+        {
+          "family": "focus-trap",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Behaviors/FocusTrap.ts"
+          ]
+        },
+        {
+          "family": "generate-unique-id",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/GenerateUniqueId.ts"
+          ]
+        },
+        {
+          "family": "gesture-events",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/GestureEvents/Callbacks.ts"
+          ]
+        },
+        {
+          "family": "get-browser",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/GetBrowser.ts"
+          ]
+        },
+        {
+          "family": "get-closest",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/GetClosest.ts"
+          ]
+        },
+        {
+          "family": "get-has-list-inside",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/GetHasListInside.ts"
+          ]
+        },
+        {
+          "family": "get-picker-extensibility",
+          "file_count": 1,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/GetPickerExtensibilityAPI.ts"
+          ]
+        },
+        {
+          "family": "get-version",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/GetVersion.ts"
+          ]
+        },
+        {
+          "family": "global-callbacks",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/GlobalCallbacks.ts"
+          ]
+        },
+        {
+          "family": "global-d",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Global.d.ts"
+          ]
+        },
+        {
+          "family": "global-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/GlobalEnum.ts"
+          ]
+        },
+        {
+          "family": "hide-on-scroll",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/HideOnScroll.ts"
+          ]
+        },
+        {
+          "family": "i-accordion",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Accordion/IAccordion.ts"
+          ]
+        },
+        {
+          "family": "i-accordion-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AccordionItem/IAccordionItem.ts"
+          ]
+        },
+        {
+          "family": "i-animated-label",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/IAnimatedLabel.ts"
+          ]
+        },
+        {
+          "family": "i-balloon",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Feature/Balloon/IBalloon.ts"
+          ]
+        },
+        {
+          "family": "i-bottom-sheet",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/BottomSheet/IBottomSheet.ts"
+          ]
+        },
+        {
+          "family": "i-builder",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IBuilder.ts"
+          ]
+        },
+        {
+          "family": "i-button-loading",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/ButtonLoading/IButtonLoading.ts"
+          ]
+        },
+        {
+          "family": "i-callback",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/ICallback.ts"
+          ]
+        },
+        {
+          "family": "i-carousel",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Carousel/ICarousel.ts"
+          ]
+        },
+        {
+          "family": "i-child",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IChild.ts"
+          ]
+        },
+        {
+          "family": "i-date-picker",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/DatePicker/IDatePicker.ts"
+          ]
+        },
+        {
+          "family": "i-disposable",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IDisposable.ts"
+          ]
+        },
+        {
+          "family": "i-drag-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IDragEvent.ts"
+          ]
+        },
+        {
+          "family": "i-dropdown",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/IDropdown.ts"
+          ]
+        },
+        {
+          "family": "i-dropdown-server-side",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Dropdown/ServerSide/IDropdownServerSide.ts"
+          ]
+        },
+        {
+          "family": "i-dropdown-server-side-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/IDropdownServerSideItem.ts"
+          ]
+        },
+        {
+          "family": "i-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/IEvent.ts"
+          ]
+        },
+        {
+          "family": "i-feature",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Feature/IFeature.ts"
+          ]
+        },
+        {
+          "family": "i-flatpickr",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/IFlatpickr.ts"
+          ]
+        },
+        {
+          "family": "i-flatpickr-month",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/IFlatpickrMonth.ts"
+          ]
+        },
+        {
+          "family": "i-flatpickr-time",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Timepicker/Flatpickr/IFlatpickrTime.ts"
+          ]
+        },
+        {
+          "family": "i-flip-content",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/FlipContent/IFlipContent.ts"
+          ]
+        },
+        {
+          "family": "i-floatable",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IFloatable.ts"
+          ]
+        },
+        {
+          "family": "i-floating-position",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Utils/FloatingPosition/IFloatingPosition.ts"
+          ]
+        },
+        {
+          "family": "i-gallery",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Gallery/IGallery.ts"
+          ]
+        },
+        {
+          "family": "i-inline-svg",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/InlineSvg/IInlineSvg.ts"
+          ]
+        },
+        {
+          "family": "i-listener",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/IListener.ts"
+          ]
+        },
+        {
+          "family": "i-message-event-pi-d",
+          "file_count": 1,
+          "markers": [
+            "preview"
+          ],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/PreviewInDevices/IMessageEventPiD.ts"
+          ]
+        },
+        {
+          "family": "i-month-picker",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/MonthPicker/IMonthPicker.ts"
+          ]
+        },
+        {
+          "family": "i-no-ui-slider",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/INoUiSlider.ts"
+          ]
+        },
+        {
+          "family": "i-notification",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Notification/INotification.ts"
+          ]
+        },
+        {
+          "family": "i-observer",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/IObserver.ts"
+          ]
+        },
+        {
+          "family": "i-openable",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IOpenable.ts"
+          ]
+        },
+        {
+          "family": "i-overflow-menu",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/IOverflowMenu.ts"
+          ]
+        },
+        {
+          "family": "i-parent",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IParent.ts"
+          ]
+        },
+        {
+          "family": "i-pattern",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IPattern.ts"
+          ]
+        },
+        {
+          "family": "i-progress",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/IProgress.ts"
+          ]
+        },
+        {
+          "family": "i-provider-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/ProviderEvents/IProviderEvent.ts"
+          ]
+        },
+        {
+          "family": "i-provider-events-manager",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/ProviderEvents/IProviderEventsManager.ts"
+          ]
+        },
+        {
+          "family": "i-provider-pattern",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IProviderPattern.ts"
+          ]
+        },
+        {
+          "family": "i-range-slider",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/RangeSlider/IRangeSlider.ts"
+          ]
+        },
+        {
+          "family": "i-rating",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Rating/IRating.ts"
+          ]
+        },
+        {
+          "family": "i-render-update",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/IRenderUpdate.ts"
+          ]
+        },
+        {
+          "family": "i-search",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Search/ISearch.ts"
+          ]
+        },
+        {
+          "family": "i-search-by-id",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/ISearchById.ts"
+          ]
+        },
+        {
+          "family": "i-section-index",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/SectionIndex/ISectionIndex.ts"
+          ]
+        },
+        {
+          "family": "i-section-index-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/SectionIndexItem/ISectionIndexItem.ts"
+          ]
+        },
+        {
+          "family": "i-sidebar",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Sidebar/ISidebar.ts"
+          ]
+        },
+        {
+          "family": "i-submenu",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Submenu/ISubmenu.ts"
+          ]
+        },
+        {
+          "family": "i-swipe-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Interface/ISwipeEvent.ts"
+          ]
+        },
+        {
+          "family": "i-swipe-events",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/SwipeEvents/ISwipeEvents.ts"
+          ]
+        },
+        {
+          "family": "i-tabs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Tabs/ITabs.ts"
+          ]
+        },
+        {
+          "family": "i-tabs-content-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TabsContentItem/ITabsContentItem.ts"
+          ]
+        },
+        {
+          "family": "i-tabs-header-item",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TabsHeaderItem/ITabsHeaderItem.ts"
+          ]
+        },
+        {
+          "family": "i-time-picker",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TimePicker/ITimePicker.ts"
+          ]
+        },
+        {
+          "family": "i-tooltip",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Tooltip/ITooltip.ts"
+          ]
+        },
+        {
+          "family": "i-touch-events",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TouchEvents/ITouchEvents.ts"
+          ]
+        },
+        {
+          "family": "i-video",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Video/IVideo.ts"
+          ]
+        },
+        {
+          "family": "i-virtual-select",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/IVirtualSelect.ts"
+          ]
+        },
+        {
+          "family": "icon-library",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/IconLibrary.ts"
+          ]
+        },
+        {
+          "family": "lang-observer",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/MutationObserver/Lang/LangObserver.ts"
+          ]
+        },
+        {
+          "family": "lang-observer-configs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/MutationObserver/Lang/LangObserverConfigs.ts"
+          ]
+        },
+        {
+          "family": "layout-private",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/LayoutPrivate.ts"
+          ]
+        },
+        {
+          "family": "layout-private-body-css-vars",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/LayoutPrivateBodyCssVars.ts"
+          ]
+        },
+        {
+          "family": "layout-private-close-deprecated-submenu",
+          "file_count": 1,
+          "markers": [
+            "deprecated"
+          ],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/LayoutPrivateCloseDeprecatedSubmenu.ts"
+          ]
+        },
+        {
+          "family": "layout-private-on-orientation-change",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/LayoutPrivateOnOrientationChange.ts"
+          ]
+        },
+        {
+          "family": "layout-private-set-a11-y",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/LayoutPrivateSetA11Y.ts"
+          ]
+        },
+        {
+          "family": "layout-private-skip-content-link",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/LayoutPrivateSkipContentLink.ts"
+          ]
+        },
+        {
+          "family": "listener-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/ListenerEnum.ts"
+          ]
+        },
+        {
+          "family": "listener-manager",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/ListenerManager.ts"
+          ]
+        },
+        {
+          "family": "manage-accessibility",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/ManageAccessibility.ts"
+          ]
+        },
+        {
+          "family": "map-operation",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/MapOperation.ts"
+          ]
+        },
+        {
+          "family": "master-detail",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/MasterDetail.ts"
+          ]
+        },
+        {
+          "family": "menu",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/Menu.ts"
+          ]
+        },
+        {
+          "family": "month-picker-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/MonthPicker/MonthPickerFactory.ts"
+          ]
+        },
+        {
+          "family": "network",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/Network.ts"
+          ]
+        },
+        {
+          "family": "next-year-btn",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/l10ns/NextYearBtn.ts"
+          ]
+        },
+        {
+          "family": "no-u-i-slider",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/Utils.ts"
+          ]
+        },
+        {
+          "family": "no-ui-slider-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/NoUiSliderEnum.ts"
+          ]
+        },
+        {
+          "family": "no-ui-slider-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/NoUiSliderFactory.ts"
+          ]
+        },
+        {
+          "family": "no-ui-slider-interval",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderInterval/NoUiSliderInterval.ts"
+          ]
+        },
+        {
+          "family": "no-ui-slider-single",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderSingle/NoUiSliderSingle.ts"
+          ]
+        },
+        {
+          "family": "normalize-provider-configs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/NormalizeProviderConfigs.ts"
+          ]
+        },
+        {
+          "family": "o-s-u-i",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Constants.ts"
+          ]
+        },
+        {
+          "family": "observer-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/ObserverEnum.ts"
+          ]
+        },
+        {
+          "family": "observer-manager",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/ObserverManager.ts"
+          ]
+        },
+        {
+          "family": "on-post-message",
+          "file_count": 1,
+          "markers": [
+            "preview"
+          ],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/PreviewInDevices/OnPostMessage.ts"
+          ]
+        },
+        {
+          "family": "orientation-change",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/OrientationChange.ts"
+          ]
+        },
+        {
+          "family": "osui",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/osui.ts"
+          ]
+        },
+        {
+          "family": "previous-year-btn",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/l10ns/PreviousYearBtn.ts"
+          ]
+        },
+        {
+          "family": "progress",
+          "file_count": 1,
+          "markers": [
+            "api"
+          ],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Patterns/ProgressAPI.ts"
+          ]
+        },
+        {
+          "family": "progress-bar",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/Bar/ProgressBar.ts"
+          ]
+        },
+        {
+          "family": "progress-circle",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/Circle/ProgressCircle.ts"
+          ]
+        },
+        {
+          "family": "progress-enum",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/ProgressEnum.ts"
+          ]
+        },
+        {
+          "family": "progress-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/Progress/ProgressFactory.ts"
+          ]
+        },
+        {
+          "family": "provider-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/ProviderEvents/ProviderEvent.ts"
+          ]
+        },
+        {
+          "family": "provider-events-manager",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/ProviderEvents/ProviderEventsManager.ts"
+          ]
+        },
+        {
+          "family": "providers",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Providers.ts"
+          ]
+        },
+        {
+          "family": "r-t-l-observer",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/MutationObserver/RTL/RTLObserver.ts"
+          ]
+        },
+        {
+          "family": "r-t-l-observer-configs",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Observers/MutationObserver/RTL/RTLObserverConfigs.ts"
+          ]
+        },
+        {
+          "family": "range-date",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/RangeDate/Enum.ts"
+          ]
+        },
+        {
+          "family": "range-slider-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/RangeSlider/RangeSliderFactory.ts"
+          ]
+        },
+        {
+          "family": "s-v-g",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/SVG.ts"
+          ]
+        },
+        {
+          "family": "sanitize",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/Sanitize.ts"
+          ]
+        },
+        {
+          "family": "screen-on-scroll",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/ScreenOnScroll.ts"
+          ]
+        },
+        {
+          "family": "scroll",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Behaviors/Scroll.ts"
+          ]
+        },
+        {
+          "family": "scroll-to-element",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/ScrollToElement.ts"
+          ]
+        },
+        {
+          "family": "single-date",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/SingleDate/Enum.ts"
+          ]
+        },
+        {
+          "family": "swipe-event",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/GestureEvents/SwipeEvent.ts"
+          ]
+        },
+        {
+          "family": "time-picker-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Pattern/TimePicker/TimePickerFactory.ts"
+          ]
+        },
+        {
+          "family": "times",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/Times.ts"
+          ]
+        },
+        {
+          "family": "today-btn",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Datepicker/Flatpickr/l10ns/TodayBtn.ts"
+          ]
+        },
+        {
+          "family": "toggle-class",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/ToggleClass.ts"
+          ]
+        },
+        {
+          "family": "u-r-l",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Helper/URL.ts"
+          ]
+        },
+        {
+          "family": "update-position-on-scroll",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/SharedProviderResources/Flatpickr/UpdatePositionOnScroll.ts"
+          ]
+        },
+        {
+          "family": "update-zindex",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/SharedProviderResources/Flatpickr/UpdateZindex.ts"
+          ]
+        },
+        {
+          "family": "utils",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OutSystems/OSUI/Utils/Utilities.ts"
+          ]
+        },
+        {
+          "family": "virtual-select",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Utils.ts"
+          ]
+        },
+        {
+          "family": "virtual-select-d",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/VirtualSelect.d.ts"
+          ]
+        },
+        {
+          "family": "virtual-select-factory",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/VirtualSelectFactory.ts"
+          ]
+        },
+        {
+          "family": "virtual-select-search",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Search/VirtualSelectSearch.ts"
+          ]
+        },
+        {
+          "family": "virtual-select-tags",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Tags/VirtualSelectTags.ts"
+          ]
+        },
+        {
+          "family": "window-on-message",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/WindowOnMessage.ts"
+          ]
+        },
+        {
+          "family": "window-on-resize",
+          "file_count": 1,
+          "markers": [],
+          "sample_paths": [
+            "src/scripts/OSFramework/OSUI/Event/DOMEvents/Listeners/WindowOnResize.ts"
+          ]
+        }
+      ],
+      "non_config_file_count": 318
+    }
+  },
+  "generated_at_utc": "2026-06-15T08:51:05Z",
+  "references": [
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Timepicker/Flatpickr/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "<img alt=\"Flatpickr\" src=\"https://flatpickr.js.org/images/logo.png\" width=\"24\"> Flatpickr \u00b7 ![flatpickr version](https://img.shields.io/badge/version-4.6.13-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://flatpickr.js.org/\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Timepicker/Flatpickr/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Timepicker/Flatpickr/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Datepicker/Flatpickr/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "<img alt=\"Flatpickr\" src=\"https://flatpickr.js.org/images/logo.png\" width=\"24\"> Flatpickr \u00b7 ![flatpickr version](https://img.shields.io/badge/version-v4.6.13-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://flatpickr.js.org/\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Datepicker/Flatpickr/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Datepicker/Flatpickr/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "<img alt=\"Flatpickr\" src=\"https://flatpickr.js.org/images/logo.png\" width=\"24\"> Flatpickr \u00b7 ![flatpickr version](https://img.shields.io/badge/version-v4.6.13-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://flatpickr.js.org/\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Monthpicker/Flatpickr/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Monthpicker/Flatpickr/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Carousel/Splide/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "<img alt=\"Splide\" src=\"https://raw.githubusercontent.com/Splidejs/splide/master/images/logo.svg\" width=\"24\"> Splide \u00b7 ![splidejs version](https://img.shields.io/badge/version-v4.1.3-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://splidejs.com/\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Carousel/Splide/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Carousel/Splide/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Carousel/AbstractCarouselConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractcarousel",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "AutoPlay"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as GlobalEnum.Direction.LTR | GlobalEnum.Direction.RTL | GlobalEnum.Direction.TTB.",
+          "name": "Direction"
+        },
+        {
+          "default_value": "Enum.Defaults.Height",
+          "description": "Implementation configuration property typed as string | number.",
+          "name": "Height"
+        },
+        {
+          "default_value": "1",
+          "description": "Implementation configuration property typed as number.",
+          "name": "ItemsDesktop"
+        },
+        {
+          "default_value": "Enum.Defaults.SpaceNone",
+          "description": "Implementation configuration property typed as string | number.",
+          "name": "ItemsGap"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "ItemsPhone"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "ItemsTablet"
+        },
+        {
+          "default_value": "true",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "Loop"
+        },
+        {
+          "default_value": "Enum.Navigation.Both,\n\t\t\t\t\t\tEnum.Navigation.Arrows,\n\t\t\t\t\t\tEnum.Navigation.Dots,\n\t\t\t\t\t\tEnum.Navigation.None",
+          "description": "Implementation configuration property typed as Enum.Navigation.",
+          "name": "Navigation"
+        },
+        {
+          "default_value": "Enum.Defaults.SpaceNone",
+          "description": "Implementation configuration property typed as string | number.",
+          "name": "Padding"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "StartingPosition"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Carousel/AbstractCarouselConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Carousel/AbstractCarouselConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/DatePicker/AbstractDatePickerConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractdatepicker",
+      "properties": [
+        {
+          "default_value": "Helper.Dates.ServerFormat",
+          "description": "Implementation configuration property typed as string.",
+          "name": "DateFormat"
+        },
+        {
+          "default_value": "0",
+          "description": "Implementation configuration property typed as number.",
+          "name": "FirstWeekDay"
+        },
+        {
+          "default_value": "undefined",
+          "description": "Implementation configuration property typed as string.",
+          "name": "MaxDate"
+        },
+        {
+          "default_value": "undefined",
+          "description": "Implementation configuration property typed as string.",
+          "name": "MinDate"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowTodayButton"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowWeekNumbers"
+        },
+        {
+          "default_value": "Enum.TimeFormatMode.Disable",
+          "description": "Implementation configuration property typed as string.",
+          "name": "TimeFormat"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/DatePicker/AbstractDatePickerConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/DatePicker/AbstractDatePickerConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Dropdown/AbstractDropdownConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractdropdown",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsDisabled"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowDropboxAsPopup"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Dropdown/AbstractDropdownConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Dropdown/AbstractDropdownConfig.ts"
+    },
+    {
+      "compatibility_notes": [
+        "// Set Provider configs values! // - (*) Config added by us to the provider repository! this._providerOptions = { altFormat: this._checkAltFormat(), altInput: true, allowInput: this.AllowInput, disable: this.Disable.length === 0 ? undefined : this.Disable, disableMobile: this.DisableMobile, dateFormat: this._isUsingDateTime ? this.ServerDateFormat + ' H:i:S' // do not change 'H:i:S' since it's absoluted needed due to platform conversions! : this.ServerDateFormat, maxDate: this._validateDate(this.MaxDate, true), minDate: this._validateDate(this.MinDate), onChange: this.OnChange, onClose: this.OnClose, onMonthChange: this.OnMonthChange, onOpen: this.OnOpen, time_24hr: this.TimeFormat === OSFramework.OSUI.Patterns.DatePicker.Enum.TimeFormatMode.Time24hFormat, updateInputVal: false, // (*) weekNumbers: this.ShowWeekNumbers, ariaDateFormat: Providers.OSUI.SharedProviderResources.Flatpickr.Enum.AriaDateFormat.WeekdayDayMonthYear, position: OutSystems.OSUI.Utils.GetIsRTL() ? Providers.OSUI.SharedProviderResources.Flatpickr.Enum.Position.Right : Providers.OSUI.SharedProviderResources.Flatpickr.Enum.Position.Left, } as FlatpickrOptions;",
+        "/** * Set DatePicker Locale * * @memberof Providers.OSUI.DatePicker.Flatpickr.AbstractFlatpickrConfig */ public set Lang(value: string) { // substring is needed to avoid passing values like \"en-EN\" since we must use only \"en\" this._dynamicLang = value.substring(0, 2); }"
+      ],
+      "doc_path": "src/scripts/Providers/OSUI/Datepicker/Flatpickr/AbstractFlatpickrConfig.ts",
+      "events": [
+        "OnChange",
+        "OnClose",
+        "OnMonthChange",
+        "OnOpen"
+      ],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractflatpickr",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.Patterns.DatePicker.Enum.Mode.",
+          "name": "CalendarMode"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnChange"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnClose"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnMonthChange"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnOpen"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Datepicker/Flatpickr/AbstractFlatpickrConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Datepicker/Flatpickr/AbstractFlatpickrConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/MonthPicker/AbstractMonthPickerConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractmonthpicker",
+      "properties": [
+        {
+          "default_value": "'MM/YYYY'",
+          "description": "Implementation configuration property typed as string.",
+          "name": "DateFormat"
+        },
+        {
+          "default_value": "value",
+          "description": "Implementation configuration property typed as MonthYear.",
+          "name": "InitialMonth"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as MonthYear.",
+          "name": "MaxMonth"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as MonthYear.",
+          "name": "MinMonth"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/MonthPicker/AbstractMonthPickerConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/MonthPicker/AbstractMonthPickerConfig.ts"
+    },
+    {
+      "compatibility_notes": [
+        "//To avoid performance issues if (tickMarksValues > this.MaxValue) { tickMarksValues = this.MaxValue; } // Ticks, when they exist, can't be decimal (library restraint) if (tickMarksValues < 1) { console.warn( 'The interval between tick marks, when they exist, can not be smaller than one or a decimal number (library restraint). If you do not want TickMarks to show, set the ShowTickMarks parameter to false.' ); this.ShowTickMarks = true; return null; }",
+        "// To avoid the creation of minor ticks, whatever the value const ticksDensity = tickMarksValues * 100;"
+      ],
+      "doc_path": "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/AbstractNoUiSliderConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractnouislider",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/AbstractNoUiSliderConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/AbstractNoUiSliderConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/RangeSlider/AbstractRangeSliderConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractrangeslider",
+      "properties": [
+        {
+          "default_value": "0",
+          "description": "Implementation configuration property typed as number.",
+          "name": "InitialValueFrom"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "InitialValueTo"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsDisabled"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsInterval"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "MaxValue"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "MinValue"
+        },
+        {
+          "default_value": "GlobalEnum.Orientation.Horizontal,\n\t\t\t\t\t\tGlobalEnum.Orientation.Vertical",
+          "description": "Implementation configuration property typed as Orientation.",
+          "name": "Orientation"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowFloatingLabel"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowTickMarks"
+        },
+        {
+          "default_value": "this.Orientation === (GlobalEnum.Orientation.Horizontal as string",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Size"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "StartingValueFrom"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "StartingValueTo"
+        },
+        {
+          "default_value": "1",
+          "description": "Implementation configuration property typed as number.",
+          "name": "Step"
+        },
+        {
+          "default_value": "0",
+          "description": "Implementation configuration property typed as number.",
+          "name": "TickMarksInterval"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/RangeSlider/AbstractRangeSliderConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/RangeSlider/AbstractRangeSliderConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/TimePicker/AbstractTimePickerConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstracttimepicker",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "FirstWeekDay"
+        },
+        {
+          "default_value": "undefined",
+          "description": "Implementation configuration property typed as string.",
+          "name": "InitialTime"
+        },
+        {
+          "default_value": "true",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "Is24Hours"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "MaxTime"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "MinTime"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "TimeFormat"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/TimePicker/AbstractTimePickerConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/TimePicker/AbstractTimePickerConfig.ts"
+    },
+    {
+      "compatibility_notes": [
+        "// Method used to generate the HTML String to be attached at the option label private _getOptionImagePrefix(option: DropDownOption): string { // Since we'll add a src attribute, lets sanitize the given url to avoid XSS const sanitizedUrl = OSFramework.OSUI.Helper.Sanitize(option.image_url_or_class); return `<img class=\"${Enum.CssClass.OptionItemImage}\" src=\"${sanitizedUrl}\">`; }",
+        "// Group titles do not have labels thus it can skip this block if (!data.isGroupTitle) { // If it has group options, we need to use the calculated group index in order to match // with the one received from the provider if (data.isGroupOption) { groupIndex = this._groupedOptionsList.findIndex((group) => group.index === data.groupIndex); index = data.index - (data.groupIndex + 1); } else { groupIndex = 0; index = data.index; }",
+        "/** * Method used to set all the common VirtualSelect properties across the different types of instances * * @returns [VirtualSelectOpts] * @memberof Providers.OSUI.Dropdown.VirtualSelect.AbstractVirtualSelectConfig */ public getProviderConfig(): VirtualSelectOpts { /* In order to avoid XSS let's sanitize the label of each all options - This must be done here since If we do this at the renderer option we will remain with the library value unSanitized, that said we must do it before adding the list of options to the library! */ for (const option of this.OptionsList) { option.label = OSFramework.OSUI.Helper.Sanitize(option.label); }"
+      ],
+      "doc_path": "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/AbstractVirtualSelectConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Abstractvirtualselect",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "ElementId"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "NoOptionsText"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "NoResultsText"
+        },
+        {
+          "default_value": "value",
+          "description": "Implementation configuration property typed as DropDownOption[].",
+          "name": "OptionsList"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "PopupDropboxBreakpoint"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Prompt"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "SearchPrompt"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as DropDownOption[].",
+          "name": "StartingSelection"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [
+        "Pattern placeholders described in source"
+      ],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/AbstractVirtualSelectConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/AbstractVirtualSelectConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Accordion/AccordionConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Accordion",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "MultipleItems"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Accordion/AccordionConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Accordion/AccordionConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/AccordionItem/AccordionItemConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Accordionitem",
+      "properties": [
+        {
+          "default_value": "Enum.IconType.Caret",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Icon"
+        },
+        {
+          "default_value": "GlobalEnum.Direction.Right",
+          "description": "Implementation configuration property typed as string.",
+          "name": "IconPosition"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsDisabled"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "StartsExpanded"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ToggleWithIcon"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/AccordionItem/AccordionItemConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/AccordionItem/AccordionItemConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/AnimatedLabelConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Animatedlabel",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/AnimatedLabelConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/AnimatedLabelConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/BottomSheet/BottomSheetConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Bottomsheet",
+      "properties": [
+        {
+          "default_value": "GlobalEnum.ShapeTypes.SoftRounded,\n\t\t\t\t\t\tGlobalEnum.ShapeTypes.Sharp,\n\t\t\t\t\t\tGlobalEnum.ShapeTypes.Rounded",
+          "description": "Implementation configuration property typed as GlobalEnum.ShapeTypes.",
+          "name": "Shape"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowHandler"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/BottomSheet/BottomSheetConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/BottomSheet/BottomSheetConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/ButtonLoading/ButtonLoadingConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Buttonloading",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsLoading"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ShowLoadingAndLabel"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/ButtonLoading/ButtonLoadingConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/ButtonLoading/ButtonLoadingConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Dropdown/ServerSide/DropdownServerSideConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Dropdownserverside",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "AllowMultipleSelection"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsDisabled"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Dropdown/ServerSide/DropdownServerSideConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Dropdown/ServerSide/DropdownServerSideConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/DropdownServerSideItemConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Dropdownserversideitem",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsSelected"
+        },
+        {
+          "default_value": "undefined",
+          "description": "Implementation configuration property typed as string.",
+          "name": "ItemId"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/DropdownServerSideItemConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/DropdownServerSideItem/DropdownServerSideItemConfig.ts"
+    },
+    {
+      "compatibility_notes": [
+        "/** * Set MonthPicker Locale * * @memberof Providers.OSUI.MonthPicker.Flatpickr.FlatpickrMonthConfig */ public set Lang(value: string) { // substring is needed to avoid passing values like \"en-EN\" since we must use only \"en\" this._dynamicLang = value.substring(0, 2); } } }"
+      ],
+      "doc_path": "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/FlatpickrMonthConfig.ts",
+      "events": [
+        "OnChange",
+        "OnChangeEventCallback",
+        "OnClose",
+        "OnCloseEventCallback",
+        "OnOpen",
+        "OnOpenEventCallback"
+      ],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Flatpickrmonth",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnChangeEventCallback"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnCloseEventCallback"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnOpenEventCallback"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "ServerDateFormat"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Monthpicker/Flatpickr/FlatpickrMonthConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Monthpicker/Flatpickr/FlatpickrMonthConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Datepicker/Flatpickr/RangeDate/FlatpickrRangeDateConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Flatpickrrangedate",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "InitialEndDate"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "InitialStartDate"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Datepicker/Flatpickr/RangeDate/FlatpickrRangeDateConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Datepicker/Flatpickr/RangeDate/FlatpickrRangeDateConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Datepicker/Flatpickr/SingleDate/FlatpickrSingleDateConfig.ts",
+      "events": [
+        "OnChange"
+      ],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Flatpickrsingledate",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string | Date.",
+          "name": "InitialDate"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Datepicker/Flatpickr/SingleDate/FlatpickrSingleDateConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Datepicker/Flatpickr/SingleDate/FlatpickrSingleDateConfig.ts"
+    },
+    {
+      "compatibility_notes": [
+        "/** * Set TimePicker Locale * * @memberof Providers.OSUI.TimePicker.Flatpickr.FlatpickrTimeConfig */ public set Lang(value: string) { // substring is needed to avoid passing values like \"en-EN\" since we must use only \"en\" this._dynamicLang = value.substring(0, 2); } } }"
+      ],
+      "doc_path": "src/scripts/Providers/OSUI/Timepicker/Flatpickr/FlatpickrTimeConfig.ts",
+      "events": [
+        "OnChange",
+        "OnChangeEventCallback",
+        "OnClose",
+        "OnCloseEventCallback",
+        "OnOpen",
+        "OnOpenEventCallback"
+      ],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Flatpickrtime",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnChangeEventCallback"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnCloseEventCallback"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as OSFramework.OSUI.GlobalCallbacks.Generic.",
+          "name": "OnOpenEventCallback"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "ServerDateFormat"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Timepicker/Flatpickr/FlatpickrTimeConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Timepicker/Flatpickr/FlatpickrTimeConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/FlipContent/FlipContentConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Flipcontent",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "FlipSelf"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsFlipped"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [
+        "FlipContent"
+      ],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/FlipContent/FlipContentConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/FlipContent/FlipContentConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Utils/FloatingUI/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "FloatingUI \u00b7 ![floatingUI version](https://img.shields.io/badge/version-v1.6.5-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://github.com/floating-ui/floating-ui\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Utils/FloatingUI/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Utils/FloatingUI/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Gallery/GalleryConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Gallery",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "ItemsGap"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "RowItemsDesktop"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "RowItemsPhone"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "RowItemsTablet"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Gallery/GalleryConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Gallery/GalleryConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/InlineSvg/InlineSvgConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Inlinesvg",
+      "properties": [
+        {
+          "default_value": "OSFramework.OSUI.Constants.EmptyString",
+          "description": "Implementation configuration property typed as string.",
+          "name": "SVGCode"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/InlineSvg/InlineSvgConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/InlineSvg/InlineSvgConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Notification/NotificationConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Notification",
+      "properties": [
+        {
+          "default_value": "undefined",
+          "description": "Implementation configuration property typed as number.",
+          "name": "CloseAfterTime"
+        },
+        {
+          "default_value": "true",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "InteractToClose"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "NeedsSwipes"
+        },
+        {
+          "default_value": "Enum.Defaults.DefaultPosition",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Position"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "StartsOpen"
+        },
+        {
+          "default_value": "Enum.Defaults.DefaultWidth",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Width"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Notification/NotificationConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Notification/NotificationConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderInterval/NoUiSliderIntervalConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Nouisliderinterval",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderInterval/NoUiSliderIntervalConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderInterval/NoUiSliderIntervalConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderSingle/NoUiSliderSingleConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Nouislidersingle",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderSingle/NoUiSliderSingleConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderSingle/NoUiSliderSingleConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/OverflowMenuConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Overflowmenu",
+      "properties": [
+        {
+          "default_value": "GlobalEnum.FloatingPosition.Auto,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.Bottom,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.BottomEnd,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.BottomStart,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.Center,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.Left,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.LeftEnd,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.LeftStart,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.Right,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.RightEnd,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.RightStart,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.Top,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.TopEnd,\n\t\t\t\t\t\tGlobalEnum.FloatingPosition.TopStart",
+          "description": "Implementation configuration property typed as GlobalEnum.FloatingPosition.",
+          "name": "Position"
+        },
+        {
+          "default_value": "GlobalEnum.ShapeTypes.SoftRounded,\n\t\t\t\t\t\tGlobalEnum.ShapeTypes.Sharp,\n\t\t\t\t\t\tGlobalEnum.ShapeTypes.Rounded",
+          "description": "Implementation configuration property typed as GlobalEnum.ShapeTypes.",
+          "name": "Shape"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/OverflowMenuConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/OverflowMenu/OverflowMenuConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Progress/Bar/ProgressBarConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Progressbar",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Progress/Bar/ProgressBarConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Progress/Bar/ProgressBarConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Progress/Circle/ProgressCircleConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Progresscircle",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Progress/Circle/ProgressCircleConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Progress/Circle/ProgressCircleConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Rating/RatingConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Rating",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsEdit"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "RatingScale"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "RatingValue"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Size"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Rating/RatingConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Rating/RatingConfig.ts"
+    },
+    {
+      "compatibility_notes": [
+        ". \u251c\u2500\u2500 ... \u251c\u2500\u2500 src # Where the code lives | \u251c\u2500\u2500 scripts # Contains the TS code (+ patterns partials) of the framework. | | \u251c\u2500\u2500 OSFramework # Internal code to orchestrate the usage of provider. **Should not** be invoked directly. | | | \u251c\u2500\u2500 Behaviours # Contains the classes used to set/define pattern behaviours. | | | \u251c\u2500\u2500 Event # Contains the classes related with event management. | | | | \u2514\u2500\u2500 GestureEvents # Contains the classes related with gesture events. | | | \u251c\u2500\u2500 Helper # Contains several classes that isolate behaviors and simplify the code. | | | \u251c\u2500\u2500 Interface # Contains several generic interfaces to be used by different patterns. | | | \u251c\u2500\u2500 Pattern # Contains the code (TS + SCSS partial) of each pattern of OutSystems UI - divided in folders with the pattern name. | | | | \u251c\u2500\u2500 Accordion | | | | \u251c\u2500\u2500 AccordionItem | | | | \u251c\u2500\u2500 AnimatedLabel | | | | \u251c\u2500\u2500 BottomSheet | | | | \u251c\u2500\u2500 ButtonLoading | | | | \u251c\u2500\u2500 Carousel | | | | \u251c\u2500\u2500 DatePicker | | | | \u251c\u2500\u2500 Dropdown | | | | | \u2514\u2500\u2500 ServerSide | | | | \u251c\u2500\u2500 DropdownServerSideItem | | | | \u251c\u2500\u2500 FlipContent | | | | \u251c\u2500\u2500 Gallery | | | | \u251c\u2500\u2500 MonthPicker | | | | \u251c\u2500\u2500 Notification | | | | \u251c\u2500\u2500 Progress | | | | | \u251c\u2500\u2500 Bar | | | | | \u2514\u2500\u2500 Circle | | | | \u251c\u2500\u2500 RangeSlider | | | | \u251c\u2500\u2500 Rating | | | | \u251c\u2500\u2500 SectionIndex | | | | \u251c\u2500\u2500 SectionIndexItem | | | | \u251c\u2500\u2500 Sidebar | | | | \u251c\u2500\u2500 SubMenu | | | | \u251c\u2500\u2500 SwipeEvents | | | | \u251c\u2500\u2500 Tabs | | | | \u251c\u2500\u2500 TabsContentItem | | | | \u251c\u2500\u2500 TabesHeaderItem | | | | \u251c\u2500\u2500 TimePicker | | | | \u251c\u2500\u2500 Tooltip | | | | \u2514\u2500\u2500 TouchEvents | | | | | | | \u251c\u2500\u2500 Constants.ts # File that constains all the constants, strings, names, etc to be used in the internal framework. | | | \u251c\u2500\u2500 ErrorCodes.ts # Contains all the Framework Error codes per pattern. | | | \u2514\u2500\u2500 ClobalCallbacks.ts # Contains global events callbacks types. | | | \u2514\u2500\u2500 GlobalEnum.ts # Contains all the enumerates. | | | | | \u251c\u2500\u2500 OutSystems # Folder that constains **all public** APIs. | | | \u2514\u2500\u2500 OSUI # OutSystems UI public APIs. | | | \u251c\u2500\u2500 Patterns # Contains all patterns public APIs. | | | \u251c\u2500\u2500 Utils # Useful APIs to be used in OutSystems code module. | | | \u2514\u2500\u2500 ErrorCodes.ts # Contains all the API Error codes per pattern. | | | \u2514\u2500\u2500 GetVersion.ts # File that contains the API to return the OSUI version. | | | | | \u251c\u2500\u2500 Providers # Folder containing provider specific code. | | | \u251c\u2500\u2500 Carousel # Contains the providers used by the **Carousel** pattern. | | | | \u2514\u2500\u2500 Splide # Splide specific code. | | | | | | | \u251c\u2500\u2500 DatePicker # Contains the providers used by the **DatePicker** pattern. | | | | \u2514\u2500\u2500 Flatpickr # Flatpickr specific code. | | | | \u251c\u2500\u2500 l10ns # Contains all the translations needed for the nonTranslated calendar elements by library; | | | | \u251c\u2500\u2500 RangeDate # Specific code for the **DatePicker** pattern with **RangeDate** Mode. | | | | \u2514\u2500\u2500 SingleDate # Specific code for the **DatePicker** pattern with **SingleDate** Mode. | | | | | | | \u251c\u2500\u2500 Dropdown # Contains the providers used by the **DropdownSearch** & **DropdownTags** pattern. | | | | \u2514\u2500\u2500 VirtualSelect # VirtualSelect specific code. | | | | \u251c\u2500\u2500 scss # Contains all styles for the datepicker based on library; | | | | \u251c\u2500\u2500 Search # Specific code for the DropdownSearch. | | | | \u2514\u2500\u2500 Tags # Specific code for the DropdownTags search. | | | | | | | \u251c\u2500\u2500 MonthPicker # Contains the providers used by the **MonthPicker** pattern. | | | | \u2514\u2500\u2500 Flatpickr # Flatpickr specific code. | | | | | | | \u251c\u2500\u2500 RangeSlider # Contains the providers used by the **RangeSlider** & **RangeSliderInterval** pattern. | | | | \u2514\u2500\u2500 NoUiSlider # NoUiSlider specific code. | | | | | | | \u251c\u2500\u2500 TimePicker # Contains the providers used by the **MonthPicker** pattern. | | | | \u2514\u2500\u2500 Flatpickr # Flatpickr specific code. | | | | | | | \u2514\u2500\u2500 SharedProviderResources # Contains the providers used by the patterns that share this info/structure. | | | \u2514\u2500\u2500 Flatpickr # Flatpickr specific code. | | | | | | | | \u251c\u2500\u2500 Global.d.ts # Used to declare development time variables and imports, that will not be *used* in runtime - for better intellisense in Visual Code. | | \u2514\u2500\u2500 osui.ts # Defines the (old) `osui` API, retrocompatibility, but now invoking the methods correctly organized under `OutSystems.OSUI`. | | | \u251c\u2500\u2500 scss # Contains all the SCSS partials that are **not** related with any pattern. \u2514\u2500\u2500 ..."
+      ],
+      "doc_path": "src/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Readme",
+      "properties": [],
+      "purpose": "Bellow there is some comments about the application structure.",
+      "slots": [
+        "FlipContent"
+      ],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Search/SearchConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Search",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Search/SearchConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Search/SearchConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/SectionIndex/SectionIndexConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Sectionindex",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsFixed"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "SmoothScrolling"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/SectionIndex/SectionIndexConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/SectionIndex/SectionIndexConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/SectionIndexItem/SectionIndexItemConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Sectionindexitem",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "ScrollToWidgetId"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/SectionIndexItem/SectionIndexItemConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/SectionIndexItem/SectionIndexItemConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Sidebar/SidebarConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Sidebar",
+      "properties": [
+        {
+          "default_value": "GlobalEnum.Direction.Right,\n\t\t\t\t\t\tGlobalEnum.Direction.Right,\n\t\t\t\t\t\tGlobalEnum.Direction.Left",
+          "description": "Implementation configuration property typed as GlobalEnum.Direction.",
+          "name": "Direction"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "HasOverlay"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "StartsOpen"
+        },
+        {
+          "default_value": "Enum.Defaults.Width",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Width"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Sidebar/SidebarConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Sidebar/SidebarConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Carousel/Splide/SplideConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Splide",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Carousel/Splide/SplideConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Carousel/Splide/SplideConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Submenu/SubmenuConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Submenu",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Submenu/SubmenuConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Submenu/SubmenuConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/SwipeEvents/SwipeEventsConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Swipeevents",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "WidgetId"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/SwipeEvents/SwipeEventsConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/SwipeEvents/SwipeEventsConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Tabs/TabsConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Tabs",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "ContentAutoHeight"
+        },
+        {
+          "default_value": "GlobalEnum.CssProperties.Auto",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Height"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "JustifyHeaders"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as number.",
+          "name": "StartingTab"
+        },
+        {
+          "default_value": "GlobalEnum.Orientation.Horizontal,\n\t\t\t\t\t\tGlobalEnum.Orientation.Vertical",
+          "description": "Implementation configuration property typed as GlobalEnum.Orientation.",
+          "name": "TabsOrientation"
+        },
+        {
+          "default_value": "GlobalEnum.Direction.Left, GlobalEnum.Direction.Right",
+          "description": "Implementation configuration property typed as GlobalEnum.Direction.",
+          "name": "TabsVerticalPosition"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Tabs/TabsConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Tabs/TabsConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/TabsContentItem/TabsContentItemConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Tabscontentitem",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/TabsContentItem/TabsContentItemConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/TabsContentItem/TabsContentItemConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/TabsHeaderItem/TabsHeaderItemConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Tabsheaderitem",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/TabsHeaderItem/TabsHeaderItemConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/TabsHeaderItem/TabsHeaderItemConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Tooltip/TooltipConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Tooltip",
+      "properties": [
+        {
+          "default_value": "true",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "IsHover"
+        },
+        {
+          "default_value": "GlobalEnum.Position.Right,\n\t\t\t\t\t\tObject.values(GlobalEnum.Position",
+          "description": "Implementation configuration property typed as GlobalEnum.Position.",
+          "name": "Position"
+        },
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "StartVisible"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Tooltip/TooltipConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Tooltip/TooltipConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/TouchEvents/TouchEventsConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Touchevents",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "WidgetId"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/TouchEvents/TouchEventsConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/TouchEvents/TouchEventsConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/OSFramework/OSUI/Pattern/Video/VideoConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Video",
+      "properties": [
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "Autoplay"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Captions"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "Controls"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Height"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "Loop"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "Muted"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "PosterURL"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "URL"
+        },
+        {
+          "default_value": "",
+          "description": "Implementation configuration property typed as string.",
+          "name": "Width"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/OSFramework/OSUI/Pattern/Video/VideoConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/OSFramework/OSUI/Pattern/Video/VideoConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "VirtualSelect \u00b7 ![virtualselect version](https://img.shields.io/badge/version-v1.3.0-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://sa-si-dev.github.io/virtual-select/#/\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/README.md"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Search/VirtualSelectSearchConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Virtualselectsearch",
+      "properties": [
+        {
+          "default_value": "false",
+          "description": "Implementation configuration property typed as boolean.",
+          "name": "AllowMultipleSelection"
+        }
+      ],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Search/VirtualSelectSearchConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Search/VirtualSelectSearchConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Tags/VirtualSelectTagsConfig.ts",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "Virtualselecttags",
+      "properties": [],
+      "purpose": "Implementation configuration source.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Tags/VirtualSelectTagsConfig.ts"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Tags/VirtualSelectTagsConfig.ts"
+    },
+    {
+      "compatibility_notes": [],
+      "doc_path": "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/README.md",
+      "events": [],
+      "evidence_status": "Implementation nuance only",
+      "mentor_prompt_guidance": "Use this source-backed note only after current docs and generated catalogs; do not label mirror-only facts Current official or Catalog-backed official.",
+      "name": "noUiSlider \u00b7 ![nouislider version](https://img.shields.io/badge/version-v15.8.1-informational)",
+      "properties": [],
+      "purpose": "All info about this Provider <a href=\"https://refreshless.com/nouislider/\">here</a>.",
+      "slots": [],
+      "source_aliases": [
+        "https://github.com/OutSystems/outsystems-ui/blob/dev/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/README.md"
+      ],
+      "source_url": "https://github.com/OutSystems/outsystems-ui/blob/552c418b1697957065760d8b236b40acc827ad30/src/scripts/Providers/OSUI/RangeSlider/NoUISlider/README.md"
+    }
+  ],
+  "source_branch": "dev",
+  "source_commit": "552c418b1697957065760d8b236b40acc827ad30",
+  "source_content_root": "src",
+  "source_family": "official_repo_mirror",
+  "source_quality": "outsystems_public_implementation_evidence",
+  "source_remote": "https://github.com/OutSystems/outsystems-ui",
+  "source_repo": "OutSystems/outsystems-ui",
+  "summary": {
+    "entries_with_events": 4,
+    "entries_with_properties": 33,
+    "reference_count": 53,
+    "top_level_paths": {
+      "README.md": 1,
+      "scripts": 52
+    },
+    "warning_count": 18
+  },
+  "warnings": [
+    "src/scripts/OSFramework/OSUI/Pattern/AnimatedLabel/AnimatedLabelConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/OSFramework/OSUI/Pattern/Progress/Bar/ProgressBarConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/OSFramework/OSUI/Pattern/Progress/Circle/ProgressCircleConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/OSFramework/OSUI/Pattern/Search/SearchConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/OSFramework/OSUI/Pattern/Submenu/SubmenuConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/OSFramework/OSUI/Pattern/TabsContentItem/TabsContentItemConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/OSFramework/OSUI/Pattern/TabsHeaderItem/TabsHeaderItemConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Carousel/Splide/README.md: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Carousel/Splide/SplideConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Datepicker/Flatpickr/README.md: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/README.md: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Dropdown/VirtualSelect/Tags/VirtualSelectTagsConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Monthpicker/Flatpickr/README.md: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/README.md: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderInterval/NoUiSliderIntervalConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/RangeSlider/NoUISlider/SliderSingle/NoUiSliderSingleConfig.ts: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Timepicker/Flatpickr/README.md: no implementation nuance fields extracted",
+    "src/scripts/Providers/OSUI/Utils/FloatingUI/README.md: no implementation nuance fields extracted"
+  ]
+}

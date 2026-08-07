@@ -105,7 +105,7 @@ Use an OutSystems-specific handoff header that points to `outsystems-plan-to-men
 22. If the user chooses option 1, stop after the patched plan. Report the patched plan path and explain that the full flow requires installing or using `outsystems-mentor-implementation`. State: Install or use `outsystems-mentor-implementation` for the full deterministic Mentor package.
 23. If the user chooses option 2, write `docs/superpowers/plans/{plan-stem}-mentor-output.md` as a DEGRADED OUTPUT using only the 10-section Mentor spec format from `references/mentor-spec-guardrails.md`. This is a degraded paste-mode Mentor spec.
 24. Degraded paste-mode Mentor spec output must be paste mode only. Do not send degraded output through OutSystems MCP, and do not label degraded output as Studio-native pseudocode.
-25. At the top of degraded output, state: `DEGRADED OUTPUT: outsystems-mentor-implementation was not available. This file is a 10-section Mentor spec for paste mode only. It does not include Studio-native pseudocode packages and does not include Data Model Pseudocode, Server Action Pseudocode, Client Action Pseudocode, Screen/UI Pseudocode, Navigation Pseudocode, or Verification Pseudocode. Install or use outsystems-mentor-implementation for the full deterministic Mentor package.`
+25. At the top of degraded output, emit the DEGRADED OUTPUT notice in `references/prompt-templates/degraded-output-notice.md` verbatim (no placeholders).
 
 ## Artifact Rules
 

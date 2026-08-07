@@ -8,6 +8,73 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### v36 — the OutSystems sprint loop pack (release candidate, not yet cut)
+
+> **Draft.** Written against the candidate build; the version number and the
+> "verified" claims below must be re-checked at the cut. The Windows install
+> walkthrough and the no-VPN rehearsal have **not** been run yet.
+
+Three skills join `outsystems-plan-to-mentor`, so the published set now covers
+steps 1–6 of the sprint loop plus the runtime grade: `outsystems-ui-design`
+(wireframe to validated blueprint), `outsystems-mentor-implementation` (build),
+and `outsystems-runtime-ui-audit` (score the published app from its live URL).
+`outsystems-plan-to-mentor` is re-exported from current source.
+
+- **A single entry document**, `docs/sprint-loop-for-colleagues.md`, is the
+  thing to read first. It gives the loop in order, names which skill owns each
+  step, and points at the Superpowers and OutSystems MCP plugins' own official
+  installs for the steps we do not redistribute. It lists the **six human
+  gates** as a table, because the honest headline is that this loop does not run
+  unattended and planning for one wastes a day.
+- **What is not included is stated plainly**, and by function rather than by
+  internal name: the source-review half of step 7, step 8, and the
+  retrospective all depend on tooling that is not publicly distributed.
+- **A feedback kit**, `docs/colleague-feedback/`: a friction-log template and a
+  standard-library bundler that collects the filled template, installed-skill
+  frontmatter and any run receipts into one archive. It makes no network calls,
+  and it redacts the home directory, OutSystems hostnames and anything
+  GUID-shaped before writing — verified end to end against a fixture carrying
+  all three, including that a skill's body never leaves the machine.
+- **The pack installs from per-OS instructions**, not from a script.
+  `INSTALL-SPRINT-LOOP-MACOS.md` and `INSTALL-SPRINT-LOOP-WINDOWS.md` ship as
+  release assets alongside `outsystems-sprint-loop-pack.tgz` and its `.sha256`.
+  Both agents are covered — Claude Code reads `~/.claude/skills/`, Codex reads
+  `~/.agents/skills/`, and neither needs a config file edited.
+
+**One file is deliberately withheld.** `outsystems-ui-design` normally carries a
+generated inventory of the built-in platform widgets' runtime properties. It is
+derived from an OutSystems-internal repository that publishes no licence, so it
+must not enter a world-visible repo. The generator script ships instead, with a
+new `references/built-in-widgets-regeneration.md` covering both how to produce
+the file with OutSystems GitHub access and how the skill behaves without it:
+fall back to the block index and say a property list is unverified rather than
+inventing one that looks right and fails at build time.
+
+### Verified by execution
+
+The macOS install document was walked end to end against this build: digest
+check, extraction, copy into a skills root, and the verification block. All four
+skills report their own `name:` line afterwards. The design skill's validator
+was then run inside that install, with the widget inventory absent, against both
+worked-example blueprints it now ships — both validate.
+
+### Not yet verified
+
+- **The Windows document has not been executed.** It is written PowerShell-native
+  rather than translated from the macOS commands, but every previous release
+  found defects on Windows that were invisible on macOS by construction. Treat it
+  as unproven until it is walked in a VM.
+- **The no-VPN rehearsal has not been run.** The build skill's retrieval is
+  pluggable, and the claim that a colleague needs no VPN is a design claim here,
+  not a measurement.
+
+### Repository changes
+
+`skills/EXPORT-MANIFEST.json` now records **every** exported pack rather than
+only the most recent one. Before this, exporting a second skill overwrote the
+manifest, and the CI integrity check kept passing while covering nothing but the
+last export. `docs/` is generated output too, and is covered by the same check.
+
 ## 2026-08-05 — outsystems-plan-to-mentor: mechanical coverage gate
 
 Skill export from PAS `f8482d5`. The self-reported coverage score (0–100,

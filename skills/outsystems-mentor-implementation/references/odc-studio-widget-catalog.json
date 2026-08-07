@@ -1,0 +1,1682 @@
+{
+  "generated_at_utc": "2026-06-20T17:54:30+00:00",
+  "source_family": "official_outsystems_docs_odc",
+  "source_search_roots": [
+    "src/eap/reference",
+    "src/eap/building-apps/ui",
+    "knowledge/outsystems/public/odc/reference"
+  ],
+  "summary": {
+    "current_official_count": 3,
+    "o11_candidate_support_count": 23,
+    "target_count": 24,
+    "unverified_gap_count": 21
+  },
+  "warnings": [],
+  "widgets": [
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "layout",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Container"
+      ],
+      "name": "Container",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Container",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Visible"
+        ],
+        "purpose": "Container \"box\" where you can drag and drop other widgets, including other containers, to organize the layout of the screen.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/container",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Container"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Container widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/container/",
+          "title": "Container - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "display",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Expression"
+      ],
+      "name": "Expression",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Expression",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Example",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "The expression widget displays text or the result of an expression at runtime. It's similar to the print command in other programming languages. To use the expression widget:",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/expression",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Expression"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Expression widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/expression/",
+          "title": "Expression - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "control-flow",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for If"
+      ],
+      "name": "If",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "If",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Condition",
+          "Name"
+        ],
+        "purpose": "Allows you to control the content that is displayed in the screen based on a condition.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/if_widget",
+        "support_status": "O11-supported ODC candidate",
+        "title": "If Widget"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "If",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "display",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Text"
+      ],
+      "name": "Text",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Text",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "Encloses the text that you type in your screen or block.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/text_widget",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Text Widget"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "Text",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Form"
+      ],
+      "name": "Form",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Form",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "Allows to create, show or edit a single record of an Entity or a Structure.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/form",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Form"
+      },
+      "observed_examples": [
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app, screen, LayoutBlank, and password reset context",
+          "hierarchy": [
+            "RecoverPasswordReset",
+            "LayoutBlank",
+            "Content",
+            "Container",
+            "Form named PasswordResetForm"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "RecoverPasswordReset",
+          "widget_name": "PasswordResetForm",
+          "widget_type": "Form"
+        }
+      ],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Form widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/form/",
+          "title": "Form - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Input widget reference",
+          "notes": "Documents: Select the Input widget and set a Client Variable through the Variable property.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/client-variable.md",
+          "title": "Client variables - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Input widget reference",
+          "notes": "Documents: Select the Input widget and create a local variable through the Variable dropdown.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/logic/local-variable.md",
+          "title": "Local variables - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Input widget reference",
+          "notes": "Documents configuring an Input-related Events > OnChange property to create a new Client Action.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/self-registration/create-validation-form.md",
+          "title": "Create validation form - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Input widget reference",
+          "notes": "Documents an OutSystems UI pattern containing Icon and Input widgets, using the Input Variable dropdown, and setting the Input Prompt property.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/inputwithicon.md",
+          "title": "Input with Icon - OutSystems Developer Cloud documentation"
+        }
+      ],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Input"
+      ],
+      "name": "Input",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Input",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Enabled",
+          "Mandatory",
+          "Name",
+          "Prompt",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Field that holds the data typed by the user.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/input",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Input"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Input widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/input/",
+          "title": "Input - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "action",
+      "current_contextual_sources": [
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Button widget reference",
+          "notes": "Documents a Button widget with an On Click event that calls a client action.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/sending-emails/sending.md",
+          "title": "Sending emails - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Button widget reference",
+          "notes": "Documents selecting a Signup button and choosing New Client Action from the On Click event dropdown.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/self-registration/logic.md",
+          "title": "Self-registration logic - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Button widget reference",
+          "notes": "Documents that passing a value through an On Click Event works with a Link widget and also with a Button, including a destination Screen handler.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/navigation/pass-information-between-screens.md",
+          "title": "Pass information between screens - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Button widget reference",
+          "notes": "Documents caution around widgets that use OnClick client actions for navigation and recommends Button and Link components to link directly to URLs.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/seo/seo-best-practices.md",
+          "title": "SEO best practices - OutSystems Developer Cloud documentation"
+        }
+      ],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Button"
+      ],
+      "name": "Button",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Click"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Button",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Confirmation Message",
+          "Enabled",
+          "Is Form Default",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Visible"
+        ],
+        "purpose": "Provides a button that users can click or tap to trigger an action, submit data or navigate to another screen.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/button",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Button"
+      },
+      "observed_examples": [
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app, screen, and S3 upload/staging context",
+          "hierarchy": [
+            "S3OrchestratorDemo",
+            "LayoutTopMenu",
+            "MainContent",
+            "Form named Demo",
+            "Tabs",
+            "TabsContentItem named Tab_UseCase",
+            "Container named Ex1_1_UploadClientSideToS3",
+            "Container named StartUploadCSide",
+            "IfWidget named ShowStartUploadClientSide",
+            "Container",
+            "UIBlockInstanceWidget ButtonLoading",
+            "Button"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "S3OrchestratorDemo",
+          "section_title": "Start Upload",
+          "text": "Start Upload",
+          "widget_name": "Button",
+          "widget_type": "Button"
+        },
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app, screen, S3Binary, TempTable, and copy-to-temp context",
+          "hierarchy": [
+            "S3OrchestratorDemo",
+            "LayoutTopMenu",
+            "MainContent",
+            "Form named Demo",
+            "Tabs",
+            "TabsContentItem named Tab_UseCase",
+            "Container named Ex1_3_DownloadCopyServerSide",
+            "IfWidget",
+            "Container named ShowDownloadButton",
+            "UIBlockInstanceWidget ButtonLoading",
+            "Button named DownloadGUID2"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "S3OrchestratorDemo",
+          "section_title": "Download Binary from Staging Area to Temp",
+          "text": "Download Binary from Staging Area to Temp",
+          "widget_name": "DownloadGUID2",
+          "widget_type": "Button"
+        }
+      ],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Button widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/button/",
+          "title": "Button - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "action",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Button Group"
+      ],
+      "name": "Button Group",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Button Group",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Enabled",
+          "Mandatory",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Set of buttons from which the user can select a single option.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/button_group",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Button Group"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "Button Group",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "navigation",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Link"
+      ],
+      "name": "Link",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Click"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Link",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Confirmation Message",
+          "Enabled",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Visible"
+        ],
+        "purpose": "Displays a hyperlink that users can click or tap to trigger an action, submit data or navigate to another screen.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/link",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Link"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Link widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/link/",
+          "title": "Link - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "navigation",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Popover Menu"
+      ],
+      "name": "Popover Menu",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Popover Menu",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Popover Width",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "A container that opens when the user taps an element or a region. You can use it to provide contextual information or options.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/popover_menu",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Popover Menu"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "Popover Menu",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "data-display",
+      "current_contextual_sources": [
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact List widget reference",
+          "notes": "Documents that after fetching data with an Aggregate, the example uses a List widget but a Table or other widget can also display the data.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/interaction/fetch-display.md",
+          "title": "Fetch and display data from the database in OutSystems - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact List widget reference",
+          "notes": "Documents dragging a List widget to a Screen, setting the Source field to GetEmployees.List, and dragging an Entity Attribute into the List widget.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/interaction/fetch-display.md",
+          "title": "Fetch and display data from the database in OutSystems - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact List widget reference",
+          "notes": "Documents creating an Aggregate in a Screen or Block through Fetch Data from Database before binding UI that consumes the resulting list.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/aggregate.md",
+          "title": "Query data using aggregates - OutSystems Developer Cloud documentation"
+        }
+      ],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for List"
+      ],
+      "name": "List",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Scroll Ending"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "List",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Animate Items",
+          "Mode",
+          "Name",
+          "Property",
+          "Source",
+          "Style Classes",
+          "Tag Wrapper",
+          "Value"
+        ],
+        "purpose": "Use the List widget to display a simple list, for example a list of Expressions, or to display more complex items by adding a List Item widget. The List widget requires a source to populate the items.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/list",
+        "support_status": "O11-supported ODC candidate",
+        "title": "List"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the List widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/list/",
+          "title": "List - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "data-display",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for List Item"
+      ],
+      "name": "List Item",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Click"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "List Item",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Full Swipe Left",
+          "Full Swipe Right",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "Displays a list item with full swipe behavior capability, containing a List Action widget to define the swiping behavior.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/list_item",
+        "support_status": "O11-supported ODC candidate",
+        "title": "List Item"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "List Item",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "data-display",
+      "current_contextual_sources": [
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Table widget reference",
+          "notes": "Documents that after fetching data with an Aggregate, the example uses a List widget but a Table or other widget can also display the data.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/interaction/fetch-display.md",
+          "title": "Fetch and display data from the database in OutSystems - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Table widget reference",
+          "notes": "Documents setting a data-display widget source to GetEmployees.List after creating the GetEmployees Aggregate; use as Table data producer guidance only.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/interaction/fetch-display.md",
+          "title": "Fetch and display data from the database in OutSystems - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Table widget reference",
+          "notes": "Documents creating an Aggregate in a Screen or Block through Fetch Data from Database before binding UI that consumes the resulting list.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/aggregate.md",
+          "title": "Query data using aggregates - OutSystems Developer Cloud documentation"
+        }
+      ],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Table"
+      ],
+      "name": "Table",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Sort"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Table",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Property",
+          "Show Header",
+          "Source",
+          "Style Classes",
+          "Style Header",
+          "Style Row",
+          "Value"
+        ],
+        "purpose": "Use the Table Widget to display data in cells distributed in rows and columns. The tables created with Table Widget support automatic pagination, sorting, and dragging Attributes to add columns.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/table",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Table"
+      },
+      "observed_examples": [
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app, screen, and S3Binary staging context",
+          "hierarchy": [
+            "S3OrchestratorDemo",
+            "LayoutTopMenu",
+            "MainContent",
+            "Form named Demo",
+            "Tabs",
+            "TabsContentItem named Tab_UseCase",
+            "Container named Ex1_2_DownloadFromS3ServerSide",
+            "IfWidget",
+            "Container named Spacer2",
+            "TableRecords named TblBinaries"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "S3OrchestratorDemo",
+          "section_title": "Staging Area Information stored in table S3Binary",
+          "widget_name": "TblBinaries",
+          "widget_type": "TableRecords"
+        },
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app, screen, and metadata/S3 object context",
+          "hierarchy": [
+            "S3UtilitiesDemo",
+            "LayoutTopMenu",
+            "MainContent",
+            "Form named Demo",
+            "Tabs",
+            "TabsContentItem named Tab_Utility",
+            "Container named Cont_Metadata",
+            "Container named Cont_GetObjectMetadata",
+            "Container",
+            "TableRecords named TblGetObjectMetadata"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "S3UtilitiesDemo",
+          "section_title": "Metadata Actions (Get attributes, List with Filter)",
+          "subsection_title": "GetObjectMetadata: Get metadata for an S3 object",
+          "widget_name": "TblGetObjectMetadata",
+          "widget_type": "TableRecords"
+        }
+      ],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Table widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/table/",
+          "title": "Table - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Checkbox"
+      ],
+      "name": "Checkbox",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Checkbox",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Enabled",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Check box field where the user can enable or disable an option. The value must be stored in a Boolean variable.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/checkbox",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Checkbox"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Checkbox widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/checkbox/",
+          "title": "Checkbox - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [
+        "Radio Button"
+      ],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Radio Group"
+      ],
+      "name": "Radio Group",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Radio Group",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Enabled",
+          "Mandatory",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Radio Group is a widget that groups two or more Radio Buttons. Set the variable that holds the value of the selected option in the Variable property of Radio Group. This value usually comes from a Static Entity. The value of Variable depends on which Radio Button the user selects.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/radio_group",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Radio Group"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Radio Group widget, grouped Radio Buttons, selected value binding through Variable, properties, events, and runtime Id.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/radio_group/",
+          "title": "Radio group - OutSystems 11 Documentation"
+        },
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 Traditional Web reference; not current ODC authority",
+          "notes": "Documents individual Radio Button behavior for Traditional Web and should not be used alone to generate ODC Radio Group prompts.",
+          "source_family": "official_outsystems_public_docs_o11_traditional_web",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/traditional_web/web_interfaces/designing_screens/radio_button_widget/",
+          "title": "Radio Button Widget - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observed; public ODC docs search did not surface a matching widget reference",
+          "label": "Radio Group",
+          "notes": "Use Radio Group as the ODC Studio widget label; treat O11 Radio Group and Radio Button references as supporting compatibility sources only.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Dropdown widget reference",
+          "notes": "Documents adding a Dropdown and setting its values to the returning list of an Aggregate, using the DropdownLabel attribute as the options text.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/calculated-attribute-create.md",
+          "title": "Create a Calculated Attribute in an Aggregate - OutSystems Developer Cloud documentation"
+        },
+        {
+          "evidence_level": "Current ODC contextual documentation; not an exact Dropdown widget reference",
+          "notes": "Documents using Screen Aggregates to populate drop-down box lists and warns to set Max. Records higher than the expected maximum when fetching all records.",
+          "source_family": "official_outsystems_public_docs_odc",
+          "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/aggregate.md",
+          "title": "Query data using aggregates - OutSystems Developer Cloud documentation"
+        }
+      ],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Dropdown"
+      ],
+      "name": "Dropdown",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Dropdown",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Empty Text",
+          "Enabled",
+          "List",
+          "Mandatory",
+          "Name",
+          "Options Content",
+          "Options Text",
+          "Options Value",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Use the Dropdown Widget to create drop-down lists in your Mobile and Reactive Web Apps.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/dropdown",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Dropdown"
+      },
+      "observed_examples": [
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app, screen, and NormalizePdfMode context",
+          "hierarchy": [
+            "S3UtilitiesDemo",
+            "LayoutTopMenu",
+            "MainContent",
+            "Form named Demo",
+            "Tabs",
+            "TabsContentItem named Tab_Utility",
+            "Container named Cont_PDFinS3",
+            "Container named Cont_NormalizePdfInS3WithQpdf",
+            "Container named NormalizePdfBtn",
+            "Container",
+            "Dropdown DropNormalizeMode"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "S3UtilitiesDemo",
+          "widget_name": "DropNormalizeMode"
+        }
+      ],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Dropdown widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/dropdown/",
+          "title": "Dropdown - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Label"
+      ],
+      "name": "Label",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Label",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Input Widget",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "Provides a caption to the input fields describing the information that is being requested from the user.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/label",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Label"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "Label",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Text Area"
+      ],
+      "name": "Text Area",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Text Area",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Enabled",
+          "Mandatory",
+          "Name",
+          "Prompt",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Multi-line field to hold text typed by the user. The value must be stored in a Text variable.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/text_area",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Text Area"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "Text Area",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "form-input",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Switch"
+      ],
+      "name": "Switch",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Switch",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Enabled",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Variable"
+        ],
+        "purpose": "Two-state toggle control which allows users to select between two options. You can assign only a boolean variable to Switch.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/switch",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Switch"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": [
+        {
+          "evidence_level": "ODC Studio toolbox observation; not current public documentation authority",
+          "label": "Switch",
+          "notes": "Treat O11 support as support-only and require ODC Studio review before using this target as authoritative.",
+          "observed_at": "2026-05-23",
+          "source": "ODC Studio appshot",
+          "studio_version": "ODC Studio 1.7.9"
+        }
+      ]
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "media",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Image"
+      ],
+      "name": "Image",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Image",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Default Image",
+          "Image",
+          "Image Content",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Type",
+          "URL",
+          "Value"
+        ],
+        "purpose": "Displays an image in the screen or block. The image source can be one of the following:",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/image",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Image"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Image widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/image/",
+          "title": "Image - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [
+        "reactive web apps"
+      ],
+      "binding_shape": [],
+      "category": "media",
+      "current_contextual_sources": [],
+      "doc_path": "src/eap/building-apps/ui/icons/icon-widget-ref.md",
+      "events": [
+        "OnClick",
+        "OnMouseOut",
+        "OnMouseOver"
+      ],
+      "evidence_status": "Current official",
+      "key_properties": [
+        "Icon",
+        "Name",
+        "Property",
+        "Size",
+        "Style Classes",
+        "Value",
+        "Visible"
+      ],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "Use the Icon element only for documented ODC Studio behavior; keep missing facts explicit.",
+      "missing_facts": [
+        "Documented binding shape not found in source section"
+      ],
+      "name": "Icon",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Icon",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value",
+          "Visible"
+        ],
+        "purpose": "Shows an icon from a predefined set of icons for common use and content. It allows you to add a visual reference to an action, for example.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/icon",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Icon"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "Depending on the icon library selected at the theme level, the Icon widget displays icons from either the FontAwesome or Phosphor icon libraries. Use icons to provide visual cues for actions, indicate functionality, or enhance navigation in your app\u2019s user interface.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/icons/icon-widget-ref.md",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [],
+      "binding_shape": [],
+      "category": "file-input",
+      "current_contextual_sources": [],
+      "doc_path": "",
+      "events": [],
+      "evidence_status": "Unverified gap",
+      "key_properties": [],
+      "kind": "widget",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "",
+      "missing_facts": [
+        "Official source section not found for Upload"
+      ],
+      "name": "Upload",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [
+          "On Change"
+        ],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [],
+        "normalized_name": "Upload",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Accept",
+          "File Content",
+          "File Name",
+          "Mandatory",
+          "Name",
+          "Property",
+          "Style Classes",
+          "Value"
+        ],
+        "purpose": "The Upload widget lets users browse and select a local file, which you can then upload to the server.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/upload",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Upload"
+      },
+      "observed_examples": [
+        {
+          "app": "S3Orchestrator_Sandbox",
+          "evidence_level": "Studio-observed, user-confirmed; MCP confirms app and screen context",
+          "hierarchy": [
+            "S3OrchestratorDemo",
+            "LayoutTopMenu",
+            "MainContent",
+            "Form named Demo",
+            "Tabs",
+            "TabsContentItem named Tab_UseCase",
+            "Container named Ex1_1_UploadClientSideToS3",
+            "Container named Ex1_Phase1Name",
+            "Container named ClientFileUpload",
+            "Upload widget named Ex1_uplFile"
+          ],
+          "notes": "MCP context search did not expose this exact deep widget node; use as real-app naming and placement evidence, not official platform authority.",
+          "screen": "S3OrchestratorDemo",
+          "widget_name": "Ex1_uplFile"
+        }
+      ],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the Upload widget reference, including purpose, properties, events, and runtime Id where documented. Use as supporting source only unless a current ODC source is found.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/upload/",
+          "title": "Upload - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "",
+      "source_url": "",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [
+        "reactive web apps",
+        "mobile apps"
+      ],
+      "binding_shape": [],
+      "category": "ui-producer",
+      "current_contextual_sources": [],
+      "doc_path": "src/eap/building-apps/ui/screen-about.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "key_properties": [],
+      "kind": "screen",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "Use the Screen element only for documented ODC Studio behavior; keep missing facts explicit.",
+      "missing_facts": [
+        "Documented properties not found in source section",
+        "Documented events not found in source section",
+        "Documented binding shape not found in source section"
+      ],
+      "name": "Screen",
+      "o11_candidate_support": null,
+      "observed_examples": [],
+      "official_supporting_sources": [],
+      "purpose": "A screen is a user interface (UI) element that contains other UI elements (such as fields or labels) that enable users to interact with your app. You can create an empty screen, or from a screen template for a specific use case.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/screen-about.md",
+      "studio_toolbox_observations": []
+    },
+    {
+      "applies_to": [
+        "reactive web apps",
+        "mobile apps"
+      ],
+      "binding_shape": [],
+      "category": "ui-producer",
+      "current_contextual_sources": [],
+      "doc_path": "src/eap/building-apps/ui/screen-about.md",
+      "events": [],
+      "evidence_status": "Current official",
+      "key_properties": [],
+      "kind": "block",
+      "legacy_names": [],
+      "mentor_prompt_guidance": "Use the Web Block element only for documented ODC Studio behavior; keep missing facts explicit.",
+      "missing_facts": [
+        "Documented properties not found in source section",
+        "Documented events not found in source section",
+        "Documented binding shape not found in source section"
+      ],
+      "name": "Web Block",
+      "o11_candidate_support": {
+        "accessibility_notes": [],
+        "events": [],
+        "evidence_level": "Official O11 reference; not current ODC authority",
+        "missing_facts": [
+          "O11 events not found in source"
+        ],
+        "normalized_name": "Block",
+        "notes": "Use as support-only guidance for confirmed ODC Studio targets and verify in ODC Studio.",
+        "page_family": "interface",
+        "properties": [
+          "Name",
+          "Source Block"
+        ],
+        "purpose": "Allows you to use a Block in your screen. If the Block is designed with input parameters, you must specify the value for those parameters.",
+        "runtime_properties": [
+          "Id"
+        ],
+        "source_family": "official_outsystems_public_docs_o11",
+        "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/block_widget",
+        "support_status": "O11-supported ODC candidate",
+        "title": "Block Widget"
+      },
+      "observed_examples": [],
+      "official_supporting_sources": [
+        {
+          "compatibility_status": "Legacy backward-compatible fallback; prefer generated o11_candidate_support when present.",
+          "evidence_level": "Official O11 reference; not current ODC authority",
+          "notes": "Documents the O11 Block Widget reference; current ODC Web Block source remains the governing authority when available.",
+          "source_family": "official_outsystems_public_docs_o11",
+          "source_url": "https://success.outsystems.com/documentation/11/reference/outsystems_language/interfaces/designing_screens/block_widget/",
+          "title": "Block Widget - OutSystems 11 Documentation"
+        }
+      ],
+      "purpose": "You can create blocks in UI flows",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/screen-about.md",
+      "studio_toolbox_observations": []
+    }
+  ]
+}
