@@ -73,8 +73,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/o11-designing-screens-widget-catalog.json",
-      "sha256": "9d87d7685ead47250c41348df8f1908f28b6308be15c959a80b17f7187e22aa6",
-      "size": 60433
+      "sha256": "3b16f6d9beafefddf90703bd82fb1c2eb80d5b5f4adc3c3fbfd8a799f69a01af",
+      "size": 55393
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-app-shell-first-scaffold.md",
@@ -113,8 +113,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-studio-widget-catalog.json",
-      "sha256": "301c182b49ca12434f38a4b89d1318c0f471f40be4ffac45a0268274dcd032ce",
-      "size": 71957
+      "sha256": "c8f1da6c480c65a4c9e6d7bf55e9243099eb2ce5726b8238cf45b1ffeb4d9586",
+      "size": 71963
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-ui-acceptance-coverage-map.md",
@@ -268,8 +268,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/json_file_io.py",
-      "sha256": "877c2fd49f96207689e838f9f13260336f63fbf8d870ef83ec9b1ff114875456",
-      "size": 964
+      "sha256": "548e0d9e4910132d61cb19b1d95a09951f5f2a00795ccde934f44e6c4ef66adc",
+      "size": 1107
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/omi_regression_harness.py",
@@ -680,8 +680,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/o11-designing-screens-widget-catalog.json",
-          "sha256": "9d87d7685ead47250c41348df8f1908f28b6308be15c959a80b17f7187e22aa6",
-          "size": 60433
+          "sha256": "3b16f6d9beafefddf90703bd82fb1c2eb80d5b5f4adc3c3fbfd8a799f69a01af",
+          "size": 55393
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-app-shell-first-scaffold.md",
@@ -720,8 +720,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-studio-widget-catalog.json",
-          "sha256": "301c182b49ca12434f38a4b89d1318c0f471f40be4ffac45a0268274dcd032ce",
-          "size": 71957
+          "sha256": "c8f1da6c480c65a4c9e6d7bf55e9243099eb2ce5726b8238cf45b1ffeb4d9586",
+          "size": 71963
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-ui-acceptance-coverage-map.md",
@@ -875,8 +875,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/json_file_io.py",
-          "sha256": "877c2fd49f96207689e838f9f13260336f63fbf8d870ef83ec9b1ff114875456",
-          "size": 964
+          "sha256": "548e0d9e4910132d61cb19b1d95a09951f5f2a00795ccde934f44e6c4ef66adc",
+          "size": 1107
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/omi_regression_harness.py",
@@ -910,7 +910,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
+      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
       "version": "2026-08-07"
     },
     {
@@ -989,7 +989,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
+      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
       "version": "2026-08-07"
     },
     {
@@ -1023,7 +1023,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
+      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
       "version": "2026-08-07"
     },
     {
@@ -1047,7 +1047,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
+      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
       "version": "2026-08-07"
     },
     {
@@ -1276,7 +1276,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "fc9a4e6126ddd9d9883c834257c933965abc49d5",
+      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
       "version": "2026-08-07"
     }
   ]

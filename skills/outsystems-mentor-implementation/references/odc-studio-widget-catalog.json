@@ -1,10 +1,10 @@
 {
-  "generated_at_utc": "2026-06-20T17:54:30+00:00",
+  "generated_at_utc": "2026-08-07T23:17:10+00:00",
   "source_family": "official_outsystems_docs_odc",
   "source_search_roots": [
     "src/eap/reference",
     "src/eap/building-apps/ui",
-    "knowledge/outsystems/public/odc/reference"
+    "<local mirror of the public ODC reference docs>"
   ],
   "summary": {
     "current_official_count": 3,

@@ -2,7 +2,7 @@
   "entries": [
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Block Widget/Block Widget.md",
+      "doc_path": "Interface/Block Widget/Block Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -26,7 +26,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Button/Button.md",
+      "doc_path": "Interface/Button/Button.md",
       "events": [
         "On Click"
       ],
@@ -56,7 +56,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Button Widget/Button Widget.md",
+      "doc_path": "_Traditional Web/Button Widget/Button Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -91,7 +91,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Button Group/Button Group.md",
+      "doc_path": "Interface/Button Group/Button Group.md",
       "events": [
         "On Change"
       ],
@@ -120,7 +120,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Button Group Item/Button Group Item.md",
+      "doc_path": "Interface/Button Group Item/Button Group Item.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -148,7 +148,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Cell Widget/Cell Widget.md",
+      "doc_path": "_Traditional Web/Cell Widget/Cell Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -177,7 +177,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Check Box Widget/Check Box Widget.md",
+      "doc_path": "_Traditional Web/Check Box Widget/Check Box Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -208,7 +208,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Checkbox/Checkbox.md",
+      "doc_path": "Interface/Checkbox/Checkbox.md",
       "events": [
         "On Change"
       ],
@@ -236,7 +236,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Combo Box Widget/Combo Box Widget.md",
+      "doc_path": "_Traditional Web/Combo Box Widget/Combo Box Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -275,7 +275,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Comment Widget/Comment Widget.md",
+      "doc_path": "_Traditional Web/Comment Widget/Comment Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source",
@@ -297,7 +297,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Container/Container.md",
+      "doc_path": "Interface/Container/Container.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -324,7 +324,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Container Widget/Container Widget.md",
+      "doc_path": "_Traditional Web/Container Widget/Container Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -351,7 +351,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Dropdown/Dropdown.md",
+      "doc_path": "Interface/Dropdown/Dropdown.md",
       "events": [
         "On Change"
       ],
@@ -385,7 +385,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Edit Record Widget/Edit Record Widget.md",
+      "doc_path": "_Traditional Web/Edit Record Widget/Edit Record Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -419,7 +419,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Editable Table Widget/Editable Table Widget.md",
+      "doc_path": "_Traditional Web/Editable Table Widget/Editable Table Widget.md",
       "events": [
         "On Row Delete",
         "On Row Save"
@@ -452,7 +452,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Expression/Expression.md",
+      "doc_path": "Interface/Expression/Expression.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -479,7 +479,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Expression Widget/Expression Widget.md",
+      "doc_path": "_Traditional Web/Expression Widget/Expression Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -507,7 +507,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Form/Form.md",
+      "doc_path": "Interface/Form/Form.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -533,7 +533,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Form Widget/Form Widget.md",
+      "doc_path": "_Traditional Web/Form Widget/Form Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -566,7 +566,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Header Row Widget/Header Row Widget.md",
+      "doc_path": "_Traditional Web/Header Row Widget/Header Row Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source",
@@ -589,7 +589,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/HTML Element/HTML Element.md",
+      "doc_path": "Interface/HTML Element/HTML Element.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -615,7 +615,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Icon/Icon.md",
+      "doc_path": "Interface/Icon/Icon.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -642,7 +642,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/If Widget/If Widget.md",
+      "doc_path": "Interface/If Widget/If Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -666,7 +666,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Image -- cd6adc51/Image.md",
+      "doc_path": "Interface/Image -- cd6adc51/Image.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -697,7 +697,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Image Widget/Image Widget.md",
+      "doc_path": "_Traditional Web/Image Widget/Image Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -731,7 +731,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Input/Input.md",
+      "doc_path": "Interface/Input/Input.md",
       "events": [
         "On Change"
       ],
@@ -761,7 +761,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Input Widget/Input Widget.md",
+      "doc_path": "_Traditional Web/Input Widget/Input Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -794,7 +794,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Input Password Widget/Input Password Widget.md",
+      "doc_path": "_Traditional Web/Input Password Widget/Input Password Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -827,7 +827,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Label/Label.md",
+      "doc_path": "Interface/Label/Label.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -854,7 +854,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Label Widget/Label Widget.md",
+      "doc_path": "_Traditional Web/Label Widget/Label Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -884,7 +884,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Link/Link.md",
+      "doc_path": "Interface/Link/Link.md",
       "events": [
         "On Click"
       ],
@@ -913,7 +913,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Link Widget/Link Widget.md",
+      "doc_path": "_Traditional Web/Link Widget/Link Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -947,7 +947,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/List/List.md",
+      "doc_path": "Interface/List/List.md",
       "events": [
         "On Scroll Ending"
       ],
@@ -977,7 +977,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/List Action/List Action.md",
+      "doc_path": "Interface/List Action/List Action.md",
       "events": [
         "On Click"
       ],
@@ -1004,7 +1004,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/List Box Widget/List Box Widget.md",
+      "doc_path": "_Traditional Web/List Box Widget/List Box Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1040,7 +1040,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/List Item/List Item.md",
+      "doc_path": "Interface/List Item/List Item.md",
       "events": [
         "On Click"
       ],
@@ -1068,7 +1068,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/List Records Widget/List Records Widget.md",
+      "doc_path": "_Traditional Web/List Records Widget/List Records Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1102,7 +1102,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Placeholder Widget/Placeholder Widget.md",
+      "doc_path": "Interface/Placeholder Widget/Placeholder Widget.md",
       "events": [],
       "missing_facts": [
         "O11 properties not found in source",
@@ -1123,7 +1123,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Popover Menu/Popover Menu.md",
+      "doc_path": "Interface/Popover Menu/Popover Menu.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1150,7 +1150,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Popup/Popup.md",
+      "doc_path": "Interface/Popup/Popup.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1177,7 +1177,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Radio Button/Radio Button.md",
+      "doc_path": "Interface/Radio Button/Radio Button.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1205,7 +1205,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Radio Button Widget/Radio Button Widget.md",
+      "doc_path": "_Traditional Web/Radio Button Widget/Radio Button Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1236,7 +1236,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Radio Group/Radio Group.md",
+      "doc_path": "Interface/Radio Group/Radio Group.md",
       "events": [
         "On Change"
       ],
@@ -1265,7 +1265,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Row Widget/Row Widget.md",
+      "doc_path": "_Traditional Web/Row Widget/Row Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1291,7 +1291,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Show Record Widget/Show Record Widget.md",
+      "doc_path": "_Traditional Web/Show Record Widget/Show Record Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1324,7 +1324,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Switch/Switch.md",
+      "doc_path": "Interface/Switch/Switch.md",
       "events": [
         "On Change"
       ],
@@ -1352,7 +1352,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Table/Table.md",
+      "doc_path": "Interface/Table/Table.md",
       "events": [
         "On Sort"
       ],
@@ -1382,7 +1382,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Table Widget/Table Widget.md",
+      "doc_path": "_Traditional Web/Table Widget/Table Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1411,7 +1411,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Table Records Widget/Table Records Widget.md",
+      "doc_path": "_Traditional Web/Table Records Widget/Table Records Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1453,7 +1453,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Text Widget/Text Widget.md",
+      "doc_path": "Interface/Text Widget/Text Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1479,7 +1479,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Text Area/Text Area.md",
+      "doc_path": "Interface/Text Area/Text Area.md",
       "events": [
         "On Change"
       ],
@@ -1509,7 +1509,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface/Upload/Upload.md",
+      "doc_path": "Interface/Upload/Upload.md",
       "events": [
         "On Change"
       ],
@@ -1539,7 +1539,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Upload Widget/Upload Widget.md",
+      "doc_path": "_Traditional Web/Upload Widget/Upload Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1570,7 +1570,7 @@
     },
     {
       "accessibility_notes": [],
-      "doc_path": "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web/Web Block Widget/Web Block Widget.md",
+      "doc_path": "_Traditional Web/Web Block Widget/Web Block Widget.md",
       "events": [],
       "missing_facts": [
         "O11 events not found in source"
@@ -1596,8 +1596,8 @@
   "generated_at_utc": "source-derived",
   "source_family": "official_outsystems_public_docs_o11",
   "source_roots": [
-    "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/Interface",
-    "knowledge/outsystems/public/o11/product-docs/14 - Other Documentation/OutSystems Language/_Traditional Web"
+    "Interface",
+    "_Traditional Web"
   ],
   "summary": {
     "entry_count": 54,

@@ -1,5 +1,8 @@
-"""Shared JSON-file read+parse helper used by omi_regression_harness.py,
-omi_telemetry_report.py, and check_catalog_freshness.py.
+"""Shared JSON-file read+parse helper for this skill's scripts.
+
+Enumerating the callers here rots: the catalog-refresh tooling that used it is
+maintainer-only and does not ship in public distributions, so a named list goes
+stale the moment a bundle withholds one of them.
 
 Each caller decides what to do with a JSONFileError (raise SystemExit with
 its own message, or record a per-item status) — this helper only owns the
