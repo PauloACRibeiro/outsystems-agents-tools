@@ -23,13 +23,13 @@ def write_link(session_dir, omi_scenario, prompt_source, recorded_by):
     if session_dir.name.startswith("pending-"):
         raise SystemExit(
             f"{session_dir} is still a provisional session directory (name "
-            "starts with 'pending-') — link only after the polling skill's "
+            "starts with 'pending-') - link only after the polling skill's "
             "update-run-id step renames it to the real Mentor runId, or the "
             "link will be orphaned by the rename")
     meta_path = session_dir / "meta.json"
     if not meta_path.is_file():
         raise SystemExit(
-            f"{session_dir} has no meta.json — not a polling-behavior session directory")
+            f"{session_dir} has no meta.json - not a polling-behavior session directory")
 
     link = {
         "omi_scenario": omi_scenario,

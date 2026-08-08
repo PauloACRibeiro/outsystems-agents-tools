@@ -51,7 +51,7 @@ Audit these in the same pass and record findings in the matrix's Patch / Risk co
 
 Then:
 
-1. Run `python3 scripts/check_requirement_coverage.py <inventory-or-prd> <plan-under-review>` and copy its full output verbatim into the review artifact. The coverage numbers, the uncovered and dangling lists, and the `coverage verdict:` line are computed, never hand-authored; do not restate them as your own estimate. The checker proves every ID is cited; the Evidence column stays the judgement check that each citation is honest.
+1. Run `python3 scripts/check_requirement_coverage.py <inventory-or-prd> <plan-under-review>` (on Windows PowerShell, `python` — `python3` is not a command there) and copy its full output verbatim into the review artifact. The coverage numbers, the uncovered and dangling lists, and the `coverage verdict:` line are computed, never hand-authored; do not restate them as your own estimate. The checker proves every ID is cited; the Evidence column stays the judgement check that each citation is honest.
 2. List the **top gaps** (uncovered IDs, Partial rows, or unclear assumptions), prioritized by impact.
 3. Produce a **patched version of the plan** that closes those gaps with **minimal changes**, preserving the original structure where possible (add/adjust sections rather than rewriting everything). The patched plan cites each requirement ID inline where it is addressed. The patched version must be the full plan text after edits. Do not write a summary-only patched artifact.
 

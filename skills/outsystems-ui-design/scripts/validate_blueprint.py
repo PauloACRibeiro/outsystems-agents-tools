@@ -16,7 +16,7 @@ LAYOUT_BLOCKS = ("LayoutSideMenu", "LayoutTopMenu", "LayoutBlank")
 REPEAT_MARKERS = ("ListRecords", "TableRecords", "Table", "Gallery", "Carousel", "AccordionList")
 NUMERIC_TYPES = {"integer", "longInteger", "decimal", "currency"}
 _NUMERIC_WIDGET_RE = re.compile(r"\b(ProgressBar|Counter)\b")
-# (?!\s*=) — F-E: don't match HTML property syntax like "AdvancedHtml Tag=p".
+# (?!\s*=) - F-E: don't match HTML property syntax like "AdvancedHtml Tag=p".
 _STATUS_WIDGET_RE = re.compile(r"\b(Tag|Badge)\b(?!\s*=)")
 
 _TYPES = {
@@ -53,7 +53,7 @@ def _check_single_layout(bp, errors):
     if layout not in LAYOUT_BLOCKS:
         errors.append(
             f"app_chrome.layout_block: {layout!r} must be exactly one of "
-            f"{list(LAYOUT_BLOCKS)} — one layout block per screen, no combinations"
+            f"{list(LAYOUT_BLOCKS)} - one layout block per screen, no combinations"
         )
 
 
@@ -64,7 +64,7 @@ def _check_region_shapes(bp, errors):
         for region in screen.get("main_content", []):
             if not isinstance(region, dict):
                 errors.append(
-                    f"screen '{screen_name}': main_content item is not an object — "
+                    f"screen '{screen_name}': main_content item is not an object - "
                     "every region must be a JSON object"
                 )
                 continue
@@ -74,12 +74,12 @@ def _check_region_shapes(bp, errors):
                     if not isinstance(item, dict):
                         errors.append(
                             f"screen '{screen_name}' group '{group_name}': items[{i}] "
-                            "is not an object — every region must be a JSON object"
+                            "is not an object - every region must be a JSON object"
                         )
                     elif item.get("type") == "group":
                         errors.append(
                             f"screen '{screen_name}' group '{group_name}': nested groups "
-                            "are not part of the OMI contract — flatten to one group level"
+                            "are not part of the OMI contract - flatten to one group level"
                         )
 
 
@@ -121,14 +121,14 @@ def _check_region_mapping(bp, errors):
         for region, screen_name in _leaf_regions(screen):
             block = (region.get("outsystems_hints") or {}).get("block")
             if "reuse" in region:
-                # Bound to an existing app block — that IS the mapping. A
+                # Bound to an existing app block - that IS the mapping. A
                 # malformed binding is reported once, by the reuse check.
                 continue
             if not block and not region.get("custom_block_needed"):
                 label = region.get("name") or region.get("id") or "?"
                 errors.append(
                     f"screen '{screen_name}' region '{label}': no outsystems_hints.block "
-                    "and not flagged custom_block_needed — every region must map to a "
+                    "and not flagged custom_block_needed - every region must map to a "
                     "named OutSystems UI block or be explicitly flagged"
                 )
 
@@ -159,7 +159,7 @@ def _check_no_container(bp, errors):
                     label = region.get("name") or region.get("id") or "?"
                     errors.append(
                         f"screen '{screen_name}' region '{label}': 'Container' in "
-                        f"{text!r} — no Container nodes in the skeleton; use "
+                        f"{text!r} - no Container nodes in the skeleton; use "
                         "Columns*/Card family blocks"
                     )
                     break
@@ -185,13 +185,13 @@ def _check_block_name_granularity(bp, errors):
     and it still catches the semicolon / 2+ commas / Pagination-with-repeat
     shapes. Likewise, this skill's own evidence (Run A, Run B) always keeps
     Pagination as a sibling of its repeated-content block
-    (TableRecords/Table/Gallery/...), never nested in the same block string —
+    (TableRecords/Table/Gallery/...), never nested in the same block string -
     "Card with TableRecords and Pagination" is the same collapsing mistake
     even with only one "and" and no comma.
 
     'plus' is banned outright. It is a conjunction that joins two distinct
     block names ("Columns3 plus MetricCard web block") and never appears in a
-    legitimate property qualifier — so unlike "and", it can be rejected with
+    legitimate property qualifier - so unlike "and", it can be rejected with
     no false positives. Phase 3 GAP-3: this exact string shipped in the golden
     fixture, slipping past both the gate's wording and this check, while being
     the reference example operators copy from.
@@ -210,7 +210,7 @@ def _check_block_name_granularity(bp, errors):
                 label = region.get("name") or region.get("id") or "?"
                 errors.append(
                     f"screen '{screen_name}' region '{label}': outsystems_hints.block "
-                    f"{block!r} looks like several widgets collapsed into one region — "
+                    f"{block!r} looks like several widgets collapsed into one region - "
                     "split into sibling regions or a group's items[], one bare block "
                     "name per region"
                 )
@@ -232,7 +232,7 @@ def _check_block_name_bare(bp, errors):
                 label = region.get("name") or region.get("id") or "?"
                 errors.append(
                     f"screen '{sname}' region '{label}': outsystems_hints.block "
-                    f"{block!r} is not a bare block name — use a single catalog token "
+                    f"{block!r} is not a bare block name - use a single catalog token "
                     "like 'Columns3' or 'ColumnsMediumRight'; put qualifiers in the "
                     "section fields, not the block name"
                 )
@@ -241,7 +241,7 @@ def _check_block_name_bare(bp, errors):
 # OMI's reference doc (odc-visual-source-ui-discipline.md) is explicit: "Use a
 # bare Phosphor icon name for OutSystems UI Icon widgets, not `ph-*` or
 # `ph ph-*` class syntax." OMI's own EXAMPLE ASSET violates this ("icon-home"),
-# and this skill's golden fixture copied the error — so both conventions were
+# and this skill's golden fixture copied the error - so both conventions were
 # in circulation and the schema (a bare string) waved both through.
 # Phase 3 GAP-6: a wrong icon convention validated green and would have reached
 # OMI unpatched. The schema is unchanged; this is a skill-side gate, like the
@@ -260,7 +260,7 @@ def _check_icon_convention(bp, errors):
             role = entry.get("role", "?")
             errors.append(
                 f"icon_mapping[{i}] (role {role!r}): outsystems_icon {icon!r} is CSS "
-                "class syntax, not an icon name — OMI requires a bare Phosphor icon "
+                "class syntax, not an icon name - OMI requires a bare Phosphor icon "
                 "name (e.g. 'house', 'gear', 'magnifying-glass'), never 'icon-*', "
                 "'ph-*' or 'ph ph-*'"
             )
@@ -285,7 +285,7 @@ def _check_repeat_producer(bp, errors):
             if not entity:
                 errors.append(
                     f"screen '{screen_name}' region '{label}': repeated content "
-                    "(ListRecords/Table/Gallery/...) without a data producer — set "
+                    "(ListRecords/Table/Gallery/...) without a data producer - set "
                     "data_source.entity on the region or its group"
                 )
             elif entity not in _declared_entities(bp):
@@ -345,7 +345,7 @@ def _check_binding_type_fit(bp, warnings):
             warnings.append(
                 f"screen '{sname}': {element} binds to "
                 f"{binds['entity']}.{binds['attribute']} (data_type "
-                f"{attr.get('data_type')!r}), which is not numeric — a "
+                f"{attr.get('data_type')!r}), which is not numeric - a "
                 "ProgressBar/Counter expects a numeric attribute"
             )
         if _STATUS_WIDGET_RE.search(element) and not (
@@ -354,7 +354,7 @@ def _check_binding_type_fit(bp, warnings):
             warnings.append(
                 f"screen '{sname}': {element} binds to "
                 f"{binds['entity']}.{binds['attribute']}, which is not backed by a "
-                "static entity — a status Tag/Badge expects a static-entity-backed "
+                "static entity - a status Tag/Badge expects a static-entity-backed "
                 "attribute"
             )
 
@@ -386,7 +386,7 @@ def _check_assertion_parity(bp, errors):
             if key in derived and claimed != derived[key]:
                 errors.append(
                     f"screen '{sname}': assertions.{key} claims {claimed} but "
-                    f"main_content has {derived[key]} — a self-reported count must "
+                    f"main_content has {derived[key]} - a self-reported count must "
                     "match main_content (main_content is the source of truth)"
                 )
 
@@ -402,14 +402,14 @@ def _check_enum_on_non_fk(bp, errors):
             if a.get("enum_values") and not a.get("is_foreign_key"):
                 errors.append(
                     f"entity '{ename}' attribute '{a.get('name')}' carries enum_values "
-                    "but is_foreign_key is false — enum_values is only valid on a "
+                    "but is_foreign_key is false - enum_values is only valid on a "
                     "foreign-key attribute (it defines the referenced Static Entity's "
                     "records)"
                 )
 
 
 def _existing_entities(bp):
-    """Entity names flagged `exists: true` — already in the target app."""
+    """Entity names flagged `exists: true` - already in the target app."""
     return {e.get("name") for e in bp.get("entities", [])
             if isinstance(e, dict) and e.get("exists") is True}
 
@@ -431,20 +431,20 @@ def _check_existing_asset_channel(bp, errors):
             if not block:
                 errors.append(
                     f"screen '{sname}' region '{label}': reuse is declared without a "
-                    "usable reuse.block name — name the existing app block (it may be "
+                    "usable reuse.block name - name the existing app block (it may be "
                     "flow-qualified, e.g. 'MainFlow/RecentQueriesPanel')"
                 )
             elif not _existing_app_mode(bp):
                 errors.append(
                     f"screen '{sname}' region '{label}': reuse.block {block!r} binds an "
-                    f"app block that already exists, but target_mode is {mode!r} — the "
+                    f"app block that already exists, but target_mode is {mode!r} - the "
                     "existing-asset channel is valid only under 'existing-app'"
                 )
             elif (region.get("outsystems_hints") or {}).get("block") or \
                     region.get("custom_block_needed"):
                 errors.append(
                     f"screen '{sname}' region '{label}': reuse.block {block!r} coexists "
-                    "with outsystems_hints.block or custom_block_needed — reuse satisfies "
+                    "with outsystems_hints.block or custom_block_needed - reuse satisfies "
                     "the mapping on its own; a region binds to an existing block OR "
                     "describes one to build, never both"
                 )
@@ -452,7 +452,7 @@ def _check_existing_asset_channel(bp, errors):
         for name in sorted(n for n in _existing_entities(bp) if n):
             errors.append(
                 f"entity '{name}' is flagged exists: true, but target_mode is {mode!r} "
-                "— the existing-asset channel is valid only under 'existing-app'"
+                "- the existing-asset channel is valid only under 'existing-app'"
             )
 
 
@@ -476,7 +476,7 @@ def _check_existing_asset_announcement(bp, warnings):
         if name not in known and name.rsplit("/", 1)[-1] not in known:
             warnings.append(
                 f"{kind} {name!r} is bound in the blueprint but not named in "
-                "target_context.existing_assets — announce it there too"
+                "target_context.existing_assets - announce it there too"
             )
 
 
@@ -494,7 +494,7 @@ def _datasource_entities(bp):
 
 def _fk_enum_targets(bp):
     """Entity names that some FK attribute (with enum_values) points at, via
-    a '<Target> Identifier' data_type — the only contract-valid record seed."""
+    a '<Target> Identifier' data_type - the only contract-valid record seed."""
     targets = set()
     for ent in bp.get("entities", []):
         if not isinstance(ent, dict):
@@ -508,7 +508,7 @@ def _fk_enum_targets(bp):
 
 
 def _records_targets(bp):
-    """Entity names declared with a non-empty design-time `records` list —
+    """Entity names declared with a non-empty design-time `records` list -
     the standalone-static record intake (F-A Option A, OMI rule 6)."""
     return {e.get("name") for e in bp.get("entities", [])
             if isinstance(e, dict) and isinstance(e.get("records"), list)
@@ -517,7 +517,7 @@ def _records_targets(bp):
 
 def _check_records_on_non_static(bp, errors):
     """F-B3: `records` are design-time rows and only mean something on a
-    static entity — on any other entity type they are a contract error."""
+    static entity - on any other entity type they are a contract error."""
     for ent in bp.get("entities", []):
         if not isinstance(ent, dict) or "records" not in ent:
             continue
@@ -525,7 +525,7 @@ def _check_records_on_non_static(bp, errors):
         if "static" not in etype.lower():
             errors.append(
                 f"entity '{ent.get('name', '?')}' declares records but its type is "
-                f"{etype!r} — records are design-time rows and only valid on a "
+                f"{etype!r} - records are design-time rows and only valid on a "
                 "static entity (a normal entity is runtime-populated)"
             )
 
@@ -558,7 +558,7 @@ def _check_dual_seed_mismatch(bp, errors):
         if target in recs and recs[target] != lst:
             errors.append(
                 f"entity '{target}' declares records {recs[target]} but incoming "
-                f"foreign key '{via}' carries enum_values {lst} — contradictory "
+                f"foreign key '{via}' carries enum_values {lst} - contradictory "
                 "dual seed; OMI seeds once only when the ordered lists are "
                 "identical (make them match or drop one seed)"
             )
@@ -568,11 +568,11 @@ def _check_static_datasource_unpopulated(bp, errors, extra_targets=None):
     types = {e.get("name"): (e.get("type") or "") for e in bp.get("entities", [])
              if isinstance(e, dict)}
     used = _datasource_entities(bp)
-    # A static entity is populable if THIS blueprint seeds it — via an incoming
-    # FK+enum or its own declared records — or (multi-path mode) if a SIBLING
+    # A static entity is populable if THIS blueprint seeds it - via an incoming
+    # FK+enum or its own declared records - or (multi-path mode) if a SIBLING
     # blueprint does; extra_targets carries the union of the other blueprints'
     # seed targets (FK-enum + declared records).
-    # An entity flagged `exists: true` is already populated in the target app —
+    # An entity flagged `exists: true` is already populated in the target app -
     # demanding a seed path would force the producer to re-declare rows it has.
     seeded = (_fk_enum_targets(bp) | _records_targets(bp) | _existing_entities(bp)
               | (extra_targets or set()))
@@ -580,7 +580,7 @@ def _check_static_datasource_unpopulated(bp, errors, extra_targets=None):
         if "static" in str(types.get(name, "")).lower() and name not in seeded:
             errors.append(
                 f"entity '{name}' (static) is used as a data_source but has no "
-                "populable record path — it declares no records and no incoming "
+                "populable record path - it declares no records and no incoming "
                 "foreign key with enum_values seeds it; OMI cannot populate it "
                 "(declare its rows in the entity's records array, or seed it via "
                 "an incoming FK+enum_values, or model it as a normal entity)"
@@ -604,7 +604,7 @@ def _check_repeat_prose_columns(bp, warnings):
                     label = region.get("name") or region.get("id") or "?"
                     warnings.append(
                         f"screen '{sname}' region '{label}': repeat widget "
-                        f"'{element}' over '{entity}' has no structured binds — its "
+                        f"'{element}' over '{entity}' has no structured binds - its "
                         f"columns are prose-only and cannot be verified against "
                         f"'{entity}'s attributes"
                     )
@@ -614,7 +614,7 @@ def collect_errors(bp, extra_seed_targets=None):
     """Return a list of human-readable contract violations (empty = valid).
 
     extra_seed_targets (multi-path only): entity names seeded in a sibling
-    blueprint — by an incoming FK+enum or by declared records — so F-B2 does
+    blueprint - by an incoming FK+enum or by declared records - so F-B2 does
     not false-error on a static entity whose seed lives in another blueprint
     of the same app.
     """
@@ -653,12 +653,12 @@ def collect_warnings(bp):
 
 def _check_menu_chrome(bp, warnings):
     """Advisory (soak-1 G4): a menu-bearing layout should carry its menu content
-    so OMI's Chrome Batch Discipline can review shared chrome — never an error,
+    so OMI's Chrome Batch Discipline can review shared chrome - never an error,
     because chrome content may legitimately be absent from the wireframe."""
     chrome = bp.get("app_chrome", {})
     if chrome.get("layout_block") in ("LayoutSideMenu", "LayoutTopMenu") and not chrome.get("menu"):
         warnings.append(
-            "app_chrome: layout %r has no 'menu' content — OMI reviews shared "
+            "app_chrome: layout %r has no 'menu' content - OMI reviews shared "
             "chrome from the blueprint; add app_chrome.menu ([{label, active}]) "
             "if the wireframe shows page links" % chrome.get("layout_block")
         )
@@ -708,7 +708,7 @@ def collect_cross_blueprint_errors(named_blueprints):
                         f"entity '{name}' has a contradictory dual seed across "
                         f"blueprints: {d['source']} declares records "
                         f"{d['records']} vs {src} foreign key '{via}' enum_values "
-                        f"{lst} — ordered lists must be identical (seeded once)"
+                        f"{lst} - ordered lists must be identical (seeded once)"
                     )
     for name, ds in decls.items():
         if len(ds) < 2:
@@ -781,7 +781,7 @@ def _expand_paths(raw_paths):
             # Directory intake is restricted to canonical blueprint.json files:
             # a parent of per-screen directories (*/blueprint.json) or a single
             # screen directory (blueprint.json). A directory holding only
-            # arbitrarily-named *.json is NOT intaken — it expands to nothing and
+            # arbitrarily-named *.json is NOT intaken - it expands to nothing and
             # main() reports "no blueprint files found" (exit 2), so a misnamed
             # file is never silently validated, and per-file reports never collide.
             found = sorted(p.glob("*/blueprint.json")) or sorted(p.glob("blueprint.json"))

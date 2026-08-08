@@ -5,7 +5,7 @@ maintainer-only and does not ship in public distributions, so a named list goes
 stale the moment a bundle withholds one of them.
 
 Each caller decides what to do with a JSONFileError (raise SystemExit with
-its own message, or record a per-item status) — this helper only owns the
+its own message, or record a per-item status) - this helper only owns the
 read/parse/exception-wrapping step.
 """
 import json

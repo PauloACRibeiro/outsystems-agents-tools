@@ -2,11 +2,11 @@
 """Classify an enriched blueprint into create / modify / verify build actions.
 
 Executable form of the intake rule in
-references/odc-visual-source-enriched-blueprint.md § Existing-Asset Reuse
+references/odc-visual-source-enriched-blueprint.md section Existing-Asset Reuse
 Channel (Phase 1 trial F-02): reused and existing elements fold into
 modification or verification steps, never creation steps. Run it as a
 pre-flight before prompt emission; a non-empty ``errors`` list means the
-blueprint must go back to the producer uncorrected — do not invent a
+blueprint must go back to the producer uncorrected - do not invent a
 replacement and do not fall back to creating the asset.
 
 Usage:
@@ -66,7 +66,7 @@ def build_intake_plan(bp):
             if not existing_app:
                 plan["errors"].append(
                     f"entity '{name}' is flagged exists: true under target_mode "
-                    f"{mode!r} — return to producer"
+                    f"{mode!r} - return to producer"
                 )
                 continue
             plan["verifications"].append(
@@ -88,7 +88,7 @@ def build_intake_plan(bp):
             if "reuse" in region and not block:
                 plan["errors"].append(
                     f"screen '{sname}' region '{label}': reuse without a usable "
-                    "reuse.block name — return to producer"
+                    "reuse.block name - return to producer"
                 )
                 continue
             if block:
@@ -97,18 +97,18 @@ def build_intake_plan(bp):
                     plan["errors"].append(
                         f"screen '{sname}' region '{label}': reuse.block {block!r} "
                         "coexists with outsystems_hints.block or custom_block_needed "
-                        "— return to producer"
+                        "- return to producer"
                     )
                     continue
                 if not existing_app:
                     plan["errors"].append(
                         f"screen '{sname}' region '{label}': reuse.block {block!r} "
-                        f"under target_mode {mode!r} — return to producer"
+                        f"under target_mode {mode!r} - return to producer"
                     )
                     continue
                 if block in declared_blocks or block.rsplit("/", 1)[-1] in declared_blocks:
                     plan["errors"].append(
-                        f"reused block {block!r} also appears in blocks[] — that array "
+                        f"reused block {block!r} also appears in blocks[] - that array "
                         "is the list of blocks this build CREATES; return to producer"
                     )
                     continue

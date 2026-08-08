@@ -287,3 +287,6 @@ rg --hidden --no-ignore -n "tenant-changing actions used|read-only" skills/share
 git diff --check -- docs/superpowers/agent-handoff.md docs/superpowers/plans/2026-05-23-mentor-generated-app-bridge.md
 python3 projects/workspace-agent-tools/scripts/agent_handoff_health.py --workspace-root .
 ```
+
+On Windows PowerShell, use `python` instead of `python3` — `python3` is not a
+command there.

@@ -69,7 +69,7 @@ def check(output_text, expected):
     for phrase in expected.get("forbidden_phrases", []):
         # A forbidden phrase shaped like a heading (e.g. "### Studio-Native
         # Pseudocode") must be found as an ACTUAL heading line, not as a
-        # raw substring — otherwise prose that names the heading only to
+        # raw substring - otherwise prose that names the heading only to
         # say it's absent ("no `### Placement` section here") would
         # false-fail. Non-heading forbidden phrases (tool names, claim
         # sentences) keep the plain substring check.

@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "docs/colleague-feedback/FEEDBACK.md",
-      "sha256": "23b51930542b0d0e66180af370c358a147f58ea0c2114d5110be95af79caf553",
-      "size": 4115
+      "sha256": "f9339ccd249d8a35c2cfd76605eb8797caf0b910dc73d5af4c7478e1dd6d8dee",
+      "size": 4278
     },
     {
       "path": "docs/colleague-feedback/collect_feedback_bundle.py",
@@ -13,8 +13,8 @@
     },
     {
       "path": "docs/colleague-public-knowledge-setup.md",
-      "sha256": "e8f654e764a49746b6ed0df6dee1b3e8dc639b25e3bdb8a103cfb364e61fe5ed",
-      "size": 9872
+      "sha256": "a1ab3543cec44b229591af4d01296d06d16db940bae047f471398a224a9c8d46",
+      "size": 10496
     },
     {
       "path": "docs/sprint-loop-for-colleagues.md",
@@ -23,8 +23,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/README.md",
-      "sha256": "d7f7767d246b82609c7821d502ef5a1dabda731dd3700aa5396c41d9ca43aab6",
-      "size": 38656
+      "sha256": "eebfa964fbfc66692aeaddead15ccc4608e175ec672ffe4ae9e5e8830bb8e774",
+      "size": 38818
     },
     {
       "path": "skills/outsystems-mentor-implementation/SKILL.md",
@@ -68,8 +68,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/mentor-capability-constraint-matrix.md",
-      "sha256": "cd71312071cda7144ad23fe0f34f75cc250ed54278a79b2e8bb6030e7d394554",
-      "size": 7454
+      "sha256": "a0af47a68a487f98c60c1e5f3788b72caf6e4fe4a9fb95d6afa5279109b6eb55",
+      "size": 7550
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/o11-designing-screens-widget-catalog.json",
@@ -248,8 +248,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/blueprint_intake_plan.py",
-      "sha256": "3d6869034ce72be192edd9904d8848293d9b44aba5eb4123570a5f28447d6835",
-      "size": 5353
+      "sha256": "703e50118c9ecdd35db6072546ef79361db2b32361e7472db3f4a2a3a612e1cf",
+      "size": 5346
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/capability_review_queue.py",
@@ -263,33 +263,33 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/golden_scenario_check.py",
-      "sha256": "be43df2cac9b2f6cc54880ed9cd352b573d5b4ad1277772b7457af76c61b534f",
-      "size": 4188
+      "sha256": "3cf69c101e4e6ec2cb7c92437e296a831621fab72dcfa1747d93b5efde13a32d",
+      "size": 4186
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/json_file_io.py",
-      "sha256": "548e0d9e4910132d61cb19b1d95a09951f5f2a00795ccde934f44e6c4ef66adc",
-      "size": 1107
+      "sha256": "d17ec7c7eae159c5a8a97a2f94c576cb137f490731bb9cebb124478094848b5a",
+      "size": 1105
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/omi_regression_harness.py",
-      "sha256": "30d9fb071d5c4e203ca06331569cd1aed5e9ee2dfd64cbd8abcd83ac6eeb6721",
-      "size": 7597
+      "sha256": "355b4e07ea9d801ce76cb505fe6008b316bf63d74d48d551fa911bc141410d9e",
+      "size": 7589
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/omi_telemetry_link.py",
-      "sha256": "6eb9a0e70775ba7b56ff48f163c36234725c4e24aa8811793b74295b75b4bef2",
-      "size": 2332
+      "sha256": "7995bf318a96fe3d84ef9d875efab93912be1ea6ccf699c54847a49ffc102045",
+      "size": 2328
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/omi_telemetry_report.py",
-      "sha256": "5ef9ddc120385b12e433d9e3e37189a35d5f923ae2a905b446325aa67085f977",
-      "size": 4863
+      "sha256": "bdc598f6c791a08c7964574214278b2c534fee4f6f39aac630843a0e3b4b2ea2",
+      "size": 4857
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/response_contract_lint.py",
-      "sha256": "c27c64ff2349d22ed7e17976e1024d76e9d1d316827611e1438604d2b28d4478",
-      "size": 14795
+      "sha256": "9d040a374bec9c4ca3a8cd414d45efe97b6ffc540484958dc410aaca0e29ecc2",
+      "size": 14785
     },
     {
       "path": "skills/outsystems-mentor-implementation/scripts/validate_screen_navigation_order.py",
@@ -318,8 +318,8 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-      "sha256": "0964694c97d7bdf84a3413b7ecd356c4e1fb36fe8db3fd9aefc704f0193f145a",
-      "size": 6730
+      "sha256": "45020f54fb9f664972bbe68a94b4061c679e9da1bb4807915dbb62b81611c7a9",
+      "size": 6801
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
@@ -398,8 +398,8 @@
     },
     {
       "path": "skills/outsystems-ui-design/SKILL.md",
-      "sha256": "87c7b12620f536b29aacd9021c15345600e79c2703d5ab98de19f2526008040c",
-      "size": 38683
+      "sha256": "7771373de621994b406c86ef4278269ba620fef319e0035ca33a18ec37dea64d",
+      "size": 39028
     },
     {
       "path": "skills/outsystems-ui-design/references/blocks-index.md",
@@ -408,8 +408,8 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/built-in-widgets-regeneration.md",
-      "sha256": "df6d91101638e892d5cc8019ad35d1dcc2af2a34bb0c892ebf325a662483ea20",
-      "size": 3184
+      "sha256": "332758824e34ed27ffe36690140144a5e5bd3aabd3523ae756d90031e70d60f4",
+      "size": 4223
     },
     {
       "path": "skills/outsystems-ui-design/references/charts.md",
@@ -598,13 +598,13 @@
     },
     {
       "path": "skills/outsystems-ui-design/scripts/generate_builtin_widgets.py",
-      "sha256": "fc8d20071983aafe9ae4f88d2eb1628a0fe2ac4f74b736b69e4336824099f81c",
-      "size": 9233
+      "sha256": "bbaf62edbb0267fbd2499193768db0ff8f119cae4db4dbc218a79cb50cb9aa41",
+      "size": 9228
     },
     {
       "path": "skills/outsystems-ui-design/scripts/validate_blueprint.py",
-      "sha256": "31e05200d0a120a8c0675c5156d87f73b2a2c35556710d1dd9167813ed0f77a7",
-      "size": 38586
+      "sha256": "0ff33c4296c73a7768be3900eebeaa21c6f7c237a8c124504979606e13e4fd47",
+      "size": 38504
     },
     {
       "path": "skills/outsystems-ui-design/templates/preview-shell.html",
@@ -613,8 +613,8 @@
     },
     {
       "path": "skills/shared/mentor-generated-app-bridge.md",
-      "sha256": "a344702d189c44e2ddad9c6a674ad728e6affac00405782d366e12d4bb81cd1f",
-      "size": 10080
+      "sha256": "f9c35c6643028fa1c92ab3be6fdbb2e036cc960ea6c256bb40d5716b9ddfdae9",
+      "size": 10176
     }
   ],
   "manifest_version": 2,
@@ -625,13 +625,13 @@
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
-          "sha256": "e8f654e764a49746b6ed0df6dee1b3e8dc639b25e3bdb8a103cfb364e61fe5ed",
-          "size": 9872
+          "sha256": "a1ab3543cec44b229591af4d01296d06d16db940bae047f471398a224a9c8d46",
+          "size": 10496
         },
         {
           "path": "skills/outsystems-mentor-implementation/README.md",
-          "sha256": "d7f7767d246b82609c7821d502ef5a1dabda731dd3700aa5396c41d9ca43aab6",
-          "size": 38656
+          "sha256": "eebfa964fbfc66692aeaddead15ccc4608e175ec672ffe4ae9e5e8830bb8e774",
+          "size": 38818
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
@@ -675,8 +675,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/mentor-capability-constraint-matrix.md",
-          "sha256": "cd71312071cda7144ad23fe0f34f75cc250ed54278a79b2e8bb6030e7d394554",
-          "size": 7454
+          "sha256": "a0af47a68a487f98c60c1e5f3788b72caf6e4fe4a9fb95d6afa5279109b6eb55",
+          "size": 7550
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/o11-designing-screens-widget-catalog.json",
@@ -855,8 +855,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/blueprint_intake_plan.py",
-          "sha256": "3d6869034ce72be192edd9904d8848293d9b44aba5eb4123570a5f28447d6835",
-          "size": 5353
+          "sha256": "703e50118c9ecdd35db6072546ef79361db2b32361e7472db3f4a2a3a612e1cf",
+          "size": 5346
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/capability_review_queue.py",
@@ -870,33 +870,33 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/golden_scenario_check.py",
-          "sha256": "be43df2cac9b2f6cc54880ed9cd352b573d5b4ad1277772b7457af76c61b534f",
-          "size": 4188
+          "sha256": "3cf69c101e4e6ec2cb7c92437e296a831621fab72dcfa1747d93b5efde13a32d",
+          "size": 4186
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/json_file_io.py",
-          "sha256": "548e0d9e4910132d61cb19b1d95a09951f5f2a00795ccde934f44e6c4ef66adc",
-          "size": 1107
+          "sha256": "d17ec7c7eae159c5a8a97a2f94c576cb137f490731bb9cebb124478094848b5a",
+          "size": 1105
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/omi_regression_harness.py",
-          "sha256": "30d9fb071d5c4e203ca06331569cd1aed5e9ee2dfd64cbd8abcd83ac6eeb6721",
-          "size": 7597
+          "sha256": "355b4e07ea9d801ce76cb505fe6008b316bf63d74d48d551fa911bc141410d9e",
+          "size": 7589
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/omi_telemetry_link.py",
-          "sha256": "6eb9a0e70775ba7b56ff48f163c36234725c4e24aa8811793b74295b75b4bef2",
-          "size": 2332
+          "sha256": "7995bf318a96fe3d84ef9d875efab93912be1ea6ccf699c54847a49ffc102045",
+          "size": 2328
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/omi_telemetry_report.py",
-          "sha256": "5ef9ddc120385b12e433d9e3e37189a35d5f923ae2a905b446325aa67085f977",
-          "size": 4863
+          "sha256": "bdc598f6c791a08c7964574214278b2c534fee4f6f39aac630843a0e3b4b2ea2",
+          "size": 4857
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/response_contract_lint.py",
-          "sha256": "c27c64ff2349d22ed7e17976e1024d76e9d1d316827611e1438604d2b28d4478",
-          "size": 14795
+          "sha256": "9d040a374bec9c4ca3a8cd414d45efe97b6ffc540484958dc410aaca0e29ecc2",
+          "size": 14785
         },
         {
           "path": "skills/outsystems-mentor-implementation/scripts/validate_screen_navigation_order.py",
@@ -905,12 +905,12 @@
         },
         {
           "path": "skills/shared/mentor-generated-app-bridge.md",
-          "sha256": "a344702d189c44e2ddad9c6a674ad728e6affac00405782d366e12d4bb81cd1f",
-          "size": 10080
+          "sha256": "f9c35c6643028fa1c92ab3be6fdbb2e036cc960ea6c256bb40d5716b9ddfdae9",
+          "size": 10176
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "9479b1a7bc0d2cb221ec03259b30eac6c240e81c",
+      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
       "version": "2026-08-08"
     },
     {
@@ -939,8 +939,8 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-          "sha256": "0964694c97d7bdf84a3413b7ecd356c4e1fb36fe8db3fd9aefc704f0193f145a",
-          "size": 6730
+          "sha256": "45020f54fb9f664972bbe68a94b4061c679e9da1bb4807915dbb62b81611c7a9",
+          "size": 6801
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
@@ -989,7 +989,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
       "version": "2026-08-08"
     },
     {
@@ -1023,7 +1023,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
       "version": "2026-08-08"
     },
     {
@@ -1032,8 +1032,8 @@
       "files": [
         {
           "path": "docs/colleague-feedback/FEEDBACK.md",
-          "sha256": "23b51930542b0d0e66180af370c358a147f58ea0c2114d5110be95af79caf553",
-          "size": 4115
+          "sha256": "f9339ccd249d8a35c2cfd76605eb8797caf0b910dc73d5af4c7478e1dd6d8dee",
+          "size": 4278
         },
         {
           "path": "docs/colleague-feedback/collect_feedback_bundle.py",
@@ -1047,7 +1047,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "a03cd6b41fb0b70757b683383763add3e9d4fc15",
+      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
       "version": "2026-08-08"
     },
     {
@@ -1061,8 +1061,8 @@
         },
         {
           "path": "skills/outsystems-ui-design/SKILL.md",
-          "sha256": "87c7b12620f536b29aacd9021c15345600e79c2703d5ab98de19f2526008040c",
-          "size": 38683
+          "sha256": "7771373de621994b406c86ef4278269ba620fef319e0035ca33a18ec37dea64d",
+          "size": 39028
         },
         {
           "path": "skills/outsystems-ui-design/references/blocks-index.md",
@@ -1071,8 +1071,8 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/built-in-widgets-regeneration.md",
-          "sha256": "df6d91101638e892d5cc8019ad35d1dcc2af2a34bb0c892ebf325a662483ea20",
-          "size": 3184
+          "sha256": "332758824e34ed27ffe36690140144a5e5bd3aabd3523ae756d90031e70d60f4",
+          "size": 4223
         },
         {
           "path": "skills/outsystems-ui-design/references/charts.md",
@@ -1261,13 +1261,13 @@
         },
         {
           "path": "skills/outsystems-ui-design/scripts/generate_builtin_widgets.py",
-          "sha256": "fc8d20071983aafe9ae4f88d2eb1628a0fe2ac4f74b736b69e4336824099f81c",
-          "size": 9233
+          "sha256": "bbaf62edbb0267fbd2499193768db0ff8f119cae4db4dbc218a79cb50cb9aa41",
+          "size": 9228
         },
         {
           "path": "skills/outsystems-ui-design/scripts/validate_blueprint.py",
-          "sha256": "31e05200d0a120a8c0675c5156d87f73b2a2c35556710d1dd9167813ed0f77a7",
-          "size": 38586
+          "sha256": "0ff33c4296c73a7768be3900eebeaa21c6f7c237a8c124504979606e13e4fd47",
+          "size": 38504
         },
         {
           "path": "skills/outsystems-ui-design/templates/preview-shell.html",
@@ -1276,7 +1276,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
       "version": "2026-08-08"
     }
   ]

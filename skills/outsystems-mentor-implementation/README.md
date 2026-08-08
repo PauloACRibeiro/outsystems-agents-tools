@@ -108,6 +108,9 @@ python3 skills/outsystems-mentor-implementation/scripts/deterministic_quality_sc
   --json
 ```
 
+On Windows PowerShell, use `python` instead of `python3` and put the command on
+one line — `\` does not continue a line there, and `python3` is not a command.
+
 Use this scorer only when those four artifacts exist. It does not replace
 current OutSystems documentation authority, human review, or approval gates for
 live validation.

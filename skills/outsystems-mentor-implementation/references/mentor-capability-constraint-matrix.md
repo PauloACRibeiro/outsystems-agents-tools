@@ -147,3 +147,6 @@ when the user supplies newer explicit evidence.
 python3 -m unittest skills/outsystems-mentor-implementation/tests/test_deterministic_quality_master.py -v
 git diff --check
 ```
+
+On Windows PowerShell, use `python` instead of `python3` — `python3` is not a
+command there.

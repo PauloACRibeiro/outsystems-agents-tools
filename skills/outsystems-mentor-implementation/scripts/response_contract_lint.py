@@ -13,16 +13,16 @@ Generic (scorecard-free) shape checks, always run regardless of mode:
   template literals)
 - paste-safe structure of any ### Mentor Studio Prompt block found (acceptance
   checks / unknowns-manual-verification / prerequisites-reuse markers, and
-  merged-prompt detection) — runs on any block found, no minimum count
+  merged-prompt detection) - runs on any block found, no minimum count
   without a scorecard to say what's expected
 - Plan Conversion Manifest structural shape, only when the answer actually
   contains a coverage_map: marker (an answer that never claimed to write a
   manifest is not held to the manifest contract); minimum coverage-entry
   count defaults to 1 (a manifest with zero entries is unconditionally
-  broken) — a stricter minimum stays scorecard-only, not a generic default
+  broken) - a stricter minimum stays scorecard-only, not a generic default
 
 This is the same lint SKILL.md's Final Self-Check requires running before
-every answer (mandatory, not conditional on saving a draft file) — see the
+every answer (mandatory, not conditional on saving a draft file) - see the
 Final Self-Check section of SKILL.md. The test-only regression harness
 (omi_regression_harness.py) imports these same functions so the live
 self-check and the test harness never drift apart.
@@ -277,7 +277,7 @@ def check_prompt_structure(text, min_blocks):
             failures.append({
                 "check": "merged_prompt",
                 "detail": (f"Mentor prompt block {index} carries multiple "
-                           "acceptance-check clusters — merged requirements "
+                           "acceptance-check clusters - merged requirements "
                            "suspected (one requirement per Mentor prompt)")})
     return failures
 
@@ -306,7 +306,7 @@ def lint(text, mode):
             "detail": "### Unknowns And Fallback Behavior must follow ### Evidence Status",
         })
 
-    # Generic shape checks — no scorecard needed, run on every answer.
+    # Generic shape checks - no scorecard needed, run on every answer.
     failures += scan_placeholders(text)
     failures += check_prompt_structure(text, min_blocks=0)
     failures += check_setting_defaults(text)

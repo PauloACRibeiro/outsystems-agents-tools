@@ -530,6 +530,13 @@ python3 scripts/validate_blueprint.py design/<screen-slug>/blueprint.json \
   | tee design/<screen-slug>/validation-report.txt
 ```
 
+Windows PowerShell (`python3` is not a command on Windows):
+
+```powershell
+python scripts\validate_blueprint.py design\<screen-slug>\blueprint.json |
+  Tee-Object design\<screen-slug>\validation-report.txt
+```
+
 (Resolve `scripts/validate_blueprint.py` relative to this skill's install
 directory — that copy is canonical. If the operator explicitly names another copy
 (e.g. a repo-source checkout), use the operator's path and note it in the run; when
@@ -544,6 +551,13 @@ share the same app's data model:
 ```bash
 python3 scripts/validate_blueprint.py design/ \
   | tee design/cross-blueprint-report.txt
+```
+
+Windows PowerShell:
+
+```powershell
+python scripts\validate_blueprint.py design\ |
+  Tee-Object design\cross-blueprint-report.txt
 ```
 
 Directory intake is restricted to **canonical `blueprint.json` files**: a

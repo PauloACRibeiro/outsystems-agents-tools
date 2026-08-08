@@ -2,13 +2,13 @@
 """Generate references/built-in-widgets.md from runtime-widgets-js sources.
 
 Parses the machine-generated widget property interfaces in
-OutSystems/runtime-widgets-js ``src/Generated/*.Generated.ts`` — the actual
-runtime contract for the ~30 built-in platform widgets — and emits a markdown
+OutSystems/runtime-widgets-js ``src/Generated/*.Generated.ts`` - the actual
+runtime contract for the ~30 built-in platform widgets - and emits a markdown
 inventory. The inventory is GENERATED, never hand-edited: re-run this script
 against a fresh download to refresh it (procedure in
 ``maintenance/refresh-checklist.md``).
 
-Python 3.7+ stdlib only. Deterministic: same inputs → byte-identical output
+Python 3.7+ stdlib only. Deterministic: same inputs -> byte-identical output
 (commit/date are passed in, never read from the clock).
 
 Usage:

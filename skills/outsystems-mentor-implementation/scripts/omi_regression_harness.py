@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""OMI regression harness — deterministic checker over saved generation-pass artifacts.
+"""OMI regression harness - deterministic checker over saved generation-pass artifacts.
 
 A harness run has two parts (see the golden-scenarios suite's own README,
 part of this project's local operator test suite, not shipped in this pack):
@@ -11,14 +11,14 @@ part of this project's local operator test suite, not shipped in this pack):
 
 The scorecard-free shape checks (placeholder scan, paste-safe Mentor-prompt
 structure, Plan Conversion Manifest shape) live in response_contract_lint.py
-now, not here — this script imports them so the live self-check SKILL.md
+now, not here - this script imports them so the live self-check SKILL.md
 requires and this test harness never drift apart. This script only adds the
 scorecard-driven arguments (min_coverage_entries, min_mentor_prompt_blocks,
 requires_manifest gating) response_contract_lint.py's generic defaults don't
 know about.
 
 Report-don't-mutate: this script never edits artifacts, scorecards, or skill
-content. Reports contain no timestamps, durations, or absolute paths — two
+content. Reports contain no timestamps, durations, or absolute paths - two
 runs over the same artifacts must produce byte-identical reports.
 
 The JSON report's optional top-level "telemetry" key holds a Phase 2
@@ -47,7 +47,7 @@ DEFAULT_SUITE = SCRIPTS.parent / "tests" / "golden_scenarios"
 # lint() (response_contract_lint.py) now also runs the generic shape checks
 # internally. This harness reports those same checks under their own
 # dedicated layers below with scorecard-aware parameters (min_coverage_entries,
-# min_mentor_prompt_blocks) that lint()'s generic defaults don't know about —
+# min_mentor_prompt_blocks) that lint()'s generic defaults don't know about -
 # so any of these check names produced by lint()'s "contract-lint" layer would
 # just be reporting the same defect twice. Filtered out here, not in lint()
 # itself, so the real self-check path (response_contract_lint.py run directly,

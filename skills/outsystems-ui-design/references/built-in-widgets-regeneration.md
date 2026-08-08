@@ -40,7 +40,9 @@ You need access to the OutSystems GitHub organization and the `gh` CLI
 authenticated against it (`gh auth status` should show you are logged in). If
 you do not have that access, keep working without the file as described above.
 
-Run from this skill's own directory:
+Run from this skill's own directory.
+
+macOS/Linux:
 
 ```bash
 TMP=$(mktemp -d)
@@ -53,6 +55,25 @@ COMMIT=$(gh api repos/OutSystems/runtime-widgets-js/commits/HEAD --jq '.sha[:12]
 python3 scripts/generate_builtin_widgets.py \
   --source "$TMP" --out references/built-in-widgets.md \
   --commit "$COMMIT" --date "$(date +%F)"
+```
+
+Windows PowerShell. Do not translate the block above — `mktemp`, `base64` and
+`python3` do not exist on Windows, and `date +%F` resolves to the `Get-Date`
+alias and fails with a parameter-binding error rather than a missing-command
+one:
+
+```powershell
+$Tmp = (New-Item -ItemType Directory -Path (Join-Path $env:TEMP ("bw-" + [guid]::NewGuid().ToString("N").Substring(0,8)))).FullName
+foreach ($f in (gh api repos/OutSystems/runtime-widgets-js/contents/src/Generated --jq '.[].name')) {
+  $B64 = gh api "repos/OutSystems/runtime-widgets-js/contents/src/Generated/$f" --jq '.content'
+  # GitHub wraps base64 across lines; FromBase64String rejects the whitespace.
+  [IO.File]::WriteAllBytes((Join-Path $Tmp $f), [Convert]::FromBase64String((($B64 -join '') -replace '\s','')))
+}
+$Commit = gh api repos/OutSystems/runtime-widgets-js/commits/HEAD --jq '.sha[:12]'
+
+python scripts\generate_builtin_widgets.py `
+  --source $Tmp --out references\built-in-widgets.md `
+  --commit $Commit --date (Get-Date -Format 'yyyy-MM-dd')
 ```
 
 The generator is Python 3.7+ standard library only and is deterministic: the

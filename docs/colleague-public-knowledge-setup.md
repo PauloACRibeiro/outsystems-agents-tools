@@ -38,7 +38,13 @@ Verify the SHA-256 digest before extracting; if it does not match, STOP and repo
 not extract or install:
 
 Both platforms use the same Python check — no shell-native hash tools, so the
-command is identical everywhere Python 3 runs:
+command is the same on each. It needs **Python 3.11 or newer**, which is the
+same floor `install.py` enforces a few steps later, so nothing that can run the
+installer will fail this check.
+
+The Windows form needs the explicit exit-code check. PowerShell does not stop on
+a failing native command, so without it `digest OK` would print over a mismatch
+and an agent reading the output would extract a corrupted archive.
 
 ```bash
 python3 -c 'import hashlib,pathlib,sys; want=pathlib.Path("outsystems-public-knowledge.zip.sha256").read_text().split()[0]; got=hashlib.file_digest(open("outsystems-public-knowledge.zip","rb"),"sha256").hexdigest(); sys.exit(0) if want==got else sys.exit("SHA-256 digest mismatch - stop and report")' && echo "digest OK"
@@ -46,6 +52,7 @@ python3 -c 'import hashlib,pathlib,sys; want=pathlib.Path("outsystems-public-kno
 
 ```powershell
 python -c "import hashlib,pathlib,sys; want=pathlib.Path('outsystems-public-knowledge.zip.sha256').read_text().split()[0]; got=hashlib.file_digest(open('outsystems-public-knowledge.zip','rb'),'sha256').hexdigest(); sys.exit(0) if want==got else sys.exit('SHA-256 digest mismatch - stop and report')"
+if ($LASTEXITCODE -ne 0) { throw "SHA-256 digest mismatch - stop and report" }
 "digest OK"
 ```
 
@@ -71,7 +78,7 @@ entering the extracted directory, while keeping the directory location explicit.
 macOS/Linux:
 
 ```bash
-python3 -m zipfile -e "$ARCHIVE" outsystems-public-knowledge
+python3 -m zipfile -e outsystems-public-knowledge.zip outsystems-public-knowledge
 test -f outsystems-public-knowledge/install.py
 python3 outsystems-public-knowledge/install.py --help
 python3 outsystems-public-knowledge/install.py
@@ -80,7 +87,7 @@ python3 outsystems-public-knowledge/install.py
 Windows PowerShell:
 
 ```powershell
-python -m zipfile -e $Archive outsystems-public-knowledge
+python -m zipfile -e outsystems-public-knowledge.zip outsystems-public-knowledge
 if (-not (Test-Path .\outsystems-public-knowledge\install.py -PathType Leaf)) { throw "missing root install.py" }
 python .\outsystems-public-knowledge\install.py --help
 python .\outsystems-public-knowledge\install.py
@@ -203,6 +210,9 @@ you have an explicit local engine input:
 python3 scripts/bootstrap_public_knowledge.py \
   --engine-source /path/to/workspace_knowledge_cc-<version>-py3-none-any.whl
 ```
+
+On Windows PowerShell, use `python` instead of `python3` and put the command on
+one line — `\` does not continue a line there.
 
 `--engine-source` may instead name an unpacked component directory containing
 exactly one matching wheel under `wheels/`, or a local

@@ -5,7 +5,7 @@ Reads (a) each session directory under a polling-behavior cache's sessions/
 folder directly, for per-session rows (runId, app, status, wall time, and
 whether an omi-link.json correlation file exists for it), and (b) a Mode 3
 digest JSON (produced by that skill's own `run.py summary` command) for
-aggregate figures (sessionCount, succeededCount, trend) — passed through
+aggregate figures (sessionCount, succeededCount, trend) - passed through
 verbatim, never recomputed here.
 
 MIN_SESSIONS_REQUIRED mirrors the polling skill's own config default for
@@ -13,7 +13,7 @@ MIN_SESSIONS_REQUIRED mirrors the polling skill's own config default for
 not expose that value itself, so it is a documented local constant here, not
 read live from another repo's config file.
 
-Exit 0 on a successful report — this is a reporting tool, not a pass/fail
+Exit 0 on a successful report - this is a reporting tool, not a pass/fail
 gate over the telemetry itself. Exit 2 on a usage/config error (missing or
 malformed --digest file, missing --cache directory).
 """
@@ -99,7 +99,7 @@ def main():
               f"({report['succeededCount']} succeeded, {report['failedCount']} failed, "
               f"{report['cancelledCount']} cancelled)")
         if report["belowMinSessionsRequired"]:
-            print(f"Below minSessionsRequired ({report['minSessionsRequired']}) — "
+            print(f"Below minSessionsRequired ({report['minSessionsRequired']}) - "
                   "no trend/signal claim should be made from this data yet.")
         for row in report["sessions"]:
             link_note = row["linkedScenario"] or "unlinked"

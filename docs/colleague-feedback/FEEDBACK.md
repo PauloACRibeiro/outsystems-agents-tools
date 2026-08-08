@@ -4,8 +4,11 @@ Fill this in **by hand, while you work** — one entry each time the loop surpri
 you, cost you time, or made you guess. Rough notes beat polished prose; a
 half-sentence written in the moment is worth more than a tidy write-up from
 memory a week later. When you are done (or at the end of a sprint), save this
-file, run `python3 collect_feedback_bundle.py --feedback FEEDBACK.md` from the
-folder this file came in, and email the single `.tgz` it produces to
+file and run the bundler from the folder this file came in —
+`python3 collect_feedback_bundle.py --feedback FEEDBACK.md` on macOS or Linux,
+`python collect_feedback_bundle.py --feedback FEEDBACK.md` in Windows
+PowerShell (`python3` is not a command on Windows) — then email the single
+`.tgz` it produces to
 `<the person who sent you this pack>`. The bundler is offline and read-only: it
 gathers this file, the version stamps of your installed OutSystems skills, and
 any local run receipts, redacts your home directory, environment hostnames and
