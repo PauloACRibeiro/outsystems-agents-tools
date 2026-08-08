@@ -103,10 +103,18 @@ Fetch the full content of a document previously returned by
 | `grounding_search(query, scope="public")` | `search_outsystems_public` | `search_outsystems_public` (same tool name, served over the cloned public repos) |
 | `fetch(doc_id)` | `fetch_doc` | `fetch_doc` |
 
-Verified tool signature, both bindings:
+Verified tool signature, both bindings **at current versions**:
 `search_outsystems_public(query: str, top_k: int = 5, platform: str | None = None)`.
 `top_k` is clamped to 1–20. `platform` accepts `'odc'` or `'o11'` and is
 refused before dispatch when it is anything else; omit it to search both.
+**Version floor for the colleague binding:** the `platform` argument exists
+from engine wheel `workspace_knowledge_cc` 1.4.0 (first shipped in release
+v35). **Pre-v35 components silently ignore the argument instead of refusing
+it** — retrieval still answers, with O11 material crowding the results.
+Probe when in doubt: pass `platform='bogus'` once — a current engine refuses,
+a stale one answers as if unfiltered. On a stale engine, treat platform
+filtering as unavailable: rely on query shaping (two-pass rule) and tell the
+user to re-bootstrap from the current release.
 Documents that apply to both platforms, and the platform-neutral OutSystems UI
 guides, are returned either way. Pass `platform='odc'` for OMI work so O11
 material does not crowd the result set. Then `fetch_doc(doc_id)` for the full

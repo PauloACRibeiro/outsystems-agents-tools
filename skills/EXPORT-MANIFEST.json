@@ -13,8 +13,8 @@
     },
     {
       "path": "docs/colleague-public-knowledge-setup.md",
-      "sha256": "277f61a753e5643d41f5a6bc05a2f4644fd7dc9cff35e398f12d29777e4ed4a1",
-      "size": 12045
+      "sha256": "e8f654e764a49746b6ed0df6dee1b3e8dc639b25e3bdb8a103cfb364e61fe5ed",
+      "size": 9872
     },
     {
       "path": "docs/sprint-loop-for-colleagues.md",
@@ -28,8 +28,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/SKILL.md",
-      "sha256": "c6716ae07b2b3385308e06e707e816b1dc53a6944e582b8c190db33085a2e3f4",
-      "size": 31013
+      "sha256": "22eac17158cd899916bb0cf0823bd1d9f3e05da782bcff97a3161d830ddfda57",
+      "size": 31124
     },
     {
       "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -48,8 +48,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
-      "sha256": "4be798abfaf068f513b756a470a0087bed3c6cbd2f258701d727347de56e3014",
-      "size": 7358
+      "sha256": "d109d325269ccf61661e042b1957de8a72d6462676bdad4fa3a206746b97b673",
+      "size": 7959
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
@@ -625,8 +625,8 @@
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
-          "sha256": "277f61a753e5643d41f5a6bc05a2f4644fd7dc9cff35e398f12d29777e4ed4a1",
-          "size": 12045
+          "sha256": "e8f654e764a49746b6ed0df6dee1b3e8dc639b25e3bdb8a103cfb364e61fe5ed",
+          "size": 9872
         },
         {
           "path": "skills/outsystems-mentor-implementation/README.md",
@@ -635,8 +635,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "c6716ae07b2b3385308e06e707e816b1dc53a6944e582b8c190db33085a2e3f4",
-          "size": 31013
+          "sha256": "22eac17158cd899916bb0cf0823bd1d9f3e05da782bcff97a3161d830ddfda57",
+          "size": 31124
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -655,8 +655,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
-          "sha256": "4be798abfaf068f513b756a470a0087bed3c6cbd2f258701d727347de56e3014",
-          "size": 7358
+          "sha256": "d109d325269ccf61661e042b1957de8a72d6462676bdad4fa3a206746b97b673",
+          "size": 7959
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
@@ -910,7 +910,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "source_commit": "9479b1a7bc0d2cb221ec03259b30eac6c240e81c",
       "version": "2026-08-08"
     },
     {
@@ -1047,7 +1047,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "source_commit": "a03cd6b41fb0b70757b683383763add3e9d4fc15",
       "version": "2026-08-08"
     },
     {

@@ -1,6 +1,6 @@
 # OutSystems Public Knowledge — Colleague Setup
 
-The component ZIP named by the sibling `RELEASE-CONTRACT.json` is the canonical
+The component ZIP published on the distribution repo's latest release is the canonical
 way to install OMI's public knowledge provider. It contains a checksum-verified engine
 wheel and a standard-library installer; the installer provisions only the four
 approved public repositories (`docs-odc`, `docs-howtos`, `docs-product`, and
@@ -17,7 +17,7 @@ in this component.
 - macOS, Linux, or Windows.
 - Git and Python 3.11 or newer.
 - Claude Code and/or Codex installed.
-- The component ZIP and its sibling `RELEASE-CONTRACT.json` from the same
+- The component ZIP and its sibling `.sha256` digest file from the same
   approved internal handoff channel.
 - VPN access for the separate `outsystems-tech-content` server when using OMI
   for implementation-detail work.
@@ -27,29 +27,36 @@ downloads only the four public OutSystems repositories.
 
 ## Contract-driven ZIP setup
 
-### 1. Read and verify the candidate contract
+### 1. Download and verify the component archive
 
-Use the exact `component.archive.name`, `component.archive.sha256`, and
-`component.archive.layout` values in `RELEASE-CONTRACT.json`. Stop unless
-`component.archive.layout == "flat"`; OMI onboarding never assumes a wrapping
-top-level directory. The SHA-256 digest must match before extraction. The
-following standard-library check is version-neutral.
+Fetch both files from the same release — the archive and its digest:
 
-macOS/Linux:
+- `https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/outsystems-public-knowledge.zip`
+- `https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/outsystems-public-knowledge.zip.sha256`
+
+Verify the SHA-256 digest before extracting; if it does not match, STOP and report — do
+not extract or install:
+
+Both platforms use the same Python check — no shell-native hash tools, so the
+command is identical everywhere Python 3 runs:
 
 ```bash
-ARCHIVE="$(python3 -c 'import json; print(json.load(open("RELEASE-CONTRACT.json"))["component"]["archive"]["name"])')"
-python3 -c 'import hashlib,json,pathlib,sys; c=json.load(open("RELEASE-CONTRACT.json"))["component"]["archive"]; p=pathlib.Path(c["name"]); actual=hashlib.file_digest(p.open("rb"), "sha256").hexdigest(); print(actual); raise SystemExit(0 if c["layout"] == "flat" and p.name == c["name"] and actual == c["sha256"] else "release-contract mismatch")'
+python3 -c 'import hashlib,pathlib,sys; want=pathlib.Path("outsystems-public-knowledge.zip.sha256").read_text().split()[0]; got=hashlib.file_digest(open("outsystems-public-knowledge.zip","rb"),"sha256").hexdigest(); sys.exit(0) if want==got else sys.exit("SHA-256 digest mismatch - stop and report")' && echo "digest OK"
 ```
-
-Windows PowerShell:
 
 ```powershell
-$Archive = python -c "import json; print(json.load(open('RELEASE-CONTRACT.json'))['component']['archive']['name'])"
-python -c "import hashlib,json,pathlib; c=json.load(open('RELEASE-CONTRACT.json'))['component']['archive']; p=pathlib.Path(c['name']); actual=hashlib.file_digest(p.open('rb'), 'sha256').hexdigest(); print(actual); raise SystemExit(0 if c['layout'] == 'flat' and p.name == c['name'] and actual == c['sha256'] else 'release-contract mismatch')"
+python -c "import hashlib,pathlib,sys; want=pathlib.Path('outsystems-public-knowledge.zip.sha256').read_text().split()[0]; got=hashlib.file_digest(open('outsystems-public-knowledge.zip','rb'),'sha256').hexdigest(); sys.exit(0) if want==got else sys.exit('SHA-256 digest mismatch - stop and report')"
+"digest OK"
 ```
 
-Stop if verification reports a mismatch.
+**Version floor:** the release you install from must carry engine wheel
+`workspace_knowledge_cc` **1.4.0 or newer** (first shipped in v35) — check
+`wheels/` inside the ZIP. Older components lack the `platform` search argument
+and **silently ignore it** rather than refusing, which quietly degrades OMI's
+ODC-focused retrieval. If you installed before v35, re-run this setup from the
+current release. Quick probe on an installed component: call
+`search_outsystems_public` with `platform='bogus'` — a current engine refuses
+the value; a pre-v35 engine answers as if you had not passed it.
 
 ### 2. Extract and install
 
@@ -139,70 +146,21 @@ never discards colleague changes. Resolve or preserve those changes yourself,
 then rerun `doctor` and `update`. A failed update keeps the previous complete
 index and receipt usable; it does not report partial success.
 
-## Contract-bound OMI skill-pack setup
+## OMI skill-pack setup (standalone OMI colleague pack only)
 
-The OMI TGZ remains separate from the component ZIP. They are two separate
-candidate files bound by the same `RELEASE-CONTRACT.json`; do not combine or
-repack them. Read `omi.archive_name` from the contract and keep the sibling OMI
-receipt beside it. Each platform sequence below derives all candidate names,
-verifies the four-file release pair, extracts only the manifest-bound root
-installer, checks its bounded help output, installs to explicit roots, and then
-runs the read-only check. Do not extract anything before pair verification.
+**Sprint-loop pack users: skip this whole section.** Your four skills install
+via the release's own `INSTALL-SPRINT-LOOP-<OS>.md` documents; this section
+covers only the standalone `omi-colleague-pack-*` channel, whose archive ships
+with a root `install.py` consumed by the repository's `install_skill_pack.py` installer.
 
-### macOS/Linux OMI sequence
-
-```bash
-CONTRACT="RELEASE-CONTRACT.json"
-COMPONENT_ARCHIVE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["component"]["archive"]["name"])' "$CONTRACT")"
-OMI_ARCHIVE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["omi"]["archive_name"])' "$CONTRACT")"
-OMI_RECEIPT="${OMI_ARCHIVE%.tgz}.receipt.json"
-python3 verify_release_pair.py \
-  --contract "$CONTRACT" \
-  --component "$COMPONENT_ARCHIVE" \
-  --omi "$OMI_ARCHIVE" \
-  --omi-receipt "$OMI_RECEIPT"
-mkdir -p omi-installer
-python3 -c 'import pathlib,tarfile,sys; a=pathlib.Path(sys.argv[1]); n=a.name[:-4]+"/install.py"; t=tarfile.open(a,"r:gz"); m=t.getmember(n); assert m.isfile() and not m.issym() and not m.islnk(); pathlib.Path(sys.argv[2]).write_bytes(t.extractfile(m).read())' "$OMI_ARCHIVE" omi-installer/install.py
-python3 omi-installer/install.py --help
-CODEX_SKILLS_ROOT="$HOME/.agents/skills"
-CLAUDE_SKILLS_ROOT="$HOME/.claude/skills"
-python3 omi-installer/install.py --pack "$OMI_ARCHIVE" \
-  --codex-root "$CODEX_SKILLS_ROOT" \
-  --claude-root "$CLAUDE_SKILLS_ROOT"
-python3 omi-installer/install.py --pack "$OMI_ARCHIVE" \
-  --codex-root "$CODEX_SKILLS_ROOT" \
-  --claude-root "$CLAUDE_SKILLS_ROOT" \
-  --check
-```
-
-### Windows PowerShell OMI sequence
-
-```powershell
-$Contract = 'RELEASE-CONTRACT.json'
-$ComponentArchive = python -c "import json,sys; print(json.load(open(sys.argv[1]))['component']['archive']['name'])" $Contract
-$OmiArchive = python -c "import json,sys; print(json.load(open(sys.argv[1]))['omi']['archive_name'])" $Contract
-$OmiReceipt = $OmiArchive -replace '\.tgz$', '.receipt.json'
-python .\verify_release_pair.py --contract $Contract --component $ComponentArchive --omi $OmiArchive --omi-receipt $OmiReceipt
-New-Item -ItemType Directory -Force .\omi-installer | Out-Null
-python -c "import pathlib,tarfile,sys; a=pathlib.Path(sys.argv[1]); n=a.name[:-4]+'/install.py'; t=tarfile.open(a,'r:gz'); m=t.getmember(n); assert m.isfile() and not m.issym() and not m.islnk(); pathlib.Path(sys.argv[2]).write_bytes(t.extractfile(m).read())" $OmiArchive .\omi-installer\install.py
-python .\omi-installer\install.py --help
-$CodexSkillsRoot = Join-Path $HOME '.agents\skills'
-$ClaudeSkillsRoot = Join-Path $HOME '.claude\skills'
-python .\omi-installer\install.py --pack $OmiArchive --codex-root $CodexSkillsRoot --claude-root $ClaudeSkillsRoot
-python .\omi-installer\install.py --pack $OmiArchive --codex-root $CodexSkillsRoot --claude-root $ClaudeSkillsRoot --check
-```
-
-The OMI installer verifies the exact TGZ and embedded `PACKAGE-MANIFEST.json`,
-then writes plain managed copies (never symlinks) to the two explicit skill
-roots. Its receipt is written last and binds the exact TGZ digest plus a
-canonical size/sha256 inventory of the OMI tree and managed shared files.
-`--check` verifies that inventory. An idempotent rerun uses staged files and an
-identity-bound backup so a failed update restores the prior managed install;
-unexpected transaction residue is preserved and refused for manual recovery.
-The installer replaces only its own managed files. It does not inspect, read,
-register, or change either client's persistent configuration. In particular,
-it does not read or change Claude Code or Codex configuration; discovery
-remains the client's ordinary filesystem scan.
+For that standalone channel: download the pack `.tgz` and its `.sha256` from
+the release that published them, verify the digest exactly as in step 1 above
+(same command, the pack's filenames), then run the pack's bundled installer
+per the pack repository's packaging README → "Install (Phase 2)" (`--claude-root` /
+`--codex-root` accepted; `--check` verifies an existing install). The installer
+writes plain managed copies (never symlinks) and does not read or change Claude
+Code or Codex configuration. There is no separate pair-verification step: each
+asset carries its own digest file.
 
 ## OMI provider states
 
@@ -228,7 +186,13 @@ approved internal instructions for your client. If it is unavailable, OMI must
 report the missing implementation authority rather than infer those details
 from the public component.
 
-## Transition-only bootstrap
+## Transition-only bootstrap (maintainer-side only)
+
+`scripts/bootstrap_public_knowledge.py` exists in the maintainer's private
+repo and does **not** ship in any release asset — if you are reading this
+from an installed pack, this path is not available to you; use the release
+channel above instead. Kept here for the maintainer's own migrations:
+
 
 The repository script below exists for one transition release only. It is not
 the canonical installer or lifecycle authority, it does not accept URLs, and it
