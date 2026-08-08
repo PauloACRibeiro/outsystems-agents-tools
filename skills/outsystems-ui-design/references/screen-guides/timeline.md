@@ -1,8 +1,8 @@
 # Timeline / Activity Feed Screen
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/screen-guides/timeline.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI screen-guide reference set (`timeline.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 ## Anatomy

@@ -6,8 +6,8 @@ description: OutSystems UI utility patterns — AlignCenter, ButtonLoading, Cent
 # Utility Patterns
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/outsystems-ui/patterns/utilities.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI pattern reference set (`patterns/utilities.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 > **Category:** Utilities — small building-block helpers used inside other patterns or screens.

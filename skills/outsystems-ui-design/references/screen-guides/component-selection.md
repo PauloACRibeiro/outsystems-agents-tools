@@ -1,8 +1,8 @@
 # Component Selection Guide
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/screen-guides/component-selection.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI screen-guide reference set (`component-selection.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 Choose the right UI component for the content and interaction pattern. Using the wrong component causes usability failures regardless of styling.

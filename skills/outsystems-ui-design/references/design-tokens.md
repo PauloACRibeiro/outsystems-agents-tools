@@ -6,8 +6,8 @@ description: Mobile UI design token taxonomy — color/spacing/typography/border
 # Design Tokens
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/outsystems-ui/design-tokens.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI pattern reference set (`design-tokens.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 Mobile UI Framework ships design tokens out of the box. **OutSystems UI (Reactive Web + Phone App Template) uses its own framework CSS variables instead** — see [`styles-and-utilities.md`](styles-and-utilities.md).

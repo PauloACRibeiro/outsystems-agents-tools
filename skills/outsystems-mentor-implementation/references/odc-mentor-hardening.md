@@ -875,7 +875,7 @@ source exposes them.
 
 **Evidence**
 
-`outsystems-mcp-skills/docs/CONVENTIONS.md` records the current MCP limitation.
+The upstream skills catalog's conventions document records the current MCP limitation.
 For broader tenant context and payload guardrails, see
 `references/tenant-context-guardrails.md`.
 

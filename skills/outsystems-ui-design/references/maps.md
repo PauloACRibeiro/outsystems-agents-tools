@@ -6,8 +6,8 @@ description: Catalog of OutSystems Maps blocks (Map, Marker, Map_StaticMap, Mark
 # OutSystems Maps
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/outsystems-ui/maps.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI pattern reference set (`maps.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 Separate Forge component (install per-app, not built into OutSystems UI). Backed by Google Maps / Bing / AWS providers. **Live sample:** [outsystemsui.outsystems.com/OutSystemsMapsSample](https://outsystemsui.outsystems.com/OutSystemsMapsSample/Map).

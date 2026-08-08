@@ -20,10 +20,12 @@ Read this once end to end before your first run, then use it as the checklist.
 - **Node.js and Google Chrome** for the grading step. The capture script drives
   your installed Chrome through Playwright; it installs one npm package into a
   scratch folder and does not download a browser.
-- **The four skills in this repository**, installed into your agent's skills
+- **The four skills in this pack**, installed into your agent's skills
   directory: `outsystems-ui-design`, `outsystems-plan-to-mentor`,
   `outsystems-mentor-implementation`, and `outsystems-runtime-ui-audit`. Follow
-  this repository's own install instructions.
+  the bundled release install document for your OS
+  (`INSTALL-SPRINT-LOOP-MACOS.md` / `INSTALL-SPRINT-LOOP-WINDOWS.md`, attached
+  to the same release you downloaded this pack from).
 
 You do **not** need a VPN, and you do not need an OutSystems employee account.
 
@@ -32,7 +34,7 @@ You do **not** need a VPN, and you do not need an OutSystems employee account.
 | Steps | Owned by | How you get it |
 |---|---|---|
 | 1–2 | The public **Superpowers** plugin | Installed separately — see below. Not redistributed here. |
-| 3, 4, 5, grading | The four skills in **this repository** | Install per this repository's instructions. |
+| 3, 4, 5, grading | The four skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
 | 6 | The public **OutSystems MCP** plugin | `outsystems@outsystems` — see below. |
 
 ### Steps 1–2 — install Superpowers yourself

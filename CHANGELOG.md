@@ -121,6 +121,14 @@ source directories added to the non-shipped reference triggers — and there is
 now a test that watches each new guard actually fail on a planted violation,
 rather than trusting that a clean run means a working check.
 
+A third review round proved the same lesson again at a smaller grain: an
+internal network endpoint and forty-one references to a maintainer-only
+repository sat in the exported tree, invisible to every pattern above. Both
+are gone from the source, and the gate now also hard-fails private IP
+addresses, any address-with-port, Windows user paths, *any* tenant hostname
+(not just the known one), and the maintainer repository's name — each with a
+regression test carrying the exact string that got through.
+
 **The maintainer's catalog-refresh tooling no longer ships, and the catalogs it
 produces no longer point at a machine you cannot reach.** Six scripts
 regenerated the bundled reference catalogs from a documentation mirror that

@@ -6,8 +6,8 @@ description: Catalog of OutSystems Charts blocks (Charts API v2) — column, bar
 # OutSystems Charts
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/outsystems-ui/charts.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI pattern reference set (`charts.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 Separate Forge component (not core OutSystems UI). Backed by Highcharts under the hood. **Always use Charts API v2** — the legacy v1 is superseded.

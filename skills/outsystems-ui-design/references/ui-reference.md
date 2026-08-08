@@ -6,8 +6,8 @@ description: Cross-cutting reference for OutSystems UI widgets and blocks — th
 # OutSystems UI — Widgets & Blocks Reference
 
 
-> **Harvested from:** `outsystems-mcp-skills/skills/outsystems-design-to-app/references/outsystems-ui/ui-reference.md` (read-only source, harvested 2026-07-13).
-> **Upstream origin:** OutSystems UI pattern reference, curated within `outsystems-mcp-skills` (no further upstream repo cited in source).
+> **Harvested from:** a curated OutSystems UI pattern reference set (`ui-reference.md`) (read-only source, harvested 2026-07-13).
+> **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 The single cross-cutting reference for OS UI domain knowledge. Use this to pick the right widget / block / pattern and to validate spec composition. For deep block-by-block detail (args + placeholders + events), drop into the matching `patterns/<category>.md`.

@@ -18,13 +18,13 @@
     },
     {
       "path": "docs/sprint-loop-for-colleagues.md",
-      "sha256": "3a25d9746e479e2b0d196b6f37d10fc2fbff9a4297c2dcec161e20b47becae5d",
-      "size": 16706
+      "sha256": "89ad252c3bd9f1512e748a4c322a428113ab3994a0b6b4470d8ee9e27b415161",
+      "size": 16843
     },
     {
       "path": "skills/outsystems-mentor-implementation/README.md",
-      "sha256": "b742d22bd42023126b88a078aa1b6b6522117bb4cf1f3f122cef3f3ead5fc9de",
-      "size": 38550
+      "sha256": "d7f7767d246b82609c7821d502ef5a1dabda731dd3700aa5396c41d9ca43aab6",
+      "size": 38656
     },
     {
       "path": "skills/outsystems-mentor-implementation/SKILL.md",
@@ -88,8 +88,8 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-mentor-hardening.md",
-      "sha256": "3b6ad7d70063719aa0912a52b302d2882223bd4beac65e509e6190813e100b36",
-      "size": 84311
+      "sha256": "e6165335350a772eff13fc0aa52d54007309fbc239c2d991329713b77741bcea",
+      "size": 84318
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-platform-guardrails.md",
@@ -413,13 +413,13 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/charts.md",
-      "sha256": "5764d9efd9dc88182f1068702244c5537a65e2462c229b461fc7fea7313e7276",
-      "size": 3377
+      "sha256": "3a005e5438492a95aca16c529a399da028b5d1d51b149f1f46d673269e1a16c5",
+      "size": 3334
     },
     {
       "path": "skills/outsystems-ui-design/references/design-tokens.md",
-      "sha256": "dfd280872edbb1e854166268121c9bbc1fe455dd0ab3a049063d9304fa52fdc3",
-      "size": 7685
+      "sha256": "06691bf30cf4f7c68c349a88cabcc2b714a04bb65973d56acaae37b8f1dcdc92",
+      "size": 7642
     },
     {
       "path": "skills/outsystems-ui-design/references/examples/existing-app-blueprint.json",
@@ -443,8 +443,8 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/maps.md",
-      "sha256": "dab2031377ef4a21719d286b67de158ecf9bb11bffc371b9124267f4257452c1",
-      "size": 4384
+      "sha256": "8274baf070eeca814f55b04c4861fe390b3578dd90ace5ca349a87ed27185e4c",
+      "size": 4341
     },
     {
       "path": "skills/outsystems-ui-design/references/patterns/adaptive.md",
@@ -473,23 +473,23 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/patterns/utilities.md",
-      "sha256": "876dffc5234e28c62c38ab4f490c033855753e4ccaca7247672039e4bd80093f",
-      "size": 6381
+      "sha256": "cda0c0200a00fc77b6363620da3500bdc3d781f925f64ae10d2e978eef4a4b77",
+      "size": 6338
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/app-type-styling.md",
-      "sha256": "fd02fc2dfee78e571a22892094a403c7119d946fdab2c259676e324299aa5f49",
-      "size": 5791
+      "sha256": "ad5a004b41848342d502a141c4b5f41c307b8312568779d5f12f6450eccc6a30",
+      "size": 5753
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/calendar.md",
-      "sha256": "a42758f0ef2a2bf10fba971907320116e272cef782c1b06411091d4e63301280",
-      "size": 2901
+      "sha256": "8315118337d579ab0d014420c46c5371598690231816290372793994264e1305",
+      "size": 2863
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/component-selection.md",
-      "sha256": "2a137c65b3a31bbb5c0533b97e5c4207201c934ed4a76e5b4dc094c066a62d63",
-      "size": 4365
+      "sha256": "a70db29025b125542d2cc4d16fae08910e24c223d45eb4e932ffb199ad6269e5",
+      "size": 4327
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/dashboard.md",
@@ -498,28 +498,28 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/design-system.md",
-      "sha256": "b0ac2de0a6ad2b9040eaaf15aa2e1e89dbe423b9ee38e274caaa99fc2a365258",
-      "size": 3581
+      "sha256": "5526c9947515537a376f52850332ecca6c8904a112d9c07d0912b21958f19eea",
+      "size": 3543
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/detail-view.md",
-      "sha256": "3aca0f75a3d80d059bff05dd7093cfcebe6a59b1f8f49f969bf6b3274c5d70c9",
-      "size": 3280
+      "sha256": "3dd3f386003cea35baf74dd8df9394edb1fead2a4914c838a3bbeaa96fbd8ddd",
+      "size": 3242
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/edit-form.md",
-      "sha256": "a112142217e35600cfb59903550cda6fcc2b3a0c195ffa678374351bb4dd2523",
-      "size": 3896
+      "sha256": "8752bb7ed387baafe8e29e001b9ed7d86900c1dc7f134de2ed09794b64aaaace",
+      "size": 3858
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/gallery-grid.md",
-      "sha256": "b448e9c1818684baa9747d88a43c0825577a67f66660fa409bf3431d32e49dce",
-      "size": 3477
+      "sha256": "565df4710fe66e474daf07c8b88a6bfcb4cb5e96f92bd929cfe2a23a365db1f6",
+      "size": 3439
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/inbox-notifications.md",
-      "sha256": "028a9ec1667d7ef82a22a6d30c92eb4421c9a7f82017d4d84df9b7f405c5d531",
-      "size": 3332
+      "sha256": "44e9c3b0942d6c30129b7e22181207e22b792e0eeebe29796fc57b251cc0f59b",
+      "size": 3294
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/instructional.md",
@@ -528,48 +528,48 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/kanban.md",
-      "sha256": "3cbeba53e5e34dc51d040425beff4a768da54c3c783f872b5bc813f9dd575735",
-      "size": 3031
+      "sha256": "8c4ad76562a78c36e0a6f1713284de4e4eb63ed9681d7442bfe38e76da143811",
+      "size": 2993
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/list-table.md",
-      "sha256": "8222e9cc60ec8d203b1456f59bf5331d3f9fb53e652bba268262969449612141",
-      "size": 3403
+      "sha256": "e03374ecdce008a1b4b830ba6d10f071445e5dfb7ca96c4bd2cfea5f09981d7d",
+      "size": 3365
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/map-view.md",
-      "sha256": "7378218abf23c3363fe8dd643e930c125164b19c2d8ed12f5d798816e72b69fa",
-      "size": 3182
+      "sha256": "7990da4c375e0456e9b75fec4d39a13db0c4bfceb698234437a3b72aad723cd4",
+      "size": 3144
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/master-detail.md",
-      "sha256": "96060eae143be5bc24b202450658ddff68d7f49f275050f26026dcf1eb30332e",
-      "size": 2486
+      "sha256": "5affd1d6ec9826d4e85e533ba3a32ab28c9506f9a225bb1c502fda99ddd2e3a6",
+      "size": 2448
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/reusable-blocks.md",
-      "sha256": "65ab354f2953c872be8004e70c63d7f856168c849787336e38c0de79a24e73d1",
-      "size": 3131
+      "sha256": "790c10b2820c7efdddf7a518eed7ffe7325864df581046b5f1969b85c32750dc",
+      "size": 3093
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/settings.md",
-      "sha256": "06068cd55b20d62177586ad7975862cc60dee67bd66b42870a874b1db3e0dae3",
-      "size": 3033
+      "sha256": "2b8914d93aae378ffa7f95ef2d4cac664ae6e89d0ac6e883301eb6070b745f2d",
+      "size": 2995
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/states-and-feedback.md",
-      "sha256": "6779507ab798b2c881dd5ffeab223d42042643374179b06716131e337b8e6b5a",
-      "size": 4885
+      "sha256": "b44e759e198c93451f4ebb9a498ce0f2c91ffe6541f6556208dc635a29a68b72",
+      "size": 4847
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/timeline.md",
-      "sha256": "9c7c0a0e1c329d7c8d7fbb422f0b74dd054d618d27c2e15dc66ea70573a7ec72",
-      "size": 3459
+      "sha256": "6e96fa8096c7da8f63e0cc48ce006af57f0ce32ab6a24341029d6cbaf32a3da2",
+      "size": 3421
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-guides/wizard.md",
-      "sha256": "a55307976cacf943c7fe15b9d2606f630f15446d176bae5a457780666ef4464b",
-      "size": 3047
+      "sha256": "b08a227bbac1e1f50660bc2abd68103f5fd5e7ac008eb7f4dc1f40d1359b5d5d",
+      "size": 3009
     },
     {
       "path": "skills/outsystems-ui-design/references/screen-templates.md",
@@ -588,8 +588,8 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/ui-reference.md",
-      "sha256": "6cf6571e7c1fa85e90b26e0e95185699e8cbac203c970c8ab7fa85e3a98004c4",
-      "size": 32852
+      "sha256": "4165e34dadbebae48655415dc25a25ba9fb2915e051578705234ec3871d130ec",
+      "size": 32809
     },
     {
       "path": "skills/outsystems-ui-design/schemas/enriched-blueprint.schema.json",
@@ -620,7 +620,7 @@
   "manifest_version": 2,
   "packs": [
     {
-      "build_date_utc": "2026-08-07",
+      "build_date_utc": "2026-08-08",
       "file_count": 57,
       "files": [
         {
@@ -630,8 +630,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/README.md",
-          "sha256": "b742d22bd42023126b88a078aa1b6b6522117bb4cf1f3f122cef3f3ead5fc9de",
-          "size": 38550
+          "sha256": "d7f7767d246b82609c7821d502ef5a1dabda731dd3700aa5396c41d9ca43aab6",
+          "size": 38656
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
@@ -695,8 +695,8 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-mentor-hardening.md",
-          "sha256": "3b6ad7d70063719aa0912a52b302d2882223bd4beac65e509e6190813e100b36",
-          "size": 84311
+          "sha256": "e6165335350a772eff13fc0aa52d54007309fbc239c2d991329713b77741bcea",
+          "size": 84318
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-platform-guardrails.md",
@@ -910,11 +910,11 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
-      "version": "2026-08-07"
+      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "version": "2026-08-08"
     },
     {
-      "build_date_utc": "2026-08-07",
+      "build_date_utc": "2026-08-08",
       "file_count": 14,
       "files": [
         {
@@ -989,11 +989,11 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
-      "version": "2026-08-07"
+      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "version": "2026-08-08"
     },
     {
-      "build_date_utc": "2026-08-07",
+      "build_date_utc": "2026-08-08",
       "file_count": 5,
       "files": [
         {
@@ -1023,11 +1023,11 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
-      "version": "2026-08-07"
+      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "version": "2026-08-08"
     },
     {
-      "build_date_utc": "2026-08-07",
+      "build_date_utc": "2026-08-08",
       "file_count": 3,
       "files": [
         {
@@ -1042,16 +1042,16 @@
         },
         {
           "path": "docs/sprint-loop-for-colleagues.md",
-          "sha256": "3a25d9746e479e2b0d196b6f37d10fc2fbff9a4297c2dcec161e20b47becae5d",
-          "size": 16706
+          "sha256": "89ad252c3bd9f1512e748a4c322a428113ab3994a0b6b4470d8ee9e27b415161",
+          "size": 16843
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
-      "version": "2026-08-07"
+      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "version": "2026-08-08"
     },
     {
-      "build_date_utc": "2026-08-07",
+      "build_date_utc": "2026-08-08",
       "file_count": 44,
       "files": [
         {
@@ -1076,13 +1076,13 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/charts.md",
-          "sha256": "5764d9efd9dc88182f1068702244c5537a65e2462c229b461fc7fea7313e7276",
-          "size": 3377
+          "sha256": "3a005e5438492a95aca16c529a399da028b5d1d51b149f1f46d673269e1a16c5",
+          "size": 3334
         },
         {
           "path": "skills/outsystems-ui-design/references/design-tokens.md",
-          "sha256": "dfd280872edbb1e854166268121c9bbc1fe455dd0ab3a049063d9304fa52fdc3",
-          "size": 7685
+          "sha256": "06691bf30cf4f7c68c349a88cabcc2b714a04bb65973d56acaae37b8f1dcdc92",
+          "size": 7642
         },
         {
           "path": "skills/outsystems-ui-design/references/examples/existing-app-blueprint.json",
@@ -1106,8 +1106,8 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/maps.md",
-          "sha256": "dab2031377ef4a21719d286b67de158ecf9bb11bffc371b9124267f4257452c1",
-          "size": 4384
+          "sha256": "8274baf070eeca814f55b04c4861fe390b3578dd90ace5ca349a87ed27185e4c",
+          "size": 4341
         },
         {
           "path": "skills/outsystems-ui-design/references/patterns/adaptive.md",
@@ -1136,23 +1136,23 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/patterns/utilities.md",
-          "sha256": "876dffc5234e28c62c38ab4f490c033855753e4ccaca7247672039e4bd80093f",
-          "size": 6381
+          "sha256": "cda0c0200a00fc77b6363620da3500bdc3d781f925f64ae10d2e978eef4a4b77",
+          "size": 6338
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/app-type-styling.md",
-          "sha256": "fd02fc2dfee78e571a22892094a403c7119d946fdab2c259676e324299aa5f49",
-          "size": 5791
+          "sha256": "ad5a004b41848342d502a141c4b5f41c307b8312568779d5f12f6450eccc6a30",
+          "size": 5753
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/calendar.md",
-          "sha256": "a42758f0ef2a2bf10fba971907320116e272cef782c1b06411091d4e63301280",
-          "size": 2901
+          "sha256": "8315118337d579ab0d014420c46c5371598690231816290372793994264e1305",
+          "size": 2863
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/component-selection.md",
-          "sha256": "2a137c65b3a31bbb5c0533b97e5c4207201c934ed4a76e5b4dc094c066a62d63",
-          "size": 4365
+          "sha256": "a70db29025b125542d2cc4d16fae08910e24c223d45eb4e932ffb199ad6269e5",
+          "size": 4327
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/dashboard.md",
@@ -1161,28 +1161,28 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/design-system.md",
-          "sha256": "b0ac2de0a6ad2b9040eaaf15aa2e1e89dbe423b9ee38e274caaa99fc2a365258",
-          "size": 3581
+          "sha256": "5526c9947515537a376f52850332ecca6c8904a112d9c07d0912b21958f19eea",
+          "size": 3543
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/detail-view.md",
-          "sha256": "3aca0f75a3d80d059bff05dd7093cfcebe6a59b1f8f49f969bf6b3274c5d70c9",
-          "size": 3280
+          "sha256": "3dd3f386003cea35baf74dd8df9394edb1fead2a4914c838a3bbeaa96fbd8ddd",
+          "size": 3242
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/edit-form.md",
-          "sha256": "a112142217e35600cfb59903550cda6fcc2b3a0c195ffa678374351bb4dd2523",
-          "size": 3896
+          "sha256": "8752bb7ed387baafe8e29e001b9ed7d86900c1dc7f134de2ed09794b64aaaace",
+          "size": 3858
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/gallery-grid.md",
-          "sha256": "b448e9c1818684baa9747d88a43c0825577a67f66660fa409bf3431d32e49dce",
-          "size": 3477
+          "sha256": "565df4710fe66e474daf07c8b88a6bfcb4cb5e96f92bd929cfe2a23a365db1f6",
+          "size": 3439
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/inbox-notifications.md",
-          "sha256": "028a9ec1667d7ef82a22a6d30c92eb4421c9a7f82017d4d84df9b7f405c5d531",
-          "size": 3332
+          "sha256": "44e9c3b0942d6c30129b7e22181207e22b792e0eeebe29796fc57b251cc0f59b",
+          "size": 3294
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/instructional.md",
@@ -1191,48 +1191,48 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/kanban.md",
-          "sha256": "3cbeba53e5e34dc51d040425beff4a768da54c3c783f872b5bc813f9dd575735",
-          "size": 3031
+          "sha256": "8c4ad76562a78c36e0a6f1713284de4e4eb63ed9681d7442bfe38e76da143811",
+          "size": 2993
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/list-table.md",
-          "sha256": "8222e9cc60ec8d203b1456f59bf5331d3f9fb53e652bba268262969449612141",
-          "size": 3403
+          "sha256": "e03374ecdce008a1b4b830ba6d10f071445e5dfb7ca96c4bd2cfea5f09981d7d",
+          "size": 3365
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/map-view.md",
-          "sha256": "7378218abf23c3363fe8dd643e930c125164b19c2d8ed12f5d798816e72b69fa",
-          "size": 3182
+          "sha256": "7990da4c375e0456e9b75fec4d39a13db0c4bfceb698234437a3b72aad723cd4",
+          "size": 3144
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/master-detail.md",
-          "sha256": "96060eae143be5bc24b202450658ddff68d7f49f275050f26026dcf1eb30332e",
-          "size": 2486
+          "sha256": "5affd1d6ec9826d4e85e533ba3a32ab28c9506f9a225bb1c502fda99ddd2e3a6",
+          "size": 2448
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/reusable-blocks.md",
-          "sha256": "65ab354f2953c872be8004e70c63d7f856168c849787336e38c0de79a24e73d1",
-          "size": 3131
+          "sha256": "790c10b2820c7efdddf7a518eed7ffe7325864df581046b5f1969b85c32750dc",
+          "size": 3093
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/settings.md",
-          "sha256": "06068cd55b20d62177586ad7975862cc60dee67bd66b42870a874b1db3e0dae3",
-          "size": 3033
+          "sha256": "2b8914d93aae378ffa7f95ef2d4cac664ae6e89d0ac6e883301eb6070b745f2d",
+          "size": 2995
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/states-and-feedback.md",
-          "sha256": "6779507ab798b2c881dd5ffeab223d42042643374179b06716131e337b8e6b5a",
-          "size": 4885
+          "sha256": "b44e759e198c93451f4ebb9a498ce0f2c91ffe6541f6556208dc635a29a68b72",
+          "size": 4847
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/timeline.md",
-          "sha256": "9c7c0a0e1c329d7c8d7fbb422f0b74dd054d618d27c2e15dc66ea70573a7ec72",
-          "size": 3459
+          "sha256": "6e96fa8096c7da8f63e0cc48ce006af57f0ce32ab6a24341029d6cbaf32a3da2",
+          "size": 3421
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-guides/wizard.md",
-          "sha256": "a55307976cacf943c7fe15b9d2606f630f15446d176bae5a457780666ef4464b",
-          "size": 3047
+          "sha256": "b08a227bbac1e1f50660bc2abd68103f5fd5e7ac008eb7f4dc1f40d1359b5d5d",
+          "size": 3009
         },
         {
           "path": "skills/outsystems-ui-design/references/screen-templates.md",
@@ -1251,8 +1251,8 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/ui-reference.md",
-          "sha256": "6cf6571e7c1fa85e90b26e0e95185699e8cbac203c970c8ab7fa85e3a98004c4",
-          "size": 32852
+          "sha256": "4165e34dadbebae48655415dc25a25ba9fb2915e051578705234ec3871d130ec",
+          "size": 32809
         },
         {
           "path": "skills/outsystems-ui-design/schemas/enriched-blueprint.schema.json",
@@ -1276,8 +1276,8 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "68f2c42292a86b166a3a8467d8af59282290b893",
-      "version": "2026-08-07"
+      "source_commit": "77adc217f5bd7c9ab2b6080bc6e746521ddc9614",
+      "version": "2026-08-08"
     }
   ]
 }
