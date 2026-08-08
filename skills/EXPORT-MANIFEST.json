@@ -13,8 +13,8 @@
     },
     {
       "path": "docs/colleague-public-knowledge-setup.md",
-      "sha256": "a1ab3543cec44b229591af4d01296d06d16db940bae047f471398a224a9c8d46",
-      "size": 10496
+      "sha256": "b13ff05cc7c08030d8cdd3918c8447c21267c8cfd046d427ef559a1ad59e5fb4",
+      "size": 11539
     },
     {
       "path": "docs/sprint-loop-for-colleagues.md",
@@ -625,8 +625,8 @@
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
-          "sha256": "a1ab3543cec44b229591af4d01296d06d16db940bae047f471398a224a9c8d46",
-          "size": 10496
+          "sha256": "b13ff05cc7c08030d8cdd3918c8447c21267c8cfd046d427ef559a1ad59e5fb4",
+          "size": 11539
         },
         {
           "path": "skills/outsystems-mentor-implementation/README.md",
@@ -910,7 +910,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
+      "source_commit": "59464af8ae69ff55267361d8b7f78bd31de3642b",
       "version": "2026-08-08"
     },
     {
@@ -1047,7 +1047,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "1924a329f7360b92ceec6e603e53028ef7b9140c",
+      "source_commit": "59464af8ae69ff55267361d8b7f78bd31de3642b",
       "version": "2026-08-08"
     },
     {

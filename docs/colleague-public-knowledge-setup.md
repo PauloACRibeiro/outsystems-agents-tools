@@ -67,10 +67,10 @@ the value; a pre-v35 engine answers as if you had not passed it.
 
 ### 2. Extract and install
 
-After the contract check proves the flat layout, extract the exact archive into
-a locally named `outsystems-public-knowledge` directory. Confirm that the root
-`install.py` is present and run its bounded, non-mutating help command before
-installation:
+Once the digest check above passes, extract the archive into a locally named
+`outsystems-public-knowledge` directory — the ZIP is flat, with no wrapping
+top-level directory. Confirm that the root `install.py` is present and run its
+bounded, non-mutating help command before installation:
 
 These commands invoke the same root launcher as `python install.py` after
 entering the extracted directory, while keeping the directory location explicit.
@@ -93,9 +93,27 @@ python .\outsystems-public-knowledge\install.py --help
 python .\outsystems-public-knowledge\install.py
 ```
 
-The default managed root is `~/outsystems-public-knowledge` (the equivalent
-directory under `%USERPROFILE%` on Windows). Pass `--root <path>` only when you
-need a different location. A successful install verifies the archive and wheel,
+**The default managed root is `~/opk`** (the equivalent directory under
+`%USERPROFILE%` on Windows) — short by design, because the component root
+appears in every registration command. Pass `--root <path>` only when you need
+a different location.
+
+Two things this trips people on, both verified by a from-scratch install on
+2026-08-08:
+
+- **Pre-v35 components used `~/outsystems-public-knowledge` instead.** If you
+  installed before v35 you have a root at the old path, and it is on the wrong
+  side of the version floor above. Re-run this setup from the current release;
+  the new install lands in `~/opk` and leaves the old directory alone for you to
+  delete once you are satisfied.
+- **`doctor`, `update`, and `registration` resolve the default root
+  independently of where you installed.** If you passed `--root`, pass the same
+  `--root` to those commands too. Without it they inspect `~/opk` and, when that
+  is not where your component lives, report a wall of failures naming a
+  directory you never created — `Component receipt is unsafe or unreadable` —
+  rather than saying the root was not found.
+
+A successful install verifies the archive and wheel,
 creates the component-owned virtual environment, clones the approved public
 repositories, builds and smoke-tests the index, writes the success receipt last,
 and prints Claude Code and Codex registration commands.
@@ -109,13 +127,13 @@ again without changing the component, run:
 macOS/Linux:
 
 ```bash
-~/outsystems-public-knowledge/.venv/bin/outsystems-public-knowledge registration
+~/opk/.venv/bin/outsystems-public-knowledge registration
 ```
 
 Windows PowerShell:
 
 ```powershell
-& "$HOME\outsystems-public-knowledge\.venv\Scripts\outsystems-public-knowledge.exe" registration
+& "$HOME\opk\.venv\Scripts\outsystems-public-knowledge.exe" registration
 ```
 
 The MCP alias must be exactly `outsystems-public-knowledge`. Claude Code and
@@ -135,16 +153,19 @@ public repositories. Internal and private search scopes are empty by design.
 cleanliness, manifest and receipt integrity, index health, and a smoke query:
 
 ```bash
-~/outsystems-public-knowledge/.venv/bin/outsystems-public-knowledge doctor
+~/opk/.venv/bin/outsystems-public-knowledge doctor
 ```
 
-Windows PowerShell uses the same executable under
-`$HOME\outsystems-public-knowledge\.venv\Scripts\`.
+Add `--root <path>` if you installed somewhere other than `~/opk`. A healthy
+install reports every check `ok` and exits 0; any failure exits 1 and names the
+check plus a suggested action.
+
+Windows PowerShell uses the same executable under `$HOME\opk\.venv\Scripts\`.
 
 To fast-forward the approved repositories and atomically rebuild the index:
 
 ```bash
-~/outsystems-public-knowledge/.venv/bin/outsystems-public-knowledge update
+~/opk/.venv/bin/outsystems-public-knowledge update
 ```
 
 The update command has a deliberate dirty-repository boundary: local edits or
