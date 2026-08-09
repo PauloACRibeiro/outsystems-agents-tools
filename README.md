@@ -29,6 +29,11 @@ before you write anything to disk. When you are done, verify it and tell me the
 pack version, the skills roots you installed into, and where you put the docs.
 ```
 
+**The pack alone is not the whole loop.** Its build step (step 5) refuses to
+run without a knowledge source: install the **OutSystems Public Knowledge MCP
+server** too — next section, same release. (OutSystems employees already
+running the internal tech-content server over VPN are covered.)
+
 Then read [the sprint loop entry doc](docs/sprint-loop-for-colleagues.md) before
 your first run. It is short, and it covers the two things that cost people the
 most time: the order the steps have to run in, and the six points where the loop
