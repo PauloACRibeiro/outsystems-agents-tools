@@ -8,6 +8,45 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## v37 — 2026-08-09
+
+The first release shaped by its own audience: every change below traces to a
+finding from the maintainer running the full colleague flow by hand on a clean
+Windows machine (15 findings, all fixed, all independently reviewed).
+
+### Sprint loop pack (`outsystems-sprint-loop-pack-2026-08-09.1`)
+
+- The install now ends with ONE next action: a link to the sprint loop entry
+  doc on GitHub. Local doc paths are secondary reference, not the handoff.
+- "Restart the client" was wrong on Claude Desktop and is gone: skills load in
+  a NEW conversation; resuming an old one keeps the old skill registry.
+- The design skill's missing widget inventory is now an offered completion
+  step for OutSystems staff (regenerate locally in about a minute), not a
+  footnote — and its routing note no longer names a skill the pack does not
+  carry as if it were installed.
+- The feedback bundle now records WHICH pack version it came from
+  (PACKAGE-MANIFEST.json travels with it), no longer ships every skill twice,
+  its --dry-run claim matches what --dry-run actually shows, and all three
+  privacy redaction rules are now proven by tests rather than asserted.
+
+### OutSystems Public Knowledge server (component unchanged, documents new)
+
+- The component archive is byte-identical to v36 (engine 1.4.0); both INSTALL
+  documents are newly rendered.
+- Refresh is now ON DEMAND: update when the index reports stale content. The
+  weekly scheduled job is deliberately no longer offered — measured on a real
+  machine, an unattended weekly fire finds the index bound and silently
+  refuses almost every time (and the one real registered task observed was
+  itself broken since creation by argument corruption, invisibly, because a
+  background task logs nothing). Documents from earlier releases may have
+  registered a job; both REFRESH and UNINSTALL now carry its removal by name.
+- The pre-update safety check now recognizes BOTH server binaries and scopes
+  matches to the install root by path (with the sibling-folder trap fixed —
+  a naive prefix match would have blocked every future refresh).
+- The install documents state the expected snapshot age on a fresh install
+  (~3 weeks; the documented one-time refresh brings it current).
+
+
 ### v36 — the OutSystems sprint loop pack (release candidate, not yet cut)
 
 > **Draft.** Written against the candidate build; the version number and the

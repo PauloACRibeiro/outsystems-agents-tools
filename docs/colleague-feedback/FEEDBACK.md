@@ -10,10 +10,12 @@ file and run the bundler from the folder this file came in —
 PowerShell (`python3` is not a command on Windows) — then email the single
 `.tgz` it produces to
 `<the person who sent you this pack>`. The bundler is offline and read-only: it
-gathers this file, the version stamps of your installed OutSystems skills, and
+gathers this file, the pack's PACKAGE-MANIFEST.json (the version and digest
+record), the identity stamps of your installed OutSystems skills, and
 any local run receipts, redacts your home directory, environment hostnames and
 any id that looks like a GUID, and writes one archive. Nothing is uploaded, and
-you can preview exactly what it would send with `--dry-run` first.
+`--dry-run` first lists every file it would include and how many redactions
+each rule made, without writing anything — review that list before the real run.
 
 ## The steps
 

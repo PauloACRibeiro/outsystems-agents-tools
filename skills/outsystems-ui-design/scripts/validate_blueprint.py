@@ -383,7 +383,15 @@ def _check_assertion_parity(bp, errors):
         derived = _derive_counts(screen)
         sname = screen.get("name", "?")
         for key, claimed in assertions.items():
-            if key in derived and claimed != derived[key]:
+            if key not in _ASSERTION_WIDGETS:
+                errors.append(
+                    f"screen '{sname}': assertions.{key} is not a supported "
+                    f"assertion ({', '.join(sorted(_ASSERTION_WIDGETS))}) - an "
+                    "unknown key would sail through here and then fail as "
+                    "UNSUPPORTED at the step-7 recompute; the vocabulary is "
+                    "shared and enforced on both ends"
+                )
+            elif claimed != derived[key]:
                 errors.append(
                     f"screen '{sname}': assertions.{key} claims {claimed} but "
                     f"main_content has {derived[key]} - a self-reported count must "
@@ -463,8 +471,19 @@ def _check_existing_asset_announcement(bp, warnings):
     known = set()
     for entry in declared:
         if isinstance(entry, str) and entry.strip():
-            known.add(entry.strip())
-            known.add(entry.strip().rsplit("/", 1)[-1])
+            text = entry.strip()
+            known.add(text)
+            known.add(text.rsplit("/", 1)[-1])
+            # Greenfield trial G-06: an annotated entry ("QueryHistory
+            # (entity) - EXISTS; ...") names its asset in its leading token;
+            # exact-string matching forced a bare-name duplicate sibling.
+            # Match the word-bounded leading name - and only that, so a name
+            # mentioned mid-annotation about another asset does not count.
+            lead = re.match(
+                r"[A-Za-z_][A-Za-z0-9_]*(?:/[A-Za-z_][A-Za-z0-9_]*)*", text)
+            if lead:
+                known.add(lead.group(0))
+                known.add(lead.group(0).rsplit("/", 1)[-1])
     bound = []
     for screen in bp.get("screens", []):
         for region, _sn in _leaf_regions(screen):
@@ -770,6 +789,85 @@ def collect_cross_blueprint_errors(named_blueprints):
                 f"entity '{name}' has conflicting declared records across "
                 "blueprints: " + " vs ".join(parts)
             )
+    _collect_chrome_conflicts(named_blueprints, errors)
+    return errors
+
+
+def _collect_chrome_conflicts(named_blueprints, errors):
+    """One app, one chrome. A multi-screen app is N design runs sharing one
+    chrome decision made up front (chain ordering rule 3), and nothing checked
+    that the N runs actually agreed - a screen could ship a different layout,
+    a different app title, or a different sidebar and every per-file validation
+    would still pass.
+
+    `active` is deliberately excluded: each screen highlights its own menu
+    entry, so comparing it would fail every correctly-built app.
+    """
+    for field in ("layout_block", "app_title"):
+        groups = defaultdict(list)
+        for source, bp in named_blueprints:
+            value = bp.get("app_chrome", {}).get(field)
+            if value is not None:
+                groups[value].append(source)
+        if len(groups) > 1:
+            parts = [f"{src} ({field} {value!r})"
+                     for value, srcs in groups.items() for src in srcs]
+            errors.append(
+                f"app_chrome.{field} differs across blueprints: "
+                + " vs ".join(parts)
+                + " - every screen in one app shares one chrome decision"
+            )
+
+    menus = {}
+    for source, bp in named_blueprints:
+        menu = bp.get("app_chrome", {}).get("menu")
+        if isinstance(menu, list):
+            menus[source] = tuple(e.get("label") for e in menu if isinstance(e, dict))
+    if len(set(menus.values())) < 2:
+        return
+    base_source, base = next(iter(menus.items()))
+    for source, labels in menus.items():
+        if labels == base:
+            continue
+        if set(labels) == set(base):
+            errors.append(
+                f"app_chrome.menu order differs between {base_source} and "
+                f"{source}: {list(base)} vs {list(labels)} - the same links in "
+                "a different order is a different sidebar to the user"
+            )
+        else:
+            only_one = sorted(x for x in set(base) ^ set(labels) if x is not None)
+            errors.append(
+                f"app_chrome.menu entries differ between {base_source} and "
+                f"{source}: {only_one} appear(s) in only one - every screen "
+                "shares one navigation"
+            )
+
+
+def collect_plan_agreement_errors(plan_text, named_blueprints):
+    """Flag every entity a blueprint declares that the plan never names.
+
+    The chain calls entity names the reconciliation boundary between its two
+    routes, and until now the check was manual. It runs in one direction only:
+    plan prose is free-form, so blueprint -> plan can be checked mechanically
+    while plan -> blueprint cannot without guessing which capitalised words are
+    entities. Matching is word-bounded, so `QueryHistoryArchive` in the plan
+    does not satisfy an entity named `QueryHistory`.
+    """
+    errors = []
+    for source, bp in named_blueprints:
+        for entity in bp.get("entities", []):
+            if not isinstance(entity, dict):
+                continue
+            name = entity.get("name")
+            if not isinstance(name, str) or not name.strip():
+                continue
+            if not re.search(rf"\b{re.escape(name)}\b", plan_text):
+                errors.append(
+                    f"{source}: entity '{name}' is declared in the blueprint but "
+                    "never named in the plan - the two routes must agree at the "
+                    "entity-name reconciliation boundary"
+                )
     return errors
 
 
@@ -821,6 +919,24 @@ def _validate_one(bp_path, report_path, extra_seed_targets=None):
     return (1 if errors else 0), bp
 
 
+def _emit_plan_agreement(plan_path, loaded):
+    """Print the plan-to-blueprint reconciliation. True means they disagree."""
+    try:
+        plan_text = Path(plan_path).read_text(encoding="utf-8")
+    except OSError as exc:
+        sys.stdout.write(f"PLAN AGREEMENT: cannot read plan {plan_path}: {exc}\n")
+        return True
+    errors = collect_plan_agreement_errors(plan_text, loaded)
+    if errors:
+        sys.stdout.write(f"PLAN AGREEMENT: {len(errors)} disagreement(s).\n")
+        for e in errors:
+            sys.stdout.write(f"- {e}\n")
+        return True
+    sys.stdout.write(
+        f"PLAN AGREEMENT: every declared entity is named in {plan_path}.\n")
+    return False
+
+
 def main(argv=None):
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
@@ -828,6 +944,9 @@ def main(argv=None):
                         help="One or more blueprint.json paths, or a directory")
     parser.add_argument("--report",
                         help="Report path (single-path only; default: beside the blueprint)")
+    parser.add_argument("--plan",
+                        help="Implementation plan (markdown) to reconcile entity "
+                             "names against - the chain's cross-route boundary")
     args = parser.parse_args(argv)
 
     paths = _expand_paths(args.paths)
@@ -842,7 +961,10 @@ def main(argv=None):
     if len(paths) == 1:
         bp_path = paths[0]
         report_path = Path(args.report) if args.report else bp_path.with_name("validation-report.txt")
-        code, _ = _validate_one(bp_path, report_path)
+        code, bp = _validate_one(bp_path, report_path)
+        if args.plan and bp is not None and _emit_plan_agreement(
+                args.plan, [(str(bp_path), bp)]):
+            code = code or 1
         return code
 
     # Multi-path: per-file reports beside each, then the cross-blueprint pass.
@@ -877,6 +999,8 @@ def main(argv=None):
                 sys.stdout.write(f"- {c}\n")
         else:
             sys.stdout.write("CROSS-BLUEPRINT: no conflicts.\n")
+    if args.plan and loaded and _emit_plan_agreement(args.plan, loaded):
+        any_error = True
     return 1 if any_error else 0
 
 

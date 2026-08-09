@@ -17,7 +17,11 @@ from pathlib import Path
 
 # BR- business rule, UC- use case, C- acceptance criterion. Plain form is
 # PREFIX-NNN; an optional uppercase scope infix (BR-VISIT-001) is allowed.
-ID_PATTERN = re.compile(r"\b(?:BR|UC|C)-(?:[A-Z][A-Z0-9]*-)*\d{3}\b")
+# Canonical grammar: PREFIX-NNN with dash-separated scope infixes (UC-A-001).
+# The fused scope form (UC-A01, C-A17) is also accepted since 2026-08-09: the
+# admin-area build's PRD used it and scored 0/N coverage on a complete plan
+# because this pattern could not see its IDs at all (AB-02).
+ID_PATTERN = re.compile(r"\b(?:BR|UC|C)-(?:(?:[A-Z][A-Z0-9]*-)*\d{3}|[A-Z]+\d{2,3})\b")
 
 
 def extract_ids(text: str) -> set[str]:

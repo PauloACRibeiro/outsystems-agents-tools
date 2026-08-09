@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Bundle a colleague's sprint-loop feedback into one .tgz they can email.
 
-Collects, when present: their filled-in FEEDBACK.md, the YAML frontmatter of
-each installed ``outsystems-*`` skill (version stamp only -- never the skill
-body), any ``*receipt*.json`` files those skills left behind, and a short
-generated environment.txt (OS, Python version, which skills roots exist).
+Collects, when present: their filled-in FEEDBACK.md, the pack's
+``PACKAGE-MANIFEST.json`` from the docs folder (THE version and digest record
+-- skill frontmatter carries no version field), the YAML frontmatter of each
+installed ``outsystems-*`` skill (identity stamp: name and description --
+never the skill body; identical copies across roots are collected once), any
+``*receipt*.json`` files those skills left behind, and a short generated
+environment.txt (OS, Python version, which skills roots exist).
 
 Every text file is redacted before it enters the archive: the user's home
 directory becomes ``~``, GUID-shaped ids become ``<redacted-guid>``, and
@@ -26,6 +29,7 @@ from io import BytesIO
 from pathlib import Path
 
 DEFAULT_SKILLS_ROOTS = ["~/.claude/skills", "~/.agents/skills"]
+DEFAULT_DOCS_ROOT = "~/outsystems-sprint-loop"
 SKILL_PREFIX = "outsystems-"
 ARCHIVE_PREFIX = "outsystems-sprint-loop-feedback"
 
@@ -111,7 +115,16 @@ def collect(args, roots, counts):
         else:
             note("feedback file not found: {}".format(args.feedback))
 
+    manifest = Path(args.docs_root).expanduser() / "PACKAGE-MANIFEST.json"
+    if manifest.is_file():
+        text = read_text(manifest)
+        if text is not None:
+            items.append(("PACKAGE-MANIFEST.json", redact(text, counts)))
+    else:
+        note("pack manifest not found: {} (no version info in this bundle)".format(manifest))
+
     used_labels = set()
+    seen = {}
     for root in roots:
         label = root_label(root, used_labels)
         if not root.is_dir():
@@ -127,12 +140,22 @@ def collect(args, roots, counts):
                 block = frontmatter(text) if text is not None else None
                 if block is None:
                     note("no frontmatter in {}/SKILL.md".format(skill.name))
+                elif seen.get((skill.name, "frontmatter")) == block:
+                    # identical copy in an earlier root: one copy is enough,
+                    # and environment.txt already records that both roots exist
+                    note("{}: frontmatter identical to the copy already collected".format(base))
                 else:
+                    seen[(skill.name, "frontmatter")] = block
                     items.append((base + "/SKILL.frontmatter.md", redact(block, counts)))
             for receipt in sorted(skill.rglob("*receipt*.json")):
                 text = read_text(receipt)
-                if text is not None:
-                    items.append((base + "/" + receipt.name, redact(text, counts)))
+                if text is None:
+                    continue
+                if seen.get((skill.name, receipt.name)) == text:
+                    note("{}/{}: identical to the copy already collected".format(base, receipt.name))
+                    continue
+                seen[(skill.name, receipt.name)] = text
+                items.append((base + "/" + receipt.name, redact(text, counts)))
 
     items.append(("environment.txt", build_environment(roots, counts)))
     return items
@@ -158,7 +181,11 @@ def main():
     parser.add_argument("--skills-root", action="append", dest="skills_roots",
                         help="a skills directory to scan; repeatable (default: {})".format(
                             " and ".join(DEFAULT_SKILLS_ROOTS)))
-    parser.add_argument("--dry-run", action="store_true", help="list what would be sent, write nothing")
+    parser.add_argument("--docs-root", default=DEFAULT_DOCS_ROOT,
+                        help="pack docs folder holding PACKAGE-MANIFEST.json (default: {})".format(
+                            DEFAULT_DOCS_ROOT))
+    parser.add_argument("--dry-run", action="store_true",
+                        help="list the files and per-rule redaction counts, write nothing")
     args = parser.parse_args()
 
     roots = [Path(r).expanduser() for r in (args.skills_roots or DEFAULT_SKILLS_ROOTS)]

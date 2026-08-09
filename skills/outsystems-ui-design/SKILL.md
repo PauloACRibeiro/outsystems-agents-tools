@@ -1,6 +1,6 @@
 ---
 name: outsystems-ui-design
-description: Use when the user brings a wireframe screenshot, screen sketch, or screen-design ask and wants to iterate on the design interactively before anything is built — an interactive wireframe-to-blueprint loop that maps every visual region to a named OutSystems UI web block, renders a local HTML preview per round, and emits a validated enriched blueprint.json on approval. Route to outsystems-design-to-app instead for a one-shot, non-interactive build straight from a design source (Figma URL, image, HTML mockup). Route to outsystems-mentor-implementation instead for Mentor/tenant execution of an already-approved blueprint.
+description: Use when the user brings a wireframe screenshot, screen sketch, or screen-design ask and wants to iterate on the design interactively before anything is built — an interactive wireframe-to-blueprint loop that maps every visual region to a named OutSystems UI web block, renders a local HTML preview per round, and emits a validated enriched blueprint.json on approval. Route to outsystems-design-to-app (if that skill is installed — it is not part of the colleague sprint-loop pack) for a one-shot, non-interactive build straight from a design source (Figma URL, image, HTML mockup). Route to outsystems-mentor-implementation instead for Mentor/tenant execution of an already-approved blueprint.
 compatibility: Agent-neutral (Codex and Claude Code). Python 3.7+ stdlib only. No MCP server required — outsystems-tech-content and a public knowledge provider (workspace-knowledge-cc or outsystems-public-knowledge) are optional enrichment only.
 allowed-tools: AskUserQuestion, Bash, Read, Write, Edit
 ---
@@ -194,6 +194,20 @@ existing entity names, existing theme names, brand color. Then:
    list-table, edit-form, …) — plus a one-line rationale, and **confirm with the user
    before going deeper**. This confirmation gates Step 2; a wrong archetype poisons
    every downstream mapping.
+
+**Inventory-fed entry** (greenfield trial G-09): when a screen-inventory brief
+exists for this screen (`outsystems-screen-inventory`'s `--brief` output, read
+from the app's `screen-inventory.json`), the brief is the arriving context, not
+a competing opinion. The archetype arrives as the inventory's answer — step 4
+above **confirms** it rather than re-deriving it, and a mismatch with the
+wireframe is raised as a finding, never silently re-decided. The chrome arrives
+pre-translated — `layout_block` and `app_title` verbatim, the menu already in
+the blueprint's `{label, active}` shape — and is **not re-decided here** (hard
+gate 1 is satisfied by the inventory's decision). The screen's bindings,
+behaviour, and navigation contract — including what it `accepts` and who
+arrives carrying it — arrive with the brief. The wireframe still wins on visual
+anatomy, archetype guides included: the brief pre-answers what the screen *is*,
+not what it looks like.
 
 ### Step 2 — Inference pass
 
@@ -496,6 +510,13 @@ that was never modelled.
 advisory prose and carries no authority. Any count you want enforced goes in the
 screen's optional `assertions` object (e.g. `assertions: { "links": 4, "buttons": 0 }`); the
 validator recomputes it from `main_content` and hard-fails a mismatch.
+**Counting vocabulary (AB-03, learned live):** the counted element families are
+exactly Link, Button, and Input — **choice and date widgets (Dropdown,
+DropdownSearch, DatePicker, DatePickerRange) are NOT `inputs`**; an operator who
+counts them as inputs fails with a bare number mismatch. And declare the
+**zero-affordance assertion** (`{"links": 0, "buttons": 0, "inputs": 0}`)
+deliberately on read-only screens: it turns a no-editing business rule into a
+fact the post-publish recompute checks mechanically.
 
 **Type-fit is advice, not law.** A ProgressBar/Counter bound to a non-numeric
 attribute, or a status Tag not backed by a static entity, produces a `WARNING`
@@ -572,6 +593,27 @@ same entity name declared with a conflicting shape across blueprints — a
 different primary key, or a same-named attribute typed differently — is a
 contract error, because OMI merges these into one data model on intake. A
 single path behaves exactly as before this check existed.
+
+The multi-blueprint pass also checks **shared chrome**: one app has one
+`app_chrome.layout_block`, one `app_title`, and one menu — same entries, same
+order, on every screen. A multi-screen app is N runs sharing one chrome
+decision made up front, and nothing used to check that the N runs agreed.
+`active` is excluded on purpose: each screen highlights its own entry.
+
+**Reconciling against the plan.** Add `--plan <path>` to check the chain's
+cross-route boundary — every entity a blueprint declares must be named in the
+implementation plan:
+
+```bash
+python3 scripts/validate_blueprint.py design/ --plan docs/plans/<plan>.md
+```
+
+It runs in one direction only. Plan prose is free-form, so blueprint → plan is
+mechanical while plan → blueprint would mean guessing which capitalised words
+are entities. Matching is word-bounded, so `QueryHistoryArchive` in the plan
+does not satisfy an entity named `QueryHistory`. An entity flagged
+`exists: true` is still checked: the build must not create it, but the plan
+should still name the data the screen binds to.
 
 ### Step 5 — Handoff
 
