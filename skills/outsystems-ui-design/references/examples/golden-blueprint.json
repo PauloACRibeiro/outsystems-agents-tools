@@ -164,7 +164,7 @@
               },
               "content": [
                 {
-                  "element": "ListRecords card row",
+                  "element": "List card row",
                   "data": "Title, owner, due date",
                   "binds": {
                     "entity": "WorkItem",

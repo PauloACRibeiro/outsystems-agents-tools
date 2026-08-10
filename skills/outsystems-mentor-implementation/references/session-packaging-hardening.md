@@ -62,6 +62,19 @@ inventory and the source spec while the package is generated:
   returns `-1` when absent, so `> 0` silently drops position-0 matches.
   Expressions ported from an existing app carry this trap unflagged —
   ported code gets the same grounding as new code.
+- **Product-vocabulary trap** — for an ODC target, name the forbidden widget
+  and its replacement explicitly; naming only the widget you want is not
+  enough. Verified O11-only name: `ListRecords` — use `List`, or
+  `TableRecords` for a tabular layout. Mentor substitutes silently, with no
+  validation error and no disclosure, so prohibition by name is the only
+  guard. Measured on the first live colleague sprint-loop run (2026-08-09):
+  re-running one screen session at full scope with the wrong name forbidden
+  took `internal_retry_count` from 12 to 0, correctly authored, zero errors.
+  Forbid only names verified O11-only against the generated built-in-widget
+  reference. A name appearing in OutSystems 11 documentation is not evidence
+  it is wrong for ODC — most widgets exist in both products, and
+  TableRecords, ListItem and ListItemAction are ODC built-ins. Forbidding one
+  of those would ban a widget that is valid on the target.
 
 Warned traps hold; unwarned ones become defects. Trap generation is part of
 packaging, not left to execution-time diligence.

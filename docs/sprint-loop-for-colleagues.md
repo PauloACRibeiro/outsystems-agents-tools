@@ -20,14 +20,26 @@ Read this once end to end before your first run, then use it as the checklist.
 - **Node.js and Google Chrome** for the grading step. The capture script drives
   your installed Chrome through Playwright; it installs one npm package into a
   scratch folder and does not download a browser.
+- **A machine enrolled in company MDM, if you will sign in to GitHub from it.**
+  GitHub's device-code sign-in goes through company conditional access, and on
+  an unenrolled machine it fails outright — no retry fixes it and there is no
+  local workaround. Enrol first. This is a hard stop, not a slow path, and it
+  blocks anything needing a GitHub login, including returning a feedback bundle
+  that way rather than by email.
 - **The four skills in this pack**, installed into your agent's skills
   directory: `outsystems-ui-design`, `outsystems-plan-to-mentor`,
   `outsystems-mentor-implementation`, and `outsystems-runtime-ui-audit`. Follow
   the bundled release install document for your OS
   (`INSTALL-SPRINT-LOOP-MACOS.md` / `INSTALL-SPRINT-LOOP-WINDOWS.md`, attached
   to the same release you downloaded this pack from).
+- **An OutSystems knowledge server for step 5.** The build skill refuses to
+  produce pseudocode ungrounded: before any output it checks for a knowledge
+  provider, and if none is reachable it stops and waits. The **OutSystems
+  Public Knowledge MCP server** satisfies it and ships in the same release as
+  this pack — install it before your first run (see below).
 
-You do **not** need a VPN, and you do not need an OutSystems employee account.
+You do **not** need a VPN, and you do not need an OutSystems employee account —
+the Public Knowledge server stands in for the VPN-only internal one.
 
 ## Where the pieces come from
 
@@ -35,6 +47,7 @@ You do **not** need a VPN, and you do not need an OutSystems employee account.
 |---|---|---|
 | 1–2 | The public **Superpowers** plugin | Installed separately — see below. Not redistributed here. |
 | 3, 4, 5, grading | The four skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
+| 5 (knowledge) | The **OutSystems Public Knowledge MCP server** | Same release as this pack, own install docs — see below. |
 | 6 | The public **OutSystems MCP** plugin | `outsystems@outsystems` — see below. |
 
 ### Steps 1–2 — install Superpowers yourself
@@ -59,6 +72,39 @@ under **Plugins → Coding**.
 If either command has moved on, the project home above is the authority — use
 its README rather than this page.
 
+### Step 5 — install the OutSystems Public Knowledge MCP server
+
+Step 5's build skill, `outsystems-mentor-implementation`, will not produce
+pseudocode or Mentor prompts ungrounded. Before any output it checks for a
+knowledge provider, and if none is reachable it stops and waits for you. Two
+providers satisfy it:
+
+- **The OutSystems Public Knowledge MCP server** — grounded in the public
+  OutSystems documentation; no VPN, no employee account. It ships in the **same
+  release you downloaded this pack from**, with its own per-OS install
+  instructions. Paste this into Claude Code or Codex:
+
+  ```text
+  Install the OutSystems Public Knowledge MCP server on this machine.
+
+  Detect my OS, then download and follow the matching instructions:
+    macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-MACOS.md
+    Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-WINDOWS.md
+
+  Follow that document literally. Confirm the install root and the
+  prerequisites with me before you write anything to disk. The install takes
+  6-10 minutes, so run it backgrounded. When you are done, verify it and tell
+  me the version, the install root, the doctor result and the tool count.
+  ```
+
+- **The internal tech-content server** — OutSystems employees on a trusted
+  machine, over VPN. Implementation-level authority, a strict upgrade over the
+  public server. If you already run it, you are covered and can skip the
+  public install.
+
+Install one of them before your first run — finding out at step 5 costs you a
+session.
+
 ### Step 6 — install the OutSystems MCP plugin
 
 Everything that touches your tenant — running a Mentor edit in step 5's direct
@@ -75,11 +121,34 @@ repository README has the exact command and the OAuth walkthrough, plus a
 best-effort recipe for Codex and other harnesses. Always install as
 `outsystems@outsystems`; the bare plugin name is not enough to update it later.
 
+**Order matters: authenticate first, restart second.** Authentication state
+lives in your configuration, not in the session — `claude mcp login
+outsystems` (browser sign-in), confirm `claude mcp list` shows `✔ Connected`,
+and only then start a new conversation. A conversation started before the
+login binds an unauthenticated server and will never see the tools, however
+many times you restart the client (a real first run spent two restarts
+learning this). If login fails with `403 tenant_not_allowed`, that is a
+server-side allowlist — nothing on your machine fixes it; contact OutSystems.
+
+**The same command is your reconnect step.** The connector token lasts roughly
+ten hours, so a full day's work outlives it — it expired twice during one real
+run. When tenant tools stop responding, or `claude mcp list` stops showing
+`✔ Connected`, run `claude mcp login outsystems` again and start a new
+conversation, exactly as on the first login. An expired token does not
+announce itself as an auth problem; it looks like the tenant going quiet.
+
 ## The loop
 
 ### Step 1 — Idea and requirements
 
 **Skill: `superpowers:brainstorming`** (or a hand-written PRD.)
+
+**Invoke it by name.** Start the conversation with "Using
+superpowers:brainstorming, help me turn this idea into requirements and a
+screen inventory:" followed by your idea. Do not just paste the idea cold — an
+idea-shaped prompt can route straight to the step 5 build skill instead,
+skipping requirements, plan, and design entirely (this happened on a real
+first run). Naming the skill removes the gamble.
 
 You bring the idea; you get back requirements plus a **screen inventory** — how
 many screens, what each one does, and what navigation or header they share.
@@ -165,7 +234,26 @@ hand-off, because nothing downstream will notice if it is missing.
 
 ### Step 5 — Build
 
-**Skill: `outsystems-mentor-implementation`.**
+**Skill: `outsystems-mentor-implementation`.** Needs the knowledge server from
+"Step 5 — install the OutSystems Public Knowledge MCP server" above; without a
+provider the skill stops before producing anything.
+
+**Create the app yourself first, in ODC Portal or Studio, from a template — do
+not let the agent create it.** This is the single most expensive thing to get
+wrong, so it is worth thirty seconds of your time. The MCP's app-creation call
+cannot clone a template: there is no template parameter, and the app it makes
+arrives with no theme, no layouts, and no `Common` flow — which means no Login,
+no password recovery, no user profile, and no "you don't have permission"
+screen. An app built on that shell renders as unstyled HTML and has no route by
+which anyone can sign in, so any screen you restrict by role becomes
+unreachable rather than protected. A template-created app brings all of it.
+
+Two consequences worth knowing. The build skill will stop and ask if it finds
+itself pointed at a bare shell — that gate is deliberate, and the answer is to
+go and create the app properly rather than to wave it through. And if a bare
+app has already been created, delete it before creating the real one: names are
+compared with spaces removed, so `My App` and `MyApp` collide, and the leftover
+shell will block the name you actually want.
 
 Two routes feed it, and they stay separate:
 
@@ -287,6 +375,33 @@ These are the ones that bite when skipped.
    inventory and one navigation decision made up front.
 4. **Theme is its own step.** Ask for it explicitly during step 5.
 
+## When a session ends mid-loop
+
+A long run outlives its conversation. On the first real end-to-end run the
+driving session archived itself part way through and the work carried on under
+a new one; closing the browser later changed nothing either.
+
+An archived session reads exactly like a stall — your last prompt sitting
+there unanswered, no error, no completion. **That is not a failed build.**
+Nothing was lost, because nothing load-bearing lives in the conversation.
+
+1. **Do not re-send the prompt into the dead session**, and do not assume the
+   Mentor session it started is still running. Look at the app, not the chat.
+2. **Start a new conversation and point it at the artifacts on disk.** The
+   Mentor package step 5 wrote — the file named on the `Output file:` line of
+   the step-4 handoff, the one carrying the Manual Setup Gate, the Session
+   Readiness Matrix, the pseudocode and the numbered Mentor sessions — is the
+   resume artifact. That package, the patched plan and the blueprints are the
+   handoff. The conversation never was.
+3. **Enumerate what is actually deployed before resuming**, and tick off the
+   build-log rows that already landed. A session that was in flight when the
+   conversation died may have finished, half-finished, or done nothing, and the
+   package's expected element delta cannot tell you which — only the deployed
+   model can.
+
+Keep those artifacts somewhere a fresh conversation can reach. The package path
+is the only thing you have to carry across.
+
 ## What this distribution does not include, and why
 
 The loop as we run it internally has two more numbered steps and a
@@ -308,6 +423,16 @@ go from an idea to a published, evidence-scored revision, and converge on a
 target quality tier. What you give up is the automatic memory between sprints —
 you will carry that context forward yourself, in your own repository, rather than
 having the loop reconstruct it from committed source.
+
+## Before your first run — fifteen minutes of smoke tests
+
+Once both installs are done (this pack and the Public Knowledge server), run
+the eight pasted-prompt checks in
+[`post-install-checks.md`](post-install-checks.md) in a **new conversation**.
+Each has a stated expected result, so every one is a clean pass/fail; the
+first three cover the dependency wiring, the honesty contract, and the one
+operational trap. A failure there, on a fresh install, is the most valuable
+feedback you can send.
 
 ## Feedback
 

@@ -12,8 +12,55 @@ from pathlib import Path
 
 SCHEMA_PATH = Path(__file__).resolve().parents[1] / "schemas" / "enriched-blueprint.schema.json"
 
-LAYOUT_BLOCKS = ("LayoutSideMenu", "LayoutTopMenu", "LayoutBlank")
-REPEAT_MARKERS = ("ListRecords", "TableRecords", "Table", "Gallery", "Carousel", "AccordionList")
+# TARGET PRODUCT: OutSystems Developer Cloud (ODC). See SKILL.md "Target product".
+#
+# The five layout blocks ODC ships in an app's own `Layouts` flow. Grounded in
+# the ODC Themes doc (success.outsystems.com .../user_interface/themes/) and
+# confirmed against the Layouts flow of a template-created ODC app (2026-08-10):
+#   LayoutTopMenu     menu across the top; the block a new empty screen gets
+#   LayoutSideMenu    menu in a left sidebar, top bar baked in
+#   LayoutBlank       "a layout that doesn't contain the Menu"
+#   LayoutBase        landing-page layout, Header + MainContent, "already has a
+#                     Menu on the top"
+#   LayoutBaseSection section container the docs describe as living *inside*
+#                     LayoutBase rather than at the screen root; accepted here
+#                     because it is a real element of the Layouts flow, but it
+#                     carries no chrome of its own
+# NOTE: `Layout_Top_Menu` (underscored) is NOT an ODC spelling. It appeared in a
+# docs page and in the 2026-08-09 run dossier; the Layouts flow disproves it.
+LAYOUT_BLOCKS = (
+    "LayoutSideMenu", "LayoutTopMenu", "LayoutBlank", "LayoutBase", "LayoutBaseSection",
+)
+
+# Layouts that own a menu region, so a blueprint choosing one is expected to
+# carry its menu content. LayoutBase qualifies on the Themes doc's wording
+# ("already has a Menu on the top"); LayoutBaseSection does not - it is a
+# content section nested in a layout that already made the chrome decision.
+# Shared with outsystems-screen-inventory's MENU_BEARING (drift-tested).
+MENU_BEARING_LAYOUTS = ("LayoutSideMenu", "LayoutTopMenu", "LayoutBase")
+
+# Widgets/blocks whose presence means the region repeats over a row set, so it
+# needs a data producer. `List` and `TableRecords` are both ODC built-in widgets
+# with a repeating placeholder (`content` and `row` respectively) - verified
+# against references/built-in-widgets.md, generated from OutSystems'
+# runtime-widgets-js. `ListRecords` is deliberately absent: it is O11
+# Traditional-Web only and is handled as a detector below.
+REPEAT_MARKERS = ("List", "TableRecords", "Table", "Gallery", "Carousel", "AccordionList")
+
+# Product-boundary detectors (maintainer decision, 2026-08-10): shipped surfaces
+# speak ODC only, and O11-only names survive as *detectors* - naming one in a
+# blueprint is an error whose message teaches the ODC replacement.
+#
+# Every entry must be grounded before it is added: the name must be documented
+# as O11-only AND absent from references/built-in-widgets.md (the generated ODC
+# runtime contract). Names that exist in both products (`TableRecords`,
+# `Dropdown`, `ListItem`, `ListItemAction`) are NOT detectors - see SKILL.md.
+O11_ONLY_BLOCKS = {
+    # "List Records Widget ... Applies only to Traditional Web Apps" (O11 docs);
+    # absent from the ODC runtime widget inventory.
+    "ListRecords": "List (or TableRecords for a tabular layout)",
+}
+_O11_ONLY_RE = re.compile(r"\b(" + "|".join(O11_ONLY_BLOCKS) + r")\b")
 NUMERIC_TYPES = {"integer", "longInteger", "decimal", "currency"}
 _NUMERIC_WIDGET_RE = re.compile(r"\b(ProgressBar|Counter)\b")
 # (?!\s*=) - F-E: don't match HTML property syntax like "AdvancedHtml Tag=p".
@@ -269,6 +316,85 @@ def _check_icon_convention(bp, errors):
 _REPEAT_RE = re.compile(r"\b(" + "|".join(REPEAT_MARKERS) + r")\b")
 
 
+def _check_product_vocabulary(bp, errors):
+    """Hard gate: no O11-only widget name may reach an ODC build.
+
+    The 2026-08-09 live run's most expensive failure mode was the builder
+    faithfully constructing what the plan asked for, where the plan asked for
+    the wrong product's widget. Validation passed, the build was wrong. This
+    gate closes that: an O11-only name is an error, and the message names the
+    ODC replacement so the fix is mechanical rather than a research task.
+
+    Scanned in the same two places `_check_repeat_producer` scans - the block
+    hint and the region's content descriptors - because that is where a widget
+    name actually reaches OMI.
+    """
+    for screen in bp.get("screens", []):
+        for region, screen_name in _leaf_regions(screen):
+            texts = list(_iter_strings({
+                "block": (region.get("outsystems_hints") or {}).get("block", ""),
+                "content": region.get("content", []),
+            }))
+            seen = []
+            for text in texts:
+                for match in _O11_ONLY_RE.findall(text):
+                    if match not in seen:
+                        seen.append(match)
+            label = region.get("name") or region.get("id") or "?"
+            for name in seen:
+                errors.append(
+                    f"screen '{screen_name}' region '{label}': {name!r} is an "
+                    f"OutSystems 11 widget name and does not exist in ODC - use "
+                    f"{O11_ONLY_BLOCKS[name]} instead"
+                )
+
+
+# The bare built-in `Dropdown` widget only. The word boundary already excludes
+# `DropdownSearch` / `DropdownTags` / `DropdownServerSide_*`, which are blocks
+# taking a single `OptionsList` and so have nothing to leave unstated.
+_BARE_DROPDOWN_RE = re.compile(r"\bDropdown\b")
+
+
+def _check_dropdown_option_expressions(bp, errors):
+    """Hard gate 6, second half: a record-backed `Dropdown` must name the
+    attribute its option labels come from.
+
+    ODC's Dropdown needs four co-dependent expressions - `List`, `Labels`,
+    `Values` and a type-matched `Variable` - and each one left unresolved
+    surfaces as its own `Invalid Expression`. Naming the source entity settles
+    `List` and `Values` (the value is the entity's identifier); only the label
+    attribute is still unstated, so that is what this gate requires.
+
+    Scope note: a Dropdown with no `data_source.entity` at all is the *first*
+    half of gate 6 (option source missing). That stays prose-enforced - the
+    static-option-list form is disclosed in free text, and no reliable
+    mechanical read of it exists.
+    """
+    for screen in bp.get("screens", []):
+        for region, group, screen_name in _leaf_regions(screen, with_group=True):
+            entity = ((region.get("data_source") or {}).get("entity")
+                      or ((group or {}).get("data_source") or {}).get("entity"))
+            if not entity:
+                continue
+            for item in region.get("content", []):
+                if not isinstance(item, dict):
+                    continue
+                if not _BARE_DROPDOWN_RE.search(str(item.get("element", ""))):
+                    continue
+                if (item.get("binds") or {}).get("attribute"):
+                    continue
+                label = region.get("name") or region.get("id") or "?"
+                errors.append(
+                    f"screen '{screen_name}' region '{label}': Dropdown over "
+                    f"{entity!r} names its option source but not its option "
+                    "label - set binds.attribute to the attribute shown per "
+                    "option. Dropdown needs List, Labels, Values and a "
+                    "type-matched Variable; each one left unstated becomes its "
+                    "own 'Invalid Expression'. Use DropdownSearch with an "
+                    "OptionsList if a single option input suits better."
+                )
+
+
 def _check_repeat_producer(bp, errors):
     for screen in bp.get("screens", []):
         for region, group, screen_name in _leaf_regions(screen, with_group=True):
@@ -285,8 +411,8 @@ def _check_repeat_producer(bp, errors):
             if not entity:
                 errors.append(
                     f"screen '{screen_name}' region '{label}': repeated content "
-                    "(ListRecords/Table/Gallery/...) without a data producer - set "
-                    "data_source.entity on the region or its group"
+                    "(List/TableRecords/Table/Gallery/...) without a data producer - "
+                    "set data_source.entity on the region or its group"
                 )
             elif entity not in _declared_entities(bp):
                 errors.append(
@@ -648,6 +774,8 @@ def collect_errors(bp, extra_seed_targets=None):
     _check_block_name_granularity(bp, errors)
     _check_block_name_bare(bp, errors)
     _check_no_container(bp, errors)
+    _check_product_vocabulary(bp, errors)
+    _check_dropdown_option_expressions(bp, errors)
     _check_repeat_producer(bp, errors)
     _check_icon_convention(bp, errors)
     _check_binding_existence(bp, errors)
@@ -675,7 +803,7 @@ def _check_menu_chrome(bp, warnings):
     so OMI's Chrome Batch Discipline can review shared chrome - never an error,
     because chrome content may legitimately be absent from the wireframe."""
     chrome = bp.get("app_chrome", {})
-    if chrome.get("layout_block") in ("LayoutSideMenu", "LayoutTopMenu") and not chrome.get("menu"):
+    if chrome.get("layout_block") in MENU_BEARING_LAYOUTS and not chrome.get("menu"):
         warnings.append(
             "app_chrome: layout %r has no 'menu' content - OMI reviews shared "
             "chrome from the blueprint; add app_chrome.menu ([{label, active}]) "

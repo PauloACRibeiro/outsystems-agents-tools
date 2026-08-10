@@ -40,6 +40,21 @@ You need access to the OutSystems GitHub organization and the `gh` CLI
 authenticated against it (`gh auth status` should show you are logged in). If
 you do not have that access, keep working without the file as described above.
 
+Two things that stop people here, neither of which is a defect:
+
+- **A freshly installed `gh` is only visible in new terminals.** After
+  `winget install GitHub.cli` (or an installer on macOS), the terminal that ran
+  the install still has its old PATH — `gh` appears "not recognized". Open a
+  new terminal, or on Windows refresh PATH in place:
+  `$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')`
+- **Authentication can fail on machines the OutSystems IT policy does not
+  trust** (conditional access / unmanaged device). That is a hard stop, not
+  something to retry around: stop here, and keep working without the file as
+  described above. The skill stays fully usable; only built-in widget property
+  names remain unverified. Do not leave the user with an open-ended "come back
+  when authenticated" as the only exit — proceeding without the file is the
+  documented, supported outcome.
+
 Run from this skill's own directory.
 
 macOS/Linux:

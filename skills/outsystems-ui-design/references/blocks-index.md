@@ -199,7 +199,7 @@ These are native OutSystems widgets, not OutSystems UI blocks:
 | `Checkbox` | Boolean toggle |
 | `RadioButton` / `RadioGroup` | Single-choice |
 | `Switch` | On/off toggle |
-| `Dropdown` | Select from list (Source bound to aggregate `.List`) |
+| `Dropdown` | Select from list. Data property is **`List`** (not `Source`): `List = <Aggregate>.List`, with `Labels`/`Values` expressions and an option-typed `Variable`. See `references/ui-reference.md`. |
 | `Upload` | File upload |
 | `Form` | Validation container (children in `content`, includes `OnSaveClick` action with `Form1.Valid` check) |
 | `Label` | Field label (use `TargetWidget` to point to its Input's `Name`) |

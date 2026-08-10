@@ -20,6 +20,11 @@ for internal, course, archive, and workshop evidence as well as implementation
 authority (function signatures, TrueChange, widget rules). It is not part of
 this public-provider contract and keeps its own dedicated preflight in
 `SKILL.md`. The public-provider role does not supply those restricted sources.
+It is an OutSystems-internal component with **no public distribution and no
+install route on a colleague machine** — do not go looking for its installer,
+and do not invent setup steps when asked; the answer is that access comes from
+the component's internal maintainers (VPN plus entitlement), and the public
+provider is the supported alternative for everyone else.
 If the separate capability is unavailable, keep claims that depend on them
 `Unverified or blocked`.
 

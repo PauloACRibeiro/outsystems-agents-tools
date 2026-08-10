@@ -31,6 +31,9 @@ before producing output. Apply the Architecture Layering Gate, Security
 Server-Trust Gate, Performance Query Pre-Mortem, Timer / Async Idempotency Gate,
 or Public API Contract Gate as applicable.
 
+Apply the User Reference Authoring Gate in addition whenever the design
+touches the platform `User` entity.
+
 ## Architecture Layering Gate
 
 Use this gate before OMI suggests reusable services, entities, public actions,
@@ -99,6 +102,51 @@ Fallback behavior:
   `tenant-context-guardrails.md`.
 - If server-side authorization cannot be specified, stop and ask for the policy
   instead of relying on UI-only restrictions.
+
+## User Reference Authoring Gate
+
+Use this gate whenever a design touches the platform `User` entity: a User
+Identifier attribute, a foreign key into `User`, an aggregate over `User`, or
+any element whose creation would add a `User` reference to the app.
+
+The distinction is authoring versus carrying, and it is the whole gate.
+Mentor carries an existing User reference through a publish without trouble.
+It fails when it authors one. Measured on the first live colleague
+sprint-loop run (2026-08-09): three publishes of the same app differing only
+in a `User` reference went fail, fail, succeed, and succeeded the moment the
+User-typed attribute and the seed's user lookup were removed; both failures
+were `OS-DPL-50205` "Model features validation failed". The same attribute
+added by hand in ODC Studio (User Identifier, optional, delete rule Ignore)
+published first time, and a later Mentor publish carried that
+Studio-authored attribute through untouched.
+
+Check:
+
+- author in Studio, carry with Mentor: a User-typed attribute or a foreign key
+  into `User` is a `Manual Setup Gate` row for the human to add in ODC Studio
+  before the session that needs it, never a Mentor create step.
+- carrying is not authoring: once the reference exists, later sessions may
+  read, write, and filter on that attribute freely.
+- derive identity server-side with `GetUserId()` rather than reading the
+  platform User entity; an aggregate over `User` is itself an authored
+  reference and falls under this gate.
+- classify the reference as already-conformant in the session's expected
+  element delta, so the enumeration gate does not read a pre-existing
+  attribute as drift.
+- treat a recurring `ImplicitSelfUserProvider` warning as a hard check, not a
+  dismissible note. In the same run it named the exact capability the design
+  depended on and was explained away in near-identical words, session after
+  session, by the agent that produced the work — a warning dismissed by its
+  own author is a self-report. One check would have saved two failed publishes
+  and three diagnostic sessions.
+
+Fallback behavior:
+
+- If it is unverified whether the target app already carries the reference,
+  inspect the app before packaging and record `User reference state unknown`
+  rather than emitting a create step on a guess.
+- If the design needs a User reference and ODC Studio access is not available,
+  stop and say so. No Mentor-side workaround for authoring has been measured.
 
 ## Performance Query Pre-Mortem
 
@@ -201,6 +249,9 @@ Use these exact labels in OMI output when the gate cannot be satisfied:
   is defined.
 - `Public contract impact unknown`: public consumers, transaction behavior, or
   compatibility strategy is missing.
+- `User reference state unknown`: whether the target app already carries the
+  platform `User` reference is unverified, so the design cannot be classified
+  as carrying an existing reference rather than authoring a new one.
 
 When any of these labels materially affects safety, return a prompt/spec with an
 explicit unknown rather than a paste-ready Mentor Studio instruction.

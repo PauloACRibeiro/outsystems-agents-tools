@@ -60,9 +60,10 @@ the wireframe does not show.
 
 ## Canonical layout placeholder order (every screen)
 
-Every screen wraps content in one layout block (`LayoutTopMenu`, `LayoutSide`,
-`LayoutLanding`, `LayoutBlank`, `LayoutPopup`, `LayoutNative`). The layout
-exposes **six placeholders that all exist, in this exact order**:
+Every screen wraps content in one layout block. The ODC set is exactly five —
+`LayoutTopMenu`, `LayoutSideMenu`, `LayoutBlank`, `LayoutBase`,
+`LayoutBaseSection` (see `layouts.md`). The layout exposes **six placeholders
+that all exist, in this exact order**:
 
 ```
 Header → ActionButton → Breadcrumbs → Title → Actions → MainContent

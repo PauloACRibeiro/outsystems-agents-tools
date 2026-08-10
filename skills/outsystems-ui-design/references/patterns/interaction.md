@@ -256,11 +256,23 @@ These are different things — don't confuse them:
 | | `IDropdown` (built-in widget) | `DropdownSearch` (OutSystemsUI block) |
 |---|---|---|
 | Type | `"IDropdown"` | `"IMobileBlockInstanceWidget"` with `SourceBlock: "DropdownSearch"` |
-| Data source | `List: "<Aggregate>.List"` | `OptionsList: "<DropdownOption List>"` |
+| Data source | `List: "<Aggregate>.List"` — **the property is `List`, never `Source`** | `OptionsList: "<DropdownOption List>"` |
+| Option label / value | `Labels` and `Values` expressions, evaluated per option — both required | carried by the option structure's own `Text` / `Value` attributes |
 | Variable type | MUST be Identifier (e.g. `ProductId`) | Any matching the option `Value` |
 | Use for | Simple entity selection | Searchable, complex dropdown |
 
 If you see error `'OptionsList' requires a value of 'DropdownOption List' data type`, you've mixed the two stacks — pick one.
+
+**Why a plain `Dropdown` errors more often than a `DropdownSearch`.** The widget
+needs **four co-dependent expressions** — `List`, `Labels`, `Values`, and a
+`Variable` whose type matches the option value. A spec that names only the option
+*source* leaves three of them for the builder to guess, and each unresolved slot
+surfaces as a separate `Invalid Expression`. `DropdownSearch` takes **one**
+mandatory input (`OptionsList`, typed `DropdownSearchOption List`), so there is
+far less to leave unstated. This is a **specification-completeness** difference,
+not a product-boundary one: `Dropdown` is a perfectly valid ODC widget. When you
+map a region to `Dropdown`, name the label and value expressions alongside the
+data source, or choose `DropdownSearch` and supply its option list.
 
 ## DropdownTags
 

@@ -18,6 +18,42 @@ This skill is fully local. It has **no OutSystems MCP tools** and performs **no
 tenant operation of any kind** — no app creation, no Mentor session, no publish, no
 deploy. Everything it produces is files on disk plus chat.
 
+## Target product: OutSystems Developer Cloud (ODC)
+
+**Every name this skill emits is an ODC name.** The layouts, widgets, blocks and
+patterns in `references/` describe ODC's OutSystems UI framework, and a blueprint
+is built by ODC Mentor against an ODC tenant. OutSystems 11 is **not** a target:
+this skill has no O11 mode, and there is no `target_platform` switch to set.
+
+Two consequences worth stating, because leaving them unstated is what caused the
+2026-08-09 live run's most expensive defect — a screen built correctly to a plan
+that named the wrong product's widget:
+
+- **O11-only names are validator errors, not alternatives.** `validate_blueprint.py`
+  carries an `O11_ONLY_BLOCKS` detector map; naming one in a region fails the
+  blueprint with a message naming the ODC replacement. The map is deliberately
+  small — a name only enters it once it is documented as O11-only *and* absent
+  from `references/built-in-widgets.md`, the generated ODC runtime contract.
+- **Shared names are not O11 names.** Many widgets exist in both products —
+  `TableRecords`, `Dropdown`, `ListItem`, `ListItemAction`, `Form`, `Input`.
+  A name appearing in O11 documentation is **not** evidence it is wrong for ODC.
+  Check `references/built-in-widgets.md` before treating any name as foreign;
+  that file is generated from OutSystems' own ODC widget runtime, so presence
+  there settles the question.
+- **When that file is absent, say so — do not fall back to guessing.** It is
+  excluded from the public distribution on licensing grounds, so on most
+  installs it will not be there. That does not license an inference from O11
+  documentation; it removes the only thing that could settle one. Two honest
+  moves, in order: offer the one-time regeneration in
+  `references/built-in-widgets-regeneration.md` if the operator has OutSystems
+  org access, and otherwise treat the product question as **unverified** and
+  name it as such in the output. The detector map still fires — `ListRecords`
+  is grounded independently — but nothing may be *added* to it, and no name may
+  be called foreign, on the strength of an O11 doc alone. This is a real
+  limitation of the public pack, not a gap to paper over: four findings in the
+  2026-08-09 run were wrong precisely because that inference was made without
+  this file to check against.
+
 ## Scope guards (hard limits, not preferences)
 
 - **OutSystems UI web patterns only.** Mobile patterns are out of scope; if the
@@ -45,8 +81,11 @@ deploy. Everything it produces is files on disk plus chat.
 ## Hard gates (mandatory rules — violating any of these is a defect)
 
 1. **Layout choice first.** Before any region mapping, commit to exactly one layout
-   block: `LayoutSideMenu`, `LayoutTopMenu`, or `LayoutBlank`. Never combine layouts;
-   never map regions before the layout is chosen.
+   block from ODC's `Layouts` flow: `LayoutSideMenu`, `LayoutTopMenu`, `LayoutBlank`,
+   `LayoutBase` (landing pages — Header + MainContent, menu on top), or
+   `LayoutBaseSection` (a section container ODC's docs describe as nesting *inside*
+   `LayoutBase`; pick it only when the screen genuinely is that section). Never
+   combine layouts; never map regions before the layout is chosen.
 2. **Skeleton with zero `Container` nodes.** The structural skeleton is built only
    from the `Columns*` and `Card` families. A generic `Container` in the skeleton is
    a validator failure, not a style choice.
@@ -214,7 +253,7 @@ not what it looks like.
 Map every visual region to a named OutSystems UI block, in this strict order:
 
 1. **Layout choice first**: exactly one of `LayoutSideMenu`, `LayoutTopMenu`,
-   `LayoutBlank` (hard gate 1).
+   `LayoutBlank`, `LayoutBase`, `LayoutBaseSection` (hard gate 1).
 2. **Structural skeleton**: `Columns*` / `Card` family only — zero `Container`
    nodes (hard gate 2).
 3. **Widgets and patterns per region**, applying the Block Mapping Gate: every
@@ -248,6 +287,25 @@ Map every visual region to a named OutSystems UI block, in this strict order:
    this the same as the secondary-text sweep above: a mapping is not done
    until its data source is named, even if that source is only a disclosed
    placeholder list.
+
+   **And name the option label and value, not just the source.** ODC's
+   `Dropdown` widget needs **four co-dependent expressions** — `List` (the data,
+   and the property is `List`, never `Source`), `Labels` and `Values` evaluated
+   per option, and a `Variable` whose type matches the option value (an
+   Identifier for an entity picker). A spec that names only the source leaves
+   three of them for the builder to invent, and **each unresolved slot surfaces
+   as its own `Invalid Expression`** — this is the measured cause of the
+   2026-08-09 run's most expensive screen session, where five such errors came
+   from three under-specified dropdowns while `DropdownSearch` in the same
+   screen produced none. For a record-backed Dropdown, set `binds.attribute`
+   to the attribute shown per option; the value is the source entity's
+   identifier, so naming the entity settles it. The validator enforces this
+   half. For a static option list, the disclosed list carries both.
+
+   This is a **specification-completeness** rule, not a product-boundary one —
+   `Dropdown` is a perfectly valid ODC widget. If a single well-typed option
+   input suits the region better, `DropdownSearch` takes one mandatory
+   `OptionsList` and has correspondingly less to leave unstated.
 
 **Compose-and-disclose:** composing a workaround from real primitives is always
 preferable to two failure modes: silently approximating with a styled
@@ -538,7 +596,7 @@ blueprints declaring **different non-empty `records` lists** for the same
 entity is a conflict; declaring records in only one of them is a normal
 projection.
 
-**One advisory check, non-blocking.** A repeat widget (`Table`, `ListRecords`,
+**One advisory check, non-blocking.** A repeat widget (`List`, `Table`,
 `TableRecords`, `Gallery`, `Carousel`, `AccordionList`) over a `data_source`
 whose content items carry no structured `binds` produces a `WARNING` — its
 columns are prose-only and cannot be checked against the entity's attributes.

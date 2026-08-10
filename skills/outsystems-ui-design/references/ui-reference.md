@@ -287,7 +287,7 @@ These are native OutSystems widgets, not OutSystems UI blocks:
 | `RadioButton` / `RadioGroup` | Single-choice |
 | `ButtonGroup` / `ButtonGroupItem` | **Single-choice rendered as a segmented control.** Variable-bound, one `ButtonGroupItem` per option, `Value` per item. This is the correct widget for a **mode selector / view toggle / segmented control** — the thing that looks like joined pill buttons with one active. ODC guidance: it "works better with a **small set** of options" — roughly 2–5. Past that, use a `Dropdown`, or plain `Button`s with an active-state class if the options must stay visible. |
 | `Switch` | On/off toggle |
-| `Dropdown` | Select from list (`Source` bound to aggregate `.List`) |
+| `Dropdown` | Select from list. **Its data property is `List`, not `Source`** — `List = <Aggregate>.List`, plus `Labels`/`Values` expressions over each option, and a `Variable` whose type matches the option value (Identifier for an entity picker). Binding `Source` on a Dropdown, or omitting `Labels`/`Values`, produces `Invalid Expression`. |
 | `Upload` | File upload |
 | `Form` | Validation container (includes `OnSaveClick` action with `Form1.Valid` check) |
 | `Label` | Field label (use `TargetWidget` to point to its Input's `Name`) |

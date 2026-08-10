@@ -80,7 +80,7 @@ Use an OutSystems-specific handoff header that points to `outsystems-plan-to-men
 9. Repeat the coverage loop until convergence or max 3 passes. Convergence means the checker reports `coverage verdict: READY` on the patched plan (no uncovered IDs, no dangling references), no Missing rows, no Partial except explicitly accepted platform/runtime uncertainty, no Infeasible or Unverified platform feasibility rows, and all top gaps are closed or documented as accepted runtime risk. If a third pass is needed, write `docs/superpowers/plans/{plan-stem}-coverage-review-final.md`.
 10. Write each coverage pass to a versioned review artifact and show the final `Coverage Audit -- Patched Plan vs Spec` table plus the checker's verdict output before asking how to deliver.
 11. Run `scripts/check_plan_handoff.py` against the same full patched plan file that will be sent to `outsystems-mentor-implementation`.
-12. If the scanner reports a forbidden generic handoff, patch the plan again and rerun the scanner.
+12. If the scanner reports a forbidden generic handoff, an ODC element recipe section, or a planned action name that collides with an entity's auto-generated action, patch the plan again and rerun the scanner. A colliding name is renamed to a verb phrase (`BookRoom`, not `CreateBooking` beside entity `Booking`); the platform gives no error for the collision, it silently declines to create the action.
 13. Load `references/delivery-modes.md`.
 14. Do not ask the delivery mode question until the final coverage matrix is written and the patched plan passes the handoff scanner.
 15. Ask the delivery mode question exactly once:

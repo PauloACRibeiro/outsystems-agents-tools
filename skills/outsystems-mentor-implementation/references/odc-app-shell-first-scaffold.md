@@ -88,6 +88,27 @@ For app-shell first scaffold asks such as "blank app shell", "first scaffold", "
 
 ## Product-Template And Empty-Shell Classification
 
+**Do not originate a build target with `app_create`.** The MCP cannot clone a
+template: the call accepts only `name`, `kind` and `oml_b64`, there is no
+template parameter, and the `oml_b64` route is unreachable because OML stays
+server-side. So every app minted through MCP is a bare shell by construction,
+not by accident. When a build needs a real app, the app is created by a human in
+ODC Portal or Studio from a template and its verified key is handed over. This
+is the same conclusion GAP-10 reached on 2026-07-14; it was re-learned the
+expensive way on 2026-08-09, when a full loop run built on a bare shell and only
+discovered at the screens phase that the app had no theme, no `Layouts` flow and
+no `Common` flow — therefore no Login screen, and therefore no way to reach any
+role-restricted screen it had just built.
+
+Two measured consequences to carry:
+
+- A bare shell's Default Theme dropdown offers only `(None)` — verified across
+  two revisions. The app cannot be themed from its own properties, so "add a
+  theme later" is not available as a recovery.
+- `app_create` normalises names by removing spaces, so a discarded bare shell
+  named `My App` registers as `MyApp` and then collides with the name the real
+  Studio-created app needs. Delete the bare shell before creating the real one.
+
 The rule is: do not treat a bare MCP-created shell as equivalent to a
 product-template shell, but also do not assume every app opened from the ODC
 Studio product surface is product-template-backed.

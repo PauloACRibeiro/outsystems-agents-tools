@@ -9,7 +9,11 @@ Its fields, one per line: `Invocation mode: outsystems-plan-to-mentor` (fixed),
 `Patched plan:`, `Output file:`,
 `Target app state: new-app | template-scaffold | existing-app` (pick one),
 `Target app inventory:`, and
-`Mentor spec guardrails: references/mentor-spec-guardrails.md` (fixed).
+`Mentor spec guardrails:` (fixed — the guardrails travel inlined in the
+payload's own `Mentor spec guardrails (inline)` section, emitted verbatim in
+the same message). Do not send a path here: a path relative to this skill does
+not resolve inside `outsystems-mentor-implementation`, which is where the
+payload is read.
 
 When applying this template to another plan, replace the file paths with the actual project-local source, patched plan, output, and inventory paths. `Target app state:` is required. `Target app inventory:` is required whenever the target app state is not `new-app`; it names the scaffold inventory source (app map file, Studio observation notes, or OutSystems MCP context output).
 
@@ -19,7 +23,7 @@ The invoked skill must:
 - Fail closed on target state: if `Target app state:` is missing or invalid, or the state is not `new-app` and `Target app inventory:` is missing, stop and ask before generating any output.
 - Do not assume a greenfield target. When `Target app state:` is `template-scaffold` or `existing-app`, inventory the existing scaffold before generating sessions, using the target app inventory plus live observation when available, and fold pre-existing elements into the package as modifications rather than creations.
 - Against that scaffold inventory, classify each Mentor session as create or modify in the required `Create Or Modify` column of the `Session Readiness Matrix`.
-- Apply the relevant 10-section Mentor spec format and anti-failure guardrails from `references/mentor-spec-guardrails.md`.
+- Apply the relevant 10-section Mentor spec format and anti-failure guardrails carried inline in the payload.
 - Preserve OutSystems implementation authority and evidence rules.
 - Produce Studio-native, deterministic Mentor content. The 10-section Mentor spec is a summary layer; it does not replace the detailed pseudocode package.
 - Include `Manual Setup Gate`, `Session Readiness Matrix`, `Studio-Native Pseudocode`, and `Mentor Executable Sessions`.

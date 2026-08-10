@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -40,10 +41,49 @@ ELEMENT_RECIPE_HEADINGS: tuple[str, ...] = (
     "Verification Pseudocode",
 )
 
+# An ODC entity auto-generates entity actions named with these prefixes plus
+# the entity's own name. A custom server action given the same name collides
+# with one: the first live colleague run (2026-08-09) lost `CreateBooking`
+# beside entity `Booking` to a session that reported change_applied with two
+# retries and zero errors and created nothing. The same prompt under the name
+# `BookRoom` landed first time.
+COLLISION_PREFIXES = ("Create", "Update", "Delete", "Get")
+COLLISION_NAME_RE = re.compile(r"\b(" + "|".join(COLLISION_PREFIXES) + r")([A-Z][A-Za-z0-9]*)\b")
+ENTITY_LINE_RE = re.compile(r"\bentit(?:y|ies)\b", re.IGNORECASE)
+PASCAL_TOKEN_RE = re.compile(r"\b[A-Z][A-Za-z0-9]*\b")
+
+
+def declared_entities(text: str) -> set[str]:
+    """Names the plan itself calls entities.
+
+    Deliberately precise rather than exhaustive: only the whole remainder of a
+    prefixed name is ever tested against this set, so a plan that never uses
+    the word "entity" yields no findings instead of false ones.
+    """
+    names: set[str] = set()
+    for line in text.splitlines():
+        if ENTITY_LINE_RE.search(line):
+            names.update(PASCAL_TOKEN_RE.findall(line))
+    return names
+
 
 def scan_text(text: str) -> list[tuple[int, str, str, str]]:
     findings: list[tuple[int, str, str, str]] = []
+    entities = declared_entities(text)
     for line_no, line in enumerate(text.splitlines(), start=1):
+        for match in COLLISION_NAME_RE.finditer(line):
+            entity = match.group(2)
+            if entity not in entities:
+                continue
+            findings.append(
+                (
+                    line_no,
+                    match.group(0),
+                    f"collides with the auto-generated entity action of `{entity}`; "
+                    "rename the planned action to a verb phrase",
+                    line.strip(),
+                )
+            )
         for pattern, reason in FORBIDDEN_PATTERNS:
             if pattern in line:
                 findings.append((line_no, pattern, reason, line.strip()))

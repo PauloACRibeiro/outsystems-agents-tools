@@ -22,6 +22,8 @@ Layouts live in the **app's own `Layouts` flow** (not in the OutSystemsUI librar
 | Sidebar nav AND top header bar (banking apps, B2B dashboards, admin consoles, most authenticated SaaS) | `LayoutSideMenu` | Top bar is built in. Fill the `Header` placeholder for per-screen middle content. |
 | "top nav" / horizontal menu with tabs across the top, NO left sidebar | `LayoutTopMenu` | Top bar with `Menu` block + 6-placeholder content tree. |
 | Modal / popup with no chrome at all (login, embed, print stylesheet) | `LayoutBlank` | No menu, no chrome, just `MainContent`. |
+| Marketing / landing page — long scrolling page of stacked sections | `LayoutBase` | Two main placeholders (`Header`, `MainContent`) and a menu already on top. Simpler than `LayoutTopMenu`; same input parameters. |
+| A **section within** a `LayoutBase` landing page | `LayoutBaseSection` | Not a screen-root chrome choice in the normal case — ODC's Themes doc describes it as nesting *inside* `LayoutBase` to define landing-page sections. It carries no menu of its own. |
 
 **Don't default to `LayoutBlank` for full screens.** It gives nothing — no header, no nav, no chrome. Most user requests imply `LayoutSideMenu` or `LayoutTopMenu`. If the request mentions a left sidebar with nav items, use `LayoutSideMenu` (even if the design also has a top header bar — that comes for free).
 
@@ -77,6 +79,14 @@ Brand and user widget are baked into the Layout block's own widget tree — not 
 ### `LayoutBlank`
 
 Single `MainContent` placeholder. **Truly no chrome** — no brand, no user widget, no top bar. Use ONLY for popup screens / modal content / explicit "no chrome" requests.
+
+### `LayoutBase`
+
+Two main placeholders — `Header` and `MainContent` — and a **menu already on top**. ODC's Themes doc positions it for landing pages "due to its simplicity". Same input parameters as `LayoutTopMenu` (fixed-on-scroll menu, accessibility options, extended CSS classes). Because it carries a menu, a blueprint choosing it should also carry `app_chrome.menu` — the validator warns when it does not, exactly as for `LayoutTopMenu`/`LayoutSideMenu`.
+
+### `LayoutBaseSection`
+
+The section block a `LayoutBase` page stacks to build landing-page sections, "similar to what you find in traditional website landing pages". **It carries no chrome of its own** and is not menu-bearing. Normally it appears *nested inside* `LayoutBase` rather than as the screen root — reach for it as a screen's `layout_block` only when the screen genuinely is one such section.
 
 ## When the design feels "too custom" for a Layout block (the dark-mode trap)
 
