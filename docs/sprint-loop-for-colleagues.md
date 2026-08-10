@@ -116,10 +116,24 @@ For **Claude Code**, the official instructions are:
     claude plugin marketplace add OutSystems/outsystems-mcp
     claude plugin install outsystems@outsystems
 
-Then register the server against your own tenant hostname and authenticate — the
-repository README has the exact command and the OAuth walkthrough, plus a
-best-effort recipe for Codex and other harnesses. Always install as
-`outsystems@outsystems`; the bare plugin name is not enough to update it later.
+**Installing the plugin does not register a server.** That is a separate
+command, and it needs your own tenant hostname:
+
+    claude mcp add -s user --transport http outsystems https://<my-tenant>/mcp
+
+Substitute your tenant — something like `mycompany.outsystems.dev`. Add no
+`--client-id` and no `--callback-port`: the server supports OAuth Dynamic
+Client Registration, so Claude Code registers its own client on an ephemeral
+loopback port, and pinning either of those breaks it.
+
+Skip this command and the next one fails with `No MCP server named
+"outsystems"`, listing whatever unrelated servers you happen to have. The
+error does not suggest registration, so it reads as a broken install when
+nothing is broken.
+
+The repository README has the OAuth walkthrough and best-effort recipes for
+Codex and other harnesses. Always install as `outsystems@outsystems`; the bare
+plugin name is not enough to update it later.
 
 **Order matters: authenticate first, restart second.** Authentication state
 lives in your configuration, not in the session — `claude mcp login
