@@ -60,23 +60,27 @@ the wireframe does not show.
 
 ## Canonical layout placeholder order (every screen)
 
-Every screen wraps content in one layout block. The ODC set is exactly five —
-`LayoutTopMenu`, `LayoutSideMenu`, `LayoutBlank`, `LayoutBase`,
-`LayoutBaseSection` (see `layouts.md`). The layout exposes **six placeholders
-that all exist, in this exact order**:
+Every screen wraps content in one layout block. **The layouts do not share one
+placeholder set, and there is no `ActionButton` on any of them.**
 
-```
-Header → ActionButton → Breadcrumbs → Title → Actions → MainContent
-```
+[`layouts.md`](layouts.md#placeholder-structure) is the single source: it lists
+the layouts, and for each one the placeholders it actually exposes, measured
+from real apps' own `Layouts` flows. Read it before emitting a blueprint — and
+read the *target app's* `Layouts` flow before trusting either, since a
+placeholder name that does not exist on the chosen layout fails at build time,
+after the design has been approved.
+
+That includes **where the app's `Menu` already lives**, which differs per
+layout and determines which placeholders a screen may fill at all.
+
+What the common placeholders are for, where the chosen layout has them:
 
 | Placeholder | Typical content |
 |---|---|
-| `Header` | The app's `Menu` block (chrome). |
-| `ActionButton` | Header-level action button (often empty). |
-| `Breadcrumbs` | Breadcrumb trail (often empty; strip template-seeded default crumbs — see `ui-reference.md`). |
 | `Title` | The screen title as `AdvancedHtml Tag="h1"`. |
-| `Actions` | Screen-level primary buttons ("Create Request"). |
+| `Actions` | Screen-level primary buttons ("New course"). |
 | `MainContent` | The screen body — everything OUD's `main_content` describes. |
+| `Breadcrumbs` | Breadcrumb trail or a back link. Often empty; strip template-seeded default crumbs — see `ui-reference.md`. |
 
 Two facts that matter at design time:
 
@@ -93,7 +97,7 @@ screen is a build defect the design can prevent:
 
 | Screen kind | Where its entry link lives |
 |---|---|
-| No record-id input (lists, dashboards, launchers) | The app menu (`Menu` block's `PageLinks`) — i.e. the blueprint's `app_chrome.menu`. |
+| No record-id input (lists, dashboards, launchers) | The app menu — a `Link` added **once** inside `Common\Menu`'s `PageLinks` container, recorded in the blueprint as `app_chrome.menu`. The screen itself adds nothing. |
 | Takes a record id (detail, edit) | A parent screen — table row link, action button, or contextual link. |
 
 Design implication: a list/dashboard screen that is missing from

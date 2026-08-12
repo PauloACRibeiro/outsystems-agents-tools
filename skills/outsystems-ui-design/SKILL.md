@@ -495,11 +495,23 @@ full, using OMI's exact field names:
 - `name` — the attribute name.
 - `data_type` — e.g. `text`, `integer`, `longInteger`, `decimal`, `boolean`,
   `dateTime`, `date`, `email`, `currency`, or a relationship `"<Entity> Identifier"`.
-  **Ordinary auto-number primary keys: declare `integerIdentifier`, not
-  `longIntegerIdentifier`** — the current Mentor model API turns "Long Integer
-  Identifier" PK requests into the invalid token `LongIntegerEntityIdentifier`
-  and every publish fails (`OS-RDBS-GEN-40002`, masked as `OS-DPL-50203` via the
-  MCP path; AH-2026-07-16-014). A design that genuinely needs a 64-bit key must
+  **Ordinary auto-number primary keys: declare the literal `Long Integer`** —
+  with auto-number, mandatory and primary-key set — **not any
+  `Identifier`-suffixed type.** `Integer Identifier`, `Long Integer Identifier`
+  and `Identifier` all validate cleanly and then fail every publish
+  (`OS-RDBS-GEN-40002 Unknown OsAttributeTypes`, masked as `OS-DPL-50203` via the
+  MCP path). **The class rule, scoped to the path it was measured on — an
+  entity-attribute `DataType`: a string outside the platform's enum passes
+  validation and fails at publish** — the model API accepts any string,
+  validation checks shape rather than membership in the platform's closed enum,
+  and the enum is only enforced by the publish-time migration-script generator.
+  Verified 2026-08-11: explicit `Long Integer` published first attempt where
+  `Integer Identifier` needed 6 internal retries and failed across two
+  environments; independently reproduced on another tenant. If a `DataType`
+  string is ever uncertain, read it off an already-published app in the same
+  tenant rather than guessing a second name. This applies to **entity
+  attributes**; an `Identifier`-suffixed type on an action *parameter* is fine
+  and publishes normally. A design that genuinely needs a 64-bit key must
   say so explicitly in `evidence_boundary.review_notes` as a Mentor/publish-path
   limitation to resolve deliberately — never silently narrowed, never silently
   emitted as longIntegerIdentifier.

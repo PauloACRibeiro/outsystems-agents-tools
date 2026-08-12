@@ -34,6 +34,11 @@ or Public API Contract Gate as applicable.
 Apply the User Reference Authoring Gate in addition whenever the design
 touches the platform `User` entity.
 
+Apply the Not-Found Guard Gate in addition whenever an action takes a record id
+from outside itself — update, cancel, delete, detail — or whenever the symptom
+is **a 500 on a missing row**, **a delete that reports success for a row that
+never existed**, or **a not-found refusal that never fires**.
+
 ## Architecture Layering Gate
 
 Use this gate before OMI suggests reusable services, entities, public actions,
@@ -147,6 +152,85 @@ Fallback behavior:
   rather than emitting a create step on a guess.
 - If the design needs a User reference and ODC Studio access is not available,
   stop and say so. No Mentor-side workaround for authoring has been measured.
+
+## Not-Found Guard Gate
+
+Use this gate whenever an action takes an entity identifier from outside itself
+— a screen parameter, an API input, another action — and the row it names may
+not exist. That is nearly every update, cancel, delete and detail action.
+
+Three platform behaviours, all measured by execution against a live ODC
+development environment (2026-08-11), and no two of them alike:
+
+| Generated action | Missing row |
+|---|---|
+| `Get<Entity>ForUpdate(Id)` | **raises** |
+| `Get<Entity>(Id)` | **raises** — byte-identical error to the locking read |
+| `Delete<Entity>(Id)` | **returns silently**, no error at all |
+
+**The first consequence: `If Id = NullIdentifier()` after a read is dead code.**
+The read raises before the guard is reached, so the refusal branch can never
+execute and the caller gets a 500 instead of the declared outcome. Three
+instances of exactly this shipped in one generated app.
+
+**The second consequence, and the one that catches reviewers: swapping the
+locking read for the plain one is not a fix.** Both raise. A repair framed as
+*"don't use `GetForUpdate`"* leaves an action that already uses `Get` equally
+dead while reading as already-correct — measured, in the same app, on the
+second of two dead guards.
+
+**The third is the dangerous one.** A delete-shaped action has no broken guard
+to find, because it has no guard at all: `Delete` does not raise, so the action
+reports success for a row that never existed. It fails toward success — no
+error, no log, and a test asserting `Outcome = "Success"` passes on a random id.
+
+### The construction that works
+
+Aggregate first, guard on its `Count`, then the locking read:
+
+1. Aggregate over the entity, filtered `<Entity>.Id = <input>` — existence only.
+2. `If <aggregate>.Count = 0` → assign the refusal outcome, End. Nothing written.
+3. `Get<Entity>ForUpdate(Id: <input>)` — the row existed at step 1.
+4. Business rules → refuse or update.
+
+The guard tests the **aggregate's `Count`**, never a returned record's `Id`. The
+locking read stays exactly where it was; it simply stops deciding existence.
+Aggregates return `Count = 0` for a missing row rather than raising — verified
+independently in a second app — which is what makes step 1 usable as a guard.
+
+**What this construction is verified to do, and what it is not.** It was
+measured against a **sequential** missing-row call: an id that does not exist,
+one caller, no competing writer. On that path it turns a 500 into the declared
+refusal, repeatably, in two apps.
+
+**Concurrency between steps 1 and 3 is unverified.** There is a window: the
+aggregate can see a row that a concurrent delete removes before the locking read
+runs, and step 3 would then raise exactly as the unguarded version did. Nothing
+here has been measured under contention, and no transaction-isolation evidence
+was gathered. So: **do not treat this as a race-free construction.** Where rows
+can be deleted concurrently, keep exception handling around the read as well, or
+establish the platform's isolation behaviour first. The gate removes a
+guaranteed failure on a common path; it does not prove the path is safe under
+every schedule.
+
+Check:
+
+- every action taking an identifier from outside declares a not-found outcome,
+  **including delete-shaped ones**, where the omission is invisible;
+- the existence check is an aggregate `Count`, evaluated **before** any read;
+- the refusal returns the declared outcome and writes nothing.
+
+Fallback behavior:
+
+- **Verify by calling the action with an id that does not exist.** Static
+  inspection cannot settle this: grepping for `NullIdentifier()` finds the dead
+  guards and is structurally blind to the absent one, which is the more
+  dangerous of the two. A coverage checker cannot see it either — it can only
+  confirm the refusals a design declared, never the one it forgot.
+- If an action cannot be executed (role-gated, no authenticated route), record
+  its not-found behavior as **unverified**. A role-gated action probed through
+  an unauthenticated harness answers *"Not authorised."* — a clean HTTP 200 that
+  is easily mistaken for a correct refusal.
 
 ## Performance Query Pre-Mortem
 

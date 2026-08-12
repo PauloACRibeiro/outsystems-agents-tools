@@ -38,6 +38,32 @@ Add each claim as an extra matrix row (use `--` in the ID column) marked **Feasi
 
 Do not declare convergence while any platform feasibility row is Infeasible or Unverified. An Infeasible row is an architecture decision for the user, not a silent patch; stop and present options. Feasibility checked here is cheap; the same discovery inside `outsystems-mentor-implementation` ripples back into spec and plan rework.
 
+## Execution Outcome Coverage
+
+Every build-time signal this loop relies on -- validation, coverage, enumeration, `change_applied`, retry count, publish status -- describes whether the right *shapes* exist. None of them can observe whether the logic inside those shapes does its job. A server action can pass every one of them and do nothing at all; that is a measured outcome, not a hypothetical.
+
+So: **every non-success result value the design declares for a server action must have at least one verification row that reaches it by executing the action.** A success path is exercised by any happy-path test; a refusal branch is reached only on purpose.
+
+Write the verification matrix so each row is machine-checkable: one row per line beginning `V<N>`, naming the outcome it reaches, with indented continuation lines where a row wraps.
+
+**Put the observed result after a `->`, and only there.** The checker counts an outcome as exercised only when it appears after the arrow, because that is the only part of a row that says what came back — everything before it is setup. `V4  C-004  Enrol with an id that does not exist -> "CourseNotFound".` counts; naming the outcome while describing the setup does not.
+
+**A row that denies an outcome does not exercise it.** `-> never returns "CourseNotFound"` observes an absence, which is the opposite of reaching the branch, and the checker discards it. Write a row that reaches the refusal on purpose.
+
+Both rules are deliberately conservative: an outcome genuinely exercised but written without an arrow reads as unexercised and the run says `NOT READY`. That costs a plan edit. The opposite error ships an untested refusal branch — which is how a row asserting two refusals were *never* returned once scored them as fully covered.
+
+**Each refusal row must record the relevant state before and after the call, not the message the caller saw.** A refusal that returns the right value while writing a row is a defect no message-only assertion can see. State the evidence as the before/after reading, not as a screenshot of the refusal.
+
+Run the checker and copy its full output verbatim into the review artifact:
+
+```
+python3 scripts/check_outcome_coverage.py <design-file> <plan-under-review>
+```
+
+(On Windows PowerShell, `python` -- `python3` is not a command there.) The numbers and the `outcome verdict:` line are computed, never hand-authored.
+
+**Scope note, because getting it wrong makes the check useless in the most dangerous direction:** the checker reads only the `V<N>` verification rows, not the whole plan. A plan also carries the Mentor prompts, which name every outcome because they instruct the build to return them -- so a whole-plan scan reports full coverage for a plan whose matrix tests nothing, and can only ever say READY.
+
 ## Plan Integrity Checks
 
 Audit these in the same pass and record findings in the matrix's Patch / Risk column:
@@ -70,6 +96,7 @@ The scanner and Mentor invocation must use the same full patched plan file.
 Convergence requires:
 
 * `scripts/check_requirement_coverage.py` reports `coverage verdict: READY` on the patched plan -- no uncovered IDs, no dangling references. An accepted-risk requirement converges by being cited in the plan's scope boundaries with its disposition, not by being waived from the checker.
+* `scripts/check_outcome_coverage.py` reports `outcome verdict: READY` -- every declared refusal outcome is reached by a verification row. An outcome that is genuinely untestable converges by being cited in scope boundaries with its reason, not by being dropped from the design's declared results.
 * no Missing rows.
 * no Partial except explicitly accepted platform/runtime uncertainty.
 * no Infeasible or Unverified platform feasibility rows.

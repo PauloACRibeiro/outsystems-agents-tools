@@ -61,6 +61,7 @@ The script writes into `./shots/` and prints one JSON line per capture plus a fi
 | `probe.identity` | C16 — measured design tokens (fonts, palette by frequency, radii, shadows, imagery counts) and explicit hits on the `#1068eb`/`#f3f6f8` platform defaults; cross-checks C1/C14 |
 | `session.webm` | C11 — a recording for optional human review (you can't watch it; use `probe.motion` + hover pair) |
 
+- **A blank capture exits 3 and writes no `probe.json`.** If the landing page reports zero interactive elements, the script writes `CAPTURE-FAILED.json` instead and exits **3** — it never scores a page that did not render. This is deliberate: a blank capture does not read as an error, it reads as a *clean app*, and it fails **optimistically** (zero tap targets, null focus, `osDefaults.present: false` — which scores C16 better than the truth). **The remedy is almost always to re-run against an explicit screen URL rather than the app's base path**, where a client-side redirect to the default screen can outrun the readiness window. Measured on a live run 2026-08-11: the documented base URL produced a blank white capture while every crawled screen rendered perfectly.
 - **Sanity-check the printed desktop `title`/`url`.** If the final `url` is a login/SSO host or the title reads like an error/login page, the app is auth-gated — stop and report (see Scope).
 - If `channel: 'chrome'` fails (no system Chrome), run `npx playwright install chromium` once and drop the `channel` option in your working copy. Note the fallback in the report's Method section.
 
@@ -139,7 +140,7 @@ This skill still does not run Mentor, publish, or modify the app — the handoff
 ## What this skill does NOT do
 
 - Does not modify, deploy, or fix the app.
-- Does not attempt to log in; the crawl stays within the app's public path.
+- Does not attempt to log in; the crawl stays within the app's public path. **So this skill cannot discharge a render gate for a role-gated screen** — a clean audit here is evidence about the public surface only, and on one measured app the authenticated surface was half the application and held the defects. A gated screen needs a principal holding the role to open it and report what rendered; until then it is `unverified`, not `N/A` and not passed.
 - Does not inspect the OML/theme/CSS — that's the companion `outsystems-ui-review` skill.
 - Does not produce vibes-based scores — every tier cites a concrete observation or a `probe.json` measurement.
 

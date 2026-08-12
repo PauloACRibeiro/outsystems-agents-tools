@@ -21,7 +21,7 @@ Layouts live in the **app's own `Layouts` flow** (not in the OutSystemsUI librar
 | "sidebar nav" / "side menu" / "left navigation panel" | `LayoutSideMenu` | Persistent left sidebar with `Navigation` placeholder + main content area. **Top bar is baked in** (don't add a second Layout). |
 | Sidebar nav AND top header bar (banking apps, B2B dashboards, admin consoles, most authenticated SaaS) | `LayoutSideMenu` | Top bar is built in. Fill the `Header` placeholder for per-screen middle content. |
 | "top nav" / horizontal menu with tabs across the top, NO left sidebar | `LayoutTopMenu` | Top bar with `Menu` block + 6-placeholder content tree. |
-| Modal / popup with no chrome at all (login, embed, print stylesheet) | `LayoutBlank` | No menu, no chrome, just `MainContent`. |
+| Modal / popup with no chrome at all (login, embed, print stylesheet) | `LayoutBlank` | No menu, no chrome, just a single `Content` placeholder. |
 | Marketing / landing page — long scrolling page of stacked sections | `LayoutBase` | Two main placeholders (`Header`, `MainContent`) and a menu already on top. Simpler than `LayoutTopMenu`; same input parameters. |
 | A **section within** a `LayoutBase` landing page | `LayoutBaseSection` | Not a screen-root chrome choice in the normal case — ODC's Themes doc describes it as nesting *inside* `LayoutBase` to define landing-page sections. It carries no menu of its own. |
 
@@ -37,11 +37,20 @@ Spec rule: **inspect, delete the default, then add the chosen Layout** — and a
 
 ## Placeholder structure
 
+> **Measured, not assumed.** The per-layout sets below were read from two
+> apps' own `Layouts` flows (ODC Studio 1.719, Base Portfolio template,
+> 2026-08-11). **They differ per layout** — there is no shared six-placeholder
+> contract, and no `ActionButton` anywhere. Placeholder sets can also differ
+> between templates, so **read the target app's `Layouts` flow before emitting
+> a blueprint**: the deployed app always wins over this document, and a name
+> that does not exist there fails at build time.
+
+
 ### `LayoutSideMenu`
 
 | Placeholder | Required content | Notes |
 |---|---|---|
-| `Navigation` | **`Menu` block instance** (from app's `Common` flow), with nav entries as `Link` widgets inside `Menu.PageLinks` | The left rail. **MUST** wrap a `Menu` block — never raw `Container` of nav items, never `AdvancedHtml Tag="nav"`. |
+| `Navigation` | **Already holds the app's `Menu` block** — leave it alone | The left rail. The template puts `Common\Menu` here; don't add a second one, and never a raw `Container` of nav items or `AdvancedHtml Tag="nav"`. Nav entries go inside `Common\Menu`'s `PageLinks` **Container**, by editing that block once. |
 | `Header` | (often empty) | **Middle slot of the top bar only.** Brand and user widget are baked in (see anatomy below) — use this for per-screen content like a search box, breadcrumbs, or quick filters. |
 | `Breadcrumbs` | (often empty or `Breadcrumbs` block) | |
 | `Title` | `AdvancedHtml` `Tag: "h1"` with screen title | **MUST** go here — never inline in `MainContent`. |
@@ -63,22 +72,29 @@ Spec rule: **inspect, delete the default, then add the chosen Layout** — and a
 
 ### `LayoutTopMenu`
 
-Six placeholders, in this order:
+Six placeholders:
 
 | Placeholder | Required content |
 |---|---|
-| `Header` | **`Menu` block** (REQUIRED — `Link` widgets in `Menu.PageLinks`) |
-| `ActionButton` | header-level action button (often empty) |
+| `Header` | **Already holds the app's `Menu` block** — see the warning below. Leave alone. |
 | `Breadcrumbs` | breadcrumb trail (often empty) |
 | `Title` | `AdvancedHtml` `Tag: "h1"` with screen title |
 | `Actions` | screen-level action buttons (often empty) |
 | `MainContent` | screen body |
+| `Footer` | (often empty) |
 
 Brand and user widget are baked into the Layout block's own widget tree — not placeholders. To change them, edit `LayoutTopMenu` in the app's `Layouts` flow.
 
+> ⚠️ **`LayoutTopMenu.Header` is NOT the per-screen slot that `LayoutSideMenu.Header` is.**
+> In a template-created app, `LayoutTopMenu` instantiates `Common\Menu` **inside its own
+> `Header` placeholder**. A screen that puts anything there **replaces** the menu rather
+> than adding to it — and the failure is invisible on the first screen you look at: screen
+> one renders fine, every screen that followed the same pattern has lost its navigation.
+> The two layouts genuinely differ; do not carry a habit from one to the other.
+
 ### `LayoutBlank`
 
-Single `MainContent` placeholder. **Truly no chrome** — no brand, no user widget, no top bar. Use ONLY for popup screens / modal content / explicit "no chrome" requests.
+Single **`Content`** placeholder (not `MainContent` — the name differs from the other layouts). **Truly no chrome** — no brand, no user widget, no top bar. Use ONLY for popup screens / modal content / explicit "no chrome" requests.
 
 ### `LayoutBase`
 
@@ -86,7 +102,7 @@ Two main placeholders — `Header` and `MainContent` — and a **menu already on
 
 ### `LayoutBaseSection`
 
-The section block a `LayoutBase` page stacks to build landing-page sections, "similar to what you find in traditional website landing pages". **It carries no chrome of its own** and is not menu-bearing. Normally it appears *nested inside* `LayoutBase` rather than as the screen root — reach for it as a screen's `layout_block` only when the screen genuinely is one such section.
+Two placeholders: **`BackgroundImage`** and **`Content`**. The section block a `LayoutBase` page stacks to build landing-page sections, "similar to what you find in traditional website landing pages". **It carries no chrome of its own** and is not menu-bearing. Normally it appears *nested inside* `LayoutBase` rather than as the screen root — reach for it as a screen's `layout_block` only when the screen genuinely is one such section.
 
 ## When the design feels "too custom" for a Layout block (the dark-mode trap)
 
@@ -190,11 +206,11 @@ This pattern (named widget + `Object: "AdvancedHtml"` + `Tag: "h1"` + a `TextWid
 
 ❌ **Putting the screen title as plain text or `<h1>` directly in `MainContent`.** Use the `Title` placeholder with `AdvancedHtml Tag="h1"`.
 
-❌ **Skipping empty placeholders in widget JSON** for `LayoutTopMenu`. All 6 must be present in order — missing ones cause silent layout failures.
+❌ **Skipping empty placeholders in widget JSON.** Emit every placeholder the *chosen* layout actually has, in order, even the empty ones — missing ones cause silent layout failures. Which placeholders those are differs per layout: see the per-layout tables above, and read the target app's `Layouts` flow.
 
 ❌ **Using `Container` to mimic a layout** (e.g. `Container > Container > Container` to fake `LayoutTopMenu`'s grid). Lose responsive behavior, theme integration, and accessibility roles.
 
-❌ **Putting raw `Link` widgets, `Container`s, or `AdvancedHtml Tag="nav"` directly in `LayoutSideMenu.Navigation` or `LayoutTopMenu.Header`.** These placeholders are for `Menu` block instances. Nav links go inside `Menu.PageLinks` as `Link` widgets — see the upstream `recipes/sidebar-navigation.md` (not bundled).
+❌ **Putting raw `Link` widgets, `Container`s, or `AdvancedHtml Tag="nav"` directly in `LayoutSideMenu.Navigation` or `LayoutTopMenu.Header`.** Both already hold the app's `Menu` block — anything you add there replaces it. Nav links go inside `Common\Menu`'s `PageLinks` **Container**, edited once in the block itself.
 
 ### Chrome-placement variance (wireframe vs stock layout)
 
@@ -208,6 +224,6 @@ drawn position — placement fidelity is a theme/implementation decision that be
 downstream, not a structure decision for the blueprint.
 - ❌ **Defaulting to `LayoutBlank`** because the design "looks too custom." A bespoke visual treatment goes via theme variable overrides + `ExtendedClass`, not a custom layout shell.
 - ❌ **Putting the screen title as plain text in `MainContent`.** Use the `Title` placeholder with `AdvancedHtml Tag="h1"`.
-- ❌ **Skipping empty placeholders in `LayoutTopMenu`** — all 6 must be present in order.
+- ❌ **Inventing a placeholder that layout does not have.** The five layouts do NOT share one placeholder set — see the per-layout tables above. There is no `ActionButton` on any of them. A name that does not exist fails at build time, after the design is approved.
 - ❌ **Using `Container` to mimic a layout** (`Container > Container > Container` to fake the grid). Loses responsive behavior, theme integration, accessibility roles.
-- ❌ **Putting raw `Link` widgets, `Container`s, or `AdvancedHtml Tag="nav"` directly in `Navigation` / `Header`.** These placeholders are for `Menu` block instances; nav links go inside `Menu.PageLinks`.
+- ❌ **Putting raw `Link` widgets, `Container`s, or `AdvancedHtml Tag="nav"` into whichever placeholder already holds the app's `Menu`** — `Navigation` on `LayoutSideMenu`, `Header` on `LayoutTopMenu`. Anything placed there replaces it. Nav links go inside `Common\Menu`'s `PageLinks` Container.

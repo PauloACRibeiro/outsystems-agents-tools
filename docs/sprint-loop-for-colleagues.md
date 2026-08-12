@@ -121,7 +121,8 @@ command, and it needs your own tenant hostname:
 
     claude mcp add -s user --transport http outsystems https://<my-tenant>/mcp
 
-Substitute your tenant — something like `mycompany.outsystems.dev`. Add no
+Substitute your own tenant hostname — the `<your-company>.outsystems.dev` your
+ODC Portal already uses. Add no
 `--client-id` and no `--callback-port`: the server supports OAuth Dynamic
 Client Registration, so Claude Code registers its own client on an ephemeral
 loopback port, and pinning either of those breaks it.

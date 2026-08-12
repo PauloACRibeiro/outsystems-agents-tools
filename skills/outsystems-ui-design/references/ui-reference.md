@@ -101,8 +101,8 @@ Specifically: precise Figma values for a card-shaped, button-shaped, chart-shape
 | Two `Container`s toggled by `IsActiveTab` LocalVariable | `Tabs` + `TabsHeaderItem` + `TabsContentItem` |
 | **Segmented control / mode selector / view toggle** — joined pill buttons, one active, driving what the screen does (Single \| Multi \| Template; List \| Create \| Delete) — built as styled `Container`s, or reached for as `Tabs` | **`ButtonGroup` + `ButtonGroupItem`** (variable-bound, one item per option). `Tabs` is for switching between *sibling content panels*; a mode selector sets a **value** the screen branches on. Reaching for `Tabs` here gives the user a tab strip that lies about what it does. |
 | `Container` with `box-shadow` + `border-radius` + padding mimicking a card | `Card` block | [`patterns/content.md#card`](patterns/content.md#card) |
-| Hand-rolled list of `Link`/`Container` items in `LayoutSideMenu.Navigation` or `LayoutTopMenu.Header` | `Menu` block (from `Common`) wrapping the placeholder, with `Link` widgets inside `Menu.PageLinks` |
-| Raw `Link`s placed directly in `Navigation` / `Header` placeholders (no `Menu` wrapper) | `Menu` block first, then `Link`s inside `Menu.PageLinks` |
+| Hand-rolled list of `Link`/`Container` items placed in a layout placeholder | **Not a screen change at all.** The layout already instantiates `Common\Menu`; put the `Link` widgets inside that block's `PageLinks` **Container**, once. Which placeholder holds the menu differs per layout — [`layouts.md`](layouts.md#placeholder-structure) |
+| Raw `Link`s placed into the placeholder that already holds the menu | Same — and anything placed there **replaces** the menu rather than adding to it |
 | `Container` with `OnClick`, styled to look like a button | `Button` widget |
 | `Container` with icon + heading + dismiss × pretending to be a notice | `Alert` (inline) or `Notification` (toast) |
 | `<h1>` + `<small>` styled as a stat box | `Counter` block, often inside `Columns3` |

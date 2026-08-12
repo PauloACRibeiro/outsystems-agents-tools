@@ -239,9 +239,11 @@ pattern, or platform-level design risk:
 - TrueChange Pre-Mortem Checklist: fragile Mentor prompt areas get a final
   check for common TrueChange, binding, dependency, and navigation failures.
 - Platform guardrail suite: architecture layering, server-trust security,
-  query performance, timer/async idempotency, and public API contracts get
-  read-only prompt discipline through the Architecture Layering Gate, Security
-  Server-Trust Gate, Performance Query Pre-Mortem, Timer / Async Idempotency
+  references to the platform `User` entity, actions taking a record id that may
+  not exist, query performance, timer/async idempotency, and public API
+  contracts get read-only prompt discipline through the Architecture Layering
+  Gate, Security Server-Trust Gate, User Reference Authoring Gate, Not-Found
+  Guard Gate, Performance Query Pre-Mortem, Timer / Async Idempotency
   Gate, and Public API Contract Gate. This evidence does not authorize Mentor
   execution, publish, deploy, rollback, cleanup, or tenant mutation. It does not
   require any sibling architecture skill and does not require a graph, HTML
@@ -250,7 +252,12 @@ pattern, or platform-level design risk:
 
 Use `references/odc-platform-guardrails.md` when a request touches layering,
 public services, anonymous access, server trust, query performance, timers,
-background processing, imports, async retry, bulk work, or API contract changes.
+background processing, imports, async retry, bulk work, API contract changes,
+any relationship to a user — ownership, "my &lt;records&gt;", created-by,
+assigned-to, per-user filtering, or a foreign key to the platform `User` entity
+— or an action taking a record id that may not exist, including a 500 on a
+missing row, a delete reporting success for a row that never existed, or a
+not-found refusal that never fires.
 This suite complements current official docs and `outsystems-tech-content`; it
 does not replace them for implementation authority.
 

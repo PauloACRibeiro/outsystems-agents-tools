@@ -205,12 +205,25 @@ steps:
    them.
 2. For a normal attribute, create the declared `name` with its declared
    `data_type`; apply `is_primary_key` as declared. `enum_values` is `null`.
-   For an ordinary auto-number primary key, request Integer Identifier or omit
-   the explicit type and take the platform default; do NOT request "Long
-   Integer Identifier" — the current Mentor model API writes the invalid type
-   token `LongIntegerEntityIdentifier`, which the database script generator
-   rejects at publish (`OS-RDBS-GEN-40002`, surfaced through the MCP publish
-   path as an opaque `OS-DPL-50203`). A genuinely explicit 64-bit key
+   For an ordinary auto-number primary key, **state the literal `DataType`
+   string `Long Integer`** with `IsAutoNumber`, `IsMandatory` and
+   `IsPrimaryKey` set. Do NOT request any `Identifier`-suffixed type —
+   `Integer Identifier`, `Long Integer Identifier` and `Identifier` all
+   validate cleanly and then fail every publish, because the model API accepts
+   any string as a `DataType`, validation checks shape rather than membership in
+   the platform's closed enum, and the enum is only enforced by the publish-time
+   database-migration-script generator (`OS-RDBS-GEN-40002 Unknown
+   OsAttributeTypes`, surfaced through the MCP publish path as an opaque
+   `OS-DPL-50203`). **The class rule, scoped to the path it was measured on — an
+   entity-attribute `DataType`: a string outside the platform's enum
+   passes validation and fails at publish** — the same trap is documented
+   for `Text Identifier` and static-entity autonumber. When a string is
+   uncertain, read it off an already-published app in the same tenant rather
+   than guessing a second name. Mentor applies the same convention to every
+   entity it creates in a phase, so a fix turn is not assumed comprehensive:
+   enumerate every entity's `Id` and check the literal string. This governs
+   **entity attributes** only — an `Identifier`-suffixed type on an action
+   *parameter* publishes normally. A genuinely explicit 64-bit key
    requirement must not be silently narrowed to Integer Identifier: stop and
    surface it as a Mentor/publish-path limitation requiring a deliberate
    platform or manual resolution.

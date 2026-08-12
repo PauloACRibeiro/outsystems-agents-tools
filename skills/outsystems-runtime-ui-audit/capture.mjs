@@ -47,6 +47,31 @@ mkdirSync(outDir, { recursive: true });
 const INTERACTIVE =
   'a[href], button, input:not([type=hidden]), select, textarea, [role=button], [role=link], [role=tab], [role=checkbox], [role=switch], [role=menuitem], [tabindex]:not([tabindex="-1"])';
 
+// A rendered app has interactive elements or real text. An SPA whose entry URL
+// client-side-redirects to its default screen can still be an empty shell when
+// `networkidle` + a fixed wait expires — measured 2026-08-11, where the app's
+// documented base URL produced a blank white capture and a probe of the
+// pre-render shell. Polling for evidence of render is cheap and removes the
+// race rather than lengthening the guess.
+const RENDER_TIMEOUT_MS = 15000;
+
+async function waitForRender(page, timeout = RENDER_TIMEOUT_MS) {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    const rendered = await page
+      .evaluate(
+        (sel) =>
+          document.querySelectorAll(sel).length > 0 ||
+          (document.body?.innerText || '').trim().length > 40,
+        INTERACTIVE,
+      )
+      .catch(() => false);
+    if (rendered) return true;
+    await page.waitForTimeout(250);
+  }
+  return false;
+}
+
 async function loadPage(page, target) {
   try {
     await page.goto(target, { waitUntil: 'networkidle', timeout: 30000 });
@@ -54,6 +79,42 @@ async function loadPage(page, target) {
     await page.goto(target, { waitUntil: 'load', timeout: 30000 });
   }
   await page.waitForTimeout(2500);
+  return waitForRender(page);
+}
+
+// The guard for when the wait above still isn't enough.
+//
+// A blank capture does not read as an error — it reads as a clean app, and it
+// fails OPTIMISTICALLY: zero tap targets, null focus, and `osDefaults.present:
+// false` scores the identity criterion BETTER than the truth. So a probe from
+// an unrendered page must never be written; a missing report is honest, an
+// optimistic one is not.
+// The guard must agree with waitForRender, which accepts EITHER interactive
+// elements OR real visible text. Failing on zero interactive alone rejected
+// legitimately text-only screens — an informational or read-only page would
+// exit 3 with "nothing rendered" while its content sat in the screenshot.
+// So: blank means BOTH signals absent, which is what "unrendered" actually is.
+const BLANK_TEXT_THRESHOLD = 40; // same threshold waitForRender polls on
+
+function blankCapture(probe) {
+  const t = probe.tapTargets;
+  if (!t || t.error) return null; // the probe itself failed; not this guard's call
+  if (t.total > 0) return null;
+  const textLength = typeof t.textLength === 'number' ? t.textLength : 0;
+  if (textLength > BLANK_TEXT_THRESHOLD) return null; // text-only, but rendered
+  return {
+    reason: 'landing capture reported zero interactive elements and no meaningful text',
+    tapTargets: t.total,
+    textLength,
+    title: probe.viewports?.desktop?.title ?? null,
+    url: probe.viewports?.desktop?.url ?? probe.url,
+    likelyCause:
+      'the entry URL rendered nothing within the readiness window — commonly a '
+      + 'client-side redirect to a default screen that outruns it',
+    remedy:
+      're-run against an explicit screen URL rather than the app base path, and '
+      + 'confirm the screen renders in a browser first',
+  };
 }
 
 // Platform-default design tokens. Their presence is the rubric's highest-signal
@@ -107,7 +168,10 @@ try {
         const total = items.length;
         const under44 = items.filter((i) => i.w < 44 || i.h < 44).length;
         const under32 = items.filter((i) => i.w < 32 || i.h < 32).length;
-        return { total, under44, under32, pctGte44: total ? Math.round(((total - under44) / total) * 100) : null, sample: items.slice(0, 40) };
+        // Visible text length is recorded for the blank guard, which must not
+        // treat a legitimate text-only screen as an unrendered one.
+        const textLength = (document.body?.innerText || '').trim().length;
+        return { total, under44, under32, textLength, pctGte44: total ? Math.round(((total - under44) / total) * 100) : null, sample: items.slice(0, 40) };
       }, INTERACTIVE);
     } catch (e) { probe.tapTargets = { error: e.message }; }
 
@@ -344,6 +408,17 @@ try {
     await context.close();
   }
 
+  const blank = blankCapture(probe);
+  if (blank) {
+    writeFileSync(`${outDir}/CAPTURE-FAILED.json`, JSON.stringify(blank, null, 2));
+    console.error(JSON.stringify({
+      captureFailed: `${outDir}/CAPTURE-FAILED.json`,
+      ...blank,
+      note: 'probe.json deliberately NOT written — scoring this capture would '
+        + 'read an unrendered page as a clean app',
+    }, null, 2));
+    process.exitCode = 3;
+  } else {
   writeFileSync(`${outDir}/probe.json`, JSON.stringify(probe, null, 2));
   console.log(JSON.stringify({
     probe: `${outDir}/probe.json`,
@@ -358,6 +433,7 @@ try {
     focus: probe.focus,
     crawled: probe.crawled.length,
   }));
+  }
 } finally {
   await browser.close();
 }
