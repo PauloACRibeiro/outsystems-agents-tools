@@ -1,5 +1,5 @@
 {
-  "file_count": 137,
+  "file_count": 140,
   "files": [
     {
       "path": "docs/colleague-feedback/FEEDBACK.md",
@@ -548,13 +548,25 @@
     {
       "path": "skills/shared/mentor-generated-app-bridge.md",
       "sha256": "f9c35c6643028fa1c92ab3be6fdbb2e036cc960ea6c256bb40d5716b9ddfdae9"
+    },
+    {
+      "path": "skills/shared/reference/mentor-operations-registry.md",
+      "sha256": "dc01155e8c39c8e7bafad53d41bddfccdaadd472ed497f5bfee9672723a50b8f"
+    },
+    {
+      "path": "skills/shared/reference/odc-diagnostics-recipes.md",
+      "sha256": "4910b5971b84e6326a9aa6e5bb39fb1002df552b43f2149c26c5d3e480a6c02b"
+    },
+    {
+      "path": "skills/shared/reference/odc-error-registry.md",
+      "sha256": "dcfa7bf133c4ae01bb14ddc41f008bb09a89b7fd4ae24a3389fe7cbdcc123fd3"
     }
   ],
   "manifest_version": 2,
   "packs": [
     {
       "build_date_utc": "2026-08-18",
-      "file_count": 67,
+      "file_count": 70,
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
@@ -823,15 +835,27 @@
         {
           "path": "skills/shared/mentor-generated-app-bridge.md",
           "sha256": "f9c35c6643028fa1c92ab3be6fdbb2e036cc960ea6c256bb40d5716b9ddfdae9"
+        },
+        {
+          "path": "skills/shared/reference/mentor-operations-registry.md",
+          "sha256": "dc01155e8c39c8e7bafad53d41bddfccdaadd472ed497f5bfee9672723a50b8f"
+        },
+        {
+          "path": "skills/shared/reference/odc-diagnostics-recipes.md",
+          "sha256": "4910b5971b84e6326a9aa6e5bb39fb1002df552b43f2149c26c5d3e480a6c02b"
+        },
+        {
+          "path": "skills/shared/reference/odc-error-registry.md",
+          "sha256": "dcfa7bf133c4ae01bb14ddc41f008bb09a89b7fd4ae24a3389fe7cbdcc123fd3"
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     },
     {
       "build_date_utc": "2026-08-18",
-      "file_count": 60,
+      "file_count": 63,
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
@@ -1072,10 +1096,22 @@
         {
           "path": "skills/shared/mentor-generated-app-bridge.md",
           "sha256": "f9c35c6643028fa1c92ab3be6fdbb2e036cc960ea6c256bb40d5716b9ddfdae9"
+        },
+        {
+          "path": "skills/shared/reference/mentor-operations-registry.md",
+          "sha256": "dc01155e8c39c8e7bafad53d41bddfccdaadd472ed497f5bfee9672723a50b8f"
+        },
+        {
+          "path": "skills/shared/reference/odc-diagnostics-recipes.md",
+          "sha256": "4910b5971b84e6326a9aa6e5bb39fb1002df552b43f2149c26c5d3e480a6c02b"
+        },
+        {
+          "path": "skills/shared/reference/odc-error-registry.md",
+          "sha256": "dcfa7bf133c4ae01bb14ddc41f008bb09a89b7fd4ae24a3389fe7cbdcc123fd3"
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     },
     {
@@ -1144,7 +1180,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     },
     {
@@ -1181,7 +1217,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     },
     {
@@ -1206,12 +1242,12 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     },
     {
       "build_date_utc": "2026-08-18",
-      "file_count": 130,
+      "file_count": 133,
       "files": [
         {
           "path": "docs/colleague-feedback/FEEDBACK.md",
@@ -1732,10 +1768,22 @@
         {
           "path": "skills/shared/mentor-generated-app-bridge.md",
           "sha256": "f9c35c6643028fa1c92ab3be6fdbb2e036cc960ea6c256bb40d5716b9ddfdae9"
+        },
+        {
+          "path": "skills/shared/reference/mentor-operations-registry.md",
+          "sha256": "dc01155e8c39c8e7bafad53d41bddfccdaadd472ed497f5bfee9672723a50b8f"
+        },
+        {
+          "path": "skills/shared/reference/odc-diagnostics-recipes.md",
+          "sha256": "4910b5971b84e6326a9aa6e5bb39fb1002df552b43f2149c26c5d3e480a6c02b"
+        },
+        {
+          "path": "skills/shared/reference/odc-error-registry.md",
+          "sha256": "dcfa7bf133c4ae01bb14ddc41f008bb09a89b7fd4ae24a3389fe7cbdcc123fd3"
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     },
     {
@@ -1920,7 +1968,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "d530bcdf5226b729d1a6de2fcdb5ca72fa7f077d",
+      "source_commit": "16b58edf038d13a02ff0f80f4b3ca0c40ffbcebe",
       "version": "2026-08-18"
     }
   ]
