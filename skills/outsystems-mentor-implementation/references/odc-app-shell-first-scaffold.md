@@ -15,8 +15,11 @@ Any reviewed specification workflow may feed this mode; do not depend on
 Mentor Studio modifies an existing app shell. It needs a concrete target app,
 normally identified by a readable app name plus canonical `APP_KEY` or
 `assetKey`, before it can safely prepare or execute app-specific changes.
-Mentor Web remains the official new-app generation surface for prompt-to-app
-or requirement-document-to-blueprint generation.
+Mentor Web remains the official surface for prompt-to-app and
+requirement-document-to-blueprint generation. It is no longer the only way to
+obtain a usable target: since 0.14.0 `app_create` mints a template-backed shell,
+so the shell-first path — create the shell, then scaffold it with Mentor Studio —
+is complete end to end without leaving MCP.
 
 This mode is valid when:
 
@@ -43,6 +46,9 @@ This mode is not valid when:
 - the target is a template/sample app rather than an owned implementation shell
 
 Do not use `Template_*`, `template_*`, or `OutSystems Sample Data` as the shell.
+Naming a custom tenant template as the `template` argument of an `app_create` is
+a different thing and is legitimate: it clones that template into a new owned
+app rather than building inside the template itself.
 Do not call `app_create`, `mentor_start`, `publish_start`, or mutate a tenant
 without exact current approval for the action, readable target name, and
 canonical id when it already exists.
@@ -55,7 +61,7 @@ Before producing a first-scaffold Mentor Studio prompt, prove or ask for:
 - verified app key (`APP_KEY` / `assetKey`)
 - environment or tenant context when more than one target could match
 - shell classification: product-template shell, ODC manual empty shell,
-  intentionally empty shell, bare MCP-created shell, template-incomplete shell,
+  intentionally empty shell, blank shell, template-incomplete shell,
   or unverified shell
 - whether the app shell is intentionally empty/new, not a template or sample
 - whether the source artifact is reviewed enough to drive first-pass structure
@@ -67,12 +73,14 @@ Packet. Use it for target identity only. The packet does not expand approval,
 does not authorize tenant-changing actions, and does not prove exact Studio
 internals.
 
-If there is no shell, do not create one silently. If the user wants a manual
-path, stop at setup guidance and ask them to create a blank ODC app shell in
-the normal product surface. If the user clearly wants OMI to create the shell,
-use one compact approval gate for the readable app name, environment context
-when needed, and exact create action. After creation, verify the canonical app
-key before preparing app-targeted prompts.
+If there is no shell, do not create one silently — but since 0.14.0 `app_create`
+is a first-class way to originate one, not a last resort. With one compact
+approval gate covering the readable app name, the `kind` or `template` being
+requested, environment context when needed, and the exact create action, OMI can
+mint a template-backed shell directly. After creation, run the Shell Provenance
+Gate and echo the canonical app key before preparing app-targeted prompts. If
+the user would rather create it themselves, stop at setup guidance and hand them
+the ODC Portal/Studio path instead.
 
 If a shell does not exist, OMI may describe the shell setup path, but it must
 not create the shell automatically. Any `app_create` path requires explicit
@@ -84,36 +92,96 @@ and app key are verified.
 
 ## Shell Classification And Entry Conditions
 
-For app-shell first scaffold asks such as "blank app shell", "first scaffold", "bootstrap the first entities/roles/screens", or "use this reviewed spec against this app key", use this skill after the target app shell exists and the canonical app key is verified. Open [source-map.md](source-map.md) first. For non-visual scaffold sources, continue to this guide and then the Mentor hardening guide before producing output. For visual-source first-scaffold sources such as Figma, screenshots, or HTML mockups, build or validate the enriched blueprint first and let the scaffold guide consume that artifact for shell approval and boundary handling before UI discipline and generation. Mentor Studio modifies an existing app shell; Mentor Web remains the official new-app generation surface. Any reviewed specification workflow may feed this mode; do not depend on `outsystems-spec-driven-build`. When the user asks to create a new application correctly, classify the target as a product-template shell, ODC manual empty shell, bare MCP-created shell, template-incomplete shell, or intentionally empty shell before prompt generation; absence of the `Common UI flow` is a template-shell gap only when the target is expected to be product-template-backed; for an ODC manual empty shell, missing `Common` and other template assets may be blank-shell evidence, not a defect by itself.
+For app-shell first scaffold asks such as "blank app shell", "first scaffold", "bootstrap the first entities/roles/screens", or "use this reviewed spec against this app key", use this skill after the target app shell exists and the canonical app key is verified. Open [source-map.md](source-map.md) first. For non-visual scaffold sources, continue to this guide and then the Mentor hardening guide before producing output. For visual-source first-scaffold sources such as Figma, screenshots, or HTML mockups, build or validate the enriched blueprint first and let the scaffold guide consume that artifact for shell approval and boundary handling before UI discipline and generation. Mentor Studio modifies an existing app shell; Mentor Web remains the official prompt-to-app surface, though since 0.14.0 `app_create` can mint the template-backed shell that Mentor Studio then scaffolds. Any reviewed specification workflow may feed this mode; do not depend on `outsystems-spec-driven-build`. When the user asks to create a new application correctly, classify the target as a product-template shell, ODC manual empty shell, blank shell, template-incomplete shell, or intentionally empty shell before prompt generation; absence of the `Common UI flow` is a template-shell gap only when the target is expected to be product-template-backed; for an ODC manual empty shell, missing `Common` and other template assets may be blank-shell evidence, not a defect by itself.
 
 ## Product-Template And Empty-Shell Classification
 
-**Do not originate a build target with `app_create`.** The MCP cannot clone a
-template: the call accepts only `name`, `kind` and `oml_b64`, there is no
-template parameter, and the `oml_b64` route is unreachable because OML stays
-server-side. So every app minted through MCP is a bare shell by construction,
-not by accident. When a build needs a real app, the app is created by a human in
-ODC Portal or Studio from a template and its verified key is handed over. This
-is the same conclusion GAP-10 reached on 2026-07-14; it was re-learned the
-expensive way on 2026-08-09, when a full loop run built on a bare shell and only
-discovered at the screens phase that the app had no theme, no `Layouts` flow and
-no `Common` flow — therefore no Login screen, and therefore no way to reach any
-role-restricted screen it had just built.
+**`app_create` mints a template-backed app by default (ODC MCP 0.14.0,
+2026-08-18).** The rule this file carried before that date — that the call took
+only `name`, `kind` and `oml_b64`, had no template parameter, and therefore
+produced a bare shell by construction — described the pre-0.14.0 server and is
+retired. The create now clones the kind's standard ODC application template, the
+same path the ODC Studio new-app wizard uses, so a Studio-equivalent shell
+(theme, `Layouts`, `Common` with its authentication screens, an `OutSystemsUI`
+reference) is reachable from one approved MCP call. GAP-10 (2026-07-14) and the
+2026-08-09 loop failure — a run that reached the screens phase before anyone
+noticed the app had no theme, no `Layouts` and no `Common`, therefore no Login
+screen and no way to reach the role-restricted screens it had just built — are
+still the reason the provenance gate below exists. They are no longer a reason
+to refuse `app_create`.
 
-Two measured consequences to carry:
+Verified input surface (`required: ["name"]`, `additionalProperties: false`):
 
-- A bare shell's Default Theme dropdown offers only `(None)` — verified across
-  two revisions. The app cannot be themed from its own properties, so "add a
-  theme later" is not available as a recovery.
-- `app_create` normalises names by removing spaces, so a discarded bare shell
-  named `My App` registers as `MyApp` and then collides with the name the real
-  Studio-created app needs. Delete the bare shell before creating the real one.
+| Param | Type | Notes |
+| --- | --- | --- |
+| `name` | string, required | Non-empty. Normalised — see the collision trap below. |
+| `kind` | string enum | `CrossDevice`, `Mobile`, `MobileLibrary`, `ReactiveLibrary`, `ExternalConnection`, `ExternalLibrary`, `ModelPlugin`, `BusinessProcess`, `AIModelConnection`, `SearchServiceConnection`, `AIAgent`, `MCPConnection`, `A2AConnection`. Defaults to `CrossDevice`. |
+| `template` | string | Aliases `Web`, `Mobile`, `MobileUI`, `Agent` (case-insensitive), or a custom tenant template asset-key UUID. |
+| `blank` | boolean | Forces the pre-0.14.0 bare shell. |
+| `model` | string | AIModelConnection name or key to wire into an agent-template create. |
+| `oml_b64` | string | HTTP transport only; stdio takes `oml`, a server-local path. |
 
-The rule is: do not treat a bare MCP-created shell as equivalent to a
-product-template shell, but also do not assume every app opened from the ODC
-Studio product surface is product-template-backed.
-For product-template claims, do not treat a bare shell as equivalent to a normal
-Studio-created app shell.
+Default template by kind: `kind` omitted or `CrossDevice` → `Web`; `Mobile` →
+`Mobile`; `AIAgent` → `Agent`; every other kind resolves to no template, i.e. a
+blank shell. Libraries have no template at all — pass `kind: ReactiveLibrary` or
+`MobileLibrary` and expect a blank library.
+
+Four traps. Each is a hard server bail, not a warning:
+
+- **`kind` has no `Web` and no `Agent`.** Those are `template` values. Web is
+  `kind: CrossDevice`; agent is `kind: AIAgent`. Reading the release note's
+  "Web, Mobile, Agent" as kind tokens produces an invalid call.
+- **`template` and `kind` are mutually exclusive** — the template determines the
+  created app's kind, so passing both is rejected. `blank` combines with `kind`
+  but not with `template`; `model` is invalid with `blank` and `oml_b64`;
+  `oml_b64` is invalid with every other generation parameter.
+- **The generated paths are not idempotent.** A repeat call with an existing
+  `name` is rejected with `OS-APPS-40018`. Never retry a create blindly.
+- **`template: MobileUI` skips the ODC role-cleanup pass** and returns a
+  warning; its first publish can fail until the template's Grant/Revoke role
+  actions are removed. Do not pick it casually.
+
+Three consequences survive 0.14.0, because they are properties of the create
+call rather than of the blank shell:
+
+- `app_create` normalises names by removing spaces, so `My App` registers as
+  `MyApp` and collides with the name a Studio-created app needs — on 2026-07-14
+  `Search Engine Sandbox NG` came back as `SearchEngineSandboxNG` and blocked
+  the correctly-templated app that was supposed to replace it.
+- There is no `app_delete` tool, and an app that has never been published is not
+  visible in the ODC Portal — so cleaning up an unwanted create means publishing
+  it first and then deleting it in the Portal. Budget for that before minting a
+  throwaway.
+- A blank shell's Default Theme dropdown offers only `(None)`, verified across
+  two revisions, so "add a theme later" is not a recovery. This now applies only
+  when `blank: true` was passed or the kind has no standard template.
+
+### Shell Provenance Gate
+
+Do not assert a shell is template-backed because the create was supposed to
+clone one. Prove it, the way the digest and enumeration gates prove a publish:
+
+- On create, record the returned `clonedFromTemplateKey`. Present = template-backed,
+  and it names which template; absent = blank shell, whatever was intended.
+  Record `warnings` and `wired` from the same payload.
+- On a shell this session did not create, use read-only evidence instead:
+  `app_refs` should show `OutSystemsUI` among the producers and `context_screens`
+  should return the `Common` authentication screens. The 2026-07-14 bare-shell
+  signature was the inverse — `(System)` as the only producer, `OutSystemsUI`
+  absent, `context_screens --owned_only` returning 0 screens.
+- If the server rejects `template` or `blank` as unknown properties, the tenant
+  is running a pre-0.14.0 build. Fall back to the manual Studio path in the
+  escalation ladder below and say so plainly. Do not proceed on a blank shell
+  while reporting a template-backed one.
+
+A create that intended a template and returned no `clonedFromTemplateKey` is a
+failed create, not a usable target. That mismatch is exactly the 2026-08-09
+failure, and it is cheap to catch at create time and expensive to catch at the
+screens phase.
+
+The rule is: classify a shell by evidence of what it CONTAINS, never by what
+created it. "MCP-created" stopped being a synonym for "bare" in 0.14.0, and
+"opened from ODC Studio" was never by itself a guarantee of template backing.
 The official ODC documentation says app templates are starting points for
 development and can define look and feel, common functionality, dependencies,
 and user permission logic. It also documents editable pre-built authentication
@@ -187,9 +255,12 @@ Classify the shell before first-scaffold prompt generation:
   absent in observed evidence; preserve them when verified, but do not require
   them from default-template assumptions alone. Do not classify an ODC manual
   empty shell as template-incomplete merely because Common is absent.
-- `bare MCP-created shell`: the app exists and may even have a `MainFlow`
-  default screen, but read-only evidence or Studio inspection shows the normal
-  product-template assets are absent.
+- `blank shell`: the app exists and may even have a `MainFlow` default screen,
+  but read-only evidence or Studio inspection shows the normal product-template
+  assets are absent. Reached by `blank: true`, by a `kind` with no standard
+  template, or by any pre-0.14.0 create. Provenance does not classify it,
+  evidence does — a 0.14.0 default create is template-backed, not blank, and
+  this label must not be applied to an app merely because MCP created it.
 - `template-incomplete`: the shell has some user-facing structure, but the
   expected product-template assets are missing, incomplete, or unverified.
 - `intentionally empty shell`: the user explicitly accepts that the app is not a
@@ -202,16 +273,23 @@ screen but lacked the `Common` template surface. That means a default `Home`
 screen can prove the runtime-entry problem is solved while still leaving the app
 template-incomplete.
 
-If the user asks to create a new application correctly, first decide whether
-the correct target is an ODC manual empty shell, a product-template shell, or a
-separate custom/Forge template path. If the approved path is the manual ODC
-Web app path, an empty app shell is acceptable after app-key verification; the
-first scaffold should create a `MainFlow` user screen before expecting runtime
-default-entry proof. If the expected target is product-template-backed and the
-only available target is a bare MCP-created shell or template-incomplete shell,
-stop before broad scaffold generation and either:
+If the user asks to create a new application correctly, first decide whether the
+correct target is a template-backed shell — the 0.14.0 default, and usually the
+right answer — an ODC manual empty shell, or a separate custom/Forge template
+path. If the approved path is the manual ODC Web app path, an empty app shell is
+acceptable after app-key verification; the first scaffold should create a
+`MainFlow` user screen before expecting runtime default-entry proof. If the
+expected target is product-template-backed and the only available target is a
+blank or template-incomplete shell, stop before broad scaffold generation and
+either:
 
-- ask the user to create the shell in ODC Studio and provide the verified app key;
+- re-mint the shell template-backed with `app_create` under one compact approval
+  — the cheapest remedy, and the right default when the blank shell holds no
+  work worth keeping; mind the name-normalisation collision and the absent
+  `app_delete` documented above before discarding the old one;
+- ask the user to create the shell in ODC Studio and provide the verified app key
+  — the fallback when the tenant predates 0.14.0, or when the existing shell
+  already holds work that a re-mint would throw away;
 - ask for explicit acceptance of the intentionally empty shell risk; or
 - ask for a separate approved shell-normalization step.
 
@@ -246,9 +324,11 @@ and do not emit a Mentor Studio execution prompt.
 ### App Shell Target
 
 Name the target app and canonical id. State whether the app shell is a
-product-template shell, blank, bare MCP-created shell, template-incomplete shell,
-newly created, or an existing shell being treated as first-scaffold work.
-Explicitly say when the shell status is unverified.
+product-template shell, a blank shell, template-incomplete, newly created, or an
+existing shell being treated as first-scaffold work. When the shell was created
+this session, report the Shell Provenance Gate result with it — the returned
+`clonedFromTemplateKey`, or its absence. Explicitly say when the shell status is
+unverified.
 
 Do not target a template, sample, or ambiguous app. If multiple app rows match,
 ask the user to choose the exact one before proceeding.

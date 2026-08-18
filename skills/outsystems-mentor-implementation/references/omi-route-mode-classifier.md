@@ -67,7 +67,7 @@ no cleanup, and no live write action.
 
 | Field | Guidance |
 | --- | --- |
-| input signals | The user asks about no-shell new-app generation, requirement documents, blueprint refinement, or whether Mentor Web or Mentor Studio is the right surface. |
+| input signals | The user asks about no-shell new-app generation, requirement documents, blueprint refinement, or whether Mentor Web or Mentor Studio is the right surface. An ask that a template-backed `app_create` plus first-scaffold prompts would serve belongs in the shell-first path (`odc-app-shell-first-scaffold.md`), not here — this mode is for orientation, not for refusing a route that now exists. |
 | required preflights | Open `source-map.md`; classify with this Route Mode Classifier; route product claims to the Mentor Capability And Constraint Matrix; preserve complex full-scope input as a requirement document or source plan before decomposition. |
 | allowed outputs | Orientation guidance, requirement-document shaping, blueprint review notes, or a shell-first decision prompt when the user wants Mentor Studio work later. |
 | required evidence labels | Prefer `Current official` for Mentor Web workflow claims when grounded in current docs; otherwise use `Unverified gap` for unsupported product-contract claims. |
@@ -75,7 +75,7 @@ no cleanup, and no live write action.
 | fallback behavior | Fall back to a requirement-document outline, a shell-first approval gate, or review-only comparison of Mentor Web versus Mentor Studio routes. |
 | disallowed tenant actions | no tenant mutation: do not call `app_create`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action from orientation output. |
 
-For no-shell new-app asks such as "create a new app", "generate an app from requirements", or "build app from scratch", do not pretend Mentor Studio can create the app target by itself. Use Mentor Web for official new-app generation, or use a shell-first path with one compact approval to create or identify the shell first. If the user clearly wants OMI to create the shell, ask for the readable app name, environment context when needed, and exact create action, then create the shell only after explicit approval, verify the returned canonical app key, and continue. Do not call `app_create`, `mentor_start`, `publish_start`, or mutate a tenant without exact current approval for the readable app name, canonical app key once known, and action.
+For no-shell new-app asks such as "create a new app", "generate an app from requirements", or "build app from scratch", do not pretend Mentor Studio can create the app target by itself — it edits an existing shell. Since ODC MCP 0.14.0 the shell-first path is the normal answer rather than a workaround: `app_create` mints a template-backed shell (Studio new-app-wizard parity), and Mentor Studio then scaffolds it. Offer that path first, with Mentor Web as the alternative when the user wants prompt-to-app or requirement-document-to-blueprint generation instead. If the user wants OMI to create the shell, ask for the readable app name, the `kind` or `template` being requested, environment context when needed, and the exact create action; create only after explicit approval, then run the Shell Provenance Gate in `odc-app-shell-first-scaffold.md` and verify the returned canonical app key before continuing. Do not call `app_create`, `mentor_start`, `publish_start`, or mutate a tenant without exact current approval for the readable app name, canonical app key once known, and action.
 
 ## mode: visual-source-ui
 

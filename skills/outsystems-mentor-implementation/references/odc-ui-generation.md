@@ -4,7 +4,7 @@ Use this guide after `odc-ui-framework-selection.md` confirms the request is sup
 
 Use this guide when the user asks `outsystems-mentor-implementation` to create or modify Screens, Web Blocks, UI patterns, bindings, or UI event wiring in an existing ODC app. Paste-ready Mentor Studio prompts are web-only and only allowed when framework selection supports generation.
 
-Do not use this guide for Mentor Web requirement documents. Use the separate Mentor Web generator skill for new app generation in ODC Portal.
+Do not use this guide for Mentor Web requirement documents. Use the separate Mentor Web generator skill for prompt-to-app generation in ODC Portal. An app originated over MCP with `app_create` (template-backed since ODC MCP 0.14.0) is a normal target for this guide once its app key and provenance are verified.
 
 ## Framework Selection Preflight
 

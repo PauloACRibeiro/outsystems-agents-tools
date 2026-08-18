@@ -164,8 +164,9 @@ Before preparing the prompt, verify:
 - current revision/build/deployment
 - documentation grounding for Default Screen and screen creation behavior remains current in the existing OMI reference set; add or verify approved OutSystems public/internal documentation before adding any new product-behavior claim
 - shell classification and whether the app is a fixture, intentionally empty
-  shell, ODC manual empty shell, bare MCP-created shell, or template-incomplete
-  shell
+  shell, ODC manual empty shell, blank shell, or template-incomplete shell —
+  classify by contained assets, not by what created the app; an `app_create`
+  fixture is template-backed by default since ODC MCP 0.14.0
 - no suitable `MainFlow` user screen already exists, or the user explicitly chose
   to create/replace the named empty fixture screen
 - approved baseline text

@@ -6,7 +6,7 @@ This guide migrates the durable discipline from `outsystems-design-to-app` into 
 
 ## Evidence Boundary
 
-Current official ODC docs support Mentor Web as the new-app generation surface and Mentor Studio as the ODC Studio surface for modifying/extending apps. Current official ODC docs also support using built-in OutSystems UI patterns and adaptive patterns in ODC Studio.
+Current official ODC docs support Mentor Web as the new-app generation surface and Mentor Studio as the ODC Studio surface for modifying/extending apps. A third origination route exists alongside them: since ODC MCP 0.14.0, `app_create` mints a template-backed app shell (Studio new-app-wizard parity) that Mentor Studio then modifies — so "no shell yet" no longer implies Mentor Web. Current official ODC docs also support using built-in OutSystems UI patterns and adaptive patterns in ODC Studio.
 
 Rules inherited from `outsystems-design-to-app` are field-tested prompt discipline unless separately grounded by current official docs, OMI generated catalogs, OutSystems-public implementation evidence, or tenant observation.
 
@@ -16,12 +16,12 @@ Before writing a visual-source Mentor Studio prompt, identify:
 
 - visual source kind: Figma, screenshot, HTML mockup, source HTML/CSS, written UI brief, or generated app snapshot
 - target app type and UI framework, using `odc-ui-framework-selection.md`
-- target app shell state: verified existing app, verified blank shell, missing shell, or unknown
+- target app shell state: verified existing app, verified template-backed shell, verified blank shell, missing shell, or unknown
 - target screen/block state: existing verified target, new target, or unknown
 - source artifact path when the source is large
 - whether the requested deliverable is prompt-only, approved Mentor execution, or review guidance
 
-If no app shell exists, do not create one silently. Use Mentor Web for official no-shell app generation, or use one compact approval gate before any shell-creation action. If the user clearly wants OMI to create the shell, ask for the readable app name, environment context when needed, and exact create action, then verify the canonical app key after creation.
+If no app shell exists, do not create one silently. Offer the shell-first route — one compact approval gate, then `app_create`, which is template-backed by default since ODC MCP 0.14.0 — with Mentor Web as the alternative when the user wants prompt-to-app generation. If the user wants OMI to create the shell, ask for the readable app name, the `kind` or `template` requested, environment context when needed, and the exact create action, then run the Shell Provenance Gate and verify the canonical app key after creation.
 For shell-first scaffold work, see `references/odc-app-shell-first-scaffold.md`.
 For visual-source first scaffold work, keep the enriched blueprint as the first
 step, then let the scaffold guide consume that artifact for shell approval and
@@ -437,7 +437,7 @@ selection as a review note and label the evidence boundary.
 
 ### No automatic app_create
 
-OMI may guide a shell-first path, but it must not call `app_create` automatically. Shell creation requires explicit approval for the readable app name, environment context when needed, and exact action. Do not turn that into extra ceremony when the user intent is already clear. Verify and echo the canonical id once known. If the user wants no-shell new-app generation, route to Mentor Web guidance.
+OMI may guide a shell-first path, but it must not call `app_create` automatically. Shell creation requires explicit approval for the readable app name, the `kind` or `template` requested, environment context when needed, and exact action. Do not turn that into extra ceremony when the user intent is already clear. Verify and echo the canonical id once known, with the Shell Provenance Gate result. If the user wants prompt-to-app or requirement-document generation rather than a shell to build into, route to Mentor Web guidance.
 
 ### No mandatory publish
 

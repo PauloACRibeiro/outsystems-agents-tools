@@ -253,22 +253,26 @@ hand-off, because nothing downstream will notice if it is missing.
 "Step 5 — install the OutSystems Public Knowledge MCP server" above; without a
 provider the skill stops before producing anything.
 
-**Create the app yourself first, in ODC Portal or Studio, from a template — do
-not let the agent create it.** This is the single most expensive thing to get
-wrong, so it is worth thirty seconds of your time. The MCP's app-creation call
-cannot clone a template: there is no template parameter, and the app it makes
-arrives with no theme, no layouts, and no `Common` flow — which means no Login,
-no password recovery, no user profile, and no "you don't have permission"
-screen. An app built on that shell renders as unstyled HTML and has no route by
-which anyone can sign in, so any screen you restrict by role becomes
-unreachable rather than protected. A template-created app brings all of it.
+**Let the agent create the app, or create it yourself in ODC Portal or Studio —
+either works now.** The MCP's app-creation call clones the standard application
+template by default, the same thing the ODC Studio new-app wizard does, so the
+app arrives with a theme, layouts, and the `Common` flow that carries Login,
+password recovery, user profile, and the "you don't have permission" screen.
+Until August 2026 it could not do this, and an app built on the bare shell it
+produced rendered as unstyled HTML with no route by which anyone could sign in
+— so any screen you restricted by role became unreachable rather than
+protected. If you are following an older copy of this runbook that tells you to
+create the app by hand, that is why.
 
-Two consequences worth knowing. The build skill will stop and ask if it finds
-itself pointed at a bare shell — that gate is deliberate, and the answer is to
-go and create the app properly rather than to wave it through. And if a bare
-app has already been created, delete it before creating the real one: names are
-compared with spaces removed, so `My App` and `MyApp` collide, and the leftover
-shell will block the name you actually want.
+Three things still worth knowing. The build skill checks what the created app
+actually contains rather than trusting that the template arrived, and it will
+stop and ask if it finds itself pointed at a shell with no template assets —
+that gate is deliberate, and it is what protects you if your tenant has not yet
+picked up the newer server. Names are compared with spaces removed, so `My App`
+and `MyApp` collide, and a leftover shell will block the name you actually
+want. And there is no delete call: an app that has never been published is
+invisible in the ODC Portal, so clearing one out means publishing it first and
+then deleting it there.
 
 Two routes feed it, and they stay separate:
 

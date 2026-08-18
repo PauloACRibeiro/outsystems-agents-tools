@@ -122,7 +122,10 @@ workflow, or personal validation campaign; those are outside the colleague
 quick-start scope.
 
 App-shell first scaffold is part of this skill when the target is an empty or
-newly created app shell with a verified app key. This skill can prepare the
+newly created app shell with a verified app key. Since ODC MCP 0.14.0 a newly
+created shell is normally not empty — `app_create` clones the kind's standard
+application template by default — so the scaffold preserves `Common`, `Layouts`
+and `Themes` rather than inventing them. This skill can prepare the
 first-pass entities, roles, screens, relationships, and Mentor Studio prompts
 for that shell. It does not replace Mentor Web, and it does not silently create
 or publish an app. If the user prefers another specification workflow, use that
@@ -292,10 +295,11 @@ client-specific integration wording, or automatic tenant mutation.
 
 | Surface or skill | Relationship |
 |---|---|
-| Mentor Web | Separate new-app generation surface: prompts or requirement documents become a blueprint for review before generation. This README does not publish a colleague-ready Mentor Web skill dependency. |
+| Mentor Web | Separate prompt-to-app generation surface: prompts or requirement documents become a blueprint for review before generation. This README does not publish a colleague-ready Mentor Web skill dependency. |
+| MCP `app_create` | The other origination route, in this skill's own hands: template-backed by default since ODC MCP 0.14.0 (Studio new-app-wizard parity), blank only on the `blank` opt-out. Needs explicit approval and the Shell Provenance Gate before any first-scaffold prompt. |
 | Mentor Studio / ODC Studio | This skill prepares Studio-native implementation blocks and paste-safe prompts for existing implementation work or an app-shell first scaffold. Mentor still executes interpretively, so results must be reviewed in Studio. |
 | Superpowers planning | Use the Superpowers `writing-plans` skill, available to both Claude and Codex, or an equivalent planning workflow to create a saved implementation plan before using this skill for Studio-native deterministic intent blocks. |
-| App-shell first scaffold | OMI-owned mode for an empty or newly created shell after the app key is verified. Use any reviewed source artifact as input, stop before shell creation or Mentor execution unless that exact action is approved, and keep true no-shell app generation in Mentor Web. |
+| App-shell first scaffold | OMI-owned mode for an empty or newly created shell after the app key is verified. Use any reviewed source artifact as input, and stop before shell creation or Mentor execution unless that exact action is approved. Since ODC MCP 0.14.0 an approved `app_create` mints a template-backed shell, so a no-shell ask can be served here end to end; keep prompt-to-app and requirement-document generation in Mentor Web. |
 | Codex and Claude | Both agents should read the same canonical repo source and keep private config/cache/plugin data out of the shared skill. |
 
 ## Full implementation plan workflow for colleagues

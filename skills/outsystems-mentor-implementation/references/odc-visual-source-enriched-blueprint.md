@@ -104,6 +104,13 @@ the initial structure is intentionally minimal. Use `shell-first scaffold` when
 the first-pass structure should be prepared for a shell that already exists or
 has separately approved creation.
 
+A shell freshly minted by an approved `app_create` is `shell-first scaffold`, not
+`verified blank shell` — since ODC MCP 0.14.0 that shell arrives template-backed,
+carrying `Common`, `Layouts` and `Themes` that must be preserved rather than
+rebuilt. Reserve `verified blank shell` for a shell proven blank by the Shell
+Provenance Gate: the `blank` opt-out, a kind with no standard template, or a
+pre-0.14.0 create.
+
 ## Existing-Asset Reuse Channel
 
 `target_context.existing_assets` **announces that the target app has verified

@@ -85,7 +85,7 @@ Open [references/source-map.md](references/source-map.md) first; it routes each 
 | UI generation: screens, blocks, patterns, bindings, UI events | references/odc-ui-framework-selection.md → references/odc-ui-prompt-inventory.md → references/odc-ui-generation.md |
 | Visual sources: Figma, screenshots, HTML mockups, UI briefs | references/odc-visual-source-enriched-blueprint.md — build or validate the enriched blueprint before emitting any Mentor Studio prompt → (shell? references/odc-app-shell-first-scaffold.md) → references/odc-visual-source-ui-discipline.md → UI generation chain |
 | App-shell first scaffold, blank shell, shell classification | references/odc-app-shell-first-scaffold.md |
-| No-shell new-app asks | references/omi-route-mode-classifier.md (mentor-web-orientation) |
+| No-shell new-app asks | references/omi-route-mode-classifier.md (mentor-web-orientation); prefer shell-first via approved `app_create` |
 | Fragile Mentor patterns: SQL, data writes, JSON Deserialize, statics, button OnClick, container reparenting, named existing screens | references/odc-mentor-hardening.md (wins over general rules on conflict) |
 | Layering, security/server trust, query performance, timers/async, public APIs, `User` references, not-found guards | references/odc-platform-guardrails.md |
 | Structured intent, Architect Mode, deterministic Mentor plans | references/structured-intent-mode.md |

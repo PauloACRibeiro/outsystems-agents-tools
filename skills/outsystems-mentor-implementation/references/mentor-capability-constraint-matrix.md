@@ -86,6 +86,7 @@ app, library, or agentic app.
 | Source request | Primary route |
 | --- | --- |
 | New app from prompt or requirement documents | Mentor Web |
+| New app shell to build into with Mentor Studio | MCP `app_create` — template-backed by default since ODC MCP 0.14.0 (Studio new-app-wizard parity), blank only on the `blank` opt-out or a kind with no standard template; needs explicit approval and the Shell Provenance Gate in `odc-app-shell-first-scaffold.md` |
 | Blueprint review or blueprint correction before generation | Mentor Web |
 | Refinement inside the browser editor after generation | Mentor Web |
 | Existing web app, library, or agentic app modification | Mentor Studio |
