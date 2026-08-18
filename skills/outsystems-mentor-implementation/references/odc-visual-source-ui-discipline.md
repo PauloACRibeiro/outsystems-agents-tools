@@ -298,7 +298,7 @@ Run a visual-source gotcha review when the source contains the matching pattern:
 
 Keep gotcha entries as review or hardening guidance according to their evidence boundary. Do not promote field-only notes to current ODC product-contract authority.
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14, round 2); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14, round 2); field-observed over the Mentor MCP, not in official docs.
 
 Capture the gotcha review outcomes in the enriched blueprint so downstream
 prompt generation and manual review can see which risks were already checked.
@@ -371,7 +371,7 @@ Phosphor exposes weight modifiers — `ph-thin`, `ph-bold`, `ph-fill`. When the
 source icon's stroke weight is visually load-bearing, name the matching modifier
 in the prompt rather than accepting the default weight.
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14, round 2); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14, round 2); field-observed over the Mentor MCP, not in official docs.
 
 Record the mapping in `icon_mapping` with the source icon name, the bare
 Phosphor icon name, intended location, and any review note. Use a

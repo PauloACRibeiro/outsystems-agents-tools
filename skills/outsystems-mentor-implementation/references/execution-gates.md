@@ -264,7 +264,7 @@ turn-shaping entry).
 
 ## 4b. Cancel calibration and token hygiene
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
 RECONCILIATION — three existing OMI rules stay binding; this section calibrates the *voluntary* cancel decision underneath them: (1) `max_turn_time` must still be passed explicitly on every `mentor_start` (SKILL.md driving contract) — but as a *requested* ceiling, not an enforced terminal bound: §3 records runs sailing past it, so never treat the ceiling as a guarantee that the turn will terminate; (2) the §4 `details: true` poll at 5–6 minutes is diagnostic — it is never by itself a reason to cancel; (3) §3's warning that `mentor_cancel` can wedge in `cancelling` stands — cancel is a last resort, not a recovery plan.
 
@@ -312,6 +312,6 @@ Corollary for verdicts: where some criteria were checked and others could not be
 driven at all, the result is PARTIAL, never rounded up to PASS. "Unverifiable"
 and "verified" are different findings.
 
-> **Provenance.** External field evidence: OutSystems/legacy-team-app-generator
+> **Provenance.** External field evidence from an internal OutSystems project
 > @ 3524310 (adopted 2026-08-14, round 2); field-observed in that project's own
 > verification agent, not in official docs, and **not measured by us.**

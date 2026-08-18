@@ -1,6 +1,6 @@
 # ODC Diagnostics Recipes
 
-Rule (adapted from OutSystems/o11toodc-conversions-marketplace, mirroring
+Rule (adapted from an internal OutSystems team's service-registry pattern, mirroring
 `odc-error-registry.md`): this file is the canonical INDEX of diagnostic
 recipes for ODC error layers — one row per family, giving the first tool
 call to run, the follow-up call when the first one is inconclusive or 404s,

@@ -419,7 +419,7 @@ Ask when the widget source, list type, aggregate, data action, mapped option str
 
 Tested `outsystems-spec-driven-build` prompt-builder guardrail for `TableRecords` source binding, generalized here to OMI producer-first UI prompt rules for data-bound widgets and bootstrap setup guidance.
 
-Row-count discipline (one append per source row, never truncated): External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14, round 2; folded here 2026-08-17 per Codex ruling on AH-2026-08-17-001); field-observed over the Mentor MCP, not in official docs.
+Row-count discipline (one append per source row, never truncated): External field evidence: an internal OutSystems project (adopted 2026-08-14, round 2; folded here 2026-08-17 per Codex ruling on AH-2026-08-17-001); field-observed over the Mentor MCP, not in official docs.
 
 ## ODC SQL Generation
 
@@ -2172,7 +2172,7 @@ Real session (RequestPulse implementation, 2026-06-25): CatalogManagement (rev 1
 
 ## Publish Batch Ceiling
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
 - **Cap each publish at ~5 plan-item-sized changes — a hard ceiling, not a target.** Target cadence is ~2 plan items per publish. A "change" is one plan-item-sized edit (a new/changed entity, a screen, a server action, a bootstrap timer) — not each individual attribute. Small publishes fail loudly on a small surface: when a publish breaks it points at ≤5 things, not thirty.
 - This ceiling never relaxes stricter rules elsewhere in this guide — `## One Server Action Per Mentor Session` still binds; the ceiling governs mixed-element batches, not server-action batching.
@@ -2180,7 +2180,7 @@ External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted
 
 ## Session Slot Economics
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
 - Mentor session slots are scarce: the cap is **tenant-wide**, and a used slot stays pinned for **~24 hours after last use**. `mentor_cancel` does **not** free a slot.
 - On `per_tenant_cap_reached`: resume an existing session (`mentor_session_id` + `mentor_session_token`, optionally `fresh_context: true`) — never retry-hammer `mentor_start` hoping a slot opens.
@@ -2189,14 +2189,14 @@ External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted
 
 ## Directive Prompting — Mentor Audits And Skips
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
 - Mentor "audits and skips" when the OML already looks right: an instruction phrased as an outcome ("make sure X is Y") can terminate as a no-op audit. Be directive: **"Set X to exactly Y. Apply this change even if it looks already set. Do not just audit."**
 - Hand Mentor exact element names and values; never let it explore. Measured on the source estate: recipe-fed turns finished in ~2–9 min; a discovery-mode turn hung for ~30 min. This is the prompt-side complement to the enumeration gate — directive phrasing prevents the silent no-op the gate would otherwise catch after publish.
 
 ## When-Published Timer Trigger Persistence
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
 - Setting `timer.Schedule = "When Published"` as a string alone does **not** persist the trigger. Tell Mentor explicitly you want a **When-Published timer, not a cron schedule** (the working shape resets the timer's ScheduleConfiguration and sets its WhenPublished flag).
 - Verify after publish: a When-Published seed timer that did not run at deploy (no rows appeared) is the signature of a lost trigger — re-author the timer prompt with the explicit When-Published wording; do not debug the seed action first.

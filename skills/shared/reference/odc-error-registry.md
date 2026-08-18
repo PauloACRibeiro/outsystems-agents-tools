@@ -1,6 +1,6 @@
 # ODC Error-Code Registry
 
-Rule (adapted from OutSystems/o11toodc-conversions-marketplace): this registry is
+Rule (adapted from an internal OutSystems team's service-registry pattern): this registry is
 the canonical INDEX of ODC error codes — one row per code, giving its layer,
 meaning, countermeasure, and the file that holds the long-form treatment. Skills
 resolve a code's meaning here first. The owning file keeps its full treatment; a

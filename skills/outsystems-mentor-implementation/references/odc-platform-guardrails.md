@@ -331,7 +331,7 @@ Fallback behavior:
 
 ## Deploy-Time Error Code Gate
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs. Error-code claims here are field observations — exact official semantics stay `Unverified gap` under `provider: public-grounded`.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs. Error-code claims here are field observations — exact official semantics stay `Unverified gap` under `provider: public-grounded`.
 
 Deploy-time failures that pass model validation. Route by code, never by message text:
 
@@ -343,7 +343,7 @@ Deploy-time failures that pass model validation. Route by code, never by message
 
 ## Library Release Visibility Gate
 
-External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
 - A just-published library (or agent app) **must be RELEASED in the ODC Portal before any consumer can locate it** — until release it is invisible to consumer dependency resolution. No MCP tool performs the release; it is a manual Portal step.
 - Diagnostic: a consumer that "can't find" a just-published producer is almost always waiting on that release — check release state before debugging names, scopes, or references.
