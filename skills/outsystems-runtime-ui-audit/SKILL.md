@@ -3,6 +3,8 @@ name: outsystems-runtime-ui-audit
 description: Audit a live runtime URL against the 16-criterion UI Quality Assessment rubric. Use when the user asks to "audit this runtime", "check the live app", "review the deployed screen", "score the running app's UI", or gives a runtime link and wants a UI quality assessment. Captures screenshots (desktop + mobile), a shallow in-app crawl, interaction states (focus ring, hover), and a mechanical probe (tap-target sizes, motion signals), then scores each criterion Market Leading→Broken with evidence and a weighted total + tier. Read-only — never modifies the app.
 ---
 
+> ODC error codes: see `../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 # Runtime UI Audit
 
 > **Harvested from:** `outsystems-frontend-skills` (OutSystems official, BSD-3-Clause) `.claude/skills/runtime-ui-audit/SKILL.md` (harvested 2026-07-29, renamed on install).
@@ -16,6 +18,33 @@ You're auditing a **live runtime** — a deployed app reached by URL — against
 ## Read-only contract
 
 This skill **never modifies** the app or the codebase. It navigates a URL, captures artifacts, and reports. No edits, no deploys, no "fixed it." If the user asks for fixes after the audit, that's a separate task.
+
+## Not the same score as ODC Code Quality (Mentor)
+
+This skill's **UI Quality** score is independent of OutSystems' own **ODC
+Code Quality (Mentor)** tenant analysis (a different rubric, covering
+Security/Performance/Maintainability/Architecture from the OML/theme, not
+what a visitor sees at runtime). Don't conflate the two, and don't attribute
+a Mentor code-quality number to this report or vice versa. This also isn't
+the same "Mentor" as the [Mentor handoff](#mentor-handoff-compare-and-converge)
+section below — that's Mentor as an editing agent; ODC Code Quality (Mentor)
+is Mentor's separate tenant code-analysis feature.
+
+If an audit is ever asked to cite or gather a tenant's Mentor code-quality
+score alongside this rubric, these coverage facts apply — **measured
+2026-07-27 by the OutSystems Solutions team; coverage is evolving, re-check
+periodically, don't assume it still holds on a later tenant build:**
+
+| Asset type | Mentor analysis | ODC Portal display |
+|---|---|---|
+| `WebApplication`, `LowCodeLibrary` | Analyzed, real score | Real score |
+| `Agent`, `Workflow` | Not analyzed — trigger 404s (`OS-AIMS-40401`) | Absent from the console entirely |
+| `MobileApplication` | Not analyzed — API returns `Failed` | Shows a **false `100`** — never quote it as a passing gate |
+
+The portal's "last analysis" banner and "next analysis in Xh" countdown only
+advance on the tenant's *scheduled* sweep, not on-demand runs — trust the
+per-asset score, not that timestamp. To trigger/poll/report the real Mentor
+score on demand, use the `outsystems-code-quality-score` skill.
 
 ## Scope & assumptions
 
@@ -116,6 +145,29 @@ Flag **low-confidence** if ≥ 6 criteria are N/A.
 Produce a Markdown report **and write it to a file** (default `output/<slug>/runtime-audit.md`; overwrite if present). Copy the captures into an adjacent `shots/` folder and embed them by relative path so the report is self-contained. Lead with the headline, then the table, then per-criterion evidence. After writing, tell the user the path and print the headline + table to the conversation.
 
 Emit the report using the skeleton in [references/prompt-templates/runtime-audit-report.md](references/prompt-templates/runtime-audit-report.md), filling its angle-bracket placeholders (`<app / URL>`, `<NN>`, `<Tier>`, numerator/denominator/N-A counts, `<url>`/`<final>`, `<M>` crawled surfaces, findings, and the N/A list) with measured values — headline, per-criterion score table (one row per scored criterion, evidence per the rules above), notable findings, embedded screenshots, and Method.
+
+## Optional — Runtime health evidence (internal-only)
+
+> Added 2026-08-13 (P6, dossier rev. 17) from `OutSystems/rd-ai-ase-toolkit` RAOPST-3994: the internal `odc` CLI's `app health` verb reads per-app runtime telemetry from ODC Analytics API v5.
+
+An **optional** enrichment: measured runtime telemetry (appScore, requests, errors, error %, P95/P99 latency, unique users, last error) rendered as a separate evidence block after the report. It is telemetry beside the visual audit — the health block **never feeds, changes, or affects the 16-criterion score, weights, or tier**; the rubric is untouched, exactly like the mechanical probe feeding evidence without being a criterion.
+
+**Availability gate (this decides everything):** the `odc` CLI is **internal-only** and the pack-shipped variant of this skill must degrade gracefully. Probe with `odc app health --help` and require it to **exit 0** — a mere binary-exists check is not enough, because an older internal CLI installs the same `odc` name without this verb. If the probe fails — the default for colleagues — **omit the section entirely**: no placeholder, no "health unavailable" row, no error. Section absent is the normal shipped behaviour.
+
+When the verb exists and the audited URL maps to a known ODC app:
+
+```bash
+odc app health "<app name|key>" --stage <env> > "$WORK/app-health.json"   # read-only; JSON is the default output
+python3 "$SKILL_DIR/health_evidence.py" "$WORK/app-health.json"           # renders the report block on stdout
+```
+
+Append the renderer's stdout to the report verbatim, per [references/prompt-templates/runtime-health-evidence.md](references/prompt-templates/runtime-health-evidence.md). Never compose the block by hand: the renderer is what mechanically enforces the CLI's semantics —
+
+- **`noData.status: "undetermined"` renders as "no data", never as a score.** The CLI only lists an app as traffic-free when the response proved the page complete; an undetermined read carries the reason and nothing else.
+- **`appScore` is an Apdex-style latency score, not a health verdict** — it says nothing about failures, and **an app with no traffic scores 100**. The caveats print on every render and a score on thin traffic (<100 requests) is flagged inline, so `appScore: 100` on a quiet app can never read as praise.
+- **An absent metric is the absence of a reading, never a zero**; unresolved app inputs are surfaced as reduced coverage.
+
+`odc app health` is a read (a GET against the Analytics API); the read-only contract of this skill is unchanged. Default window is 24h — pass `--hours` for a different look-back, and leave `--limit`/`--offset` alone so `noData` stays determinable.
 
 ## Batch mode
 

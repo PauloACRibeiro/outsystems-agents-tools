@@ -216,6 +216,36 @@ When source-critical app chrome exists, keep it producer-first:
 
 Create or update chrome producers before screen consumers when the screen depends on them. If the implementation route intentionally defers chrome, record that deferral in the prompt packet and summarize it in the Prompt Coverage Audit when it materially affects review.
 
+This rule is enforced, not advisory. Before emitting a prompt package from a blueprint that declares `app_chrome`, run `scripts/check_chrome_coverage.py <blueprint-or-design-dir> <emitted-prompt-file...>`: it compares the declared chrome against the emitted prompts and returns `chrome verdict: READY` or `NOT READY`, exit 0 or 1. It gates four kinds — menu entries, app title, user-info chrome, and the layout block. Declared search bars, theme toggles, notification badges and global command buttons stay ungated because their blueprint form is free prose; they are a disclosed blind spot until the blueprint schema makes them mechanically comparable, and they remain this section's responsibility alone.
+
+Pass the emitted **prompt package**, not the run document that quotes it. A run journal narrates completed work, and narration names the same elements an instruction does — the LoanDesk build-log row listing all three menu entries as `added` is from the very run where the prompts dropped them.
+
+**Emit the chrome batch in this canonical form.** It is the only shape the gate reads:
+
+```text
+CHROME BATCH: Menu block (the TopMenu layout's navigation web block)
+  menu link: "Catalogue" -> Catalogue
+  menu link: "My loans" -> MyLoans
+  menu link: "Manage items" -> ManageItems
+  app title: "LoanDesk"
+  user info: "User profile summary"
+```
+
+A `CHROME BATCH:` header opens the block; the contiguous `menu link:` / `menu entry:` / `app title:` / `user info:` / `layout:` lines below it are its directives, and the first line that is neither blank nor a directive closes it. Labels are compared whole after normalising case and punctuation, so `My loans` matches `MyLoans` and nothing matches a substring of another label. The layout block is separately evidenced by the `Layout: <block>` assignment the screen prompts already carry.
+
+**A `menu link` needs a real destination, exactly one of them, and the right one.**
+
+- `-> <screen>`, `-> TODO`, `-> TBD - decide`, `-> ScreenName` and their relatives are the template rather than an answer and count for nothing. The rules are closed sets, and they come in two kinds that behave differently. **Structural** — bracketed text, punctuation only, empty — is never overridable, because no screen can be named `<screen>` or `...`. **Lexical** — a leading placeholder word, or a name for the *kind* of thing wanted — stands down when that entry's own source declares the destination as its exact target, because `Pending Approvals` is a placeholder-shaped string *and* an ordinary screen and nothing inside the string tells you which. So `Pending Approvals`, `Unknown Items` and `Decide Later` pass when `menu[].target` declares them, and the identical strings are still refused with no declared target behind them or against one they do not match. The vouching is per entry: one entry legitimately pointing at `Pending Approvals` does not license that destination for another entry beside it.
+- One label gets one destination across the whole prompt package. Wiring the same entry to two different screens has not decided anything, and a correct directive must not launder an incorrect one sitting beside it.
+- When the chrome source declares where the entry points — `screen-inventory.json` carries `menu[].target`, the per-screen blueprints do not — the destination must match that target, compared the same whole-label way. A batch that names all three entries and wires them to the wrong screens is a wrong menu, not a covered one, and the report says so: `declared target "My Loans", wired to catalogue`.
+- Two sources declaring **different** targets for one label is a failure here, not a question deferred elsewhere. The cross-blueprint report cannot settle it: inventory targets never enter the blueprints, so that pass sees only blueprint label order and never the disagreement.
+
+**Prose is never evidence, however well written.** `In Common UI Flow, edit Menu and add links to Catalogue ...` describes exactly the right change and still reports `NOT READY` — emit the block instead. That is a deliberate trade, made after three rounds of adversarial review each broke a matcher that tried to recognise instructions in English: a vocabulary anchor passed `App chrome: Catalogue, My loans, Manage items`; a base-form action token passed `The navigation menu will add links ...`; a clause-initial rule passed `... will first add links ...` and refused `You must add menu links ...`; and a label-overlap let `Update navigation for Loan entries ...` count the word inside its own label as the destination. Each round closed its own probes and the next found more. A canonical form has no grammar surface to probe, and this skill authors the prompts, so the cost is an emission rule rather than a parser.
+
+**Every declared element is scored — there is no platform-default exemption.** An earlier version exempted user-info chrome that a menu-bearing layout was assumed to supply. The inference was lexical rather than semantic: `Login history shortcut` and `Sign out control` were both exempted, while ODC Screens proves only that `LayoutTopMenu`'s `Header` contains sign-in logic. The app title is scored for the same reason — `LayoutTopMenu`'s `Title` placeholder reserves space for a title rather than filling one, so a document heading containing the app name proves nothing.
+
+There is deliberately no flag that turns the gate off for a recorded deferral. The run that motivated it (LoanDesk, 2026-08-12) also believed it had handled chrome; when chrome is genuinely deferred, do not gate the blueprint that declares it.
+
 ## Four-Part Section Contract
 
 Every visual-source section must include:

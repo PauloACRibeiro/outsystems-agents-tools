@@ -64,6 +64,35 @@ python3 scripts/check_outcome_coverage.py <design-file> <plan-under-review>
 
 **Scope note, because getting it wrong makes the check useless in the most dangerous direction:** the checker reads only the `V<N>` verification rows, not the whole plan. A plan also carries the Mentor prompts, which name every outcome because they instruct the build to return them -- so a whole-plan scan reports full coverage for a plan whose matrix tests nothing, and can only ever say READY.
 
+## Traceability Table
+
+The plan must carry a `## Traceability` section in the shape the requirement
+ID conventions define — one row per user story, joining the story to the
+requirement IDs it delivers and to its design artifact:
+
+| Story | Requirements | Design |
+|---|---|---|
+
+Design refs are `blueprint:<ScreenName>` / `inventory:<ScreenName>` (the
+artifact's `screens[].name`), or an explicit `none`. When the run has the
+design artifacts on disk, pass them to the checker
+(`--blueprint <blueprint.json>` / `--inventory <screen-inventory.json>`) so
+every ref is resolved against real screen names.
+
+A pre-traceability plan (no table) is accepted with the checker's printed
+note and citation-only coverage; do not retrofit a table into in-flight run
+artifacts. Every NEW plan, and every patched plan this review writes, includes
+the table.
+
+**Gate checklist for a changed spec or plan.** Before accepting any change:
+
+- [ ] Every story has acceptance criteria.
+- [ ] References BR-* and names the new ones — a change that introduces
+  behavior introduces the IDs for it; existing IDs are cited, new ones are
+  declared in the inventory in the same change.
+- [ ] The Traceability table has a row for every story and maps every
+  requirement.
+
 ## Plan Integrity Checks
 
 Audit these in the same pass and record findings in the matrix's Patch / Risk column:

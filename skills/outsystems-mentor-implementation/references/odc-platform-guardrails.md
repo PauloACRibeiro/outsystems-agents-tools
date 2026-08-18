@@ -1,5 +1,7 @@
 # ODC Platform Guardrails
 
+> ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 Use this OMI-owned reference when a prompt or pseudocode block touches
 platform-level risk: architecture layering, public services, security-sensitive
 server calls, query performance, timers/background processing, or public API
@@ -312,12 +314,39 @@ Check:
   shared-producer changes through the Shared Producer Compatibility Gate.
 - security: combine with the Security Server-Trust Gate for exposed REST or
   sensitive reusable actions.
+- ODC `Public` flag: leave `Public = false` on any Server Action called only
+  from the app's own screens, actions, or timers — seed and utility actions
+  included. Mentor has set it unprompted; the flag validates clean and then
+  fails at publish with `OS-BLD-40409:
+  ModelFeature_ServerActionPublicPropertyApp, a feature that has been removed`
+  (external field evidence, Arjan fork review 2026-08-12). On that failure,
+  enumerate every Server Action's `Public` property — utility actions first —
+  rather than guessing the culprit.
 
 Fallback behavior:
 
 - If consumer impact is unknown, do not emit a confident breaking-change prompt.
 - If transaction behavior is unknown, require clarification before making a
   public reusable action paste-ready.
+
+## Deploy-Time Error Code Gate
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs. Error-code claims here are field observations — exact official semantics stay `Unverified gap` under `provider: public-grounded`.
+
+Deploy-time failures that pass model validation. Route by code, never by message text:
+
+- **`OS-DPL-50204`** — entity attribute **type change with existing data**. In-place conversion fails deterministically. Fix: **rename to a fresh attribute** (add new attribute with the target type, migrate, retire the old name) — never re-attempt the conversion.
+- **`OS-DPL-RDBS-40020`** — **drop + recreate an attribute under the same name**. Attribute names are additive across an app's deploy history: retired names stay burned. Fix: pick a fresh name.
+- **`OS-DPL-50205`** — "Model features validation failed": deterministic and **invisible to model validation** (zero validation errors before publish). Known field triggers: a `User`-typed attribute plus seed user-lookup (this guide's User Reference Authoring Gate, above) and a `GetUser(GetUserId()).User.Name` call inside an expression (fix: stamp a literal). Do not burn retries on it — the same publish fails the same way; remove the triggering construct.
+- **`OS-BEW-CODE-50008`** — Mentor emitted a **static sort bound to a runtime value**: zero save errors, then the publish fails at "Generating database scripts", which reads like a platform outage. It is re-introduced whenever Mentor regenerates a sortable list. Standing prompt line for any sortable list: **"Implement sorting as a DYNAMIC sort (`IsDynamic = True`), never a static sort on a runtime value."**
+- **Probe-once discipline:** the first publish after a fix is a single engine probe. On failure: diagnose once against this table, report blocked with the code, and wait for an explicit retry decision — never hammer `publish_start` at a deterministic code.
+
+## Library Release Visibility Gate
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+- A just-published library (or agent app) **must be RELEASED in the ODC Portal before any consumer can locate it** — until release it is invisible to consumer dependency resolution. No MCP tool performs the release; it is a manual Portal step.
+- Diagnostic: a consumer that "can't find" a just-published producer is almost always waiting on that release — check release state before debugging names, scopes, or references.
 
 ## Unknowns And Fallback Behavior
 

@@ -1,5 +1,7 @@
 # ODC Visual-Source Enriched Blueprint
 
+> ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 ## Purpose
 
 This is the OMI-owned portable enriched blueprint for visual-source and
@@ -239,7 +241,14 @@ steps:
 6. For a standalone Static Entity, treat a non-empty `records` array as a
    non-empty ordered list of strings. Create the Static Entity and exactly one
    record per declared value, in declared order; do not require an incoming
-   foreign key. If both `records` and incoming FK `enum_values` seed the same
+   foreign key. Emit each static entity's `Id` with `IsAutoNumber = No` and an
+   explicit, non-null integer `Id` per record, and populate the
+   display/`Label` attribute — `IsAutoNumber = Yes` on a static entity leaves
+   every design-time record with a null primary key: it validates clean and
+   fails at publish with `OS-RDBS-GEN-40001` ("Null record PK", surfaced with
+   `OS-DPL-50203`). On that failure, check static-entity `Id`s first (external
+   field evidence, Arjan fork review 2026-08-12; the same
+   validation-passes-publish-fails class as the `DataType` rule above). If both `records` and incoming FK `enum_values` seed the same
    Static Entity, identical ordered lists seed the Static Entity exactly once.
    If the lists differ, stop prompt emission and return the blueprint for
    producer correction. Require a matching producer-side validation gate for

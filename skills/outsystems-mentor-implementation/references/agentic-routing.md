@@ -1,5 +1,7 @@
 # Agentic ODC - Routing Reference
 
+> ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 Open this file when the question involves AI model calls, agent creation, consuming agents, structured output, action calling, guardrails, Mentor Studio, A2A/external agents, MCP tools/connectors, agent evaluations, agentic workflows, or search services in ODC.
 
 ## Evidence note

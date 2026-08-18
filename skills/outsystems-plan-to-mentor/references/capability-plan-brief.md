@@ -18,12 +18,19 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
 
 - Use capability headings such as users and goals, workflows, business rules,
   acceptance criteria, dependencies, open decisions, and scope boundaries.
-- Cite the source's stable requirement IDs (`BR-` business rules, `UC-` use
-  cases, `C-` acceptance criteria; see
+- Cite the source's stable requirement IDs (`BR-` business rules — namespaced
+  per surface for multi-surface plans, e.g. `BR-DM-`/`BR-SC-` —, `UC-` use
+  cases, `C-` acceptance criteria, `US-` user stories; see
   `references/requirement-id-conventions.md`) inline in the section that
   addresses each requirement. If the source PRD carries no IDs yet, the
   coverage gate will assign them in pass 1; a plan that already cites them
   converges faster.
+- Include a `## Traceability` table (`| Story | Requirements | Design |`):
+  one row per `US-n` user story, citing the requirement IDs the story
+  delivers and its design artifact ref (`blueprint:<ScreenName>` /
+  `inventory:<ScreenName>` from the loop's design artifacts, or an explicit
+  `none`). The coverage checker fails any defined requirement that appears
+  in no row.
 - State scope boundaries and deliberately excluded concepts explicitly, and
   cite the ID of every deferred or excluded requirement with its disposition
   -- the coverage checker treats an uncited ID as uncovered.

@@ -72,7 +72,21 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
    substitute `Integer` for `Long Integer` or infer different types.
 
 7. **Implement seed data via a `BootstrapData` server action** only when the
-   source request or patched plan calls for demo data.
+   source request or patched plan calls for demo data. **Trigger it from a
+   Timer with `Schedule = "WhenPublished"`** (`ScheduleConfiguration.WhenPublished
+   = true`, fires automatically on every publish), **NOT from a screen's
+   `OnInitialize`** — a screen-load trigger only fires when a real user opens
+   that specific screen, so the database silently stays empty while the build
+   looks complete. When converting an existing trigger, remove the old
+   `OnInitialize` call in the same turn that adds the Timer — one trigger
+   source. When the seed set spans 3+ entities or roughly 20+ records,
+   pre-split it into one `Seed<EntityGroup>` sub-action per entity (or tight
+   group), called in sequence from a thin `BootstrapData` coordinator that
+   does only the idempotency check — a flat multi-entity seed flow has been
+   observed failing mid-turn before self-correcting into exactly this split.
+   The Timer itself goes through `outsystems-mentor-implementation`'s
+   Timer / Async Idempotency Gate. (External field evidence, Arjan fork
+   review 2026-08-12.)
 
 8. **At the end, summarize** what was created or modified, what was skipped
    and why, and any manual steps the user must take.

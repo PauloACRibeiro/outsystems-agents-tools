@@ -139,6 +139,13 @@ Boundary:
 - The gate does not replace ODC Portal impact analysis.
 - ODC Portal impact analysis remains the deployment decision point for warnings
   and blockers.
+- The MCP deployment-impact analysis is read-only on the server and exists to
+  inform the deploy decision, so run it before asking for deploy confirmation
+  rather than asking permission to run it (upstream 0.13.1, verified). The
+  deletion-impact variant (`delete: true`) mutates nothing either, but it is
+  deletion-adjacent: name the asset being analysed and get confirmation first.
+  External-library listing, contents, and source-download lookups are
+  non-destructive reads.
 
 Required preview evidence:
 

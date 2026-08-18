@@ -124,8 +124,9 @@ Install or use `outsystems-mentor-implementation` for the full deterministic Men
 ## Coverage Loop
 
 The skill always runs at least two passes before delivery mode. Every
-requirement in the source gets a stable ID (`BR-` business rule, `UC-` use
-case, `C-` acceptance criterion; see
+requirement in the source gets a stable ID (`BR-` business rule — namespaced
+per surface for multi-surface plans, e.g. `BR-DM-`/`BR-SC-` —, `UC-` use
+case, `C-` acceptance criterion, `US-` user story; see
 `references/requirement-id-conventions.md`), and each pass writes a visible
 matrix headed `Coverage Audit -- Patched Plan vs Spec`, one row per ID:
 
@@ -136,10 +137,18 @@ matrix headed `Coverage Audit -- Patched Plan vs Spec`, one row per ID:
 
 Coverage itself is mechanical, not self-reported:
 `scripts/check_requirement_coverage.py` computes the set difference between
-the IDs the source defines and the IDs the plan references, and its
-`READY` / `NOT READY` verdict is computed, never hand-authored. The matrix's
-Evidence column stays the judgement layer on top: the checker proves every ID
-is cited, the reviewer verifies each citation is honest.
+the IDs the source defines and the IDs the plan cites inline, and its
+`READY` / `NOT READY` verdict is computed, never hand-authored. New plans
+also carry a `## Traceability` table (`| Story | Requirements | Design |`)
+joining each `US-` story to the requirement IDs it delivers and to a design
+artifact ref (`blueprint:<Screen>` / `inventory:<Screen>`, resolvable
+against the artifacts via `--blueprint`/`--inventory`); the checker fails
+any requirement mapped to no story, any story without exactly one
+well-formed row, and any table-only citation (the table region never counts
+as inline coverage). A pre-traceability plan without the table keeps the
+citation-only contract, with a printed note. The matrix's Evidence column
+stays the judgement layer on top: the checker proves every ID is cited, the
+reviewer verifies each citation is honest.
 
 Pass 1 reviews the original plan and writes the first full patched plan. Pass 2
 reviews the patched plan as if it came from someone else. A third pass is used

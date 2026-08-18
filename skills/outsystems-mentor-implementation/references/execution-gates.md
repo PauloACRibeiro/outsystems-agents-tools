@@ -5,6 +5,8 @@ description: The three runtime gates that cover what build-time signals cannot s
 
 # Execution gates
 
+> Mentor operation cadence: see `../../shared/reference/mentor-operations-registry.md` for the canonical index.
+
 > **Why these exist.** Every other gate in this skill — digest, enumeration,
 > assertion recompute — is a **build-time** signal. Each describes whether the
 > right *shapes* exist. None can observe whether the logic inside those shapes
@@ -75,7 +77,7 @@ explicitly out of its scope, and it is right to stop rather than score a login
 page as if it were the app. The colleague guide says the same: the URL it audits
 must work without login.
 
-**So for a role-gated screen there is no automated route to this gate**, and
+**So for a role-gated screen the audit is not a route to this gate**, and
 saying "the audit passed" does not discharge it. Two consequences, both learned
 the hard way:
 
@@ -87,9 +89,20 @@ the hard way:
 
 **What discharges the gate for a gated screen** is a human or an authenticated
 browser session opening the screen **as a principal holding the role**, on an
-**existing** record as well as a new one, and reporting what rendered. Record it
-as a manual verification row with the principal named. If nobody does that, the
-screen is **unverified** — write that word rather than a tier.
+**existing** record as well as a new one, and reporting what rendered. The
+automated route is `outsystems-render-gate`: the operator bootstraps a test
+principal's session once, the run derives a check spec per screen, and the gate
+emits verification rows (naming that principal, with screenshots) for exactly
+this discharge — where it cannot run, record it as a manual verification row
+with the principal named instead. If nobody does either, the screen is
+**unverified** — write that word rather than a tier.
+
+**Only a clean run discharges it.** A run that returns **exit 4 does not
+discharge this gate**: exit 4 means `unasserted` rows — nothing failed, but
+nothing checked those rows either, and a gap is not a pass. Each such row needs
+the recorded **human screenshot verdict** written as a manual verification row
+naming the principal, per that skill's Result semantics, before the phase
+proceeds. A completed run is not by itself the evidence; its exit code is.
 
 ## 3. Remedy gate — per fix
 
@@ -169,6 +182,39 @@ take ~30s, so speed is a hint but not a test.
 > against the run's app and a second control app, after it asked whether our
 > digest gate had this hazard. It did.
 
+**Three publish mechanics, recorded here because the runbook alone
+demonstrably fails to carry them:**
+
+- **`publish_start` rejects a `message` over 500 characters** — a hard
+  validation error: the call never fires. Keep the drafted message under ~480
+  for headroom and trim to load-bearing nouns (entity/screen/action names plus
+  the one-line why) rather than restating Mentor's summary. Rediscovered the
+  hard way twice on 2026-08-11; until then the limit lived only in the runbook.
+- **The `operation_id` a gateway `publish_start` returns is not the key the
+  log tools take.** `publish_logs` and `deploy_messages` both return HTTP 404
+  for it. For the per-line error trail, find the app's record in
+  `env_deploy_history` and use that record's key as the `operation_key`. The
+  bridge works in flight — the row is at the top of the window — but the
+  history is a 100-row unpaged window (V73), so retrospectively the row may
+  already be gone, and an empty result is not "never deployed".
+- **Revision notes attach on publish, not on promotion.** A deployment
+  operation carries no comment field of its own; the publish `message` is the
+  only place a note is written, and promoting moves an existing revision, so
+  the note set at publish is the one that travels to the target environment.
+  When a `commit -m`-style comment is asked for on a promotion, point at the
+  publish that created the revision rather than reporting it as unsupported.
+  (Upstream 0.13.1, verified verbatim, rev.17 P1 re-diff 2026-08-13.)
+- **`context_*` reads lag a successful publish by ~20–90s** (external field
+  measurement, two builds; worst after a phase touching several screens' role
+  lists at once), and `context_search` has been observed to catch up faster
+  than the paginated listings. Terminal state and digest are the immediate
+  signals; content enumeration is the delayed one — see the enumeration gate's
+  wait rule in SKILL.md before reading a miss as a failed phase.
+
+> **Provenance.** The `operation_id` bridge and the `context_*` lag figures
+> are field evidence from the same external ODC build work as §4 — **not
+> measured by us.** The 500-character limit and the window caveat are our own.
+
 ## 4. Mid-run loop triage — one `details: true` poll at 5–6 minutes
 
 **A stuck turn is invisible to the normal polling cadence until it is too late.**
@@ -200,7 +246,13 @@ the model** rather than building on the assumption partial work survived.
 not reliably help — a scoped-down turn still hangs if it contains a single
 operation Mentor can loop on. Split ambitious work into single-concern turns
 sized to finish well inside 15–20 minutes, passing the session forward and
-telling Mentor explicitly what already exists and not to recreate it.
+telling Mentor explicitly what already exists and not to recreate it. One shape
+deserves pre-flight counting rather than triage: a single Server Action asked
+to originate several grouped-Aggregate list outputs (the "get all the dashboard
+data" shape) has crashed a turn outright on the same external evidence,
+discarding all of its work — same remedy at a coarser grain, one small action
+per list, decided before the turn is fired (see the hardening guide's
+turn-shaping entry).
 
 > **Provenance.** This section is field evidence from another team's ODC build
 > work (two production-shaped builds, 2026-08-07 → 08-10).
@@ -209,3 +261,38 @@ telling Mentor explicitly what already exists and not to recreate it.
 > sessions wedged on one objective on 2026-08-11, one repeating identical event
 > ids for 15 minutes and one emitting nothing for 20, and in both cases we could
 > see *that* they were stuck and nothing about *why*.
+
+## 4b. Cancel calibration and token hygiene
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+RECONCILIATION — three existing OMI rules stay binding; this section calibrates the *voluntary* cancel decision underneath them: (1) `max_turn_time` must still be passed explicitly on every `mentor_start` (SKILL.md driving contract) — but as a *requested* ceiling, not an enforced terminal bound: §3 records runs sailing past it, so never treat the ceiling as a guarantee that the turn will terminate; (2) the §4 `details: true` poll at 5–6 minutes is diagnostic — it is never by itself a reason to cancel; (3) §3's warning that `mentor_cancel` can wedge in `cancelling` stands — cancel is a last resort, not a recovery plan.
+
+- **A slow Mentor turn is not a wedged one.** Heavy structural turns legitimately run **8–12 minutes with silent stretches** (~7 quiet minutes is normal). Healthy small turns on this estate go terminal in 1–5 minutes — both profiles are real; judge against the turn's size.
+- **Give a heavy turn ~12–14 minutes before considering `mentor_cancel`** — and cancel only if you also intend to split the work smaller. A cancel that re-runs the same oversized prompt buys nothing.
+- **Cancel economics:** a cancel costs >3 minutes to settle, a cancelled turn commits **nothing** (failed/cancelled turns never advance OML), and a cancel against an already-succeeded run is a **no-op you will misread as a wedge** — re-poll the `runId` before concluding anything from a cancel.
+- **Hang tell:** a `nextCursor` unchanged for ~7–10 minutes is the cursor-side signature of the §4 wedge classes (stalled event ids / no events). One `details: true` poll to confirm, then apply the cancel calibration above.
+- **Copy `mentor_session_token` verbatim — never retype it.** One mistyped character returns `signature_invalid`, which reads exactly like token expiry and sends you down the wrong recovery path.
+- **Cancelled-run token recovery — payload token first, last-successful as fallback, established sessions only.** On a failed or cancelled run the terminal `error` payload carries the same `mentor_session_id` plus a freshly minted `mentor_session_token`; resume an established session — one that has already reached at least one successful turn — with those credentials, per the SKILL.md driving contract (verified against upstream 0.13.x). Keep your last SUCCESSFUL token as the fallback for exactly one case: that established session's freshly minted token is rejected as `signature_invalid`. That rejection has two causes — a hand-transcribed character (see the verbatim rule above) and a payload token the server will not accept — so re-check transcription before concluding the minted token is bad. **This fallback does not apply to a bare first-turn `app_key` init failure**: that error carries no token at all, and by definition no turn in this session has ever succeeded, so no last-successful token can exist to fall back to — SKILL.md routes that case to starting fresh, not to any token fallback. The external source for this section states the last-successful rule unconditionally but names no server version; this estate's version-anchored measurement takes precedence, and the unconditional form is narrowed to the established-session `signature_invalid` case only.
+
+## 5. Summary admissions — the confession is in the fine print, never the headline
+
+**A turn summary's follow-up notes and caveats are required reading, not
+optional colour — especially for anything RBAC-shaped.** Mentor has been
+observed to self-report a real spec gap in its own summary — a role's data
+scoping passing an empty region list — while the same turn reported
+**zero validation errors** and a complete-sounding feature list. A skim that
+stops at "zero errors" misses exactly this kind of admission.
+
+This is "the friendly surface lies toward success" (V76) read from the other
+side. The summary is **untrustworthy for success claims** — the enumeration
+gate exists because one described five parts of an action that was never
+created — and **load-bearing for failure admissions.** Its admissions are
+findings: anything the summary flags as a scoping gap, a manual step, or a
+"needs a follow-up turn" note is either fixed before the phase closes or
+carried explicitly as an open item — never silently rolled forward into the
+build report as if resolved.
+
+> **Provenance.** The self-reported RBAC gap is field evidence from the same
+> external ODC build work as §4 — **not measured by us.** Our own runs supply
+> the success-direction half (2026-08-09 enumeration incident, V76).

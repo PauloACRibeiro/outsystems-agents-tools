@@ -1,5 +1,7 @@
 # ODC Mentor Hardening
 
+> ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 Use this guide before generating ODC Studio or Mentor Studio output that includes SQL, data writes, JSON parsing, status or enum values, dependency-sensitive paste blocks, or any pattern known to be fragile in Mentor Studio.
 
 This guide captures real corrections from the Recording Music Elasticsearch Bulk PoC and turns them into reusable generation rules. Apply these rules to future output. Do not silently rewrite historical plans unless the user explicitly asks for plan reconciliation.
@@ -845,6 +847,88 @@ Ask when the user wants a single large paste block but the block crosses many de
 **Evidence**
 
 Existing skill rule.
+
+### Split Multi-List Actions Into One Action Per List
+
+**Failure pattern**
+
+One Server Action asked to return several list-typed outputs, each backed by
+its own grouped Aggregate — the "get all the dashboard data" shape:
+
+```text
+Create Server Action GetDashboardMetrics with outputs:
+  OpenByRegion (List), BySeverity (List), AvgByMonth (List), plus 4 scalar counters
+```
+
+**Preferred pattern**
+
+Split into one small action per list, each with its own single grouped
+Aggregate, decided before the turn is fired; scalar counters share one action:
+
+```text
+Create Server Action GetDashboardCounters — scalar counts only.
+Create Server Action GetOpenFindingsByRegionChart — one grouped Aggregate, one list output.
+Create Server Action GetFindingsBySeverityChart — one grouped Aggregate, one list output.
+```
+
+Screens call N small actions instead of one combined action.
+
+**Why**
+
+Several independent grouped-Aggregate list pipelines inside one action is its
+own complexity class, distinct from one broken expression: on external field
+evidence it crashed the Mentor turn outright with a generic backend error
+(`internal_retry_count: 12`, "agent serve error"), discarding all of that
+turn's work including an unrelated simple action in the same turn. The shape
+is countable from the prompt before firing — more than one grouped-list output
+in a single action is the signal.
+
+**When to ask**
+
+Ask when the spec genuinely requires one combined contract (an exposed API
+whose consumer expects a single response); otherwise split silently.
+
+**Evidence**
+
+External field evidence (Arjan fork review, 2026-08-12, n=1 crash) — not
+reproduced on our tenant; adopted as prompt shaping because the cost is zero.
+
+### Bound Expression Complexity Instead Of Retrying Variants
+
+**Failure pattern**
+
+A validation rule written as one clever inline expression — several ANDed
+comparisons with nested calls, computed aggregate-existence checks,
+C#-flavoured constructs. The expression compiler rejects it and Mentor retries
+near-variants of the same broken syntax (observed externally at
+`internal_retry_count: 33` before the turn timed out and discarded its work).
+
+**Preferred pattern**
+
+- A dedicated Aggregate and its `Count` for any "does a matching row exist"
+  check — never an inline computed existence expression.
+- Separate boolean `Assign` steps combined by a plain `If` — not one
+  multi-condition expression.
+- No C#-style literal suffixes (`0`, never `0L`).
+- Say it in the prompt: "If an expression is rejected twice, stop retrying
+  variations of the same syntax and rewrite it as simpler, separate steps."
+
+**Why**
+
+OutSystems expressions are not C#, even though Mentor generates them through a
+C#-flavoured Model API surface. A retry loop on one action burns the whole
+turn budget and ends in a timeout that discards the turn's work — see
+execution-gates §4 for the in-flight triage.
+
+**When to ask**
+
+Ask when the plan's logic genuinely cannot decompose; otherwise apply silently.
+
+**Evidence**
+
+External field evidence (Arjan fork review, 2026-08-12); consistent with our
+own decomposed-pseudocode style and the Aggregate-`Count` not-found guards
+(V71/V77/V78).
 
 ## Screen-Targeting Preflight
 
@@ -2084,6 +2168,39 @@ Real session (RequestPulse implementation, 2026-06-25): CatalogManagement (rev 1
 
 ---
 
+## Publish Batch Ceiling
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+- **Cap each publish at ~5 plan-item-sized changes — a hard ceiling, not a target.** Target cadence is ~2 plan items per publish. A "change" is one plan-item-sized edit (a new/changed entity, a screen, a server action, a bootstrap timer) — not each individual attribute. Small publishes fail loudly on a small surface: when a publish breaks it points at ≤5 things, not thirty.
+- This ceiling never relaxes stricter rules elsewhere in this guide — `## One Server Action Per Mentor Session` still binds; the ceiling governs mixed-element batches, not server-action batching.
+- **A library/reference add is a whole turn on its own.** Sequence as: reference-add turn → structure/content turn → wiring turn. The all-in-one version of that turn was observed to wedge every time it was tried. This complements (does not replace) the `## Forbidden Mentor Model-Introspection Patterns` ban on `AddDependency` calls.
+
+## Session Slot Economics
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+- Mentor session slots are scarce: the cap is **tenant-wide**, and a used slot stays pinned for **~24 hours after last use**. `mentor_cancel` does **not** free a slot.
+- On `per_tenant_cap_reached`: resume an existing session (`mentor_session_id` + `mentor_session_token`, optionally `fresh_context: true`) — never retry-hammer `mentor_start` hoping a slot opens.
+- On `run_already_in_flight`: a run is already active on that session — poll that `runId` to terminal; never fire another `mentor_start` at it.
+- Operating policy: **one session per app, one conversation per edit** — `fresh_context: true` opens a fresh, small conversation over the session's current OML without burning a new slot (see the SKILL.md driving contract for the flag's typing and fallback rules).
+
+## Directive Prompting — Mentor Audits And Skips
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+- Mentor "audits and skips" when the OML already looks right: an instruction phrased as an outcome ("make sure X is Y") can terminate as a no-op audit. Be directive: **"Set X to exactly Y. Apply this change even if it looks already set. Do not just audit."**
+- Hand Mentor exact element names and values; never let it explore. Measured on the source estate: recipe-fed turns finished in ~2–9 min; a discovery-mode turn hung for ~30 min. This is the prompt-side complement to the enumeration gate — directive phrasing prevents the silent no-op the gate would otherwise catch after publish.
+
+## When-Published Timer Trigger Persistence
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+- Setting `timer.Schedule = "When Published"` as a string alone does **not** persist the trigger. Tell Mentor explicitly you want a **When-Published timer, not a cron schedule** (the working shape resets the timer's ScheduleConfiguration and sets its WhenPublished flag).
+- Verify after publish: a When-Published seed timer that did not run at deploy (no rows appeared) is the signature of a lost trigger — re-author the timer prompt with the explicit When-Published wording; do not debug the seed action first.
+
+---
+
 ## Maintenance
 
 Add future corrections here as compact entries. Each entry should include the failure pattern, preferred pattern, why the preferred pattern is safer, when to ask, and a minimal example.
@@ -2131,3 +2248,21 @@ Lessons from a full agentic-app build (PlayRight "Member Support") driven end-to
 - Why safer: avoids false negatives from *this harness's* limitations while still using the platform's supported agentic-test paths.
 - When to ask: before promising headless verification of an agent via `exec_in_app`, confirm the entry point is a server action, not a service action — and prefer Agent Evaluations for the service-action path.
 - Minimal example: `exec_in_app(GetDistributions, MemberId=…)` verifies tool data; agent flagging/drafting must be verified via the deployed screen.
+
+## Outcome Consumption And Observable Postcondition
+
+- Scope: any prompt specifying a Client Action that calls a mutating Server Action which returns an outcome/result. Ruled by Codex 2026-08-13 (`AH-2026-08-13-018`) from the LoanDesk run, where **three of five client actions were built with no failure branch at all**.
+- Failure pattern: writing the failure half as prose — `else -> show the reason on that row`. A branch described in prose is a branch that may not exist. The two actions in that run that *did* get a failure branch were exactly the two whose spec named a concrete message widget; the three that named none ran `Refresh Data` unconditionally and discarded every refusal the server returned.
+- Preferred pattern: for every mutating call, the prompt must state four things — (1) the returned outcome **is consumed**, by a branch that reads it; (2) every **user-visible refusal or error path** names its **UI sink or message mechanism** and the **value/output bound to it**; (3) which downstream **success effects must not run** on that path — refresh, navigation, success messaging; (4) how the intended state change is **verified on an independent surface** afterwards.
+- Why safer: the user-visible symptom of a missing failure branch is not an ugly message, it is **no message** — the screen refreshes, the row is unchanged, and nothing says why. That is indistinguishable from success to the user and invisible to an enumeration gate, because the action, its call, and its signature all exist.
+- When to ask: before accepting any client-action spec whose failure half is a sentence rather than a step, and before reporting a refusal path as built on the strength of the Server Action alone.
+- Minimal example: not `else -> show the reason`, but `False -> Assign LocalMessage = <mapped sentence> ; show in MessageContainer above the form ; do NOT Refresh Data ; do NOT navigate`.
+
+## Async-Fetched Data Belongs In Its Aggregate's On After Fetch
+
+- Scope: any screen logic that reads, tests, or assigns from an Aggregate or Data Action result. Ruled by Codex 2026-08-13 (`AH-2026-08-13-018`); grounded in ODC's *Screen and block lifecycle events*, which states On Ready can run before screen data is fetched and directs data-dependent logic to the respective source's On After Fetch handler.
+- Failure pattern: specifying the *timing property* instead of the *handler that provides it* — "assigned once the fetch has resolved", "after the data loads", "when the record is available". These read as satisfied requirements and are not executable. In the LoanDesk run the specification diagnosed this exact race, prescribed the correct mitigation in those words, then placed the assignment in `On Ready`; **every edit of an existing item silently created a duplicate**, because `List.Empty` was true for rows that exist and `.Current` on an unfetched list yields an empty record whose `Id` is `0`.
+- Preferred pattern: name the **exact data source and its lifecycle handler** and the placement of the logic within it — `GetItem` Aggregate → `On After Fetch` → the If/Assign block. Keep any `NullIdentifier()` create-versus-edit test **first** inside that handler: the Aggregate still fetches and still returns an empty list in create mode.
+- Why safer: it removes the timing dependence by construction rather than racing it, which is what the prose was trying to say. It is also the difference between a rule a reviewer nods at and one a generator can implement.
+- When to ask: whenever a spec sentence contains *once*, *after*, *when*, or *has resolved* **and** the subject is fetched data. This is not a blanket rewrite of every timing word — the rule applies where a fetch is involved.
+- Minimal example: not "assign the local variable once the fetch has resolved", but `GetItem.On After Fetch: If ItemId = NullIdentifier() -> End ; Else If GetItem.List.Empty -> Assign LocalItem.Id = ItemId ... ; Else -> Assign LocalItem = GetItem.List.Current.Item`. Do not call `GetUserId()` inside On After Fetch — the platform documents it can return empty there.

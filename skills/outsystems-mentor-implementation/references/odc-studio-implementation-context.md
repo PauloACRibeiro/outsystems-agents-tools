@@ -1,5 +1,7 @@
 # ODC Studio Implementation Context
 
+> ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 This companion guide explains where ODC logic belongs, why OutSystems recommends certain implementation patterns, and which operational or security constraints should change how pseudocode is planned.
 
 Use it together with:

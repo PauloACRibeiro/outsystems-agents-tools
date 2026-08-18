@@ -1,5 +1,7 @@
 # Session Packaging Hardening
 
+> ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
+
 How to package Mentor Executable Sessions so that execution survives the
 failure modes observed in supervised paste runs: duplicated submissions,
 silent derived-value slips, unwarned naming traps, oversized blocks, and

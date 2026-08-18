@@ -150,12 +150,19 @@ def _reached(text: str) -> set[str]:
     found: set[str] = set()
     for line in verification_scope(text).splitlines():
         for segment in _OBSERVED_SEGMENT.findall(line):
-            if _DENIAL.search(segment):
-                continue
-            found.update(_BACKTICKED.findall(segment))
-            found.update(re.findall(r'"([A-Za-z_][A-Za-z0-9_]*)"', segment))
+            # A denial only discards outcomes it actually governs -- the ones that
+            # come AFTER it. "-> never returns `NotFound`" denies the outcome and is
+            # dropped; "-> `LoanNotFound`, a refusal and NOT an error" names the
+            # outcome first and then emphasises what it is not, which is ordinary
+            # matrix prose. Discarding the whole segment on any negation cost two
+            # true rows the first time this ran for real (2026-08-12) -- and a check
+            # that punishes natural phrasing gets worked around rather than obeyed.
+            denial = _DENIAL.search(segment)
+            scope = segment[: denial.start()] if denial else segment
+            found.update(_BACKTICKED.findall(scope))
+            found.update(re.findall(r'"([A-Za-z_][A-Za-z0-9_]*)"', scope))
             # Bare identifiers appear unquoted in matrix prose ("-> succeeds, CourseFull").
-            found.update(re.findall(r"\b([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)\b", segment))
+            found.update(re.findall(r"\b([A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*)\b", scope))
     return found
 
 
