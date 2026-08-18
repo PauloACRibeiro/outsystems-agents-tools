@@ -398,7 +398,7 @@ bind Variable, SelectedValue, SelectedOptions, URL/ImageURL, or equivalent input
 
 For static demo tables:
 create an explicit Local Variable typed as List<EntityOrStructure>
-populate it in On Initialize with one ListAppend per demo row
+populate it in On Initialize with one ListAppend per source row — never truncate to a smaller demo count
 bind the TableRecords Source to that list.
 
 For persistent seed data:
@@ -409,7 +409,7 @@ Never leave source-like inputs unset: `TableRecords.Source`, `List.Source`, drop
 
 **Why**
 
-Widget shape can look structurally complete while rendering no records, no options, no images, or no selected value at runtime when its source-like binding is empty. Producer-first binding keeps UI prompts deterministic and reviewable.
+Widget shape can look structurally complete while rendering no records, no options, no images, or no selected value at runtime when its source-like binding is empty. Producer-first binding keeps UI prompts deterministic and reviewable. A seed truncated to a smaller "demo" count reads as a data bug during review and costs a diagnosis round, so the row count follows the source, not convenience.
 
 **When to ask**
 
@@ -418,6 +418,8 @@ Ask when the widget source, list type, aggregate, data action, mapped option str
 **Evidence**
 
 Tested `outsystems-spec-driven-build` prompt-builder guardrail for `TableRecords` source binding, generalized here to OMI producer-first UI prompt rules for data-bound widgets and bootstrap setup guidance.
+
+Row-count discipline (one append per source row, never truncated): External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14, round 2; folded here 2026-08-17 per Codex ruling on AH-2026-08-17-001); field-observed over the Mentor MCP, not in official docs.
 
 ## ODC SQL Generation
 

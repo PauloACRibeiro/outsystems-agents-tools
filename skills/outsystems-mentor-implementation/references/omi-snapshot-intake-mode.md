@@ -11,7 +11,7 @@ Open [source-map.md](source-map.md), then load the shared
 bridge reference:
 
 ```text
-../shared/mentor-generated-app-bridge.md
+../../shared/mentor-generated-app-bridge.md
 ```
 
 Before producing Studio-native output:

@@ -296,3 +296,22 @@ build report as if resolved.
 > **Provenance.** The self-reported RBAC gap is field evidence from the same
 > external ODC build work as §4 — **not measured by us.** Our own runs supply
 > the success-direction half (2026-08-09 enumeration incident, V76).
+
+### 5b. Derive the checklist from the spec, never from the builder's summary
+
+§5 governs how to *read* a summary. This is the separate rule about where the
+verification checklist **comes from**: when scoring or verifying a build, derive
+the checklist by reading the spec, plan, or blueprint files directly. The
+builder's own summary of what it built **must not** set the checklist — a
+builder summarizing its own work is precisely the bias a fresh verification pass
+exists to remove, and a checklist derived from it can only ever confirm what the
+builder already believes it did. Anything the spec required but the summary never
+mentions is exactly the item this ordering is designed to catch.
+
+Corollary for verdicts: where some criteria were checked and others could not be
+driven at all, the result is PARTIAL, never rounded up to PASS. "Unverifiable"
+and "verified" are different findings.
+
+> **Provenance.** External field evidence: OutSystems/legacy-team-app-generator
+> @ 3524310 (adopted 2026-08-14, round 2); field-observed in that project's own
+> verification agent, not in official docs, and **not measured by us.**

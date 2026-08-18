@@ -34,6 +34,16 @@ that surfaces the evidence behind any row below.
 | OS-CLRT-00000 | deploy | One of the permission-wall marker strings (alongside `"Not Authorized"` / `"Invalid Permissions"`) that render-gate's `permissionMarkers.texts` watches for in the rendered DOM to detect a screen returning a permission-denied wall instead of the expected content. | A permission wall found on a screen the spec says the principal should reach is recorded as a finding — it fails that screen's verification row and the run continues; it is never silently read as a pass. | outsystems-render-gate · SKILL.md |
 | OS-BEW-RDM-50001 | publish | Server-build failure that can surface (alongside `OS-DPL-50205`, "or similar") when stale `ReferersData.xml` / `ReferersForCompilerData.xml` caches — left over from manual XML edits outside the Model API — are uploaded to ODC for publish. | Strip the stale `ReferersData.xml` / `ReferersForCompilerData.xml` files before publish; the server will rebuild them. | outsystems-design-to-app · references/gotchas/publish-validator-rejections.md |
 
+## Error-category routing exceptions
+
+Failures are routed by the error's `data.category`, never by message text —
+with one documented exception, recorded here so the routing rule itself can
+stay simple.
+
+| Case | Category served | Why the category misleads | Correct handling |
+|---|---|---|---|
+| External-library upload arriving while every per-replica concurrency permit is held: waits 5s, then rejected with `Server is busy, retry shortly` (upstream plugin 0.13.1) | `ValidationError` | `ValidationError` normally means "fix the prompt/plan, no blind retry" — fatal. Here the condition is transient. | Match that message string to recognise the case and retry with backoff. This is the ONE place message text is load-bearing; keep routing everything else by category alone. |
+
 ## Static vs live facts (resolve, never hardcode)
 
 Static facts (portal-only steps such as library release, URL patterns,

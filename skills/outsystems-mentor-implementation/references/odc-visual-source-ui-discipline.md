@@ -290,11 +290,16 @@ Run a visual-source gotcha review when the source contains the matching pattern:
 - SVG icon color behavior (`field-tested review guidance`): prefer verified Icon widgets; review raw SVG color behavior before hardening
 - font icon classes (`field-tested hardening guidance`): do not emit `ph ph-*` unless the target dependency is verified
 - Table/List/data-bound widget source (`field-tested hardening guidance`): never deliver empty `Source`, `OptionsList`, URL, or value bindings
-- interactive widgets inside Link or anchor regions (`field-tested review guidance`): avoid putting Upload, Input, Form, or Button inside a Link slot
+- interactive widgets inside Link or anchor regions (`field-tested review guidance`): avoid putting Upload, Input, Form, or Button inside a Link slot — the rendered Link wraps the widget and intercepts its clicks. The affirmative case: an anchor IS the correct slot wrapper when the slot's content is itself the navigation target, such as a clickable card or a list row that drills into a detail screen.
 - duplicate primary actions (`field-tested review guidance`): avoid creating a second Button when source HTML already emits a button for the same action
-- source HTML display toggles (`field-tested review guidance`): convert `display:none`/active-section toggles into explicit ODC state and Conditional Display guidance
+- source HTML display toggles (`field-tested review guidance`): convert `display:none`/active-section toggles into explicit ODC state and Conditional Display guidance — but only where the toggled section IS the screen's main content. **Transient overlays are the exception: modals, toasts, popovers, and mobile slide-in sidebars keep their `display:none` and get real show/hide wiring to the equivalent OutSystems UI widget.** Stripping the hiding CSS from an overlay renders it permanently open.
+- `<table>` tags in source markup (`field-tested review guidance`): `HtmlToWidgets` translates table tags to divs, so a `<table>` carrying no explicit `display:table` / `display:table-row` / `display:table-cell` rules stacks vertically instead of forming a grid. Carry the explicit display rules, or map to a verified Table/List widget instead.
+- `<nav>` in source markup (`field-tested review guidance`): `<nav>` does not survive widget translation, so a `.sidebar nav a` selector silently stops matching after the build. Scope link-color selectors to `.sidebar a` directly, and do not nest semantic elements inside the brand or nav area.
 
 Keep gotcha entries as review or hardening guidance according to their evidence boundary. Do not promote field-only notes to current ODC product-contract authority.
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14, round 2); field-observed over the Mentor MCP, not in official docs.
+
 Capture the gotcha review outcomes in the enriched blueprint so downstream
 prompt generation and manual review can see which risks were already checked.
 
@@ -359,6 +364,14 @@ Common mappings:
 | `lucide-message-square` | `chats` |
 | `lucide-file-text` | `file-text` |
 | `lucide-house` | `house` |
+| `lucide-target` | `target` |
+| `lucide-handshake` | `handshake` |
+
+Phosphor exposes weight modifiers — `ph-thin`, `ph-bold`, `ph-fill`. When the
+source icon's stroke weight is visually load-bearing, name the matching modifier
+in the prompt rather than accepting the default weight.
+
+External field evidence: OutSystems/legacy-team-app-generator @ 3524310 (adopted 2026-08-14, round 2); field-observed over the Mentor MCP, not in official docs.
 
 Record the mapping in `icon_mapping` with the source icon name, the bare
 Phosphor icon name, intended location, and any review note. Use a
