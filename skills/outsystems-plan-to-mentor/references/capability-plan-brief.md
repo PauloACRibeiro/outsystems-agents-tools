@@ -34,6 +34,12 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
 - State scope boundaries and deliberately excluded concepts explicitly, and
   cite the ID of every deferred or excluded requirement with its disposition
   -- the coverage checker treats an uncited ID as uncovered.
+- Do not plan a capability no requirement asks for. Name the requirement ID a
+  section serves before writing it; if you cannot name one, it is a proposal,
+  not scope -- put it under scope boundaries marked `(proposed)` with the
+  reason, for the user to accept or cut. The coverage checker cannot catch
+  this: it computes a set difference over cited IDs, so an uncited section
+  passes.
 - Keep verification at acceptance-criteria level: what observable behavior
   proves each capability works, not which tool checks it.
 - Record open decisions the user still owns, with what each decision blocks.

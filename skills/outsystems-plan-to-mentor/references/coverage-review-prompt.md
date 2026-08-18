@@ -97,7 +97,7 @@ the table.
 
 Audit these in the same pass and record findings in the matrix's Patch / Risk column:
 
-* Every plan section or step cites the requirement IDs it serves, inline where the work happens.
+* Every plan section or step cites the requirement IDs it serves, inline where the work happens. A section that cites none is a proposal, not scope: either cite the requirement it serves, or move it under scope boundaries marked `(proposed)` with the reason it was added, for the user to accept or cut. Nothing is silently present -- the checker computes a set difference over cited IDs, so a section no requirement asked for is invisible to it and reaches READY untouched. This one is judgement, not machine-checked.
 * References resolve: anything a step depends on is defined earlier in the plan or in the recorded existing scaffold, never assumed.
 * Producers come before consumers in the plan's ordering.
 * Everything the plan introduces is reachable from a user workflow; no orphaned deliverables.

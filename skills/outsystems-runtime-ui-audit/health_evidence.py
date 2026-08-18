@@ -3,7 +3,7 @@
 
 P6 (dossier rev. 17): the block is telemetry evidence beside the 16-criterion
 UI score, never part of it. Input is the AppHealthResponse JSON the internal
-`odc` CLI emits (rd-ai-ase-toolkit RAOPST-3994, Analytics API v5). The
+`odc` CLI emits (an internal OutSystems project, Analytics API v5). The
 semantics this renderer enforces mechanically, so a report cannot misread them:
 
 - an absent metric is the absence of a reading, never a zero;

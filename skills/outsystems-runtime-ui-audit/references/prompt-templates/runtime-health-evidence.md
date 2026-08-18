@@ -1,6 +1,6 @@
 # Runtime health evidence (prompt template)
 
-- version: 2 (2026-08-13 — Codex corrections round: determined no-traffic lines carry the never-deployed / UUID-not-in-tenant caveat, and all server-echoed strings are markdown-escaped by the renderer. v1 same day: P6, dossier rev. 17: optional runtime-health telemetry block from the internal `odc app health` verb, rd-ai-ase-toolkit RAOPST-3994 / Analytics API v5)
+- version: 2 (2026-08-13 — Codex corrections round: determined no-traffic lines carry the never-deployed / UUID-not-in-tenant caveat, and all server-echoed strings are markdown-escaped by the renderer. v1 same day: P6, dossier rev. 17: optional runtime-health telemetry block from the internal `odc app health` verb, an internal OutSystems project / Analytics API v5)
 - owner: `outsystems-runtime-ui-audit/SKILL.md` § "Optional — Runtime health evidence (internal-only)"
 - placeholders: `<stage key>`, `<since>`, `<to>`, `<rendered rows from health_evidence.py>`
 

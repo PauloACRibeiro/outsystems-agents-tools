@@ -148,7 +148,7 @@ Emit the report using the skeleton in [references/prompt-templates/runtime-audit
 
 ## Optional — Runtime health evidence (internal-only)
 
-> Added 2026-08-13 (P6, dossier rev. 17) from `OutSystems/rd-ai-ase-toolkit` RAOPST-3994: the internal `odc` CLI's `app health` verb reads per-app runtime telemetry from ODC Analytics API v5.
+> Added 2026-08-13 (P6, dossier rev. 17) from an internal OutSystems project: the internal `odc` CLI's `app health` verb reads per-app runtime telemetry from ODC Analytics API v5.
 
 An **optional** enrichment: measured runtime telemetry (appScore, requests, errors, error %, P95/P99 latency, unique users, last error) rendered as a separate evidence block after the report. It is telemetry beside the visual audit — the health block **never feeds, changes, or affects the 16-criterion score, weights, or tier**; the rubric is untouched, exactly like the mechanical probe feeding evidence without being a criterion.
 
