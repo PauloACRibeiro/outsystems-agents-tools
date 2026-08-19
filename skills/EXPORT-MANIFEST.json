@@ -31,7 +31,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/SKILL.md",
-      "sha256": "a9a006d6580f8e1e140007640751ad55cb0897e2d873659bfb9cc1ef7155eefe"
+      "sha256": "446e594229ea2e3a59d68516d3982f014ebb248d4b347094d717894df4903c8e"
     },
     {
       "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -51,7 +51,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
-      "sha256": "41e320f55649a717b165b8378d205a8861d548caf1763d22954aebd7c846d122"
+      "sha256": "7381c36e7b9773845733a93a59226e41f16d0b5ca36e83aa0c20d0e09e2b4e0a"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
@@ -191,7 +191,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/retrieval-query-bundles.md",
-      "sha256": "82b1d47f01735d9b9c0c786684378b964eddf8e0305d773e32d010728668cc3c"
+      "sha256": "1089bac2bc9f998be6949bd307f4c741ee1e56152d9f6c38dd065a4dc37456db"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
@@ -565,7 +565,7 @@
   "manifest_version": 2,
   "packs": [
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 70,
       "files": [
         {
@@ -582,7 +582,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "a9a006d6580f8e1e140007640751ad55cb0897e2d873659bfb9cc1ef7155eefe"
+          "sha256": "446e594229ea2e3a59d68516d3982f014ebb248d4b347094d717894df4903c8e"
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -602,7 +602,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
-          "sha256": "41e320f55649a717b165b8378d205a8861d548caf1763d22954aebd7c846d122"
+          "sha256": "7381c36e7b9773845733a93a59226e41f16d0b5ca36e83aa0c20d0e09e2b4e0a"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
@@ -742,7 +742,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/retrieval-query-bundles.md",
-          "sha256": "82b1d47f01735d9b9c0c786684378b964eddf8e0305d773e32d010728668cc3c"
+          "sha256": "1089bac2bc9f998be6949bd307f4c741ee1e56152d9f6c38dd065a4dc37456db"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
@@ -850,11 +850,11 @@
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     },
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 63,
       "files": [
         {
@@ -867,7 +867,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "a9a006d6580f8e1e140007640751ad55cb0897e2d873659bfb9cc1ef7155eefe"
+          "sha256": "446e594229ea2e3a59d68516d3982f014ebb248d4b347094d717894df4903c8e"
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -887,7 +887,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
-          "sha256": "41e320f55649a717b165b8378d205a8861d548caf1763d22954aebd7c846d122"
+          "sha256": "7381c36e7b9773845733a93a59226e41f16d0b5ca36e83aa0c20d0e09e2b4e0a"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
@@ -1027,7 +1027,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/retrieval-query-bundles.md",
-          "sha256": "82b1d47f01735d9b9c0c786684378b964eddf8e0305d773e32d010728668cc3c"
+          "sha256": "1089bac2bc9f998be6949bd307f4c741ee1e56152d9f6c38dd065a4dc37456db"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
@@ -1111,11 +1111,11 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     },
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 15,
       "files": [
         {
@@ -1180,11 +1180,11 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     },
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 7,
       "files": [
         {
@@ -1217,11 +1217,11 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     },
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 4,
       "files": [
         {
@@ -1242,11 +1242,11 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     },
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 133,
       "files": [
         {
@@ -1275,7 +1275,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "a9a006d6580f8e1e140007640751ad55cb0897e2d873659bfb9cc1ef7155eefe"
+          "sha256": "446e594229ea2e3a59d68516d3982f014ebb248d4b347094d717894df4903c8e"
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -1295,7 +1295,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
-          "sha256": "41e320f55649a717b165b8378d205a8861d548caf1763d22954aebd7c846d122"
+          "sha256": "7381c36e7b9773845733a93a59226e41f16d0b5ca36e83aa0c20d0e09e2b4e0a"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
@@ -1435,7 +1435,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/retrieval-query-bundles.md",
-          "sha256": "82b1d47f01735d9b9c0c786684378b964eddf8e0305d773e32d010728668cc3c"
+          "sha256": "1089bac2bc9f998be6949bd307f4c741ee1e56152d9f6c38dd065a4dc37456db"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
@@ -1783,11 +1783,11 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     },
     {
-      "build_date_utc": "2026-08-18",
+      "build_date_utc": "2026-08-19",
       "file_count": 44,
       "files": [
         {
@@ -1968,7 +1968,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "ff1c5e8ee7afb684ef722eebf8bfaf8f0a2cb63a",
+      "source_commit": "992ddf16c40da520e9bd310f0ad92ebed88401fb",
       "version": "2026-08-19"
     }
   ]

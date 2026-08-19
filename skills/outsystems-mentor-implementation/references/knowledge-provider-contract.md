@@ -40,6 +40,13 @@ this table owns what each mode may claim.
 | `provider: public-grounded` | `search_outsystems_content` is absent and `search_outsystems_public` is callable | public OutSystems documentation only | public-docs authority only; never implementation-level |
 | no provider | neither is callable | none | `SKILL.md` hard preflight block, or the four local repos as an explicitly degraded, source-backed fallback |
 
+**What "callable" means.** A tool that is *registered* but whose calls fail —
+server down, VPN dropped, connection refused or timed out — is **not callable**,
+and classification must treat it as absent. An MCP tool stays registered when its
+server dies; it merely errors on call, so "is the tool in my list" and "can I get
+an answer from it" are different questions, and only the second selects a mode.
+Attempt the call and read the result — never classify from the tool list alone.
+
 `provider: implementation-authority` wins whenever both are callable. A public
 provider is a route, not a downgrade of the block — but it is also not a
 substitute for internal authority.
@@ -134,7 +141,11 @@ of which 1780 (67.6%) are tagged `o11`** and 843 `odc` (2 both, 8 untagged).
 for OMI work rather than a refinement — it removes about two thirds of the
 index before ranking.
 
-The two aliases are interchangeable and public-only for this role. Internal,
+The two aliases are interchangeable **as tool names**, and public-only for this
+role — but they are not a promise about corpus size or composition: a packaged
+component indexes the four public repos, while a maintainer binding may index a
+full workspace, and platform-filter behaviour differs accordingly (see
+`retrieval-query-bundles.md`). Internal,
 course, archive, and workshop evidence routes separately through VPN-gated
 `outsystems-tech-content`, never through this contract. OMI routes by capability
 and availability instead of inferring quality from the alias or machine owner.

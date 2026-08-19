@@ -24,13 +24,13 @@ the output to the single block they name, never a whole app from an idea.
 
 ## Hard Gates (read before anything else)
 
-- **MCP preflight (mode-keyed, required before any output):** Detect the knowledge provider — never configure it. Check which retrieval tool is callable in this session, in this order:
+- **MCP preflight (mode-keyed, required before any output):** Detect the knowledge provider — never configure it. Check which retrieval tool is callable, not merely registered, in this order:
   1. `search_outsystems_content` (`outsystems-tech-content`) → `provider: implementation-authority`. Full contract, unchanged; continue normally.
   2. otherwise `search_outsystems_public` (`workspace-knowledge-cc` or `outsystems-public-knowledge`, same tool either way) → `provider: public-grounded`. Continue to pseudocode and prompt output under the narrower authority in the next gate; do not emit the VPN block below.
   3. otherwise neither provider is callable:
   - For `mode: studio-native-pseudocode`, `mode: mentor-studio-prompt`, `mode: visual-source-ui`, `mode: existing-app-grounding` prompt output, and `Invocation mode: outsystems-plan-to-mentor`: stop immediately and tell the user:
 
-> No OutSystems knowledge provider is reachable — `outsystems-tech-content` is unavailable and VPN is likely disconnected, and no public provider (`workspace-knowledge-cc` / `outsystems-public-knowledge`) is running either. Connect VPN or start a public provider, then start a new session, or explicitly confirm that you want to proceed with degraded quality. Proceeding without either removes grounding for function signatures, widget rules, and TrueChange errors.
+> No OutSystems knowledge provider is reachable — `outsystems-tech-content` is unavailable and VPN is likely disconnected, and no public provider (`workspace-knowledge-cc` / `outsystems-public-knowledge`) is callable either. Connect VPN or start a public provider, then start a new session, or explicitly confirm that you want to proceed with degraded quality. Proceeding without either removes grounding for function signatures, widget rules, and TrueChange errors.
 
   Do not fall back silently. Do not produce pseudocode or Mentor prompts until a provider is confirmed available or the user explicitly acknowledges the degraded quality and accepts the risk.
   `mode: live-validation` and any mode not listed above keep the hard preflight block for pseudocode and prompt output by default.
@@ -219,7 +219,7 @@ Verify before sending any answer:
 3. `### Unknowns And Fallback Behavior`, when present, appears after `### Evidence Status`.
 4. For visual-source answers, no tenant-mutation tool identifiers appear in the visible text.
 
-Before sending any answer, write the full draft text to a temporary file and run `scripts/response_contract_lint.py --answer <draft-file> --mode <mode>` to verify these checks deterministically — do this even if the answer was never otherwise going to be saved to a file. If you cannot write files or run scripts in this session, perform the four-item checklist above as rigorously as possible instead, and disclose in `### Unknowns And Fallback Behavior` that the deterministic lint could not run this session.
+Before sending any answer except a preflight block, write the full draft text to a temporary file and run `scripts/response_contract_lint.py --answer <draft-file> --mode <mode>` to verify these checks deterministically — do this even if you would not otherwise save it. If you cannot write files or run scripts in this session, perform the four-item checklist above as rigorously as possible instead, and disclose in `### Unknowns And Fallback Behavior` that the deterministic lint could not run this session.
 
 ## Output Contract - when invoked by outsystems-plan-to-mentor
 

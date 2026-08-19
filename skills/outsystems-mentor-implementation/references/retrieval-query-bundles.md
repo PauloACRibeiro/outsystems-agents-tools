@@ -71,6 +71,16 @@ Shape queries accordingly:
   2633, about 0.3%** — so it narrows the field very sharply without being a
   hard guarantee. Spot-check a hit's platform when a claim rests on it; you do
   not need to check every hit.
+  **That measurement is corpus-specific, and the two provider bindings do not
+  share a corpus.** It was taken on the packaged public component's four-repo
+  index, which is what a colleague installs. A maintainer binding pointed at a
+  full workspace indexes far more than those four repos — courseware and
+  archived material included — and much of that carries no platform tag, so
+  `platform='odc'` filters far less of it away: an ODC-phrased query there has
+  been observed returning five O11 documents out of five. The tool name and
+  call signature are interchangeable between bindings; **the corpus behind them
+  is not**, and neither is this number. Re-measure before trusting it on a
+  binding other than the packaged component.
 - Relative score is a usable signal. On this corpus, well-covered topics score
   roughly 25-70 while incidental keyword matches score under about 12. A top
   hit far below the others' range usually means the corpus does not really
