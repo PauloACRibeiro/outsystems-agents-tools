@@ -11,7 +11,7 @@ description: Audit a live runtime URL against the 16-criterion UI Quality Assess
 > Upstream content adapted only where paths/names required; scoring rubric unchanged.
 
 
-You're auditing a **live runtime** — a deployed app reached by URL — against the **UI Quality Assessment** rubric in [`rubric.md`](rubric.md) next to this file. Unlike the companion `outsystems-ui-review` skill (which greps the OML/theme to judge *how it was built*), this skill judges *what the user sees and experiences* from captures of the running app.
+You're auditing a **live runtime** — a deployed app reached by URL — against the **UI Quality Assessment** rubric in [`rubric.md`](rubric.md) next to this file. Unlike the companion `outsystems-ui-review` skill (not part of the colleague sprint-loop pack; it greps the OML/theme to judge *how it was built*), this skill judges *what the user sees and experiences* from captures of the running app.
 
 > **Full rubric (canonical):** [`rubric.md`](rubric.md). Read it before scoring — it defines the 16 criteria, tier boundaries, weights, and N/A rules. When a criterion's intent is ambiguous, that file wins.
 
@@ -44,7 +44,7 @@ periodically, don't assume it still holds on a later tenant build:**
 The portal's "last analysis" banner and "next analysis in Xh" countdown only
 advance on the tenant's *scheduled* sweep, not on-demand runs — trust the
 per-asset score, not that timestamp. To trigger/poll/report the real Mentor
-score on demand, use the `outsystems-code-quality-score` skill.
+score on demand, use the `outsystems-code-quality-score` skill (not part of the colleague sprint-loop pack).
 
 ## Scope & assumptions
 
@@ -120,6 +120,15 @@ Calibration guards (these trip up automated evaluators):
 - **Charts and user-submitted content (avatars, thumbnails) are exempt** from palette/consistency criteria (C1).
 - **N/A is a real answer.** Prefer it over guessing. If ≥ 6 criteria are N/A, the score is flagged low-confidence.
 
+**One root cause is one finding** (adopted 2026-08-24, from the
+`OutSystems/-UX-UI-Hub` mining pass, X-09). When several checks fail for the same underlying reason, record it **once** and
+name which criteria converged on it. Convergence tells you the finding is real
+and worth fixing first; it never multiplies the count. **Per-criterion scores
+are unchanged** — each criterion is still scored on its own evidence, because
+the weights depend on that. The rule governs the findings narrative and the fix
+list. The measured case: a screen that never received a typography-and-semantics
+pass fails three separate C14 checks from one cause.
+
 ## Step 3 — Compute the score
 
 ```
@@ -181,7 +190,7 @@ If the user passes multiple URLs, run Steps 1–4 per URL (each to its own `outp
 
 Emit this section only when the user requests convergence (e.g. "audit and fix", "iterate until Delightful") or names a target ODC app for the audited URL. Adopted from the Enzyme investigation (2026-08-06): their service turns a vision gap report into the next iterate instruction and loops until the deployed app converges.
 
-After the report, append a `## Mentor handoff` block using the skeleton in [references/prompt-templates/mentor-handoff.md](references/prompt-templates/mentor-handoff.md), filling its placeholders. Its first line states the loop's target tier, for any convergence request (generic "audit and fix" included): the tier the user asked for, else one tier above the current audit result — record the default explicitly. If the audit already scores Market Leading there is no tier above: emit the handoff only when the user supplied an explicit goal; otherwise report the app as converged instead of emitting one. Then list **at most five** fix instructions, worst-first by weighted criterion impact. Each item must cite its criterion number and quote the evidence line it comes from — never invent a fix the scored evidence does not support, and never pad the batch to five. Phrase each item as a screen-scoped, imperative OutSystems instruction ("On <screen>, increase the nav link tap targets to ≥44px"), not as a rubric complaint.
+After the report, append a `## Mentor handoff` block using the skeleton in [references/prompt-templates/mentor-handoff.md](references/prompt-templates/mentor-handoff.md), filling its placeholders. Its first line states the loop's target tier, for any convergence request (generic "audit and fix" included): the tier the user asked for, else one tier above the current audit result — record the default explicitly. If the audit already scores Market Leading there is no tier above: emit the handoff only when the user supplied an explicit goal; otherwise report the app as converged instead of emitting one. Then list **at most five** fix instructions, worst-first by weighted criterion impact. **One root cause spends one slot**, with the converged criteria named in that item — three slots on one typography pass is three quarters of the batch spent on one fix. Each item must cite its criterion number and quote the evidence line it comes from — never invent a fix the scored evidence does not support, and never pad the batch to five. Phrase each item as a screen-scoped, imperative OutSystems instruction ("On <screen>, increase the nav link tap targets to ≥44px"), not as a rubric complaint.
 
 **Design-scope gaps are skipped, not manufactured (C15-C16 design pass, 2026-08-07).** A criterion the report declares a design-scope gap — currently only C15's design-scope note (rubric.md § C15) — is never ranked into a fix item, because no bounded token or config change can close it. Skip it and rank the next-worst actionable criterion in its place; record the skip as one line above the numbered list ("Skipped: C15 — design-scope gap, see report.") so it reads as a decision, not an omission. This does not relax the five-item cap or the worst-first order for the criteria that are ranked.
 
@@ -193,7 +202,7 @@ This skill still does not run Mentor, publish, or modify the app — the handoff
 
 - Does not modify, deploy, or fix the app.
 - Does not attempt to log in; the crawl stays within the app's public path. **So this skill cannot discharge a render gate for a role-gated screen** — a clean audit here is evidence about the public surface only, and on one measured app the authenticated surface was half the application and held the defects. A gated screen needs a principal holding the role to open it and report what rendered; until then it is `unverified`, not `N/A` and not passed.
-- Does not inspect the OML/theme/CSS — that's the companion `outsystems-ui-review` skill.
+- Does not inspect the OML/theme/CSS — that's the companion `outsystems-ui-review` skill (not part of the colleague sprint-loop pack).
 - Does not produce vibes-based scores — every tier cites a concrete observation or a `probe.json` measurement.
 
 If you cannot capture a usable landing screenshot (auth wall, error page, blank render), say so and stop. Prefer reporting the blocker over scoring a page that isn't the app.

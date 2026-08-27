@@ -29,9 +29,10 @@ This is MCP mode.
 - Use the cursor discipline and no auto-publish boundary from `outsystems-mentor-polling-behavior`.
 - Preserve the structured spec, anti-failure guardrail, and show-before-firing discipline from `outsystems-spec-driven-build` when a full app spec is being converted.
 - Send the already-written prompt through Mentor.
-- Poll Mentor with cursor discipline.
+- Poll Mentor with cursor discipline, sleeping the interval the poll advertises and at least ~30s (upstream plugin 0.16.0) — the advertised figure is a floor to raise, not one to obey downward.
 - Save the terminal result under `docs/superpowers/reviews/`.
 - do not publish automatically.
+- If publish is separately approved, branch on the outcome rather than retrying: a `publish_start` refusal is answered by a further Mentor turn that completes the work, never by a second publish; and a `failed` carrying `indeterminate: true` has no observed outcome — re-poll `publish_status` with its `publication_key` or verify with `env_app`, and never re-publish. Full rules: `outsystems-mentor-implementation` execution-gates §3b.
 - Do not deploy, rollback, promote, package, push, or create pull requests.
 
 If OutSystems MCP tools are unavailable, explain the gap and fall back to paste mode unless the user chooses to stop.

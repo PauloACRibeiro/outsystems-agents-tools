@@ -24,8 +24,8 @@ Before producing Studio-native output:
    `continue_in_mentor_studio`, or when the user explicitly overrides the snapshot
    decision.
 5. If the recommendation is `regenerate_in_mentor_web`, route the work back to
-   `mentor-app-generator` for regeneration prompts instead of producing Studio
-   prompts.
+   `mentor-app-generator` (not part of the colleague sprint-loop pack) for regeneration prompts instead of
+   producing Studio prompts.
 6. If the recommendation is `manual_review_required`, ask for the missing
    evidence named in the snapshot before producing Studio prompts.
 7. Treat observed, inferred, and unknown facts differently.
@@ -36,7 +36,7 @@ Before producing Studio-native output:
    snapshot or handoff explicitly exposes them.
 
 This mode does not generate Mentor Web requirement documents or regeneration
-prompts. Route those back to `mentor-app-generator`.
+prompts. Route those back to `mentor-app-generator` (not part of the colleague sprint-loop pack).
 
 Example gate:
 

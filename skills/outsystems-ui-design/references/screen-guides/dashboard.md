@@ -42,9 +42,10 @@ Sections, top to bottom:
 
 ## Layout
 
-- Use `Columns2Section` / `Columns3Section` layout wrappers to arrange sections side-by-side. Without them, all sections stack vertically
-- Counter tiles: wrap 3 counters in a `Columns3Section`, or 2 in a `Columns2Section` — so they appear as a row
-- Charts: wrap 2 charts in a `Columns2Section` so they appear side-by-side
+- Use the `Columns2` / `Columns3` layout blocks to arrange sections side-by-side. Without them, all sections stack vertically. The full set is `Columns2`–`Columns6` plus four asymmetric splits — see `references/patterns/adaptive.md`
+- Counter tiles: wrap 3 counters in a `Columns3`, or 2 in a `Columns2` — so they appear as a row
+- Charts: wrap 2 charts of comparable weight in a `Columns2` so they appear side-by-side
+- Two charts of *unequal* weight — a trend line beside a small donut — go in an asymmetric split instead: `ColumnsSmallLeft` / `ColumnsSmallRight` (~33/67) or `ColumnsMediumLeft` / `ColumnsMediumRight` (~60/40), putting the part-to-whole chart in the narrow column. Keep a summary list out of the narrow column; a table needs the width
 - Summary list: place as a flat section below the columns — it takes full width
 - See the `VO_AddSalesDashboardWithChartAndAnonymousAccess` example for the exact code pattern
 

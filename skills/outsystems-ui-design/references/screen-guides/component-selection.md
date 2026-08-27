@@ -1,8 +1,9 @@
 # Component Selection Guide
 
 
-> **Harvested from:** a curated OutSystems UI screen-guide reference set (`component-selection.md`) (read-only source, harvested 2026-07-13).
+> **Harvested from:** a curated OutSystems UI screen-guide reference set (`component-selection.md`) (read-only source, harvested 2026-07-13; the tabular-data row was locally corrected 2026-08-19 and the accordion-detail row added 2026-08-27 — see Merge-preserved table).
 > **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
+> **Merge note:** local corrections preserved where noted in `maintenance/refresh-checklist.md`.
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 Choose the right UI component for the content and interaction pattern. Using the wrong component causes usability failures regardless of styling.
@@ -11,7 +12,8 @@ Choose the right UI component for the content and interaction pattern. Using the
 
 | Content Type | Correct Component | Wrong Choice |
 |---|---|---|
-| Tabular data (structured rows/columns, 10+ items) | Data table (TableRecords) with sort, filter, pagination | Cards (too much scrolling, no column comparison) |
+| Read-only tabular data (structured rows/columns, 10+ items) | Data table (TableRecords) with sort, filter, pagination | Cards (too much scrolling, no column comparison) |
+| Spreadsheet-grade tabular data — inline cell editing, column grouping, virtual scrolling over very large datasets | OutSystems Data Grid (`Grid` block) — see `references/data-grid.md` | TableRecords with per-cell Input widgets (rebuilds a grid by hand) |
 | Image-heavy browsing (products, files, team) | Card grid (Gallery block or responsive card layout) | Table (images don't fit tabular layout) |
 | Hierarchical data (org chart, file tree) | Tree view or nested list with expand/collapse | Flat table (loses hierarchy) |
 | Key metrics at a glance | Counter tiles or KPI cards | Table row with numbers (no visual weight) |
@@ -29,6 +31,15 @@ Choose the right UI component for the content and interaction pattern. Using the
 | Breadcrumb trail for deep navigation | Breadcrumbs (Breadcrumbs block) | Back button only (loses context) |
 | Date selection | Date picker (DatePicker block) | Free text input (error-prone formatting) |
 | Date range selection | Date range picker (DatePickerRange block) | Two separate date pickers (disconnected UX) |
+| Compact record browsing with the detail revealed in place | Card list with an `Accordion` detail — only where the detail is at most **5 detail fields**, with `Accordion.MultipleItems` left at its `False` default so one item is open at a time | Accordion detail with more than 5 fields, or a comparison that needs several details open at once — use a sidebar or master-detail layout instead |
+
+> **Source for the accordion-detail row** (official ODC documentation, checked 2026-08-27):
+> `docs-odc` `src/eap/agentic-development/mentor-web/prompts.md` — the "Select a pattern"
+> table ("max 5 fields in detail" / "Avoid when … more than 5 detail fields or multiple
+> sections need to be open"), its "Pattern constraints" list, and the same page's
+> "Only one accordion item expands at a time to avoid visual clutter". The
+> one-open-at-a-time half is also the block's own default: `Accordion.MultipleItems`
+> is `False` (`references/patterns/content.md`).
 
 ## Form Controls
 
@@ -61,3 +72,4 @@ Choose the right UI component for the content and interaction pattern. Using the
 - Checkboxes for multi-select, radio buttons for single-select — never misuse
 - Goal-oriented search (finding a specific item) → pagination. Casual browsing → infinite scroll is acceptable
 - Progressive disclosure for complex forms: show only relevant fields per step, not all at once
+- Data Grid is a **separate Forge component installed per tenant**, not a built-in widget. Where it is not installed, TableRecords is the correct tabular answer — state which the design assumes

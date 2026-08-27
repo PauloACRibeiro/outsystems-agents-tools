@@ -1,0 +1,366 @@
+{
+  "schema_version": "1",
+  "app_name": "Elastic Search Sandbox",
+  "source": {
+    "kind": "existing-app-modernization",
+    "refs": [
+      "docs/superpowers/evidence/2026-07-14-ui-design-graduation/ia/fusion-map.md",
+      "docs/superpowers/evidence/2026-07-14-ui-design-graduation/ia/method-log.md"
+    ],
+    "grounding_notes": [
+      "Reconstructed 2026-08-08 from the real 2026-07-14 fusion decision, as the regression fixture for this skill. The 23 candidates, the 9 screens, every absorption and the one dissolution are verbatim from the fusion map; the archetype per screen, the navigation edges and the menu order are this skill's own vocabulary applied to that decision, not statements the source made.",
+      "N = 9, not the 8 the fusion table proposed: the human gate split Custom Scoring out of the Search Console, on the grounds that storing a Painless script is a different job from running a query. The human gate can split a fusion, and did.",
+      "data_bindings carry only assets the source document names. The fusion map is an IA decision record, not a data model — the tenant scan behind it found roughly 30 server actions and 7 entities whose names were never written down. Where a binding is thin here, that is the source's limit being reported rather than hidden.",
+      "Index_LoadData resolves to TWO screens: its reference half is onboarding and its console half is an index operation. A candidate splitting across screens is legitimate and the contract allows it."
+    ]
+  },
+  "app_chrome": {
+    "layout_block": "LayoutSideMenu",
+    "app_title": "Elastic Search Sandbox",
+    "menu": [
+      {"label": "Start", "target": "Start"},
+      {"label": "Setup", "target": "Setup"},
+      {"label": "Query Library", "target": "Query Library"},
+      {"label": "Search", "target": "Search Console"},
+      {"label": "Custom Scoring", "target": "Custom Scoring"},
+      {"label": "Indexes", "target": "Index Console"},
+      {"label": "Documents", "target": "Document Console"},
+      {"label": "Migration", "target": "Migration Console"},
+      {"label": "Migration Profiles", "target": "Migration Profiles"}
+    ]
+  },
+  "candidates": [
+    {
+      "id": "Home",
+      "source_ref": "fusion-map §2 — code companion absent entirely",
+      "disposition": "mapped",
+      "resolves_to": ["Start"],
+      "rationale": "The landing page was a bitmap of a slide. It is where the copy-paste audience arrives and it had no code companion at all."
+    },
+    {
+      "id": "Setup",
+      "source_ref": "fusion-map §3 row 2",
+      "disposition": "mapped",
+      "resolves_to": ["Setup"],
+      "rationale": "The only true onboarding page in the app. Stays unique because onboarding is a one-time linear task and does not belong inside a console."
+    },
+    {
+      "id": "Reference",
+      "source_ref": "fusion-map §3 row 3 — holds 50 queries, not the 33 first reported",
+      "disposition": "mapped",
+      "resolves_to": ["Query Library"],
+      "rationale": "A catalogue OVER the consoles. Folding it into one console would privilege that console over the others."
+    },
+    {
+      "id": "Search_Query",
+      "source_ref": "fusion-map §2 — code companion populated and correct",
+      "disposition": "mapped",
+      "resolves_to": ["Search Console"],
+      "rationale": "Single-query mode of one console. Near-clone of Search_Multiple, minus a labelled index field and the query-notes panel."
+    },
+    {
+      "id": "Search_Multiple",
+      "source_ref": "fusion-map §1 — the app's most mature screen",
+      "disposition": "mapped",
+      "resolves_to": ["Search Console"],
+      "rationale": "Multi-query mode of the same console, and the pattern donor: it already carries the live-console-beside-code-companion arrangement the redesign propagates."
+    },
+    {
+      "id": "Search_Template",
+      "source_ref": "fusion-map §2 — code companion present but empty",
+      "disposition": "mapped",
+      "resolves_to": ["Search Console"],
+      "rationale": "Template mode of the same console. Three screens differing by which query shape is submitted is one screen with a mode selector."
+    },
+    {
+      "id": "Adv_FunctionScore",
+      "source_ref": "fusion-map §3 row 4b — added at the gate",
+      "disposition": "mapped",
+      "resolves_to": ["Custom Scoring"],
+      "rationale": "Stays standalone: storing a scoring script is a different job from running a query. This was the fusion flagged as least confident, and the gate split it back out."
+    },
+    {
+      "id": "Index_Create",
+      "source_ref": "fusion-map §3 row 5",
+      "disposition": "mapped",
+      "resolves_to": ["Index Console"],
+      "rationale": "One index operation among six. The operations differ by payload, not by screen."
+    },
+    {
+      "id": "Index_Delete",
+      "source_ref": "fusion-map §3 row 5",
+      "disposition": "mapped",
+      "resolves_to": ["Index Console"],
+      "rationale": "One index operation among six; destructive treatment is a state of the console, not a screen."
+    },
+    {
+      "id": "Index_GetList",
+      "source_ref": "fusion-map §3 row 5",
+      "disposition": "mapped",
+      "resolves_to": ["Index Console"],
+      "rationale": "Listing indexes is the console's own resting state — it is what you see before choosing an operation."
+    },
+    {
+      "id": "Index_SetAlias",
+      "source_ref": "fusion-map §3 row 5",
+      "disposition": "mapped",
+      "resolves_to": ["Index Console"],
+      "rationale": "One index operation among six."
+    },
+    {
+      "id": "Adv_Dictionary",
+      "source_ref": "fusion-map §3 row 5 — 'neither was ever advanced'",
+      "disposition": "mapped",
+      "resolves_to": ["Index Console"],
+      "rationale": "Index creation with mappings. The Adv_ prefix said advanced; the job is index creation."
+    },
+    {
+      "id": "Adv_RealTimeIndexing",
+      "source_ref": "fusion-map §3 row 5 — 'neither was ever advanced'",
+      "disposition": "mapped",
+      "resolves_to": ["Index Console"],
+      "rationale": "Index settings. Same prefix, same misfiling."
+    },
+    {
+      "id": "Index_LoadData",
+      "source_ref": "fusion-map §3 rows 2 and 5 — split across both",
+      "disposition": "mapped",
+      "resolves_to": ["Setup", "Index Console"],
+      "rationale": "Two different jobs on one page. 'How do I bulk-load' (Kibana upload, Logstash, programmatic) is documentation and belongs in onboarding; actually loading data is an index operation and belongs in the console."
+    },
+    {
+      "id": "CRUD_Create",
+      "source_ref": "fusion-map §2 — code companion populated but text wrong",
+      "disposition": "mapped",
+      "resolves_to": ["Document Console"],
+      "rationale": "One of four near-clones. The proof they are clones is in the defects: three carry Create's notes verbatim."
+    },
+    {
+      "id": "CRUD_Retrieve",
+      "source_ref": "fusion-map §2 — carries Create's NOTES verbatim",
+      "disposition": "mapped",
+      "resolves_to": ["Document Console"],
+      "rationale": "Copy-paste sibling of CRUD_Create; retrieval is a mode, not a destination."
+    },
+    {
+      "id": "CRUD_Update",
+      "source_ref": "fusion-map §2 — carries Create's NOTES verbatim",
+      "disposition": "mapped",
+      "resolves_to": ["Document Console"],
+      "rationale": "Copy-paste sibling; needs the request-body region, which the console shows conditionally."
+    },
+    {
+      "id": "CRUD_Delete",
+      "source_ref": "fusion-map §2 — carries Create's NOTES verbatim",
+      "disposition": "mapped",
+      "resolves_to": ["Document Console"],
+      "rationale": "Copy-paste sibling; the only difference that matters is destructive treatment, which is a state."
+    },
+    {
+      "id": "MigrationDashboard",
+      "source_ref": "fusion-map §4 — 'a thin form over a deep engine'",
+      "disposition": "mapped",
+      "resolves_to": ["Migration Console"],
+      "rationale": "The operational half of migration. The screen the redesign's biggest win sits on."
+    },
+    {
+      "id": "Avd_ReIndex",
+      "source_ref": "fusion-map §3 row 7",
+      "disposition": "mapped",
+      "resolves_to": ["Migration Console"],
+      "rationale": "Re-indexing IS migration, and it returns an async task with no link to the screen that polls it. Fusing closes that loop."
+    },
+    {
+      "id": "Adv_TaskManagement",
+      "source_ref": "fusion-map §3 row 7",
+      "disposition": "mapped",
+      "resolves_to": ["Migration Console"],
+      "rationale": "The screen that polls the async task ReIndex returns. It is the other end of a loop that was never connected."
+    },
+    {
+      "id": "MigrationProfiles",
+      "source_ref": "fusion-map §3 row 8",
+      "disposition": "mapped",
+      "resolves_to": ["Migration Profiles"],
+      "rationale": "Stays standalone: admin CRUD over a different entity. Configuring a migration is a different job from operating one."
+    },
+    {
+      "id": "Adv_EscapeForJSON",
+      "source_ref": "fusion-map §3 — 'dissolved entirely'",
+      "disposition": "dissolved",
+      "dissolved_into": "An inline escape affordance beside every raw-DSL textarea, on whichever console holds one.",
+      "rationale": "It was never a destination. Nobody navigates somewhere to escape a string — they need it where they are already typing."
+    }
+  ],
+  "screens": [
+    {
+      "name": "Start",
+      "purpose": "Route a developer to the screen that demonstrates the API they came for.",
+      "archetype": "instructional",
+      "behavior": "Presents the app's capabilities as native cards, each API name deep-linking to the console that demonstrates it. Replaces a bitmap of a slide with the app's actual router.",
+      "key_interactions": [
+        "Select a capability card to jump to the console that demonstrates it",
+        "Read a one-line description of each capability without leaving the page"
+      ],
+      "data_bindings": [],
+      "accepts": []
+    },
+    {
+      "name": "Setup",
+      "purpose": "Take a first-time user from an empty tenant to a working, populated index.",
+      "archetype": "instructional",
+      "behavior": "Walks the one-time setup as visible steps on one page — connection, then the three bulk-load routes (Kibana upload, Logstash, programmatic) absorbed from the reference half of the old load-data screen. Steps are visible, not hidden behind Next.",
+      "key_interactions": [
+        "Work down the setup steps in order, each independently checkable",
+        "Copy a bulk-load snippet for the chosen route",
+        "Continue into the Index Console once an index exists"
+      ],
+      "data_bindings": [],
+      "accepts": []
+    },
+    {
+      "name": "Query Library",
+      "purpose": "Browse the stored query catalogue and open any of them in the right console.",
+      "archetype": "gallery-grid",
+      "behavior": "A filterable card grid over the stored queries, one card per query with its snippet visible, deep-linking into the console that runs it. Activates the tag taxonomy the old screen carried but never used.",
+      "key_interactions": [
+        "Filter the grid by tag",
+        "Read a query's snippet from its card without opening it",
+        "Open a query in the Search Console pre-loaded"
+      ],
+      "data_bindings": [
+        {
+          "name": "GetRecordsByQuery",
+          "kind": "action",
+          "usage": "Reads the stored query catalogue for the grid.",
+          "behavior_notes": "Named in the source only as the action wrongly displayed on Adv_FunctionScore's code panel; its result shape must be re-verified against the tenant before a blueprint binds to it."
+        }
+      ],
+      "accepts": []
+    },
+    {
+      "name": "Search Console",
+      "purpose": "Run any search shape against an index and show the request beside the result.",
+      "archetype": "edit-form",
+      "behavior": "One console with a Single / Multi / Template mode selector, replacing three near-identical screens. Every mode shows the live request beside the OUTSYSTEMS CODE companion panel — the pattern the app already invented on Search_Multiple and denied to everything else — and returns a tabbed response.",
+      "key_interactions": [
+        "Choose Single, Multi or Template mode",
+        "Pick a target index",
+        "Submit the query and read the tabbed response",
+        "Copy the accompanying action snippet from the code companion",
+        "Escape a raw DSL string inline, beside the textarea"
+      ],
+      "data_bindings": [
+        {
+          "name": "GetRecordsByQuery",
+          "kind": "action",
+          "usage": "Executes the composed query for all three modes.",
+          "behavior_notes": "Signature must be re-verified per mode: the source records that the three old screens differed by query shape, and it does not record whether one action covered all three."
+        }
+      ],
+      "accepts": ["query_id"]
+    },
+    {
+      "name": "Custom Scoring",
+      "purpose": "Store and manage Painless scoring scripts, and show which queries use each.",
+      "archetype": "master-detail",
+      "behavior": "Lists the stored scripts and edits one at a time. Closes a loop the old screen left open by showing, per script, which queries consume it and linking back into the Search Console.",
+      "key_interactions": [
+        "Select a stored script from the list to edit it",
+        "Save a script and see it appear in the list",
+        "See which queries use the selected script",
+        "Follow a usage link back into the Search Console"
+      ],
+      "data_bindings": [
+        {
+          "name": "StoreFunctionScoreScript",
+          "kind": "action",
+          "usage": "Persists the edited scoring script.",
+          "behavior_notes": "This is the action the old screen was actually for. Its code panel advertised GetRecordsByQuery instead — the wrong action name shipped on the screen, which is why the binding is stated explicitly here."
+        }
+      ],
+      "accepts": ["script_id"]
+    },
+    {
+      "name": "Index Console",
+      "purpose": "Perform every index-level operation from one place.",
+      "archetype": "edit-form",
+      "behavior": "Lists existing indexes as its resting state, then performs a chosen operation against one: create, create-with-mappings, delete, set alias, adjust real-time settings, or load data. Six former screens become an operation selector because they differ by payload, not by task.",
+      "key_interactions": [
+        "See the current indexes on arrival, before choosing anything",
+        "Choose an index operation",
+        "Fill the operation's payload and submit it",
+        "Confirm before a destructive operation runs",
+        "Escape a raw DSL string inline, beside the textarea"
+      ],
+      "data_bindings": [],
+      "accepts": ["index_name"]
+    },
+    {
+      "name": "Document Console",
+      "purpose": "Create, retrieve, update and delete a single document against an index.",
+      "archetype": "edit-form",
+      "behavior": "One console with a CRUD mode selector, replacing four screens that were one screen copy-pasted four times. The request-body region appears only for Create and Update; Delete carries destructive treatment.",
+      "key_interactions": [
+        "Choose Create, Retrieve, Update or Delete",
+        "Supply the document id and, for Create/Update only, the request body",
+        "Submit and read the response",
+        "Confirm before a delete runs"
+      ],
+      "data_bindings": [],
+      "accepts": ["index_name"]
+    },
+    {
+      "name": "Migration Console",
+      "purpose": "Tell an operator whether a migration run is alive, progressing, or stuck — and act on it.",
+      "archetype": "dashboard",
+      "behavior": "Surfaces the migration engine the old screen hid: run status as a badge rather than raw text, progress against expected-vs-indexed, the per-record failure log, retry and attempt tracking, and the heartbeat/stale-bucket signal that answers 'is the worker dead?'. Absorbs re-index (which starts a run) and task management (which polls it), closing a loop that had no link between its ends.",
+      "key_interactions": [
+        "Read run status and progress at a glance",
+        "Start a re-index run and land on the run it created",
+        "Open the per-record failure log for a run",
+        "Retry a failed record",
+        "See the worker heartbeat and whether a bucket has gone stale",
+        "Open the profile a run was configured from"
+      ],
+      "data_bindings": [
+        {
+          "name": "ESMigrationFailure",
+          "kind": "entity",
+          "usage": "Per-record failure log for the selected run.",
+          "behavior_notes": "A whole entity with zero UI in the old app. It is a per-RECORD log, so its volume scales with the migration, not with the run count — the screen needs paging from the start."
+        }
+      ],
+      "accepts": ["run_id", "profile_id"]
+    },
+    {
+      "name": "Migration Profiles",
+      "purpose": "Manage the reusable configurations migration runs are started from.",
+      "archetype": "list-table",
+      "behavior": "Admin CRUD over migration profiles. Configuration only — starting and watching a run is the Migration Console's job, and keeping the two apart is why this screen was not fused into it.",
+      "key_interactions": [
+        "Browse existing profiles in a table",
+        "Create or edit a profile",
+        "Delete a profile, with confirmation",
+        "Start a run from a profile and follow it into the Migration Console"
+      ],
+      "data_bindings": [],
+      "accepts": []
+    }
+  ],
+  "navigation": [
+    {"from": "Start", "to": "Search Console", "trigger": "select the search capability card"},
+    {"from": "Start", "to": "Index Console", "trigger": "select the index capability card"},
+    {"from": "Start", "to": "Document Console", "trigger": "select the document capability card"},
+    {"from": "Start", "to": "Migration Console", "trigger": "select the migration capability card"},
+    {"from": "Start", "to": "Setup", "trigger": "select the getting-started card"},
+    {"from": "Start", "to": "Query Library", "trigger": "select the query catalogue card"},
+    {"from": "Setup", "to": "Index Console", "trigger": "continue once an index exists", "payload": "index_name"},
+    {"from": "Query Library", "to": "Search Console", "trigger": "open a stored query", "payload": "query_id"},
+    {"from": "Search Console", "to": "Custom Scoring", "trigger": "open the scoring script a query uses", "payload": "script_id"},
+    {"from": "Custom Scoring", "to": "Search Console", "trigger": "follow a usage link back to the query", "payload": "query_id"},
+    {"from": "Index Console", "to": "Document Console", "trigger": "work with documents in the selected index", "payload": "index_name"},
+    {"from": "Migration Console", "to": "Migration Profiles", "trigger": "open the profile a run was configured from"},
+    {"from": "Migration Profiles", "to": "Migration Console", "trigger": "start a run from this profile", "payload": "profile_id"}
+  ]
+}

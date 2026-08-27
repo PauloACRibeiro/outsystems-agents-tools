@@ -12,6 +12,15 @@ description: Single-page reference for every OutSystems UI block — SourceBlock
 
 > **Purpose:** Single-page reference of every block in OutSystems UI with its `SourceBlock` identifier, key arguments, placeholders, and category. Use when picking a block, when looking up the exact block name, or when validating an existing block usage.
 
+## Lookup order
+
+Block lookups are two steps, and this file is step one.
+
+1. **This file first.** A name, a `SourceBlock` identifier, an argument name, a placeholder name, or "does a block for this exist at all" is answered here in one grep, with no category file opened. Read `## Critical rules (don't ignore)` at the foot of this page before acting on any row — it carries the traps that make a syntactically correct usage still fail.
+2. **`patterns/<category>.md` second, and only for what step one does not carry** — argument semantics, event payloads, composition rules, per-block accessibility notes, and the worked examples. The section heading a row sits under names the category file to open — a row under `## Navigation patterns` is documented in full in `patterns/navigation.md`.
+
+Opening a category file to recover a name that is already in a row here costs a load for nothing. Going the other way — acting on a row here when the question was really about behaviour or composition — is the failure this order is meant to prevent, so step two is not optional once the question stops being "what is it called".
+
 ## Parameter and placeholder naming
 
 When using OutSystems UI blocks via the modelAPI (typed `IMobileBlockInstanceWidget`), every `Parameter` and `Placeholder` value uses **FULL PATH format** — `<SourceBlock>.<Name>`.

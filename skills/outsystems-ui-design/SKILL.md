@@ -114,11 +114,21 @@ that named the wrong product's widget:
    a compound string breaks that downstream contract even when the local
    validator still passes it.
 4. **Ambiguity is flagged with the top-2 candidate patterns**, presented as a
-   numbered question for the user. Never silently pick one interpretation of an
-   ambiguous region.
+   labeled numbered question for the user (`Q1` / `Q1a` / `Q1b` — see the question-label
+   protocol in Step 3). Never silently pick one interpretation of an ambiguous
+   region, and never guess which question an unmatched answer meant.
 5. **Per-round diff statements only.** From round 2 of the refinement loop onward,
    state only *what changed* since the previous round. Never re-describe the whole
    screen — a full re-description buries the diff the user needs to react to.
+
+**User-visible wording is grounded, not invented.** Every string a user reads —
+chrome labels in `app_chrome`, headings, button text, empty-state and error
+lines — is named from the ODC taxonomy and written to the Product Language and
+Style Guide, per `references/copy-grounding.md`, and stays consistent with how
+this app already phrases the same action. Deliberate divergence from an
+established phrasing is allowed and is **stated in the round's diff**; silent
+divergence is not. This is a constraint on generation, not advice to write
+carefully — `scripts/check_copy.py` is the mechanical half of it.
 
 ## Working directory contract
 
@@ -127,11 +137,17 @@ Each run creates one per-screen directory under the **user's current project roo
 
 ```
 design/<screen-slug>/
-  wireframe.<ext>          # copy of the input screenshot
+  wireframe.<ext>          # copy of the input screenshot — or, in generated-mock
+                           # intake, wireframe.html, a verbatim copy of preview.html
+  wireframe.md             # the design-source slot INSTEAD of wireframe.<ext> when
+                           # the source is a live URL or local HTML: source URL,
+                           # observed anatomy, extracted design tokens
   pattern-tree.md          # current round's tree — overwritten every round
   preview.html             # current round's HTML preview — overwritten every round
   blueprint.json           # emitted only at approval (Step 4)
   validation-report.txt    # validator output for the emitted blueprint
+  alternatives.md          # only when the optional pre-loop alternatives round ran
+  alternatives/<slug>/preview.html   # throwaway; never emits a blueprint
 ```
 
 `<screen-slug>` is the kebab-cased screen name (e.g. `work-queue-overview`).
@@ -182,12 +198,16 @@ concluding an asset is missing. It is not a sign the skill failed to install.
 |---|---|
 | Any chart (bar, line, pie, donut, sparkline…) | `references/charts.md` |
 | Any map region | `references/maps.md` |
+| Table region needing inline cell editing, column grouping, or virtual scrolling over a large dataset | `references/data-grid.md` — the OutSystems Data Grid. A **separate Forge component installed per tenant**, so confirm availability with the user; where it is not installed, `TableRecords` stays correct |
 | Carousel, Sidebar, DatePicker, Dropdown | `references/patterns/interaction.md` |
 | AlignCenter, Separator, gesture affordances | `references/patterns/utilities.md` |
-| Need exact block argument/placeholder names without full category detail | `references/blocks-index.md` — one-page args/placeholders/events index |
+| Need exact block argument/placeholder names without full category detail | `references/blocks-index.md` — one-page args/placeholders/events index, and the first stop for any "what is it called / does one exist" lookup; drop into the matching `patterns/<category>.md` only once the question turns to behavior, composition or events (its `## Lookup order` states the two steps) |
 | Verifying a built-in widget's exact properties (Input, Dropdown, TableRecords…) | `references/built-in-widgets.md` — generated runtime contract. **Not included in the public distribution**; if it is absent, generate it once per `references/built-in-widgets-regeneration.md`, and until then say a property list is unverified rather than guessing one |
 | Screen strongly resembles a stock scaffold; designing app-chrome nav reachability | `references/screen-templates.md` |
+| Proposing any **user-visible string** — heading, button label, menu entry, field label, placeholder, empty/loading/error line, toast | `references/copy-grounding.md` — the OutSystems Product Language and the ODC taxonomy decide product wording; we do not invent it. Its two sources are **not included in the public distribution**; where they are absent the rule degrades to sibling consistency and the run says once that copy is ungrounded |
 | A region needs behavior beyond a pattern's inputs — before flagging `custom_block_needed` | `references/extensibility.md` |
+| The design source is a **live URL or a local HTML file** rather than an image | `references/live-source-inspection.md` — how to drive a mockup SPA without misreading it, and the computed-style token pull the live-URL intake mode depends on |
+| The screen's direction is genuinely open — a rough sketch that commits to no layout, a close-call archetype the user could not settle, or an explicit ask to see options before converging | `references/divergent-alternatives.md` — the optional pre-loop alternatives round. **Not** for a wireframe that already commits to a layout |
 | Screen archetype confirmed at Step 1 | The matching archetype guide (below) |
 | A cross-cutting design concern surfaces | The matching cross-cutting guide (below) |
 
@@ -247,6 +267,119 @@ behaviour, and navigation contract — including what it `accepts` and who
 arrives carrying it — arrive with the brief. The wireframe still wins on visual
 anatomy, archetype guides included: the brief pre-answers what the screen *is*,
 not what it looks like.
+
+**Generated-mock intake.** Step 1 above assumes an input screenshot. When **no
+wireframe exists** and a screen-inventory brief is present for this screen, the
+agent MAY generate a self-contained HTML mock and use it as the design source
+for the run. Both halves of that condition are required: the brief supplies the
+archetype, chrome, bindings and behaviour the mock would otherwise be inventing,
+and **a wireframe the user brings always wins** — with one in hand this mode is
+not available. Field-proven on the 2026-08-25 restaurant-app run (4 screens),
+where it was improvised step by step; this makes it a sanctioned path with a
+stated contract.
+
+What the mode is, concretely:
+
+1. Generate the mock and write it as `preview.html` in the run directory, built
+   on `templates/preview-shell.html` like any other round's preview.
+2. That file is then **copied verbatim to `wireframe.html`** — the design-source
+   slot the rest of the workflow reads. Verbatim means byte-identical: the two
+   files are the same artifact in two roles, not two drafts.
+3. Record the inversion in `evidence_boundary.grounding_notes` at Step 4 — that
+   the design source was generated by this run rather than supplied, and that
+   the brief is what grounded it.
+4. Enter the refinement loop unchanged: **the mock is round 1**, the user reacts
+   to it in plain language exactly as they would to a preview built from a
+   screenshot, and the loop still exits only on explicit approval. The user
+   still approves; nothing here shortens that.
+
+What the mode may not do — each of these is a defect, not a judgement call:
+
+- It **does not skip the archetype confirmation** of step 4 above. The brief's
+  archetype is still confirmed with the user before Step 2.
+- It **does not skip the pattern tree.** Every round still writes and prints one
+  (Step 3), mock-sourced or not.
+- The mock **never counts as user evidence.** It is this run's own output; citing
+  it as something the user provided, or as grounding for a mapping the brief does
+  not carry, is a grounding lie. Say "generated from the inventory brief".
+
+**Live-URL / HTML source mode.** A sibling intake path to generated-mock, for the
+opposite situation: the user *does* bring a design source, but it is a **live URL**
+(a hosted mockup, usually a single-page app) or a local HTML file rather than an
+image. Field-proven on the 2026-08-27 restaurant-app-v2 run, where every step of
+it was improvised because the contract above assumes a screenshot file. Read
+`references/live-source-inspection.md` before touching the page — a mockup SPA
+renders inside an iframe with a JS-written DOM, so text reads come back empty and
+pixel coordinates misclick.
+
+**The mode runs in this order**, before Step 2: (1) read the page and select
+which screen this run is designing; (2) pull the design tokens; (3) settle any
+scope-vs-visual conflict; (4) write `wireframe.md`; (5) confirm the archetype
+with the user as step 4 of Step 1 requires. Conflict before archetype, because a
+screen that the conflict round rejects is a screen with no archetype to confirm.
+**The live page is not round 1** — unlike generated-mock intake, where the mock
+*is* round 1, a live source is a source: round 1 is the first `preview.html` this
+run authors from it, exactly as it would be from a screenshot.
+
+There is no image to copy, so the design-source slot is a written record:
+**`design/<screen-slug>/wireframe.md`**, holding three things —
+
+1. **The source URL** (or file path) and the date it was read.
+2. **The observed anatomy** of this screen, read out of the rendered DOM rather
+   than transcribed from a screenshot by eye.
+3. **The extracted design tokens** — brand/accent colour, corner radius, font
+   stack, surface and input backgrounds, elevation, spacing rhythm — each with
+   the selector it was read from.
+
+A screenshot is still a useful reading aid even though no image is required:
+keep any capture beside the record as `wireframe-<state>.png` and reference it
+from `wireframe.md`, so a later reader sees what was looked at. `wireframe.md`,
+not the capture, is the design-source slot.
+
+**Extracting those tokens from computed style is a required step of this mode,
+not optional polish.** A live source is the one design input that carries its own
+exact values, and they seed the blueprint's `design_system` (and `primary_color`)
+directly. Skipping the pull and eyeballing colours instead throws away the only
+advantage the source has over a screenshot. The recipe is in
+`references/live-source-inspection.md`; the values land in `wireframe.md` first so
+every token in `design_system` traces to something measured.
+
+Three situations this mode has to answer, all of which the v2 run met:
+
+- **A multi-screen mockup.** One page routinely holds every screen of the app,
+  while this skill is **one screen per run** (scope guard). Before Step 2, select
+  the region or state that is *this run's* screen — a route, a tab, a modal, a
+  section — and **record which** in `wireframe.md`: the route or selector used and
+  the interaction that reached it, so a later run can reproduce the same view. The
+  other screens on that page belong to other runs; do not design them here.
+- **The wireframe-absent screen.** A screen in the inventory may have **no mockup
+  surface** anywhere on the page. That is not an error and not a reason to stop:
+  the run proceeds **EXTRAPOLATED** — `wireframe.md` says so in those terms, names
+  what the extrapolation is built from (the inventory brief, the tokens shared with
+  the screens that *do* exist, the closest sibling screen), and the same disclosure
+  is carried into `evidence_boundary.grounding_notes` at Step 4. Two of seven v2
+  screens took this path. Extrapolated anatomy is never presented as observed.
+- **A scope-vs-visual conflict.** The source may depict a materially different
+  product than the approved PRD — the v2 mockup carried AI assistant panels,
+  credentials screens and a multi-restaurant switcher the PRD had no room for. The
+  rule is **adopt visually, reject scope**: the mockup is authority on visual
+  language, the PRD is authority on what the product contains. Run one explicit
+  **decision round** that lists each conflict with a recommendation, then record
+  the outcome where it outlives the chat. Two different records, because two
+  different owners: **this run's own output** carries the decision and every
+  adopted deviation — `wireframe.md`, the round's what-changed statement, and
+  `evidence_boundary.grounding_notes` at Step 4 — while a conflict implying a
+  change upstream is written up as a **proposal** naming the artifact and the
+  requirement ID it touches: the PRD under `docs/specs/`, the screen list and
+  chrome in `design/screen-inventory.json`. **This skill never edits either
+  artifact.** An approved PRD and a validated inventory belong to their owner,
+  who applies the correction after the operator approves it — the same routing as
+  an inventory count, repaired upstream rather than edited to pass. The round is
+  **once per app**, not once per screen —
+  the mockup is page-wide, so the first run that meets the conflict settles it and
+  records the decision where later runs inherit it. A conflict is **never silently
+  absorbed** (adopting the extra scope) and never silently dropped (designing past
+  it without saying so).
 
 ### Step 2 — Inference pass
 
@@ -327,6 +460,14 @@ on the bundled catalog.
 
 ### Step 3 — Refinement loop
 
+**Optional first, when the direction is open:** a wireframe that commits to no
+layout, an archetype the Step 1 confirmation could not settle, or an explicit ask
+for options leaves this loop nothing to refine — it converges on whichever reading
+happened first. In that case run the throwaway alternatives round in
+`references/divergent-alternatives.md` before round 1, pick one, and enter the loop
+with the pick. Where the wireframe already decides the layout, skip it: inventing
+alternatives to a decided design manufactures choice the input never offered.
+
 Each round, in order:
 
 1. **Write/overwrite** `design/<screen-slug>/preview.html` — a fully self-contained
@@ -336,10 +477,22 @@ Each round, in order:
    The preview is a design-communication artifact, explicitly *not* pixel-parity —
    keep the template's disclaimer footer.
 2. **Write/overwrite** `design/<screen-slug>/pattern-tree.md` and **print the compact
-   pattern tree in chat**, with every flagged ambiguity as a numbered question the
-   user can answer by number or in plain language.
+   pattern tree in chat**, with every flagged ambiguity as a labeled numbered
+   question (`Q1`, `Q2`, …) the user can answer by label or in plain language.
 3. The user reacts in plain language. **Re-infer only the affected subtree** and
    re-render; untouched regions are never re-derived.
+
+**Question labels are globally unique across the whole message.** Every open
+question in a round carries its own label — `Q1`, `Q2`, `Q3` — and every option
+under it carries that question's label plus a letter: `Q1a`, `Q1b`, `Q2a`. Never
+restart numbering per question, and never label options with bare letters or bare
+numbers, so a bare short answer identifies exactly one thing. (Measured
+2026-08-25: three questions each offering options `a`/`b` drew the answer "2",
+which matched nothing, and cost a clarification round.)
+
+When a reply **matches no label**, ask **one clarification, never a guess** —
+quote the labels that are still open and stop there. This is hard gate 4's
+never-silently-pick rule applied to the answer rather than to the question.
 
 Every round from the second onward opens with a **what-changed statement** — the
 diff since the last round, nothing more (hard gate 5). The loop exits only on
@@ -350,6 +503,12 @@ explicit user approval of the current tree.
 On approval, fill the OMI enriched blueprint at
 `design/<screen-slug>/blueprint.json` (schema:
 `schemas/enriched-blueprint.schema.json`), with all of:
+
+- `schema_version` — **`schema_version` is the literal string `"2"`** for this
+  blueprint, and the schema admits no other value. It is not a version you
+  choose or increment, and it is **not** the screen inventory's `"1"`: those are
+  two different artifacts with two independent version lines, and conflating
+  them fails the blueprint on its very first key.
 
 - `app_chrome` — the chosen layout block **plus its actual menu/nav content**:
   every top-bar or side-menu page link's label and which one is active, not
@@ -367,6 +526,18 @@ On approval, fill the OMI enriched blueprint at
   (only `layout_block` is required), but the validator emits an advisory
   warning when a menu-bearing layout (`LayoutSideMenu`/`LayoutTopMenu`)
   carries no `menu` content.
+  **On an app created from the standard ODC Web template, `app_chrome` maps
+  onto chrome that already exists** — such apps are observed carrying
+  `LayoutTopMenu` with the `Menu` block, and they ship the `Common`
+  authentication and profile screens the ODC documentation calls pre-built and
+  editable. Declaring `LayoutTopMenu` plus the real menu entries
+  is therefore adopting that chrome, which is the default; a different layout
+  block is a deliberate replacement, so say so in the round's what-changed
+  statement rather than letting it read as a fresh choice. For the same reason
+  the `Common` screens are not designed from scratch by default: a design run
+  on `Login` or `UserProfile` is styling a screen that exists. The measured
+  template contents are in
+  `outsystems-mentor-implementation/references/odc-app-shell-first-scaffold.md`.
 - `blocks` — reusable web blocks identified during the loop. **An empty array is a
   legitimate answer** — a screen that shares nothing and repeats nothing has no
   blocks, and inventing one to look thorough is the same defect as inventing a
@@ -393,6 +564,16 @@ On approval, fill the OMI enriched blueprint at
   Each array member requires exactly these keys: **`name`**, **`type`**,
   **`attributes`** (an array of attribute names). The key is `attributes` — **not**
   `key_attributes`.
+  **A new entity reaches the capability plan in the same round it is emitted.**
+  When this blueprint names an entity the plan's **Data Intent** does not carry,
+  update the plan's Data Intent **in the same round** — before the handoff, not
+  at the next screen. `validate_blueprint.py --plan` will find it either way; the
+  difference is *when*. Left to the validator it surfaces N screens later, as a
+  batch of unrelated entity names with no memory of which screen wanted which and
+  why (measured twice on the 2026-08-27 restaurant-app-v2 run, 11 entity names
+  between them). Fixing it while the design decision is still in the room costs
+  one line. This is the plan-side half of the `--plan` reconciliation below: that
+  flag is the safety net, not the workflow.
 - `icon_mapping` — each array member requires **`role`** and **`outsystems_icon`**.
   The key is `outsystems_icon` — **not** `icon`. Its value is a **bare Phosphor icon
   name**: `house`, `gear`, `magnifying-glass`, `arrow-right`, `trash`, `file-text`.
@@ -404,7 +585,36 @@ On approval, fill the OMI enriched blueprint at
   asset on this field — imitate the rule.** `scripts/validate_blueprint.py` now
   rejects class syntax, so a wrong value fails loudly instead of reaching OMI
   unpatched (Phase 3 GAP-6, where it did exactly that across eight screens).
-- `roles`, `acceptance_checklist`.
+- `roles`, `acceptance_checklist` — see **When a section is legitimately
+  empty** below before writing either one.
+
+## When a section is legitimately empty
+
+Adopted 2026-08-24 from the `OutSystems/-UX-UI-Hub` mining pass (X-16): ceremony
+scaling belongs **in the template that produces the artifact**, as a condition
+attached to each section, not in the operator's memory.
+
+The schema makes every top-level key required, so no section is ever dropped.
+Several are correctly **empty** — and an operator facing a required key with
+nothing true to put in it will invent something plausible. **That padding is the
+defect this section exists to prevent.** It is the same failure as inventing a
+chart: content that exists to make the artifact look complete.
+
+| Section | Empty is the right answer when | Worked case |
+|---|---|---|
+| `blocks` | the screen shares nothing and repeats nothing | see the `blocks` bullet in Step 4 — it carries the full rule, including why a block seen once is under-observed |
+| `entities` | the screen names no data producer at all | an `instructional` screen — a getting-started page, a launcher, a reference card. It explains rather than operates, so there is nothing for it to bind |
+| `icon_mapping` | the wireframe shows no icons | a plain form or a text-only detail view. Do not map an icon the wireframe never drew, and do not add one "for polish" — that is a design decision the user never approved |
+| `roles` | nothing on the screen is role-gated | a screen every principal the app admits can reach. An empty `roles` says *no gating was designed*; it does not say the app is anonymous |
+
+**`acceptance_checklist` is never empty.** It is the one required section with
+no legitimate empty state: a screen with nothing worth checking is a screen with
+nothing worth building. `scripts/validate_blueprint.py` rejects an empty one —
+before 2026-08-24 the field was unchecked and an empty list passed clean, which
+is exactly how a section quietly stops being produced.
+
+A list of what may be empty, without a statement of what may not, licenses
+over-omission. Both halves are the rule.
 
 ⚠️ **The schema is the contract, not this prose.** Field names above are listed
 because getting them wrong is the single most common way a run fails Step 4 — a
@@ -493,8 +703,33 @@ Every entity in `entities[]` is one this app will **create**, unless it carries
 full, using OMI's exact field names:
 
 - `name` — the attribute name.
-- `data_type` — e.g. `text`, `integer`, `longInteger`, `decimal`, `boolean`,
-  `dateTime`, `date`, `email`, `currency`, or a relationship `"<Entity> Identifier"`.
+- `data_type` — a **closed vocabulary**, enforced by the schema and the
+  validator. An open string here is unvalidatable, and what it hides is a
+  certain publish failure rather than a style slip (see the class rule below).
+  Three admitted forms:
+  1. **A basic type.** Either the ODC literal names — `Text`, `Integer`,
+     `Long Integer`, `Decimal`, `Currency`, `Boolean`, `Date`, `Time`,
+     `Date Time`, `Email`, `Phone Number`, `Binary Data` — or this skill's
+     camelCase spelling of the same twelve (`text`, `integer`, `longInteger`,
+     `decimal`, `currency`, `boolean`, `date`, `time`, `dateTime`, `email`,
+     `phoneNumber`, `binaryData`), plus the identifier tokens in circulation:
+     `integerIdentifier`, `longIntegerIdentifier`, `platformDefaultIdentifier`.
+     Both registers are admitted because both are measurably in use — this
+     skill's fixtures write camelCase, OMI's contract writes the ODC literal.
+     **Write one register per blueprint**: the cross-blueprint check compares
+     type strings literally, so `text` in one and `Text` in another reads as a
+     conflicting declaration of the same attribute.
+  2. **A `Text` with its length** — `Text(200)`, `Text(50)`. State it on any
+     Text attribute whose content can exceed 50: an unstated length silently
+     *chooses* 50 and truncates.
+  3. **A relationship** — `"<TargetEntity> Identifier"`, single-token target.
+
+  Not members, and refused: the App Generator's engine-side kinds that have no
+  ODC basic type (`url`, `percentage`, `rating`, `imageUrl`, `multiLineText`,
+  `foreignKey`), and near-miss spellings such as `DateTime` for `Date Time` —
+  a near-miss is read as a Text attribute named after a type, which publishes
+  cleanly and is wrong.
+
   **Ordinary auto-number primary keys: declare the literal `Long Integer`** —
   with auto-number, mandatory and primary-key set — **not any
   `Identifier`-suffixed type.** `Integer Identifier`, `Long Integer Identifier`
@@ -521,6 +756,14 @@ full, using OMI's exact field names:
   **The validator hard-fails `enum_values` set on a non-foreign-key
   attribute** — the field only means something as the record list a foreign
   key points at; on any other attribute it is a contract error, not a hint.
+- A foreign key's `data_type` is `<TargetEntity> Identifier`, and **the
+  validator hard-fails a target declared nowhere** — the target needs an
+  `entities[]` entry (flag `exists: true` if it is already in the target app)
+  or an `enum_values` list on this attribute seeding it as a static entity.
+  `User Identifier` and `Role Identifier` are platform-supplied types, so they
+  need no entry. Announcing the target in `target_context.existing_assets` is
+  not a declaration: that field says the app has assets, `exists: true` says
+  which entity is one.
 
 A **static entity** may additionally declare its own design-time rows via an
 optional entity-level `records` array (e.g.
@@ -635,6 +878,42 @@ no path is named, never go hunting beyond the install directory.) On failure: sh
 refinement loop, and re-validate. **Never hand off a failing blueprint.** On
 success, save the passing output as `validation-report.txt`.
 
+**Grading the run as a handoff.** While the design is still being drawn, some
+findings are advice. Once OMI depends on them they are defects. Add `--handoff`
+at the moment you hand the blueprint over:
+
+```bash
+python3 scripts/validate_blueprint.py design/<screen-slug>/blueprint.json --handoff
+```
+
+Windows PowerShell:
+
+```powershell
+python scripts\validate_blueprint.py design\<screen-slug>\blueprint.json --handoff
+```
+
+The graduating warnings — the prose-only repeat widget above, and a bound asset
+missing from `target_context.existing_assets` — then print under
+`HANDOFF BLOCKED:` and exit 1 instead of advising. The finding text is
+identical; only the channel and the exit code change, and the contract verdict
+is untouched: a graduating warning is not a contract error and the blueprint
+still reports `VALID`. A warning graduates only if you can always clear it by
+editing the blueprint, so there is no waiver and none is needed; warnings that
+can be a legitimate final state — a layout with no menu, an entity the screen
+reaches through a reused block — stay advisory under the flag. It works on a
+directory run too, blocking if any blueprint carries one. **Without `--handoff`
+the report is byte-for-byte what it was before the flag existed.**
+
+**Placeholder markers are rejected.** `TODO`, `TBD`, `FIXME`, `PLACEHOLDER`, a
+bracketed `<fill in>`, or a value that is nothing but `...` is a contract error
+in any gate-bearing field — names, descriptions, entity and attribute names and
+types, region names and `outsystems_hints.block`, roles, icons. A blueprint
+whose entity is called `TBD` passes every shape rule and hands OMI a literal
+entity called TBD, so this fails closed rather than warning. The free-prose
+channels are deliberately exempt: record what is still open in
+`evidence_boundary.grounding_notes` / `review_notes`, `target_context.review_notes`
+or `acceptance_checklist`, never in the field itself.
+
 **Validating more than one blueprint at once.** Pass a directory or several
 paths instead of one file when checking blueprints from separate runs that
 share the same app's data model:
@@ -684,6 +963,60 @@ are entities. Matching is word-bounded, so `QueryHistoryArchive` in the plan
 does not satisfy an entity named `QueryHistory`. An entity flagged
 `exists: true` is still checked: the build must not create it, but the plan
 should still name the data the screen binds to.
+
+**Reconciling against the screen inventory.** When this run was briefed from an
+`outsystems-screen-inventory` artifact, add `--inventory <path>` to check the
+tier boundary — the inventory decided the app's chrome, its screen list and its
+per-screen assertion counts, and the design run received those as a prose brief:
+
+```bash
+python3 scripts/validate_blueprint.py design/<screen-slug>/blueprint.json \
+  --inventory design/screen-inventory.json
+```
+
+Windows PowerShell:
+
+```powershell
+python scripts\validate_blueprint.py design\<screen-slug>\blueprint.json `
+  --inventory design\screen-inventory.json
+```
+
+**This matters most for a single-screen run.** The shared-chrome check above
+needs two blueprints to compare, so one screen on its own could drop the whole
+menu, or pick a different `layout_block`, and still exit 0. `--inventory` is the
+anchor a lone blueprint never had.
+
+Three things are **errors**, because the inventory is definitionally
+authoritative on them:
+
+- **Screen name.** A blueprint screen with no inventory entry has no recorded
+  purpose, archetype or behaviour anywhere upstream.
+- **Chrome.** `layout_block`, `app_title`, and the menu's labels *and order*.
+  Here `active` **is** checked, unlike the cross-blueprint pass: the inventory
+  records where each entry goes, so the active entry is *derived* from which
+  one targets this screen rather than being unknowable. It is compared only
+  when the file carries exactly one screen — the menu is app-level while
+  `active` is per-screen, so with two screens in one file there is no single
+  right answer and the check stays silent rather than becoming unsatisfiable.
+- **Carried assertions.** The inventory's counts come from the requirement and
+  are carried into the blueprint unchanged. **Do not edit the number to make
+  this pass** — the blueprint's own assertion check already forces those counts
+  to equal its `main_content`, so editing one breaks the other. The repair is
+  upstream: either the design is missing something the requirement asked for
+  (add it to the screen and re-derive), or the inventory's count was wrong (fix
+  the inventory and re-run its validator). The error message says so.
+
+One thing is a **warning** and never blocks: an entity the inventory listed as a
+data binding for this screen that the blueprint does not declare. A screen may
+legitimately reach an entity through a reused block or a foreign-key lookup, so
+this is advisory. Bindings of `kind: "action"` are not checked at all — a
+blueprint has no home for an action name, so any finding about one would be
+undischargeable.
+
+Like `--plan`, it runs in one direction only: an inventory screen with no
+blueprint has simply not been designed yet. An unreadable or unparseable
+`--inventory` path **fails the run** — a missing file must not silently restore
+the unchecked boundary.
 
 ### Step 5 — Handoff
 

@@ -170,7 +170,7 @@ For every visual or functional element in the source, assign exactly one disposi
 10. **Visual-source data-flow parity** — every Expression, media URL, option list, selected value, repeated item, and source-like input named in VISUAL LAYOUT has a matching DATA FLOW producer before consumer UI emission.
 11. **Visual-source prompt packet** — confirm the Visual-Source UI Prompt Packet has been prepared from the enriched blueprint. Summarize only the packet details that materially affect review inside `### Prompt Coverage Audit` or `### Studio-Native UI Spec`; do not add a mandatory extra visible output section.
 12. **CSS specificity risks** — any element using both an OutSystems UI class AND Extended Properties for the same property (color, background, padding); do not rely on `!important` in Extended Properties because OMI hardening records that it is stripped there. Prefer a dedicated CSS class/stylesheet when available, or drop the conflicting OutSystems UI class and style the element directly. If the only known workaround comes from scaffold/design-to-app guidance, mark it `⚠ partial` and require ODC Studio review before hardening.
-13. **Reserved class names** — custom layout classes must avoid unprefixed `main-content`, `sidebar`, `header`, `content`, and `footer`; prefix custom classes with app/screen/block intent unless an existing verified theme convention says otherwise
+13. **Reserved class names** — custom layout classes must avoid unprefixed `main-content`, `sidebar`, `header`, `content`, and `footer`; prefix custom classes with app/screen/block intent unless an existing verified theme convention says otherwise. Two of the five now carry a citation: `.main-content` is a live class in the ODC OutSystems UI bundle (`OutSystems/outsystems-ui:src/scss/02-layout/_content.scss`, imported into `ODC.OutSystemsUI.scss`), and `.sidebar` is defined in the bundle's deprecated sidebar partial, which the ODC bundle still imports — so a bare `.sidebar {}` collides with deprecated framework styles rather than with nothing. The remaining three names stay a prefixing convention with no citation, and this whole item is `OutSystems-public implementation evidence`, not current ODC product-contract authority. Any fixed-rail/offset-content or nav-contrast layout advice built on these names is generic CSS, not ODC platform behaviour, and must ship with prefixed class names
 14. **Framework selection** — include the selected target/framework row, such as `Web app + OutSystems UI`, so the audit shows why paste-ready Mentor Studio generation is allowed
 15. **Evidence boundary** — include the evidence label and boundary row, especially when catalog-backed, implementation-reference-only, generated-reference, dry-run, live-signature, or spec-driven-build evidence is not current ODC product-contract authority
 16. **SPA shell fidelity** — for visual-source HTML/Figma/mockup imports, check header or breadcrumb title, table header color and contrast, styled upload drop-zone preservation, and colored tile icon color. Mark unresolved fidelity risks as `⚠ partial` with an ODC Studio review note.
@@ -364,6 +364,12 @@ When this fallback materially affects the answer:
 2. State that the fact is not current ODC product-contract authority unless current ODC docs, Forge routing/version evidence, or tenant observations confirm the exposed behavior.
 3. Include a review note to verify the property, event, placeholder, or dependency in ODC Studio.
 4. Prefer the commit-pinned `source_url` from the generated reference when the user asks for provenance.
+
+### Block Event Handler Arguments
+
+When a block event is wired to a handler action, the wiring must supply a value for every mandatory Input Parameter of that action. ODC states this for element invocation generally: invoking an element that has Input Parameters requires specifying values for all the mandatory ones as part of the invocation, with optional ones supplied at will. So read the target action's parameter list before emitting the wiring step, not after — a handler wired with a mandatory input left unset is an incomplete invocation.
+
+Source: `OutSystems/docs-odc:src/eap/building-apps/logic/input-parameter.md` (`Current official`).
 
 ### Approved Pattern Review Note Matrix
 

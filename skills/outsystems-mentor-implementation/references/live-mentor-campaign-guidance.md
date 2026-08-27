@@ -17,9 +17,9 @@ not authorize tenant-changing actions beyond the exact live campaign gate.
 
 The OMI2 campaign used a dedicated Development fixture app and proved the
 workflow on that fixture. It does not prove arbitrary production safety.
-Use `outsystems-cross-agent-review-loop` for the queue, reviewer prompts,
-approval gates, and final readiness evidence; use this skill for the Mentor
-prompt content and Studio-native scope control.
+The queue, reviewer prompts, approval gates, and final readiness evidence
+belong to whatever review process owns the campaign; use this skill for the
+Mentor prompt content and Studio-native scope control.
 
 OutSystems documentation grounding used for these boundaries:
 

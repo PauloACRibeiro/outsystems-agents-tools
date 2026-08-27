@@ -60,17 +60,77 @@ The inventory file (or the ID-carrying PRD) is the definition side of the set
 difference. Later passes reuse the same inventory; they may append new IDs
 when the source reveals a missed requirement, but existing rows never change.
 
+### One obligation per ID
+
+The rule is one obligation per ID. The checker's unit is the ID token, so a
+requirement asserting two things is one binary over two obligations:
+`BR-007 — a booking belongs to exactly one room and cannot overlap another`
+scores as covered the moment the plan addresses either half, and the other
+half leaves no trace anywhere. The failure has a name — two obligations
+wearing one ID — and splitting them is the fix.
+
+Split at pass 1, while the inventory is being written and before any plan
+cites the IDs — never a sub-ID. `BR-007.a` is invisible to the checker, which
+matches whole tokens against the grammar above, so a sub-ID scores only when
+an author happens to type it and reads as a dangling reference when they do.
+Give the second obligation the next free number instead, and leave every
+existing row untouched: the stability rule outranks the split. After pass 1
+the plan already cites the IDs, so renumbering would break those citations —
+a later pass records the compound in its findings rather than resplitting it.
+
 ## Reference site: the plan
 
 The plan cites IDs inline where each requirement is addressed — in the
 section or step that implements it, not in a detached list. Deliberate
 exclusions still cite the ID: a deferred or out-of-scope requirement is
 referenced in the plan's scope boundaries or accepted-risk section with its
-disposition. Silence is the only failure mode.
+disposition, or — better — carried in the Requirement Dispositions table
+below. Silence is the only failure mode.
 
 - Reference by ID, not by position ("BR-003", never "the third rule").
 - Every ID cited in the plan must exist in the inventory; a citation of an
   undefined ID is a dangling reference and fails the checker.
+
+## The Requirement Dispositions table
+
+Citing a deferred ID in the scope boundaries discharges it, and the checker
+scores that citation as covered. That is the designed behaviour and it is not
+wrong — but it costs a distinction: a `12/12 READY` verdict reads the same
+whether twelve requirements were built or three were built and nine deferred.
+The plan carries an optional `## Requirement Dispositions` section to recover
+it:
+
+```markdown
+## Requirement Dispositions
+
+| ID | Disposition | Reason |
+|---|---|---|
+| BR-014 | deferred | member data lands in the next build |
+| UC-007 | out-of-scope | belongs to the admin product |
+| C-011 | accepted-risk | no owner for the reconciliation data |
+```
+
+- The vocabulary is closed: `built`, `deferred`, `out-of-scope`,
+  `accepted-risk`. Anything else fails the checker.
+- Each of the three terminal dispositions requires a non-empty Reason. A
+  terminal disposition is a decision, not a silence.
+- A dispositioned requirement **leaves the denominator** as well as the
+  numerator — neither gap nor win. The checker reports the rate over the
+  in-scope set and prints the defined and dispositioned counts beside it.
+- `built` is the state every requirement is already in, so a `built` row
+  changes nothing: the ID stays in the denominator and still needs its inline
+  citation. Like the Traceability table, this table is excised from the
+  inline-citation scan, so declaring an ID built here is not evidence the plan
+  builds it.
+- One row per requirement, no duplicates; every ID in the table must be
+  defined in the source. A malformed row is a failure, never silently skipped.
+- A dispositioned requirement needs no Traceability row: no story delivers it.
+- A plan that dispositions every defined requirement builds nothing, and the
+  checker fails it rather than reporting a vacuous full-coverage verdict.
+
+The table is optional. A plan without one keeps the exact citation-only
+behaviour described above, including the sanctioned scope-boundaries
+discharge — nothing about existing plans changes.
 
 ## The Traceability table
 
@@ -98,6 +158,16 @@ loop's design artifacts are the enriched `blueprint.json`
   no row has no downstream reference, and the checker fails it as
   `unmapped`. The table never satisfies the inline-citation gate: an ID
   cited only in the table still reads as uncovered inline.
+- A story whose **whole** Requirements cell is dispositioned still owns its
+  row, and the checker names it: `note: 1 story delivers no in-scope
+  requirement`, with the row, the story and each ID's disposition word. It is
+  a note and never a failure, and `--strict` does not escalate it — the two
+  rules above mean the row can neither be dropped (every defined story owns
+  one) nor emptied (the cell cites at least one ID), so there is no compliant
+  plan shape to fail the author toward. The counts were always right; what
+  the note fixes is a row that reads as live work while carrying none. If the
+  story really is out of this build, the honest fix is upstream — drop it
+  from the source's story list — not a rewrite of the plan.
 - The Design cell carries comma-separated `blueprint:<ScreenName>` or
   `inventory:<ScreenName>` refs (the `<ScreenName>` is the artifact's
   `screens[].name` value verbatim — spaces allowed, e.g.
@@ -107,14 +177,33 @@ loop's design artifacts are the enriched `blueprint.json`
 ## What the checker computes
 
 `scripts/check_requirement_coverage.py <inventory-or-prd> <plan>
-[--blueprint <blueprint.json>] [--inventory <screen-inventory.json>]`:
+[--blueprint <blueprint.json>] [--inventory <screen-inventory.json>]
+[--strict]`:
 
-- uncovered = IDs defined in the source, never referenced in the plan.
+- uncovered = in-scope IDs never referenced in the plan. Each uncovered ID is
+  printed with its Type and Requirement text when the source carries a
+  `## Requirement Inventory` table, so the gap names the obligation and not
+  just the token; a source without that table prints bare IDs.
 - dangling = IDs referenced in the plan, never defined in the source.
+- When the plan has a `## Requirement Dispositions` table: the in-scope set is
+  the defined IDs minus the dispositioned ones, and the reported rate is
+  `covered/in-scope` with the defined and dispositioned counts beside it.
+  Unknown disposition values, terminal dispositions with no reason, duplicate
+  or undefined rows, and a plan that dispositions everything all fail.
 - When the plan has a `## Traceability` table: unmapped requirements
   (defined but in no row), undefined or row-less stories, and missing
   design cells. With `--blueprint`/`--inventory`, each design ref must name
   an actual `screens[].name` in that artifact.
+- A Traceability row whose whole Requirements cell is dispositioned is named
+  as a note, with each ID's disposition word. It never moves a count or the
+  verdict, and unlike an unresolved design ref it has no `--strict` form.
+- A design ref whose artifact was **not** supplied cannot be resolved at all.
+  The checker names each such ref, counts them, and says which flag would
+  resolve it. By default that is a note and the verdict is unchanged; with
+  `--strict` it is a failure. `check_handoff_gate.py` always passes
+  `--strict`, so through the gate an unresolved ref fails the
+  `requirement-coverage` clause — supply the artifact, write the story's
+  design cell as an explicit `none`, or waive the clause with a reason.
 - Verdict: `READY` only when every set is empty; otherwise `NOT READY`.
 
 ### Migration note — plans without a Traceability table

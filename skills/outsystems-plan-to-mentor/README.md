@@ -150,11 +150,54 @@ citation-only contract, with a printed note. The matrix's Evidence column
 stays the judgement layer on top: the checker proves every ID is cited, the
 reviewer verifies each citation is honest.
 
+A plan also carries a `## Requirement Dispositions` table
+(`| ID | Disposition | Reason |`) for anything it does not build. The
+vocabulary is closed — `built`, `deferred`, `out-of-scope`, `accepted-risk` —
+and each terminal disposition needs a reason. A dispositioned requirement
+leaves the numerator and the denominator both, so the checker reports
+`covered/in-scope` with the defined and dispositioned counts beside it. The
+older discharge — citing a deferred ID in the plan's scope boundaries — was
+never wrong and still works; what it could not do was distinguish a plan that
+builds twelve requirements from one that builds three and defers nine, since
+both printed `12/12 READY`. A plan with no disposition table keeps the exact
+prior verdict.
+
+The three checkers are not sequenced by hand. `scripts/check_handoff_gate.py`
+invokes `check_requirement_coverage.py`, `check_outcome_coverage.py` and
+`check_plan_handoff.py` as subprocesses and computes one `handoff verdict:`
+over named clauses. Two properties matter. The verdict comes from each
+checker's **exit code**, never from parsing its printed prose, so a checker
+that rewords its output cannot silently change the gate's answer. And there is
+no skipped clause: an input that is not supplied, a checker that is missing,
+crashes, or hangs, each fails its clause with a named reason. A gate that
+reported READY because a clause never ran would be worse than the three
+separate exits it replaces. The gate adds no reporting of its own: each clause captures its checker's
+output verbatim, so the coverage clause carries the `covered/in-scope` line
+and the dispositioned counts exactly as the checker printed them.
+
+The visible consequence, stated rather than discovered in a run: the outcome
+checker needs a design file, so a run without `--design` gets
+`outcome-coverage: FAIL (input-not-supplied)` and cannot reach READY. Supply
+the design file; do not drop the flag.
+
+When the design file genuinely does not exist, the honest way past that clause
+is a waiver, not a dropped flag. `--waivers handoff-waivers.json` moves one
+named clause to `WAIVED`; the file's shape is published as
+`schemas/handoff-waivers.schema.json`. Every waiver names its clause and
+records why, and both the reason and the clause's original failure evidence are
+printed — `WAIVED` is a third state, never folded into `PASS`. The refusals are
+deliberately blunt: a waiver with no recorded reason, an undefined clause name,
+an unrecognised key or a duplicated clause refuses the **whole** file and
+denies READY, because a file its author demonstrably got wrong should not move
+the verdict at all. A waiver whose clause passed anyway is inert and reported
+as unused, and a waiver file that is not there means no waivers — absence can
+only ever make the gate stricter.
+
 Pass 1 reviews the original plan and writes the first full patched plan. Pass 2
 reviews the patched plan as if it came from someone else. A third pass is used
 only when remaining Missing or Partial rows, weak evidence, or ODC/Mentor
 precision issues still need closure. The delivery mode question comes after the
-final matrix, the checker's READY verdict, and the scanner pass, not before.
+final matrix and the gate's `handoff verdict: READY`, not before.
 
 The `-patched.md` artifact is the full patched plan, not a summary wrapper. If
 the original plan is also edited in place, the full final content still needs to

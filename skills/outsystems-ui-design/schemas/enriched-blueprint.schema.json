@@ -68,9 +68,30 @@
               "required": ["name", "data_type", "is_primary_key", "is_foreign_key", "enum_values"],
               "properties": {
                 "name": {"type": "string"},
-                "data_type": {"type": "string"},
+                "data_type": {
+                  "oneOf": [
+                    {"enum": [
+                      "Binary Data", "Boolean", "Currency", "Date", "Date Time",
+                      "Decimal", "Email", "Integer", "Long Integer",
+                      "Phone Number", "Text", "Time",
+                      "binaryData", "boolean", "currency", "date", "dateTime",
+                      "decimal", "email", "integer", "longInteger",
+                      "phoneNumber", "text", "time",
+                      "integerIdentifier", "longIntegerIdentifier",
+                      "platformDefaultIdentifier"
+                    ]},
+                    {"type": "string", "pattern": "^[Tt]ext\\([1-9][0-9]*\\)$"},
+                    {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]* Identifier$"}
+                  ],
+                  "description": "CLOSED VOCABULARY. An open string here is unvalidatable and the failure it hides is a certain publish failure, not a style slip: the model API accepts any string as an entity-attribute DataType, validation checks shape rather than membership in the platform's closed enum, and the enum is only enforced by the publish-time migration-script generator (OS-RDBS-GEN-40002, masked as OS-DPL-50203). Three admitted forms. (1) A basic type, in either of the two registers measurably in circulation - the ODC literal names from the docs (Text, Long Integer, Date Time), which OMI's contract prose and tests write, or this skill's camelCase spelling of the same twelve types, which its own fixtures write; plus the three identifier tokens in circulation. (2) A Text with its length, Text(200) - odc-studio-language-elements.md requires stating it, because an unstated length silently chooses 50 and truncates. (3) The relationship form '<TargetEntity> Identifier', single-token entity name. NOT members: the seven App Generator VirtualTypeKind values with no ODC basic type (url, percentage, rating, imageUrl, multiLineText, foreignKey, and foreignKey's spec-level kin), and near-miss spellings such as DateTime for Date Time, which are read as a Text attribute named after a type. The bare strings 'Identifier', 'Integer Identifier', 'Long Integer Identifier' and 'Text Identifier' have the shape of form (3) but are rejected by the validator: all four validate cleanly and then fail every publish."
+                },
                 "is_primary_key": {"type": "boolean"},
-                "is_foreign_key": {"type": "boolean"}
+                "is_foreign_key": {"type": "boolean"},
+                "enum_values": {
+                  "type": ["array", "null"],
+                  "items": {"type": "string"},
+                  "description": "Required on every attribute. null on a plain attribute; on a foreign key pointing at a static entity, the ordered list of that entity's record names, which seeds the target when it has no entities[] entry of its own."
+                }
               }
             }
           }

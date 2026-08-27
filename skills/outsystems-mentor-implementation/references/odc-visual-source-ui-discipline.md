@@ -67,6 +67,43 @@ before prompt emission:
 11. Polish acceptance: remove default pattern children, use typography hierarchy, preserve extracted colors/sizes, use realistic sample content, keep section spacing through OutSystems UI utilities when possible, and name manual review checks.
 12. Evidence boundary: Current official, Catalog-backed official, OutSystems-public implementation evidence, or Unverified gap.
 
+**Items 1, 4, 7 and 9 have a deterministic form — do not re-derive them by
+reading.** Run `scripts/render_build_brief.py <blueprint.json> [--screen <name>]
+[--inventory <screen-inventory.json>]` and carry the per-screen `BUILD BRIEF:`
+block forward verbatim rather than paraphrasing it. It emits the facts those
+four items are built from:
+
+- the region tree in declared order, group children under their group with the
+  adaptive-block column they sit in, each carrying its declared block binding,
+  `extended_class`, data source and content items
+- the **entity-touch closure** for that screen — an entity reached only through
+  `data_source.joins` or a content `binds` is as much a producer for the screen
+  as one named in `screens[].entities`, and reading finds it only if the reader
+  looks in all three places every time
+- the typed attribute projection for exactly those entities, so DATA FLOW is
+  written against declared types instead of remembered ones. A Static Entity
+  declared by a foreign key's `enum_values` rather than by an `entities[]` entry
+  is resolved and shown with its seed records
+- the per-screen create / place-existing / verify actions, taken from
+  `scripts/blueprint_intake_plan.py` rather than judged a second time
+- one section list that does not vary with the data, so two screens' briefs are
+  diffable and an absent producer reads as `(none)` rather than as a section
+  nobody wrote
+
+**It is a renderer, not a gate.** It emits facts and verifies nothing. The Block
+Mapping Gate's *choice*, the Data-Flow Parity *check*, component selection, the
+state plan, polish acceptance and the gotcha review all stay authored — they are
+judgement, and a renderer that guessed them would be inventing requirements. The
+brief closes by naming them, so it is never mistaken for the whole packet. It
+renders nothing at all for a blueprint that `blueprint_intake_plan.py` owes back
+to its producer: a return-to-producer condition must not be laundered into a
+build instruction.
+
+App chrome is deliberately outside the brief. Chrome Batch Discipline below owns
+its canonical form and `scripts/check_chrome_coverage.py` gates it; a second
+emitter for one artifact is exactly the two-owners drift the renderer exists to
+remove.
+
 The prompt packet is not the primary contract. It is the compact preparation or
 output summary that carries forward the blueprint decisions into prompt
 generation and review. Do not treat it as a mandatory fifth visible section
@@ -142,6 +179,10 @@ Do not start from a wall of Containers. A Container is allowed for local groupin
 When a prompt creates or modifies a Screen, review the existing root layout and chrome before adding a new layout. If the source requires `LayoutSideMenu`, `LayoutTopMenu`, or `LayoutBlank`, state whether default generated layout/chrome children should be removed, reused, or left unchanged.
 
 Do not apply a blind "delete default layout" rule to every existing screen. Treat it as a visual-source review gate because existing-app changes may intentionally keep the current layout.
+
+**Documented layout facts** (`Current official`). A new empty screen uses the **LayoutTopMenu** block, and the ODC documentation enumerates its placeholder set in full: **Header**, **Breadcrumbs**, **Title**, **Actions**, **MainContent**, **Footer** — six names, and content must go into the right one. **LayoutBlank** carries no Menu and exposes a single content placeholder covering the whole screen; the documentation does not name that placeholder, so never write a LayoutBlank placeholder name into a prompt until a live tenant has been read. LayoutBlank's documented purpose is also narrower than "any visually-driven screen" — the docs describe it as usually used for the login page. Sources: `OutSystems/docs-odc:src/eap/building-apps/ui/screen-about.md` and `OutSystems/docs-odc:src/eap/building-apps/ui/themes/intro.md`, with the placeholder set confirmed independently in `OutSystems/docs-odc:src/eap/agentic-development/mentor-web/prompts.md`.
+
+**OMI recommendation, not a documented rule.** For a fidelity-driven visual source, prefer LayoutBlank so that a menu-bearing layout does not impose chrome the source does not have. No OutSystems source states a layout choice keyed on source fidelity, so label this as OMI's own heuristic in the delivered prompt rather than as platform behaviour. When it is taken, carry the LayoutBlank height caveat from `odc-mentor-hardening.md`: its wrapper chain breaks the parent-height chain, so use `height:100vh` on any Container meant to fill the viewport.
 
 ## Block Mapping Gate
 
@@ -293,8 +334,11 @@ Run a visual-source gotcha review when the source contains the matching pattern:
 - interactive widgets inside Link or anchor regions (`field-tested review guidance`): avoid putting Upload, Input, Form, or Button inside a Link slot — the rendered Link wraps the widget and intercepts its clicks. The affirmative case: an anchor IS the correct slot wrapper when the slot's content is itself the navigation target, such as a clickable card or a list row that drills into a detail screen.
 - duplicate primary actions (`field-tested review guidance`): avoid creating a second Button when source HTML already emits a button for the same action
 - source HTML display toggles (`field-tested review guidance`): convert `display:none`/active-section toggles into explicit ODC state and Conditional Display guidance — but only where the toggled section IS the screen's main content. **Transient overlays are the exception: modals, toasts, popovers, and mobile slide-in sidebars keep their `display:none` and get real show/hide wiring to the equivalent OutSystems UI widget.** Stripping the hiding CSS from an overlay renders it permanently open.
-- `<table>` tags in source markup (`field-tested review guidance`): `HtmlToWidgets` translates table tags to divs, so a `<table>` carrying no explicit `display:table` / `display:table-row` / `display:table-cell` rules stacks vertically instead of forming a grid. Carry the explicit display rules, or map to a verified Table/List widget instead.
+- `<table>` tags in source markup (`field-tested review guidance`): `HtmlToWidgets` translates table tags to divs, so a `<table>` carrying no explicit `display:table` / `display:table-row` / `display:table-cell` rules stacks vertically instead of forming a grid. For a layout-only table, carrying the explicit display rules is an acceptable outcome. For a table with real data rows, prefer the ODC **Table widget**, which the documentation treats as the vehicle for record data — its Header Cells are checked against the bound attributes, and large result sets use the pagination pattern rather than loading the whole table. Use the documented name, Table widget, in prompts. Sources: `OutSystems/docs-odc:src/eap/building-apps/ui/screen-template/replace-data.md` and `OutSystems/docs-odc:src/eap/building-apps/ui/creating-screens/best-practices-fetch-display-data.md` (`Current official`); the `HtmlToWidgets` translation described above remains field evidence, not a documented mechanism.
 - `<nav>` in source markup (`field-tested review guidance`): `<nav>` does not survive widget translation, so a `.sidebar nav a` selector silently stops matching after the build. Scope link-color selectors to `.sidebar a` directly, and do not nest semantic elements inside the brand or nav area.
+- source selectors keyed on an element id (`Current official`): the platform generates HTML `id` attributes dynamically, so a rule written against the source's own id stops matching after the build. The generated id prefixes block-scope tokens ahead of the widget name — the published ODC API reference pages style their own injected widget as `#b3-b4-b1-InjectHTMLWrapper` — so the widget name survives only as a suffix behind a prefix chain whose exact shape is not contracted and must never be hard-coded. Migrate the selector to a CSS class plus a custom style name on the widget, which is the remedy the documentation gives. Sources: `OutSystems/docs-odc:src/eap/testing-apps/ui-testing-selenium/ui-testing-selenium.md` and `OutSystems/docs-odc:src/eap/reference/apis/asset-v1.md`, which carries the same rule as nine sibling API reference pages. Caveat that travels with the citation: the selenium page sits in the ODC mirror but retains O11-era wording (it names Service Studio), so the prefixing evidence rests on the API reference pages rather than on that page alone.
+- `.table-header` / `.table-row` in source CSS (`OutSystems-public implementation evidence`): both are framework-owned class names in the ODC OutSystems UI bundle, which styles them as table structure (`OutSystems/outsystems-ui:src/scss/03-widgets/_table.scss`, imported into the bundle at `ODC.OutSystemsUI.scss`). A bare `.table-header { ... }` authored for a card title bar therefore also matches the framework's table header element — element-qualify the selector (`div.table-header`) or rename the class. The framework rules prove only that `.table-header` is an ancestor of the header cells, so do not assert which element carries the class.
+- placeholder text driven by a data attribute and a script (`field-tested review guidance`): when a source node's literal text is a stand-in such as `0` and the real value sits in a data attribute that an inline script animates into place, lift the real value into the widget's static text and drop both the attribute and the script. This is source-translation guidance about the generated app having no equivalent of the source's inline script unless one is authored; it is not a claim that ODC cannot run JavaScript, which it can, through JavaScript nodes and Require Script.
 
 Keep gotcha entries as review or hardening guidance according to their evidence boundary. Do not promote field-only notes to current ODC product-contract authority.
 
@@ -377,6 +421,18 @@ Record the mapping in `icon_mapping` with the source icon name, the bare
 Phosphor icon name, intended location, and any review note. Use a
 bare Phosphor icon name for OutSystems UI Icon widgets, not `ph-*` or
 `ph ph-*` class syntax.
+
+An icon and its label are separate widgets. The Icon widget is dragged from the
+Toolbox and its `Icon` property — mandatory, default `flag` — is set by browsing
+the icon library; `Style Classes` is a separate optional property whose
+documented job is overriding styling, colors, or animations. So the icon is
+never carried as a class on the element that holds the label text: give the icon
+its own Icon widget and keep the label in its own widget beside it.
+
+Evidence: `OutSystems/docs-odc:src/eap/building-apps/ui/icons/icon-widget-ref.md`
+(mandatory `Icon` property, `Style Classes` separate and styling-only) and
+`OutSystems/docs-odc:src/eap/building-apps/ui/icons/intro.md` (drag the Icon
+widget from the toolbox, browse the library, choose the icon).
 
 ### SPA Shell Fidelity Review
 

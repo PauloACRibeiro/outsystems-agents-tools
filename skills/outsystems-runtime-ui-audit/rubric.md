@@ -6,7 +6,7 @@
 
 A framework for scoring the **UI quality** of external-facing apps from captured images. It covers **16 criteria** across 6 categories and produces a single weighted score per assessment. Current scope is **external-facing apps only** — internal tools and designs are out of scope.
 
-This judges *what the user sees and experiences* (perceived quality), not how the app was built. The build-focused counterpart is the companion `outsystems-ui-review` skill, which scores the same 16 criteria against the implementation rather than the runtime.
+This judges *what the user sees and experiences* (perceived quality), not how the app was built. The build-focused counterpart is the companion `outsystems-ui-review` skill (not part of the colleague sprint-loop pack), which scores the same 16 criteria against the implementation rather than the runtime.
 
 ## Scoring system
 

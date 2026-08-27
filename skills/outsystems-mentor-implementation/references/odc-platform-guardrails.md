@@ -41,6 +41,68 @@ from outside itself — update, cancel, delete, detail — or whenever the sympt
 is **a 500 on a missing row**, **a delete that reports success for a row that
 never existed**, or **a not-found refusal that never fires**.
 
+Route onward when the symptom is Mentor **silently rewriting** what the prompt
+asked for — most often a Server Action auto-renamed because the entity already
+carries an action of that name. For that class, this file is not the owner:
+open [references/odc-mentor-hardening.md](odc-mentor-hardening.md), which holds
+the rule in full with its dated session evidence, and resolve the publish code
+through the index in `../../shared/reference/odc-error-registry.md`. Do not
+restate that rule here — a second home whose meaning drifts from its owner's
+text is what the registry calls a lint finding.
+
+## Gate Precedence
+
+The gates below are written to compose, and in nearly every design they do —
+each covers a different risk. This section is for the case where two that both
+apply prescribe different constructions, because the order they happen to
+appear in this file was never chosen to settle anything, and adjacency is not
+an answer.
+
+**A gate carrying measured platform-refusal evidence outranks an advisory
+design gate.** A gate counts as evidence-backed here only when this file
+records a dated observation of the platform itself refusing, reverting, or
+renaming the construct — not when it records a strong design preference.
+Advisory gates say what a good design does; evidence-backed gates say what this
+platform will not accept, and a design already measured as rejected does not
+become buildable because another gate prefers it. Precedence settles the
+*construction* only. It never waives the losing gate's requirement: that
+requirement stands and must be met another way, and where it cannot be, the
+result is a stop, not a trade.
+
+**Two advisory gates in conflict do not have a winner.** Where neither side
+carries platform-refusal evidence, do not pick one. Name both outcomes, say
+which gate asks for each, and stop for a decision. The conflict is a real
+design choice, and settling it quietly hides it from the person entitled to
+make it.
+
+**The one conflict measured so far.** The Security Server-Trust Gate requires
+server-side identity and ownership on sensitive reads and writes, which points
+a design straight at a `User`-typed attribute or a foreign key into `User`. The
+User Reference Authoring Gate records that Mentor cannot author that reference:
+three publishes of one app differing only in it went fail, fail, succeed on the
+first live colleague sprint-loop run (2026-08-09). The authoring gate takes
+precedence, because its side is a measured platform refusal while the security
+gate's claim on the mechanism is a preference. What it wins is narrow — the
+reference is authored in ODC Studio as a `Manual Setup Gate` row and Mentor
+carries it from there. The security requirement itself is untouched: identity
+is still derived server-side with `GetUserId()`, and ownership is still
+enforced in server-side logic.
+
+**Maintenance.** Add to this section only when a conflict has actually been
+observed between two gates in this file, and only together with the evidence
+that settled it; a conflict reasoned about but never met belongs here in no
+form. What is recorded is not a ranking of the gates — a gate that takes
+precedence over another on one construct carries no standing on any other.
+Scope is this file's gates only. The precedence statements that already exist
+elsewhere are untouched and are not this: `SKILL.md`'s Routing Table gives
+`references/odc-mentor-hardening.md` priority over general rules on conflict,
+and the source-precedence sections of the language-elements and
+implementation-context guides rank sources. The nearest neighbour,
+`references/execution-gates.md` §3b, says which *signal* answers which question
+at publish time — `modelDigest` reports that the model changed, terminal deploy
+state reports that the deployment succeeded, and neither substitutes for the
+other — which is signal authority, not gate precedence.
+
 ## Architecture Layering Gate
 
 Use this gate before OMI suggests reusable services, entities, public actions,
@@ -80,6 +142,177 @@ Fallback behavior:
   `tenant-context-guardrails.md` first, then reduce the result into OMI-owned
   evidence.
 
+### Settings are read-only at runtime — mutable state is an entity
+
+`Current official`: *"Settings are read-only at runtime. You can only update
+the value of a setting through the ODC Portal, which will then run an
+asynchronous process to update the runtime configuration of your app"*
+(`OutSystems/docs-odc:src/eap/building-apps/data/data-best-practices/intro.md`).
+
+So a Setting is deploy-time and operator-time configuration, never a value a
+flow writes. Two consequences for placement:
+
+- **Never emit a prompt that writes a Setting from a logic flow.** There is no
+  ODC action for it. When a capability needs state that changes while the app
+  runs — a counter, a toggle a user flips, anything a screen action updates —
+  the state belongs in an **entity attribute**, not a Setting.
+- **A "feature flag" splits by who flips it.** Settings are the documented
+  home for feature-toggle flags that an operator changes per stage through the
+  Portal. A flag the *application* flips at runtime is not that, and modelling
+  it as a Setting produces a design that cannot work. Decide which one the
+  requirement means before emitting either.
+
+Settings remain correct for what they are documented for: application-wide
+values that do not change frequently, secrets marked as such in Studio, and
+per-stage configuration.
+
+### A foreign key across an app boundary supports only `Ignore`
+
+`Current official`: for a relationship between entities of different apps,
+*"the only supported Delete Rule for the foreign key attribute is Ignore"*
+(`OutSystems/docs-product:src/migration-to-odc/code-patterns/elem-unsupported-delete-rule.md`).
+Within one app the same property defaults to `Protect` and all three values are
+supported
+(`OutSystems/docs-odc:src/eap/building-apps/data/modeling/relationship/relationships.md`).
+
+The rule is about the app boundary, not about identifier references:
+
+- **Same-app foreign key: leave `Protect` alone.** It is the platform default
+  and it publishes. Never emit an instruction that rewrites a same-app delete
+  rule to `Ignore` for publish safety — that is a real constraint applied at
+  the wrong scope, and it silently drops the referential integrity the design
+  asked for.
+- **Cross-app foreign key: emit `Ignore`, then enforce integrity in logic.**
+  No database constraint exists across the boundary, so a parent delete leaves
+  orphans. When the design needs `Protect` behavior, pair the reference with a
+  server-side check that refuses the delete while related records exist and
+  returns a reason; when it needs `Delete` behavior, delete the related records
+  explicitly first.
+
+Unmeasured, so do not assert it either way: whether a cross-app `Protect`
+reaches publish and fails with a named code, or is coerced to `Ignore` the way
+the O11 conversion tool rewrites it. Cite no error code for this rule until
+someone measures it.
+
+### Reuse crosses an app boundary as a Service Action, a library boundary as a Server Action
+
+`Current official`: a Service Action *"is a REST-based remote call to another
+process"* exposed by an app, creating a weak dependency
+(`OutSystems/docs-odc:src/eap/app-architecture/service-actions.md`). A library
+is the other case: dependencies on libraries *"are always strong dependencies.
+The producer's code is necessary for compiling the app"*
+(`OutSystems/docs-odc:src/eap/building-apps/reuse/intro.md`), and the ODC
+library element table lists Server Action and Client Action under `Logic` with
+no Service Action row
+(`OutSystems/docs-odc:best-practices/.../o11-migration/code-elements-reference.md`).
+
+So the boundary decides the element, and OMI should not emit the other one:
+
+- **A library's public surface is public Server Actions.** Never emit a prompt
+  that creates a Service Action inside a library; the reusable-logic element a
+  library exposes is a Server Action, consumed by compiling it into the caller.
+- **An app's cross-app surface is Service Actions.** A second app calls into an
+  app through a Service Action, not by reaching for its internal Server Actions.
+- **Cross-app entity access is read-only.** Current best-practice guidance
+  states that *"Public Entities referenced between ODC applications can only be
+  read. Writes need to be refactored into Service Actions in the owning app"*
+  (`OutSystems/docs-odc:best-practices/.../o11-migration/code-patterns.md`). So
+  a design that has app B creating or updating app A's rows is emitted as a
+  Service Action on **A**, never as B calling A's generated entity actions.
+
+**Measured, and the refusal is structural rather than a publish failure.**
+Observed on tenant 2026-08-27 (app `98c8428a` rev 5, consuming another app's
+public entity): the consuming app is offered exactly one entity action on that
+entity — the `Get<Entity>` read — and no `Create`, `CreateOrUpdate`, `Update`
+or `Delete` action is exposed to it at all. The consumed entity carries
+`ExposeReadOnly = True`, and the write action slots (`CreateAction`,
+`CreateOrUpdateAction`, `UpdateAction`, `GetForUpdateAction`, `DeleteAction`,
+`CreateOrUpdateAllAction`, `DeleteAllAction`) are null — never imported. The
+same app's own entity, read in the same turn as a control, carries all eight.
+So the write is not something that
+validates locally and then fails on publish; it is something that cannot be
+written down in the consumer in the first place. Validation stayed at zero
+errors precisely because there was no write to express.
+
+Say it that way. A prompt that warns a reader the write "breaks at publish" is
+telling them to expect a failure they will never see, and sends them looking
+for an error code that does not exist.
+
+### Publish producers before consumers, and say which dependency kind it is
+
+`Current official`: for a strong dependency *"the consumer needs to refresh the
+dependency on the producer and to be republished"* when the producer's
+signature or implementation changes; for a weak dependency a producer change
+*"becomes immediately available to all consumers without requiring a new
+compilation and deployment of the consumer"*
+(`OutSystems/docs-odc:src/eap/building-apps/reuse/intro.md`). A consumer
+deployed without its producer is a named deployment inconsistency, `Missing app`
+(`OutSystems/docs-odc:src/eap/deploying-apps/deployment-inconsistencies.md`).
+
+- **Order every multi-asset emission producer-first**, and say so in the
+  session plan: libraries before the apps that compile them, an owning app
+  before the app that calls its Service Action.
+- **A signature change on a library is a consumer republish**, not just a
+  producer publish. Name the consumers in the plan or record them unknown.
+- **A signature change on a Service Action is not.** Weak dependencies pick up
+  the new implementation without a consumer publish, so do not emit a
+  republish-everything step for one.
+
+### Entity creation and data movement follow FK-topological order
+
+Order is not cosmetic here: a child row written before its parent exists has no
+value to put in its foreign key. So any emission that creates entities, seeds
+reference data, or moves data incrementally is ordered parents-first:
+
+1. static entities and reference data — nothing points out of them;
+2. independent aggregate roots — entities with no outbound foreign key;
+3. dependents, shallowest first, deepest last.
+
+**Mentor does not do this on its own.** Our own estate observation is that
+Mentor's entity emission order is not FK-topological, so the order has to be
+stated in the prompt rather than assumed from the plan's section order.
+
+Where a design moves data incrementally rather than seeding it once, the
+checkpoint contract is part of the design, not an implementation detail:
+
+- **Store the run's start time as the watermark**, not its end time, so a
+  record changed while the run was in flight is picked up next run instead of
+  being skipped.
+- **Advance the watermark only after the batch is validated, written and
+  audited.** A watermark advanced on entry turns one failed run into permanent
+  silent data loss.
+- **Resolve every incoming reference by its external key to a local
+  identifier.** Never write a provider's key straight into an identifier
+  attribute, and never invent one.
+
+This is design-level ordering and state, adopted as a pattern. The three-module
+sync architecture it comes from is not adopted.
+
+### Folders are per-area, so one concept name is several folders
+
+Current best-practice guidance organizes folders *"by application concept"* and
+applies that *"to all element types in ODC Studio"*, with the worked example
+showing the same concept name repeated as a separate folder under `Interface/`,
+`Logic/`, `Data/` and `Processes/`
+(`OutSystems/docs-odc:best-practices/.../architecture/naming-conventions.md`).
+
+So when a prompt places an element in a folder, the folder is named **within
+its area**: a `Logic` folder cannot hold a screen, and asking for "the
+`Billing` folder" without saying which area names up to four different folders.
+Emit the area with the folder name.
+
+**Measured, so a prompt may rely on it: a folder's area is fixed at creation.**
+Observed on tenant 2026-08-27, app `98c8428a` rev 3 — a folder created in the
+`Logic` area could not be relocated to `Interface`. The model's `ParentFolder`
+property carries a getter and no setter, and the model exposes no move
+operation at all; two independent Mentor sessions report the same. So an
+element placed under the wrong area is not repaired by moving its folder
+afterwards. Name the right area when the folder is first created.
+
+The measurement is of the ModelAPI surface Mentor drives, which is the surface
+these prompts reach. Whether ODC Studio's own UI offers a cross-area move was
+not observed, so do not assert anything about the Studio gesture.
+
 ## Security Server-Trust Gate
 
 Use this gate when OMI writes role-sensitive UI, anonymous or registered access,
@@ -102,6 +335,29 @@ Check:
   and use case justify it.
 - REST security: exposed REST endpoints need authentication and
   transport/security assumptions stated when relevant.
+- no entity action on the client side: a Client Action or Screen Action must not
+  call a generated entity action (`Create<E>`, `CreateOrUpdate<E>`, `Update<E>`,
+  `Delete<E>`) directly. Wrap it in a Server Action that validates first, and
+  call that. The naming for those wrappers is in `odc-mentor-hardening.md`.
+
+### The compiler states this one
+
+Exposing a database operation client-side is not only a design preference — it
+raises `Security Warning . You're exposing a database operation in the client
+side. Validate the data in a Server Action before changing the database.` Write
+the wrapper because the platform asks for it, and note that the platform's own
+remediation names *validation*, not merely indirection: a pass-through Server
+Action that adds no validation satisfies the compiler but not the gate.
+Local storage entity actions are exempt: calling them from client actions is
+the standard offline-app pattern, and the platform's "Database operation in the
+client-side logic of a screen" Code Quality finding states that exclusion
+explicitly ([database-operation-in-client-side.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/monitor-and-troubleshoot/manage-technical-debt/security/database-operation-in-client-side.md), verified 2026-08-27).
+
+Two adjacent warnings share this shape and are worth planning against: a Server
+Action reachable from a screen carrying the Anonymous Role raises `You're
+exposing a Server Action for public access and without authentication`, and a
+Client Action calling several Server Actions raises a Performance Warning
+directing you to group them into one.
 
 Fallback behavior:
 
@@ -109,6 +365,42 @@ Fallback behavior:
   `tenant-context-guardrails.md`.
 - If server-side authorization cannot be specified, stop and ask for the policy
   instead of relying on UI-only restrictions.
+
+### An SQL element takes parameters; `Expand Inline` is the risk
+
+`Current official`: ODC *"uses prepared statements by default"* and *"uses an
+SQL parameter for every Query Parameter that has the `Expand Inline` property
+disabled. The system disables this property by default"*; enabling it means the
+value is no longer handled as a parameter and *"your end-users may exploit
+this"*
+(`OutSystems/docs-odc:src/eap/monitor-and-troubleshoot/manage-technical-debt/security/sql-injection.md`).
+The SQL-element guidance says to *"incorporate input parameters to pass values
+into your SQL queries, enhancing security and preventing SQL injection
+vulnerabilities"*
+(`OutSystems/docs-odc:src/eap/building-apps/data/fetch-data/sql/use-sql.md`).
+
+Whenever OMI emits an SQL element whose text depends on anything a user
+supplied:
+
+- **Pass the value as a Query Parameter and leave `Expand Inline` at its
+  default `No`.** That is the whole rule for a value — a filter term, an id, a
+  date. Never emit a prompt that concatenates a user-supplied value into the
+  query text.
+- **`Expand Inline = Yes` is only for an SQL fragment**, such as a
+  caller-chosen sort direction, and it needs a named justification in the
+  prompt. Where the fragment comes from a fixed set, emit the set as a switch
+  over literals instead, so no user text reaches the statement.
+- **When `Expand Inline` is unavoidable, encode string literals with
+  `EncodeSql()`** — never with `Replace`, which the same source calls
+  *"prone to errors"* — and encode **the literal only**. Wrapping a whole
+  clause, as in `EncodeSql("WHERE surname = " + @a)`, is called out as a
+  pattern that *"is often wrong, so you get a warning if you use it."*
+- Prefer an Aggregate where one will do. The default data element carries none
+  of this exposure.
+
+The `Sanitization` library's `BuildSafe_InClauseTextList` is already cataloged
+in `odc-studio-language-elements.md`; use it for an `IN` clause built from a
+list rather than assembling the list into the query text.
 
 ## User Reference Authoring Gate
 
@@ -309,7 +601,18 @@ Check:
 - error semantics: define expected exceptions, error outputs, and retry-safe
   responses.
 - compatibility: prefer additive changes, wrappers, or versioned actions when
-  existing consumers may break.
+  existing consumers may break. A breaking signature change (such as a new
+  mandatory input) means every consumer must be updated; the documented path
+  for exposed elements is to duplicate the element and rename it (a v2), change
+  the copy, and migrate consumers progressively
+  ([handle-changes.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/reuse/handle-changes.md), verified 2026-08-27).
+  The same obligation applies inside one app when changing an existing
+  attribute's data type: the change succeeds locally and breaks at every
+  reference site, so sweep for all of them before agreeing to it — aggregate
+  filters and sort expressions, calculated attributes, action assignments,
+  widget bindings, and displayed expressions. Where the sweep is large, prefer
+  adding a correctly typed attribute and migrating, rather than retyping in
+  place.
 - consumer impact: list known consumers or mark them unknown; route broad
   shared-producer changes through the Shared Producer Compatibility Gate.
 - security: combine with the Security Server-Trust Gate for exposed REST or
@@ -338,6 +641,7 @@ Deploy-time failures that pass model validation. Route by code, never by message
 - **`OS-DPL-50204`** — entity attribute **type change with existing data**. In-place conversion fails deterministically. Fix: **rename to a fresh attribute** (add new attribute with the target type, migrate, retire the old name) — never re-attempt the conversion.
 - **`OS-DPL-RDBS-40020`** — **drop + recreate an attribute under the same name**. Attribute names are additive across an app's deploy history: retired names stay burned. Fix: pick a fresh name.
 - **`OS-DPL-50205`** — "Model features validation failed": deterministic and **invisible to model validation** (zero validation errors before publish). Known field triggers: a `User`-typed attribute plus seed user-lookup (this guide's User Reference Authoring Gate, above) and a `GetUser(GetUserId()).User.Name` call inside an expression (fix: stamp a literal). Do not burn retries on it — the same publish fails the same way; remove the triggering construct.
+- **`OS-BLD-40409` + `OS-RDBS-GEN-40002` + `OS-DPL-50205`, raised together** — Mentor set **delete rules on foreign-key attributes**, which it does BY DEFAULT. `ModelFeature_DeleteRuleOnReferences` and `ModelFeature_DeleteRuleOnSystemReferences` are **removed ODC features**, so the publish reports all three codes at once: "Value provided for argument DeleteRule was not within expected values.: Invalid delete rule (`OS-RDBS-GEN-40002`)", "Using the feature ModelFeature_DeleteRuleOnReferences, a feature that has been removed. (`OS-BLD-40409`)", "Model features validation failed (`OS-DPL-50205`)". Measured 2026-08-27 (restaurant-app-v2): the authoring turn that created 17 entities — **system references such as `User` included** — returned `validation.error_count: 0` and `change_applied: true`, and the publish failed anyway (3 attempts, `indeterminate: false` — so genuinely terminal, not an unresolved publish). Fix: **one further Mentor turn on the same session** removing delete-rule configuration from every affected attribute — 83 of them on that run — then re-publish, which succeeded. Do not re-publish unchanged; the 4xx tail is deterministic. The standing prompt line that prevents it is in `odc-mentor-hardening.md`, which owns the authoring rule.
 - **`OS-BEW-CODE-50008`** — Mentor emitted a **static sort bound to a runtime value**: zero save errors, then the publish fails at "Generating database scripts", which reads like a platform outage. It is re-introduced whenever Mentor regenerates a sortable list. Standing prompt line for any sortable list: **"Implement sorting as a DYNAMIC sort (`IsDynamic = True`), never a static sort on a runtime value."**
 - **Probe-once discipline:** the first publish after a fix is a single engine probe. On failure: diagnose once against this table, report blocked with the code, and wait for an explicit retry decision — never hammer `publish_start` at a deterministic code.
 
@@ -350,7 +654,10 @@ External field evidence: an internal OutSystems project (adopted 2026-08-14); fi
 
 ## Unknowns And Fallback Behavior
 
-Use these exact labels in OMI output when the gate cannot be satisfied:
+Use these exact labels in OMI output when the gate cannot be satisfied. Every
+label in the list below is a missing-information label: supply the fact it
+names and the design proceeds. One further label follows in its own subsection,
+for the opposite case.
 
 - `Layer fit unknown`: architecture layer, owner, sponsor, or consumer direction
   is not verified.
@@ -368,3 +675,42 @@ Use these exact labels in OMI output when the gate cannot be satisfied:
 
 When any of these labels materially affects safety, return a prompt/spec with an
 explicit unknown rather than a paste-ready Mentor Studio instruction.
+
+### `Blocked by platform rule`
+
+Every label above says something is unverified. This one says the opposite:
+nothing is missing. The design is understood, and a gate in this file has
+already recorded that the platform refuses it, reverts it, or renames it.
+
+Use it when all three hold:
+
+- the construct the design needs is named — by a gate in this file, or by an
+  owner file this file routes to — as one the platform will not accept as
+  written;
+- nothing is outstanding: a further question to the user would not change the
+  outcome;
+- the owning gate already carries the remedy, and that remedy is a different
+  construction rather than another attempt at the same one.
+
+Name the owning gate alongside the label, and give the gate's remedy in the
+same breath:
+
+> `Blocked by platform rule` (User Reference Authoring Gate) — author the
+> `User`-typed attribute in ODC Studio as a `Manual Setup Gate` row; Mentor
+> carries it from there.
+
+Where the owning gate records a publish or deploy code, quote that code from
+the gate; do not characterise the platform's behaviour independently here.
+
+**Why the label earns its place: a retry is not a diagnosis.** The converge
+iteration in `SKILL.md` stops on a budget — the handoff's target tier, or two
+consecutive audits with no weighted-score improvement. A budget cannot tell a
+design that has not converged *yet* from one that never will, so a
+platform-refused construct absorbs whatever budget is left and ends the run
+looking like an ordinary near-miss. Each attempt costs a turn and changes
+nothing. This label ends the loop on the diagnosis instead, at the first
+attempt, with the remedy already attached.
+
+`Blocked by platform rule` is an OMI output label and nothing more. It records
+how this workflow classifies its own stop; it does not create a platform claim,
+and it never stands in for the evidence held by the gate it names.

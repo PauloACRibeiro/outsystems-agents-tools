@@ -301,6 +301,67 @@ shell, record the missing template assets in `Unknowns And Fallback Behavior`.
 A manual empty shell still cannot pass default-entry runtime proof until a
 MainFlow user screen exists and is default.
 
+### Web-Template Baseline Contents
+
+What a template-backed Web app is expected to arrive carrying, so a
+first-scaffold prompt stops telling Mentor to build assets the app already has. The rule above — do not
+invent the contents of the `Common UI flow` — needs this list to be actionable.
+
+**How strong each item below is, and why it matters.** The evidence is two
+offline model-derived inventories of template-backed Web apps on two tenants
+(one sprint-loop client app and one internal sandbox app, on two different
+tenants; tenant, app and environment keys redacted), read 2026-08-26. Both were snapshotted
+**after** Mentor scaffolding and neither is a live `app_refs`/`context_screens`
+read — the verifying session had no authenticated MCP surface. Two
+after-the-fact snapshots can show an asset is present in a template-backed app;
+they cannot by themselves establish that the template is what put it there.
+So only the first item below is stated as template contents — it has independent
+documentation behind it — and the rest are **observed, not established**: use
+them as what to expect and what to look for, and confirm against the target
+before a prompt depends on them (Codex review of AH-2026-08-26-015 required this
+split, 2026-08-26).
+
+- **`Common` screens** — `Login`, `ChangePassword`, `RecoverPasswordRequest`,
+  `RecoverPasswordReset`, `UserProfile`, `InvalidPermissions`. Exactly these
+  six in both apps, and the same six the current ODC documentation names as the
+  editable pre-built authentication screens under `UI Flows` > `Common`.
+  Source: the ODC "Custom authentication flows" page, mirrored at
+  `docs-odc` `src/eap/building-apps/ui/custom-auth.md` (read 2026-08-26; the
+  live page is not machine-fetchable, so the mirror is the citable copy).
+
+Observed in both apps, template attribution **unconfirmed** — expect these,
+confirm them by reading the target:
+
+- **`Common` blocks** — `Menu`, `MenuIcon`, `ApplicationTitle`, `UserInfo`.
+- **`Layouts` blocks** — `LayoutTopMenu`, `LayoutBase`, `LayoutSideMenu`,
+  `LayoutBaseSection`, `LayoutBlank`.
+- **References** — `OutSystemsUI`, `OutSystemsCharts`, `OutSystemsMaps`,
+  `(System)`. Identical set in both apps. `OutSystemsUI`'s presence is the one
+  the Shell Provenance Gate above already keys on.
+- **Role** — exactly one persistent role, named after the app itself
+  (`ElasticSearchSandbox` in the sandbox app), with the `Common` screens wired
+  to it. Both observations contradict the reported name `Template_WebApp`, but
+  a post-create rename cannot be excluded from post-Mentor snapshots, so this
+  settles nothing about the template's own spelling. Read the role name before
+  writing a prompt that references it — assume neither spelling, and do not
+  create a second app role.
+
+**Unverified, treat as hypothesis** (AX-team report, 2026-08-25/26; no
+measurement available offline, and the scaffold inventory renders no theme
+element): themes `Template_WebApp` — said to carry `LayoutTopMenu` plus the
+`Menu` block and a 12-column fluid grid at `maxWidth 1280`, inheriting the
+`OutSystemsUI` base theme — and `EmailTheme`. Confirm with a live read or Studio
+inspection before naming either theme in a prompt.
+
+Consequence for a first scaffold, and it holds at every confidence level above:
+**read the target's own screens, blocks and role before prompting, and prompt
+only what the read does not already show.** In practice that means the prompt
+carries the user screens, entities and logic, and does not create
+authentication screens, layout blocks, a menu block, an `OutSystemsUI`
+reference, or an app role. Style changes go to the existing app theme once its
+real name is read back, never to a new theme. The read is what makes this safe
+— none of it depends on the list above being complete.
+
 ## Output Contract
 
 For app-shell first scaffold work, use these sections before any normal

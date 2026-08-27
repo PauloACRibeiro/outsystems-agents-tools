@@ -139,7 +139,7 @@ without changing the relative order below.
 | Pseudocode with material AI/agentic safety impact | `### Placement → ### Studio-Native Pseudocode → ### Agent Guardrail Coverage Audit → ### Evidence Status` |
 | Supported web UI generation | `### Mentor Studio Prompt → ### Prompt Coverage Audit → ### Studio-Native UI Spec → ### Evidence Status` |
 | Supported web UI generation with material AI/agentic safety impact | `### Mentor Studio Prompt → ### Prompt Coverage Audit → ### Studio-Native UI Spec → ### Agent Guardrail Coverage Audit → ### Evidence Status` |
-| `Invocation mode: outsystems-plan-to-mentor` | `Manual Setup Gate`, `Session Readiness Matrix`, `Studio-Native Pseudocode` (with its required subsections), `Mentor Executable Sessions` — per the SKILL.md invocation contract |
+| `Invocation mode: outsystems-plan-to-mentor` | `Manual Setup Gate`, `Session Readiness Matrix`, `Studio-Native Pseudocode` (with its required subsections), `Mentor Executable Sessions` — per the SKILL.md invocation contract; lint it with `--mode plan-to-mentor` |
 | `mode: review-only` / `mode: mentor-web-orientation` | Findings/orientation prose; end with a `### Evidence Status` section (exactly that heading level) containing one label using the weakest material label |
 | `mode: live-validation` live-row readiness answer (fragile target, proof/edit split, publish boundary) | `### Placement → ### Evidence Status → ### Unknowns And Fallback Behavior → ### Protected Contract → ### Execution Boundary` — readiness findings sit as prose between Placement and Evidence Status; `### Protected Contract` names the protected surfaces for the exact target; `### Execution Boundary` states the approval, publish, and terminal-status boundary for the row |
 

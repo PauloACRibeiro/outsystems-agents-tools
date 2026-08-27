@@ -32,6 +32,31 @@ source-plan requirements without explicit review.
 If any source requirement cannot be assigned to a block without losing meaning,
 stop and ask for clarification before generating pseudocode or Mentor prompts.
 
+## Instruction Precedence
+
+An emitted prompt draws on several sources at once, and they disagree. State
+the order explicitly rather than leaving it to be inferred from what happens to
+be written last:
+
+1. **Skill rules** — the gates and platform constraints in OMI's references.
+2. **The source plan** — capability intent, requirement IDs, scope boundaries.
+3. **The blueprint or design artifact** — screen structure, named blocks,
+   bindings.
+4. **Defaults** — OMI's own conventions where nothing above decides.
+
+**A lower tier never contradicts a higher one.** Where it appears to, the
+higher tier wins and the conflict is reported, not silently resolved: a
+blueprint asking for a construct a platform gate forbids is a conflict for the
+user, not a prompt to emit.
+
+**State the fallback when a tier is silent.** A tier that says nothing about a
+question does not block the tiers below it — it defers to them. Say which tier
+answered, so a reader can tell a deliberate default from an unnoticed gap.
+
+This is precedence between the sources of one emitted prompt. It is not a
+runtime rule-injection mechanism: a Mentor prompt is a one-shot instruction to
+an editor, and nothing here is re-evaluated turn by turn.
+
 ## Plan Conversion Manifest
 
 Build a Plan Conversion Manifest before generating pseudocode or Mentor prompts.
@@ -80,6 +105,35 @@ Every paste-safe Mentor message must include:
 
 Do not merge multiple source requirements into one Mentor prompt when the
 combined prompt becomes vague, dependency-unsafe, or hard to verify.
+
+### Per-block prompt shape
+
+Write each block's message under four named headings, in this order:
+
+- **Purpose** — the one outcome this block delivers, in a sentence.
+- **MUST DO** — the required work, as checkable statements.
+- **MUST NOT DO** — the prohibitions that apply to *this* block.
+- **EXIT** — what proves the block is finished.
+
+`MUST NOT DO` is the heading that earns its place. Mentor's characteristic
+failure is doing extra — a second screen nobody asked for, an entity attribute
+that seemed implied, a refactor of adjacent logic — and a prohibition buried in
+a paragraph is read as commentary. Name the out-of-scope neighbours the block
+sits next to, not generic caution: `scope_out` from the manifest is exactly
+this list, so carry it across rather than inventing a new one.
+
+`EXIT` is the block's `acceptance_checks`, phrased so that Mentor can tell it
+has stopped at the right place.
+
+### Name the condition, not the literal
+
+Where a prompt refers to a screen, entity, role or status, prefer the condition
+that identifies it over a value that happens to identify it today: *"the status
+that means the request is awaiting approval"* survives a rename of that status;
+`"Pending"` does not. The same applies to referring to a record by position, a
+role by display label, or a screen by its title text. Where only a literal is
+available, use it and say it is a literal, so a later rename has something to
+find.
 
 ## Block Size Budget And Split Triggers
 

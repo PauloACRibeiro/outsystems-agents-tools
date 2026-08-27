@@ -456,6 +456,46 @@ Ask when the requested query may need SQL-only behavior, when Aggregate support 
 
 Existing skill rule and current official Aggregate/SQL guidance.
 
+### Advanced SQL Dialect And Literal Syntax
+
+**Failure pattern**
+
+Writing the body of an Advanced SQL node without first settling which dialect the node will be read as, then reaching for literal forms that current official documentation does not describe for that dialect:
+
+```text
+Create SQL GetActiveCustomers over the external entity {Customers},
+filtering on the boolean attribute and concatenating first and last name,
+using whichever boolean and concatenation forms the model happens to emit.
+```
+
+**Preferred pattern**
+
+Settle the dialect from the entities in the query, then use the literal forms documented for that dialect. The dialect is not a free choice: per `use-sql.md`, PostgreSQL syntax is used when the query includes only internal entities created in ODC Studio, and ANSI-92 syntax is used when the query includes external entities or a mix of internal and external entities. That article also states the syntax is chosen automatically by ODC Studio and cannot be selected or configured manually, so the generated prompt should describe the query's entities rather than instruct Mentor to pick a syntax.
+
+For ANSI-92 queries, use the forms the mirrored ODC documentation actually shows:
+
+```sql
+-- Entity names in { }, attributes in [ ], per ansi-92-syntax.md
+SELECT {Customers}.[FirstName] || ' ' || {Customers}.[LastName]
+FROM {Customers}
+WHERE {Customers}.[IsActive] = TRUE
+```
+
+- Boolean literals are written `TRUE` and `FALSE`: `ansi-92-data-types.md` lists those as the example literals for the `BOOLEAN` SQL type. The same row gives `CAST(1 AS BOOLEAN)` as the example cast, so an integer reaches a boolean through an explicit `CAST` rather than as a bare boolean literal.
+- String concatenation uses `||`: `ansi-92-operators.md` documents `string || string` as the character-string concatenation operator. The `+` operator appears in the same article only under arithmetic, as numeric addition.
+
+**Why**
+
+Two conflicting conventions for ANSI-92 literals are in circulation, and the skill should emit only the documented one. A convention is circulating that ANSI-92 in ODC uses boolean literals `1` and `0`, but no official ODC documentation in the mirrored `docs-odc` source states that. The same convention names `+` for string concatenation, which is likewise uncorroborated by the mirrored articles that do document a concatenation operator. What the mirrors establish is a difference between two sets of written guidance; they do not by themselves establish which forms a live ODC tenant accepts, and this contradiction has not been verified against a live tenant here, because settling it needs an Advanced SQL node run against an entity from an external datasource. Until someone runs that check, generate the documented forms, and treat the other convention as an open question rather than a second valid style.
+
+**When to ask**
+
+Ask when it is not yet known whether any entity in the query comes from an external datasource, because that single fact decides the dialect for the whole query. Ask before emitting either convention's boolean or concatenation forms if the user has a tenant-specific correction that contradicts the documented forms, and record what the tenant actually accepted so the contradiction above can be closed with evidence rather than preference.
+
+**Evidence**
+
+Official SQL syntax, from the mirrored `use-sql.md`, `ansi-92-syntax.md`, `ansi-92-data-types.md`, and `ansi-92-operators.md` articles. The competing convention is recorded here as an unresolved contradiction, not as a second source of truth.
+
 ### Insert Target Columns And Returning
 
 **Failure pattern**
@@ -695,6 +735,105 @@ Ask when the active action name, input record shape, Identifier value, delete sc
 **Evidence**
 
 Current official CRUD wrapper guidance and database event guidance. Database events can be configured for Create, Update, or Delete entity actions and run after successful commit, so writes that trigger event behavior must call out commit visibility explicitly.
+
+## Delete Rules On References Are A Removed ODC Feature
+
+### Every Data-Model Prompt Must Forbid Delete-Rule Configuration
+
+**Failure pattern**
+
+A data-model prompt that says nothing about delete rules. Mentor sets them **by
+default** on foreign-key attributes — including on **system references** such as
+`User` — because `ModelFeature_DeleteRuleOnReferences` and
+`ModelFeature_DeleteRuleOnSystemReferences` are features it still knows and ODC
+has **removed**.
+
+**Preferred pattern**
+
+Carry this line, verbatim, in every data-model Mentor prompt:
+
+```text
+create FK attributes with no delete-rule configuration, system references included
+```
+
+Referential behaviour is still real intent — deactivate-not-delete, block a
+delete while children exist, cascade a soft delete. It belongs in a **server
+action** that performs the delete, where it is expressible and testable, and
+never in an attribute's delete rule.
+
+**Why**
+
+Nothing before publish sees it. On the restaurant-app-v2 run (2026-08-27) the
+turn that created 17 entities returned `validation.error_count: 0` and
+`change_applied: true`; the publish then failed with three codes at once —
+`OS-RDBS-GEN-40002` ("Invalid delete rule"), `OS-BLD-40409` (the removed
+feature, named in the message) and `OS-DPL-50205`. The recovery was one further
+Mentor turn on the same session stripping delete-rule configuration from **83
+attributes**, after which the re-publish succeeded.
+
+This is the **validation-passes/publish-fails class** already documented for the
+static-PK `Identifier` trap and static-entity autonumber: an authoring-time
+signal that is clean by construction, because the rejecting component runs at
+publish. Treat a clean authoring turn on a data-model phase as evidence of
+nothing until the publish lands.
+
+**Where the treatment lives**
+
+The error-code treatment — the three codes, the message strings, the session
+evidence — is owned by `odc-platform-guardrails.md`'s Deploy-Time Error Code
+Gate. This section owns the prompt line only; do not duplicate the treatment
+here.
+
+**Evidence**
+
+Live build, restaurant-app-v2, 2026-08-27; the failing publication is
+identified by its `publication_key` in that project's build log, which is where
+tenant-scoped identifiers belong.
+
+## Static Record Value Updates Are A Wedge Risk
+
+### Seed Static Records At Entity Creation; Never Bundle Updates To Them
+
+**Failure pattern**
+
+Updating the attribute values of static-entity records that **already exist**,
+in a turn that also carries other work:
+
+```text
+Update the Label and SortOrder of the 20 MenuCategory records, add the
+PlatformAdmin and Staff roles, add the MenuLineItem structure, and create the
+ten server actions listed below.
+```
+
+**Preferred pattern**
+
+1. **Seed static records at entity creation** — Label, SortOrder and every other
+   display value — so no post-hoc update turn is needed at all.
+2. Where an update is genuinely unavoidable, **isolate it**: its own minimal
+   turn, nothing else bundled with it, and treat it as a known wedge risk with a
+   cancel decision prepared before it starts.
+
+**Why**
+
+Updating existing static record attribute values is the suspected expensive or
+unexpressable operation behind an observed wedge. The bundled turn above wedged
+at `internal_retry_count: 40` — roughly 23 minutes before it was cancelled. The
+same work re-issued **without** the static-record updates, as six narrow turns,
+all succeeded at 0–5 retries. The static-record updates are the only removed
+variable.
+
+**Two silent transforms make counting useless here**
+
+- Mentor **normalises record identifiers**: `Pratos do Dia` came back as
+  `PratosDodia`. Nothing reports the rewrite.
+- Mentor can **reorder** the records it wrote.
+
+So the enumeration gate must diff record **lists** against the spec — names in
+order — never record counts. A count is green across both transforms.
+
+**Evidence**
+
+Live build, restaurant-app-v2, 2026-08-27.
 
 ## Status And Static-Entity Values
 
@@ -1105,6 +1244,85 @@ Real session: Block 1 deleted all widgets (including the Form). LoginForm.Valid 
 
 ## Mentor ApplyModelApiCode Patterns
 
+### The Host Execution Model — Why A Successful Turn Can Change Nothing
+
+**The tool names Mentor narrates are host tool names, and the agent's own view of
+them is lossy in three specific ways.** The agent asks to run code; a host applies
+it to the model. Knowing where that seam falls is what makes "Mentor said it
+worked but nothing changed" a diagnosable event rather than a mystery.
+
+> **The other half of this pair.** This section says *how* code is applied. What
+> that code may address — the interfaces, which properties are settable, how a
+> child is created, how a flow is wired — is curated in
+> `odc-modelapi-code-application-surface.md`, from the platform's own generated
+> API reference. Open it when the question is whether an edit is expressible at
+> all, or when a code-shaped prompt needs an exact member name; it is an
+> API-surface authority only, and says nothing about runtime behaviour.
+
+Four things follow, and they are the reason every rule in this guide ends in a
+read-back rather than in a success signal:
+
+1. **The agent and host vocabularies are not one-to-one.** The agent's
+   code-execution request drives the host's `applyModelApiCode`. Other host calls
+   — the model query, the conversation-context fetch, the reference-adding call —
+   have no agent-side step at all. This is why the `currentStep` values a run
+   reports (`runQuery`, `applyModelApiCode`, `message`, `complete`) read like host
+   operations: they are. Corroborated from this estate's own measurement — see
+   `execution-gates.md` §4b, where those four are the observed healthy sequence.
+2. **Each host call is its own model transaction (hypothesis).** A failing call
+   neither commits its own edits nor undoes an earlier successful call's edits,
+   and there is no grouped transaction spanning calls. **This does not contradict
+   the turn-level rule** in `execution-gates.md` §4: per-call transactions commit
+   into the session's in-memory working copy, while the turn-level checkpoint on
+   `status: succeeded` is what promotes that working copy to a revision. Mid-turn
+   work is therefore durable against a later failing call, but not against a turn
+   timeout — two granularities, both true.
+3. **A validation or restriction rejection is not classified as a tool failure
+   (hypothesis)** — nor is an early `return` inside the applied code. Both are
+   recorded as a successful tool call. If that holds, "reported success" and
+   "nothing changed" stop being contradictory observations and become the
+   expected output of a success classifier that excludes exactly those two paths.
+   Treat it as the leading candidate mechanism for a silent no-op, never as an
+   established platform rule.
+4. **The error the agent surfaces may not be the error that occurred.** A generic
+   transport-level failure reported back to the agent can sit on top of a
+   specific, named host exception. So a vague Mentor error message is weak
+   evidence about cause, and the agent's own "that succeeded" is weak evidence
+   about effect.
+
+**The operating consequence — unchanged, and now explained.** Prove an edit by
+reading the model back, never by reading the run's success signal. Nothing in
+this section relaxes a single existing gate; it says why those gates were
+necessary.
+
+**Do not conclude "rolled back" from an absence.** When something is created in
+one step and reported missing in a later one, the most common cause is that the
+lookup addressed it the wrong way — element kinds differ in how they are keyed,
+and an accessor that is valid for one kind throws for another, so the object is
+present and merely not addressable as asked. The other two candidates are that it
+was never created (the "created" line printed before a later fault in the *same*
+call, so nothing persisted) and a genuine rollback. Only claim the third when an
+explicit rollback or undo marker is present; never infer it because something
+cannot be found. Distinguishing these matters because they have opposite fixes:
+the first is a query bug and the third is a lost edit.
+
+**When to ask**
+
+Not applicable — this is a mental model for reading run evidence, not a
+model-dependent generation choice.
+
+**Evidence**
+
+External field evidence from another team's own Mentor troubleshooting practice
+(adopted 2026-08-26). Points 2 and 3 are that team's stated model of an internal
+host, **not measured by us and not an OutSystems product contract** — they carry
+the hypothesis label above for that reason. Point 1 is independently corroborated
+by this estate's `currentStep` measurements. Provenance, the full claims table,
+and the experiment that would settle points 2 and 3 are in the mining disposition
+under `docs/adoption/`.
+
+---
+
 ### IfNode Condition String Matching
 
 **Failure pattern**
@@ -1366,6 +1584,14 @@ Add a Button named Btn_RevealPwd...
 
 Never say "leave OnClick empty". Instead say: "Create a placeholder screen action named X and wire it to Btn_RevealPwd's OnClick."
 
+**Deleting the property is not the escape**
+
+Clearing or removing the On Click property does not produce a valid no-op Button. It produces the same missing-value error as leaving the property empty, so a mock-data or placeholder build still needs a real placeholder action wired to it.
+
+Evidence: `O11-corroborated / ODC-inferred`. The published OutSystems 11 error reference gives the cause as adding the widget "and did not set a value for the On Click property of the Event", and requires the value to be an Action, a Screen, or a RedirectToURL (`OutSystems/docs-product:src/ref/errors-and-warnings/errors/required-property-value-error.md`). No equivalent ODC page was reachable, so the ODC behavior is inferred from that O11 page together with the TrueChange text observed above. The observed ODC error code stays session evidence and is not asserted here as a documented platform code.
+
+**The rule is not Button-only.** The same cited error page names three widgets together — "You added a List Item, Button, or Link widget, and did not set a value for the On Click property of the Event" — so a Link with no On Click and a List Item with no On Click fail the same way a Button does. Wire On Click on all three. On the reactive Link widget that ODC inherits there is no `Destination` property at all; `On Click` is the mandatory one, and it carries both branches — a screen action to run and a screen to navigate to. `Destination` is mandatory only on the Traditional Web Link widget, an app type ODC does not have, so never write `Destination` into an ODC prompt. Evidence: `O11-corroborated / ODC-inferred` — `OutSystems/docs-product:src/ref/lang/auto/servicestudio-plugin-nrwidgets-link.md` lists On Click as Mandatory on the reactive Link widget and lists no Destination property. No platform error code is asserted for this widening.
+
 **Coverage audit obligation**
 
 The mandatory audit category "Interactive widgets" must flag any Button with no OnClick destination as `✗ missing`. Fix it before delivering the prompt.
@@ -1377,6 +1603,18 @@ When no appropriate existing action exists and the correct action name is unclea
 **Evidence**
 
 Real session: `Btn_RevealPwd` prompt said "leave OnClick empty." Mentor self-recovered by creating `TogglePasswordVisibility`, but the prompt was wrong and burned an extra `applyModelApiCode` pass.
+
+---
+
+## Table Widget Rules
+
+### Sort Attribute Alone Does Not Sort
+
+Setting Sort Attribute on a table header cell has no effect unless the table's OnSort event is wired. The platform generates the sort logic when the event is wired, and the clicked header cell's Sort Attribute value arrives in the handler — so a prompt that sets Sort Attribute and stops produces a table that looks sortable and is not.
+
+**Evidence**: `O11-corroborated / ODC-inferred` — `OutSystems/docs-product:src/building-apps/ui/table/pagination-sorting.md`, section "In Reactive Web and Mobile". There is no table sorting page in the ODC documentation at all, so the ODC behaviour is inferred from the reactive reference; state it that way in review notes rather than as documented ODC behaviour. The `SortAttribute` hits in the ODC docs are a false friend — `sort-aggregate.md` uses it as a tutorial local-variable name, not as a widget property.
+
+Do not prescribe a sort-local recipe. Upstream's two-local (`CurrentSortByColumn` plus `IsAsc`) and `ListSort` shape diverges from the documented auto-generated action, which uses a single Text local with `" DESC"` appended to toggle direction, and upstream's "a second handler competes with the auto-created one" claim is unstated in any source. Wire the event, let the platform generate the handler, and leave the internals to Studio.
 
 ---
 
@@ -1529,7 +1767,7 @@ var form = screen.Widgets.OfType<IForm>().Named("FormSearch");
 
 **Why it fails**
 
-ODC screens that use a Layout block (LayoutSideMenu, LayoutBlank, etc.) have exactly ONE direct child in `.Widgets` — the Layout block instance widget. All page-content widgets (Forms, Containers, etc.) live inside that block instance's `PlaceholdersContent` collection, under the matching placeholder (usually `"MainContent"`).
+ODC screens that use a Layout block (LayoutSideMenu, LayoutTopMenu, etc.) have exactly ONE direct child in `.Widgets` — the Layout block instance widget. All page-content widgets (Forms, Containers, etc.) live inside that block instance's `PlaceholdersContent` collection, under the matching placeholder — `"MainContent"` for the menu-bearing layouts, whose documented placeholder set is Header, Breadcrumbs, Title, Actions, MainContent, Footer. LayoutBlank is the exception: it exposes a single content placeholder that the documentation does not name, so resolve its placeholder name from the model instead of assuming `"MainContent"` (`OutSystems/docs-odc:src/eap/building-apps/ui/screen-about.md`).
 
 **Preferred pattern**
 
@@ -1588,8 +1826,9 @@ Real session: Mentor correctly identified the limit and applied row-card style t
 
 ### SVG Icons Cannot Go In Text Widgets
 
-OutSystems Text widgets render plain text. SVG `<path>` strings are not rendered as graphics. Options:
+OutSystems Text widgets render plain text. SVG `<path>` strings are not rendered as graphics. Options, best first:
 - Use OutSystems UI Icon widget (limited icon set, but safe)
+- Use the documented Inline SVG widget when the graphic must stay real SVG: search the ODC Studio Toolbox for `Inline SVG` and set the markup on its `SVGCode` property. If the widget does not appear in the Toolbox, its dependency was removed as unused — click **Search in other modules** to add it back. Source: `OutSystems/docs-odc:src/eap/building-apps/ui/patterns/utilities/inlinesvg.md` (`Current official`); the page notes the pattern applies to the OutSystems UI framework only.
 - Use Expression widget with `<svg>...</svg>` HTML string — works but is fragile and not Mentor-friendly
 - Omit icon and add a review note: "Replace icon placeholder with Icon widget from OutSystems UI after Mentor applies"
 
@@ -1604,9 +1843,17 @@ When adapting tested design-to-app or spec-driven scaffold prompts, treat raw SV
 
 Evidence: tested `outsystems-spec-driven-build` prompt-builder guardrail for SVG icon color baking and missing Phosphor font rendering, reconciled with OMI's safer Icon-widget-first guidance.
 
+### Form Controls Do Not Emit Their Own Label
+
+Form controls do not emit their own label. In the OutSystems UI form styles, the `label` element and the control elements (`.dropdown`, `.search-input`, `input[data-input]`, `textarea[data-textarea]`, `[data-switch]`) are styled as siblings inside the form scope — the label is a widget in its own right. A form field prompted without an explicit preceding Label widget renders as an unlabelled box.
+
+Evidence: `OutSystems/outsystems-ui:src/scss/03-widgets/_form.scss` (sibling label and control selectors under the form scope).
+
+Bind the Label to its control explicitly through the Label widget's **Input Widget** property. That binding — not sibling order and not a CSS class — is what the ODC accessibility documentation requires so screen readers read each input field caption. Every Input, Dropdown, Text Area, Checkbox and Switch in a form needs one. Source: `OutSystems/docs-odc:src/eap/building-apps/ui/accessibility/intro.md` (`Current official`). Class names carried over from a source mockup are not a substitute: `form-group` and `form-label` do not exist anywhere in OutSystems UI, even though `form-control` does, which is exactly what makes them look plausible in a mockup.
+
 ### Checkbox Internal Styling Not Reachable
 
-ODC Checkbox widget generates its own `<input type="checkbox">` element inside a wrapper div. Extended Properties on the Checkbox widget apply to the outer wrapper, not the inner input element. The following cannot be controlled via Extended Properties:
+ODC Checkbox widget generates its own `<input type="checkbox">` element inside a wrapper div. Extended Properties on the Checkbox widget are observed to land on the outer wrapper rather than the inner input element — session inference, not documented behavior. What the ODC documentation states is only that an Extended Property is output as a custom tag on the widget's HTML element (`OutSystems/docs-odc:src/eap/testing-apps/ui-testing-selenium/ui-testing-selenium.md`); which element that is for a composite widget is not documented either way. Treat the following as unreachable through Extended Properties until a live-tenant observation says otherwise:
 - Checkbox square color (accent-color requires a CSS class, not inline style)
 - Checkbox size
 - Checkmark color
@@ -1756,7 +2003,7 @@ Input bound to SelectedItemId (SupplyItem Identifier)
 
 **Preferred pattern**
 
-Use LongInteger or Text as the local variable type for any Input widget. Convert to Identifier after the user provides the value.
+Use LongInteger or Text as the local variable type for any Identifier-bound Input widget. Convert to Identifier after the user provides the value.
 
 ```text
 Local variable SelectedItemIdValue (LongInteger)
@@ -2259,6 +2506,24 @@ Lessons from a full agentic-app build (PlayRight "Member Support") driven end-to
 - Why safer: the user-visible symptom of a missing failure branch is not an ugly message, it is **no message** — the screen refreshes, the row is unchanged, and nothing says why. That is indistinguishable from success to the user and invisible to an enumeration gate, because the action, its call, and its signature all exist.
 - When to ask: before accepting any client-action spec whose failure half is a sentence rather than a step, and before reporting a refusal path as built on the strength of the Server Action alone.
 - Minimal example: not `else -> show the reason`, but `False -> Assign LocalMessage = <mapped sentence> ; show in MessageContainer above the form ; do NOT Refresh Data ; do NOT navigate`.
+
+## A Paginated List Refreshes Through Its Bound Variables
+
+- Scope: any screen whose list uses the Pagination pattern, or any prompt that pairs a `Refresh Data` with a list the user can page through. Adopted from the legacy requirement-gap adoption round (`docs/adoption/legacy-requirement-gaps-adoption.md`) row R7, corroborated against ODC's *Pagination* documentation and the ODC pagination training exercises.
+- Failure pattern: specifying the aggregate and the Pagination widget as if they were independent — the widget gets `StartIndex` / `MaxRecords` / `TotalCount`, but the aggregate's own **Start Index** and **Max. Records** properties are left at their defaults. The pager then renders correct page numbers over a result set that never changed, and paging appears to do nothing. The mirror failure is a `Refresh Data` fired from some other handler that resets the position because nothing re-supplies the current offset.
+- Preferred pattern: name one pair of screen variables and bind them in both places. The aggregate's **Start Index** and **Max. Records** properties bind the variables; the Pagination widget's mandatory `StartIndex`, `MaxRecords` and `TotalCount` inputs bind the same variables and the aggregate's total count. The page-change handler receives `NewStartIndex`, assigns it to the `StartIndex` variable, and *then* runs `Refresh Data` — the assign before the refresh, or the refresh re-runs the old offset. A control that changes page size (`MaxRecords`) must also reset `StartIndex` to `0`, or the user lands past the end of the resized result set.
+- Why safer: `StartIndex` is an **offset in records, not a page number** — for 10 per page, page 3 is `20`. Guidance that says "set the start index to the page" produces a list that silently reads the wrong window, which no enumeration gate detects because every element exists and the screen renders.
+- When to ask: before accepting a list spec that mentions pagination without naming the two variables, and before reporting paging as built on the strength of the widget alone.
+- Minimal example: not `add pagination to the list`, but `screen variables StartIndex (Integer, 0) and MaxRecords (Integer, 10) ; aggregate GetOrders sets Start Index = StartIndex, Max. Records = MaxRecords ; Pagination widget StartIndex = StartIndex, MaxRecords = MaxRecords, TotalCount = GetOrders.Count ; OnPageChange(NewStartIndex) -> Assign StartIndex = NewStartIndex ; Refresh Data GetOrders`.
+
+## A Uniqueness Check Must Exclude The Record Being Edited
+
+- Scope: any prompt asking for a "must be unique" rule on an entity attribute — a code, a reference number, an email, a name — where the same screen or action serves both create and edit. Adopted as a design from the same legacy requirement-gap adoption round (`outsystems-patch-templates`, the uniqueness-check template); the shape is composition, not platform behaviour, so it carries no error-code citation.
+- Failure pattern: specifying the check as the requirement words it — *"the code must be unique"* — which yields a validation that counts existing rows with that value and refuses when the count is above zero. It passes every test that creates a new record and fails the first time anyone opens an existing record and saves it without touching the field, because the row **reports itself as a duplicate**. The symptom reaches the user as an unfixable form: the value they are being told to change is already theirs.
+- Preferred pattern: state the check as a single validation that takes both the candidate value **and** the identifier of the record being saved, and that excludes the identifier being edited from the match. In create mode that identifier is the null identifier and excludes nothing, so one validation serves both modes and there is no second code path to keep in step. Say where the check runs (server-side, before the write) and what it returns, so the caller has an outcome to branch on rather than an exception to catch.
+- Why safer: the create-only version is green on exactly the tests a generator writes for it, and the failure appears only on the edit path of an existing row — late, in front of a user, and easy to misread as a data problem rather than a logic one. Naming the exclusion in the prompt is the only place it reliably gets built, because nothing in the requirement sentence implies it.
+- When to ask: whenever a requirement says *unique*, *no duplicates*, or *already exists* and the screen it applies to can also edit. Ask which identifier marks "this record" and confirm what the create-mode value of that identifier is, rather than assuming zero.
+- Minimal example: not `validate that Code is unique`, but `Server Action ValidateCodeUnique(InCode Text, InCurrentId <Entity> Identifier) -> IsDuplicate Boolean ; matches = rows where Code = InCode and Id <> InCurrentId ; IsDuplicate = matches is not empty ; SaveDetail calls it before the write and branches on IsDuplicate`. Pair it with a unique database index on the attribute — the validation gives the message, the index keeps the guarantee under concurrent writes.
 
 ## Async-Fetched Data Belongs In Its Aggregate's On After Fetch
 

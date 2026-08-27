@@ -408,26 +408,66 @@ This section uses the following schema whenever practical:
 - Use `Refresh Data` to rerun screen/block aggregates.
 - Avoid aggregates inside `For Each` cycles.
 - If a Data Action fetches all records, `Max. Records` can be left empty.
+- `Length` is a **Text** built-in function and its parameter is typed Text, so `Length(<Aggregate>.List)` is not a valid expression. When you need the total number of records use `<Aggregate>.Count`, which is not limited by `Max. Records`.
+- To test whether a query returned nothing, use `<Aggregate>.List.Empty` rather than `<Aggregate>.Count = 0`; the documentation advises against `.Count` for the emptiness check because it runs an extra query unnecessarily. `<SQL query>.List.Empty` is the same test for an SQL element.
+
+Evidence for the two rules above: `Current official` — `OutSystems/docs-odc:src/eap/reference/built-in-functions/text.md` publishes `Length` under Text with a Text-typed parameter, and `OutSystems/docs-odc:src/eap/building-apps/ui/creating-screens/best-practices-fetch-display-data.md` gives both remedies. State the prohibition without a platform error code — no published ODC error catalogue entry covers it.
 
 **GROUP BY / count-per-group guidance**:
 
-Use Aggregate grouping for count-per-group summaries only when the target entity, grouping attributes, and aggregate editor grouping fields are confirmed. In Studio-native pseudocode, name the grouping fields and the calculated attribute explicitly:
+Use Aggregate grouping for count-per-group summaries only when the target entity, grouping attributes, and aggregate editor grouping fields are confirmed. In Studio-native pseudocode, name the grouping fields and the aggregation explicitly:
 
 ```text
 Aggregate GetRequestCountByStatus
 Source Entity: Request
 Group By: Request.StatusId
-Calculated attribute RequestCount = Count(Request.Id)
+Count by: Request.Id
 ```
 
-For multi-dimensional counts, list each grouping attribute before the calculated attribute:
+For multi-dimensional counts, list each grouping attribute before the aggregation:
 
 ```text
 Aggregate GetRequestCountByStatusAndSlaBucket
 Source Entity: Request
 Group By: Request.StatusId, Request.SlaBucketId
-Calculated attribute RequestCount = Count(Request.Id)
+Count by: Request.Id
 ```
+
+Two rules govern that shape, and the pseudocode above was corrected to match them:
+
+- **The aggregation is applied to the attribute, not written as a formula.**
+  `Count by` (and `Sum`, `Average`, `Min`, `Max`) is an operation on a column of
+  the Aggregate. A **calculated attribute** is a different thing — an expression
+  column over the Aggregate's other columns and built-in functions — and a
+  calculated attribute may reference the resulting column by name once the
+  aggregation has produced it. The documented worked example groups by
+  `Category.Id`, counts by `Product.Id`, and only then adds a calculated
+  attribute whose expression reads the `Count` and `Label` columns. Writing the
+  count *inside* the calculated attribute inverts that order.
+- **Grouping narrows the output.** Once an Aggregate groups or aggregates, only
+  the grouped and aggregated columns are part of its output — the remaining
+  entity attributes drop out. So a grouped count Aggregate **cannot also feed
+  the row list** on the same screen; a screen that shows both a per-group total
+  and the underlying records needs two Aggregates.
+
+Evidence: `Current official` —
+[calculated-attribute-create.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/calculated-attribute-create.md)
+carries the group-then-count-then-reference example, and the ODC *Advanced
+Aggregates* training states both that calculated attributes are expressions over
+the Aggregate's attributes and that only the aggregated columns remain in the
+output when grouping or aggregation functions are used (verified 2026-08-27).
+
+When the requirement is a **single number** rather than a per-group breakdown,
+do not group at all: an ungrouped, filtered aggregate read through
+`<Aggregate>.Count` gives the total directly, and (per the `.Count` rule above)
+is not capped by `Max. Records`. Grouping for a single total buys nothing and
+costs the row list.
+
+A boolean toggle filter is **one** filter condition, not a second Aggregate and
+not a conditional refresh — `not <ToggleVariable> or <positive condition>`
+passes every record while the toggle is off and narrows to the matching ones
+while it is on. *Design pattern, no platform citation* — this is composition,
+not platform behaviour.
 
 Use this SQL hardening fallback when grouping semantics are uncertain: treat the grouping claim as `Unverified gap`, ask for the missing schema, and use `odc-mentor-hardening.md` only when an Aggregate cannot express the query safely.
 
@@ -606,12 +646,15 @@ Exception Handler All Exceptions
 
 **Lifecycle pseudocode rules:**
 
-- `On Initialize` runs before screen data is fetched — do not read aggregate output here. Use it to compute defaults, parse URL parameters, or call a Server Action that supplies a starter state.
+- `On Initialize` runs before screen data is fetched — do not read aggregate output here. Use it to compute defaults, parse URL parameters, assign block parameters, or redirect on authorization. Keep it minimal: it runs synchronously before the first paint, so a server call or local-storage access inside it delays the first render. Load-time server data belongs in the screen's Data Actions / fetch sources, which run after `On Initialize` and in parallel. (Corrected 2026-08-27 — this bullet previously recommended calling a Server Action here, which the platform's own performance guidance contradicts.)
+- Local data fetches on the client lifecycle events (`On Initialize`, `On Ready`, `On Render`) are fully serialized — they forgo the parallel fetch that Data Actions get while the screen is already rendering. The platform's technical-debt monitor flags this as the "Non-optimized local data fetch" performance finding.
 - `On After Fetch` (per-aggregate) is where logic that depends on fetched data belongs. Use it for chained / dependent queries or to derive computed properties.
 - `On Ready` is for DOM-dependent client logic (third-party widget initialization, focus management) and runs once per screen visit.
 - `On Render` runs after first render and on every screen-data change — keep it cheap and idempotent. Mutating screen data inside `On Render` causes rerender loops.
 - `On Parameters Changed` (Block-only) re-runs when a parent changes a block input. Use it to refresh the block's local state or `Refresh Data` its aggregates.
 - `On Destroy` is the cleanup hook — remove listeners, cancel pending JS work, free third-party widgets.
+
+**Sources for the keep-minimal and serialized-fetch rules**: [screen-block-lifecycle-events.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/screen-block-lifecycle-events.md) ("Keep this event handler action simple and avoid slow actions such as local storage operations, since it may delay the rendering"), [non-optimized-local-fetch.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/monitor-and-troubleshoot/manage-technical-debt/performance/non-optimized-local-fetch.md) ("Avoid local data fetch on client events (On Initialize, On Ready, On Render). These events are fully serialized"), [performance-optimization-mobile.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/mobile/best-practices/performance-optimization-mobile.md) — verified via `outsystems-tech-content` 2026-08-27.
 
 ### 3.7 Core Flow Nodes
 
@@ -619,6 +662,8 @@ Exception Handler All Exceptions
 | --- | --- | --- | --- | --- | --- |
 | `Start` | Action flows, workflows | None documented beyond being the start node | Entry point of the flow | `Start` | Current official |
 | `End` | Action flows, workflows | None documented beyond being the end node | Exit point of the flow | `End` | Current official |
+| `Destination` | Screen Actions only | Target screen and its input arguments | Terminal node that navigates; not available in Client/Server/Service Actions | `Destination OrderDetail(OrderId: SaveOrder.OrderId)` | Current official (training) — ODC training `logic/logic-actions/logic-actions.md`, verbatim "Destination (Screen Actions only)" (entitled access; no public docs page states this restriction — retrieved via `outsystems-tech-content` 2026-08-27) |
+| `Download` | Screen Actions only | `File Content`, `File Name`, `Save to Disk` | Terminal node that hands the user a file; not available in Client/Server/Service Actions | `Download InvoicePdf(File Content: RenderInvoice.Pdf)` | Current official (training) — same source and caveat as the `Destination` row, verbatim "Download (Screen Actions only)" |
 | `Assign` | Actions, Data Actions, callbacks, many logic flows | `Variable`, `Value` | Used to set variables and output parameters | `Assign IsExecuting = True` | Current official |
 | `If` | Actions | `Condition`; examples also show `Label` | True/False branching | `If CheckManagerRole()` | Current official |
 | `For Each` | Actions | `Record List`; loop context via `.Current` | Iterate lists; avoid Aggregate/SQL inside the loop | `For Each EditedProducts` | Current official |
@@ -627,11 +672,38 @@ Exception Handler All Exceptions
 | `Refresh Data` | Screen/block logic | Target Aggregate or Data Action | Re-runs screen/block data fetch | `Refresh Data GetOrders` | Current official |
 | `Trigger Event` | Server Action, Service Action | Selected event and its payload arguments | Commit first if event depends on newly written data | `Trigger Event OnPurchaseStarted(ProductId: ProductId)` | Current official |
 | `Raise Exception` | Logic flows | `Exception Message`; specific exception type selected in the node | Use for exceptional conditions, not normal control flow | `Raise Exception UnavailableExternalSystem("Provider timeout")` | Current official |
-| `Exception Handler` | Flow scopes | `Exception`, `ExceptionMessage`, `Log Error` | `All Exceptions`, `User`, `Database`, `Security`, `Communication` are explicitly documented families | `Exception Handler All Exceptions` | Current official |
+| `Exception Handler` | Flow scopes | `Exception`, `ExceptionMessage`, `Log Error` | `All Exceptions`, `User`, `Database`, `Security`, `Communication` are explicitly documented families; the handler's path stays separate from the main path and reaches its own `End` — see the note below | `Exception Handler All Exceptions` | Current official |
 | `Send Email` | Server or service logic that sends an Email element | `Email`, `To`, mapped email input parameters, optional `Attachments` | Runs on the server; email UI content is defined separately | `Send Email WelcomeEmail(To: User.Email, Handle: User.Name)` | Current official |
 | `Wake<TimerName>` | Logic flows | No inputs; no outputs | Forces a timer execution | `WakeNightlySync()` | Current official |
 
 **Sources**: [output-parameter.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/logic/output-parameter.md), [data-grid-save.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/data-grid/data-grid-save.md), [secure-app-with-roles.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/user-management/secure-app-with-roles.md), [screen-block-lifecycle-events.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/screen-block-lifecycle-events.md), [implement-events.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/events/implement-events.md), [handle-exceptions.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/handling-exceptions/handle-exceptions.md), [sending-emails/intro.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/sending-emails/intro.md), [timer-create-run.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/timers/timer-create-run.md)
+
+**Where the Excel actions run.** `Excel to Record List` is only available in Server Actions — in Web and Mobile apps the uploaded file must be sent to the server and processed there ([excel-record-list.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/logic/excel-record-list.md), stated verbatim). `Record List to Excel` is likewise documented only inside Server Actions ([record-list-excel.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/logic/record-list-excel.md)). Plan both as server-side steps with the file crossing as Binary Data. Verified via `outsystems-tech-content` 2026-08-27.
+
+**Pagination refresh is a binding contract, not a parameter hand-off.** The
+paginated Aggregate's `Start Index` and `Max. Records` properties must be
+bound to the same variables the Pagination widget updates; the page-change
+handler assigns the new start index to that variable and then runs
+`Refresh Data` on the Aggregate, which re-executes with the variables' current
+values. An aggregate left unbound (or a handler that refreshes without
+assigning first) loses the page position or fetches without the page bound.
+Source: [pagination.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/navigation/pagination.md) — verified via `outsystems-tech-content` 2026-08-27.
+
+**An exception handler is a separate path, and it terminates itself.** Current
+ODC training states that *"the Exception Handler flow can't intersect other
+flows"* because *"each flow must be independent from the others"*, and that an
+action flow has *"only one Start node but multiple End nodes"*. An action may
+carry more than one handler — one per exception type — and the most specific
+matching handler receives the exception.
+
+So when OMI describes error handling in a flow, the handler branch runs to its
+**own** `End` node rather than merging back into the success path. Pseudocode
+that rejoins the main path after a handler describes a flow ODC Studio will not
+accept. Where the handler's outcome must be visible to the caller, carry it in
+an output parameter assigned on the handler path before its `End`, not by
+reconverging.
+
+**Sources**: [handling-mechanism.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/handling-exceptions/handling-mechanism.md), ODC training `logic/questions/q-exception-handler.md` and `logic/questions/q-action-flow.md`
 
 ### 3.8 Workflow Nodes
 
@@ -787,7 +859,7 @@ This section is intentionally catalog-oriented. For very large families such as 
 | Mentor Studio | ODC Studio AI assistant | Generates or modifies supported web app elements through natural-language prompts; verify generated changes manually | Current official | [how-it-works.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/agentic-development/mentor-studio/how-it-works.md), [capabilities.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/agentic-development/mentor-studio/capabilities.md), [ai-limitations.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/agentic-development/ai-limitations.md) |
 | Consuming AI agents in apps | Consumer app pattern | `UserInput`, `SessionId`, `GenerateGuid`, deploy agentic app before consumer | Current official | [consumer-app.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/build-ai-powered-apps/consumer-app.md) |
 | Agent guardrails | ODC Portal configuration | Configured per agent in ODC Portal, not in Studio. Studio pseudocode for guardrails should note "configure in Portal" rather than showing Studio elements. Covers content filtering, topic restrictions, and PII handling. | Current official | `OutSystems/docs-odc:src/eap/building-apps/build-ai-powered-apps/guardrails.md`; `OutSystems/docs-odc:src/eap/building-apps/build-ai-powered-apps/configure-agent-guardrails.md` |
-| AI call timeout handling | Async pattern | Long AI calls (>30s) require async wrapper or background processing; do not raise `Server Request Timeout` as the primary fix | Current official | [agent-long-running.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/build-ai-powered-apps/agent-long-running.md) |
+| AI call timeout handling | Agent call tuning, then async | For AI-agent calls, raise `Server Request Timeout` to 60 seconds as the first measure — on the app, or individually on each Call Agent action (app default is 10 seconds). Move to asynchronous processing when the call needs to run beyond 60 seconds. Scope is agent calls; the general integration timeout guidance is unchanged. | Current official | [agent-long-running.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/build-ai-powered-apps/agent-long-running.md), [app-lib-properties-edit.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/libraries/app-lib-properties-edit.md) |
 | Agentic deployment order | Cross-app dependency | Deploy agent app before consumer app; reversing this order breaks `CallAgentV2` references at runtime | Course/example-backed | VPN-gated `outsystems-tech-content` query `Deploying assets`; otherwise `Unverified or blocked` |
 
 ## 5. Integration And Platform API Surfaces
@@ -871,6 +943,22 @@ These rules materially affect how you should describe logic and ordering in pseu
 - `On Application Ready` blocks the initial screen render.
 - `On Ready` and the first `On Render` do not guarantee screen data is already fetched.
 - `On After Fetch` is the correct post-query hook when you need the data itself.
+- Reaching local storage or the server from a render-blocking handler is a compiler-flagged
+  *Performance Warning*: `'{0}' contains accesses to the local storage or server, which delays
+  the {1}'s render. To avoid performance issues, use Aggregates or Data Actions instead.` The
+  message is parameterized over the handler, so it is not specific to `On Initialize` — plan
+  load-time server data as an Aggregate or Data Action rather than a call inside the handler.
+- The converse is also compiler-flagged: assigning a variable that an Aggregate or Data Action
+  reads, from a handler that runs *after* the fetch, raises a *Coherence Suggestion* directing
+  the assign back into `On Initialize`. So `On Initialize` is the correct home for the variable
+  setup a query depends on — the constraint is on data access, not on the handler doing work.
+- Fetching data from the server in a splash screen is separately flagged; move that fetch to
+  the default screen.
+
+**Corroboration**: `outsystems-tech-content` `model-truechange`, queries `OnInitialize contains
+access to the local storage or server which delays the screen render` (Performance Warning,
+score 0.533; Coherence Suggestion, 0.420; splash-screen warning, 0.486). The collection is
+tagged for both platforms — a `version="odc"` filter excludes it.
 
 ### 6.8 REST execution semantics
 
@@ -883,6 +971,58 @@ These rules materially affect how you should describe logic and ordering in pseu
 - `Call condition` can stop execution based on `TokenUsage`, `LoopCount`, or `TotalCallsCount`.
 - Official course material and deployment docs align on deployment ordering: deploy the agentic app before the consumer app/workflow that depends on it.
 
+### 6.10 TrueChange-enforced action and flow shape
+
+These are compiler errors, not style preferences — a plan that violates one produces an app
+that will not publish.
+
+- An action can be marked a Function only when it declares **exactly one** output parameter.
+  Two output parameters raise `Only One Output Parameter Allowed`; zero raises
+  `Output parameter required`; the general form is `Invalid User Function . Action '{0}' must
+  have exactly one output parameter to be available as a function.` A Data Action is the
+  separate case — it needs *at least* one output parameter, not exactly one.
+- A Function called in an **aggregate filter** must reduce to a single SQL expression *when the
+  call passes it an attribute of that aggregate*. Its body then has to be exactly one Assign
+  node with one assignment; anything else — a branch, several assignments — is rejected.
+  Observed on tenant 2026-08-27 (app `98c8428a`): a Function whose body branched on an If,
+  filtered as `ProbeBranchingFn(ProbeChild.Name) = True`, raised
+  `(Error) Invalid Expression - 'ProbeBranchingFn' function cannot be executed in the database
+  because it receives attributes from the aggregate as parameter but it doesn't have exactly an
+  Assign node with one assignment.`, with no numeric code. **What triggers the rule is the
+  aggregate attribute in the argument list, not branching by itself**, so do not emit the wider
+  "a function used anywhere near an aggregate may not branch" form — a function the aggregate
+  does not feed its own attributes to is not constrained this way. Neither setting `Function =
+  True` on the branching action nor writing the filter expression was refused on its own; the
+  error appeared only once both were in place.
+- A Function that runs client-side cannot call Server Actions: `Invalid Client Function .
+  '{1}' cannot be used in '{0}' because server actions are not available in client functions.`
+- An exception handler's flow path must stay its own graph: `Invalid Exception Handler . Flow
+  path of exception handler '{0}' can't cross main path or other in flow '{1}'.` Do not join a
+  handler back into the start-node path or into another handler. A flow also accepts only one
+  handler per exception type.
+
+**The one-output rule is enforced at validation, not at the moment the flag is set.** Observed
+on tenant 2026-08-27 (app `98c8428a`): setting `Function = True` on a Server Action that still
+carried two output parameters was *accepted* — the property write completed with no exception
+and the property afterwards read `True` — and the constraint appeared only as a TrueChange
+error, `(Error) Invalid User Function (location: /ProbeTwoOutputs) - Action 'ProbeTwoOutputs'
+must have exactly one output parameter to be available as a function.`, carrying no numeric
+code. So a Mentor turn that sets this flag can report success while leaving the app unable to
+publish: read the validation error count back after the turn rather than trusting that the
+write was refused.
+
+**Corroboration**: `outsystems-tech-content` `model-truechange`, queries `action marked as
+function must have exactly one output parameter` (top hits 0.752 / 0.743) and `exception
+handler flow must not connect to the start node flow separate graph` (0.574). Adopted from the legacy
+requirement-gap adoption round, rows R6 and R12; see
+`docs/adoption/legacy-requirement-gaps-adoption.md`.
+
+The aggregate-filter bullet is row **R5**, which that round could not corroborate in either
+collection and therefore kept out. It is here on a tenant observation instead of a citation,
+and the observation narrowed it: the source stated the rule as a flat "no branching in a
+function used in an aggregate", and the platform in fact scopes it to functions the aggregate
+passes its own attributes to.
+
 ## 7. Pseudocode Authoring Rules
 
 ### 7.1 Naming conventions
@@ -891,6 +1031,7 @@ These rules materially affect how you should describe logic and ordering in pseu
 - Use real parameter labels whenever the docs expose them.
 - Refer to outputs using `<CallNode>.<OutputParameter>`.
 - Refer to loop current item with `.Current`.
+- **`.Current` is also how a row's own record is reached inside a `List`, not only inside a `For Each`.** Observed on tenant 2026-08-27 (app `98c8428a` rev 4): a Button placed in the row of a `List` bound to `GetProbeChildren.List`, calling a screen action `PickRow(ChildId: ProbeChild Identifier)`, stored its argument as `GetProbeChildren.List.Current.ProbeChild.Id` — read back character-for-character from the published model by a session that never saw the writing session. So a row action learns which row was clicked through `<Aggregate>.List.Current.<Entity>.<Attribute>`, and the handler takes the identifier as an ordinary input parameter rather than receiving the row implicitly. The widget is `List` (model interface `IList`); `TableRecords` is O11 vocabulary and did not appear anywhere in the model.
 
 ### 7.2 Canonical patterns
 
@@ -935,6 +1076,9 @@ These rules materially affect how you should describe logic and ordering in pseu
 - Prefer one server action in pseudocode when the client would otherwise perform several server requests.
 - Avoid describing Aggregate/SQL inside a loop unless the design explicitly accepts the cost.
 - In agentic flows, state whether action calling, structured output, or both are involved. If both are needed, describe two distinct agent calls.
+- Name a data type with the token the docs use. The documented contact-number type is `Phone Number`, not `Phone`; the documented reference type is `Identifier`. A near-miss token is read as a Text attribute named after a type.
+- **A Text attribute emitted without a length is choosing 50, not leaving the length open.** Observed on tenant 2026-08-27 (app `98c8428a` rev 3): an attribute created as Text with no length given came back as `Length` 50, read from the published model by a session that never saw the writing session. No ODC document states this default, and the measurement is of the Mentor/ModelAPI path rather than a published contract — but the consequence is the same either way, which is that an unstated length silently truncates any value past 50 characters. State the length on every Text attribute whose content can exceed it.
+- **Pick the null-identifier function from the identifier's own type.** `NullIdentifier()` returns `0` and `NullTextIdentifier()` returns `""` ([Data Conversion](https://github.com/OutSystems/docs-odc/blob/main/src/eap/reference/built-in-functions/data-conversion.md)), so a check written against the wrong one compares an identifier to a value it can never hold and the guard silently never fires. Read the referenced entity's identifier type before emitting the comparison rather than defaulting to `NullIdentifier()`. Where the identifier type is not established, say so instead of guessing — and note that a null-identifier check after an entity read is dead code regardless, for the reason in `odc-platform-guardrails.md`'s Not-Found Guard Gate.
 
 ## 8. Coverage Matrix And Verification Gaps
 

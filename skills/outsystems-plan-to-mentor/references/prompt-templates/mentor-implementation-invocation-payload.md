@@ -1,8 +1,8 @@
 # Mentor implementation invocation payload (prompt template)
 
-- version: 2 (2026-08-10 — the `Mentor spec guardrails:` field stopped naming a file and started carrying it. V23, first live colleague sprint-loop run 2026-08-09: the old value was a path relative to this skill, and the payload is read inside `outsystems-mentor-implementation`, where it resolves to nothing. Version 1 extracted this template unchanged from `references/mentor-implementation-invocation.md`; prompts-as-data, Enzyme adoption #3)
+- version: 3 (2026-08-19 — added `Excluded scope:`, the do-not-build channel. fx W2.1 L10: `outsystems-screen-inventory` can record a candidate as `deferred` — not in this build at all — and that decision had no way to cross this boundary, so Section 8 was composed from recall. Version 2, 2026-08-10 — the `Mentor spec guardrails:` field stopped naming a file and started carrying it. V23, first live colleague sprint-loop run 2026-08-09: the old value was a path relative to this skill, and the payload is read inside `outsystems-mentor-implementation`, where it resolves to nothing. Version 1 extracted this template unchanged from `references/mentor-implementation-invocation.md`; prompts-as-data, Enzyme adoption #3)
 - owner: `outsystems-plan-to-mentor/references/mentor-implementation-invocation.md`
-- placeholders: the file paths (`docs/superpowers/specs/approved-prd.md`, `docs/superpowers/plans/feature-patched.md`, `docs/superpowers/plans/feature-mentor-output.md`, `docs/app-map.md`) and the `|`-separated option lists on `Delivery mode:` and `Target app state:` — pick one option per line; `Invocation mode:` and `Mentor spec guardrails:` are fixed values
+- placeholders: the file paths (`docs/superpowers/specs/approved-prd.md`, `docs/superpowers/plans/feature-patched.md`, `docs/superpowers/plans/feature-mentor-output.md`, `docs/app-map.md`) and the `|`-separated option lists on `Delivery mode:` and `Target app state:` — pick one option per line; `Excluded scope:` takes the excluded IDs or the literal `none recorded`; `Invocation mode:` and `Mentor spec guardrails:` are fixed values
 
 Everything from `## Template` down is emitted verbatim, in one message: the
 field block first, then the guardrails section under it. Replace the sample
@@ -25,8 +25,18 @@ Patched plan: docs/superpowers/plans/feature-patched.md
 Output file: docs/superpowers/plans/feature-mentor-output.md
 Target app state: new-app | template-scaffold | existing-app
 Target app inventory: docs/app-map.md
+Excluded scope: none recorded
 Mentor spec guardrails: inlined below, under `Mentor spec guardrails (inline)`
 ```
+
+`Excluded scope:` is a do-not-build list, never a backlog. Every ID on it was
+recorded upstream as outside this build, with the decision that put it there —
+`deferred` (a later build takes it), `out-of-scope` (it belongs to another
+product) or `accepted-risk` (a known gap nobody owns). Put each one in
+Section 8 (Out of scope) of the 10-section spec below, keeping its disposition
+word, and build none of them — CRITICAL CONSTRAINT 4 governs what that means.
+`none recorded` states that the question was asked and nothing was excluded; it
+is not the same as leaving the field blank.
 
 ## Mentor spec guardrails (inline)
 
@@ -96,6 +106,16 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
    flow, or workflow node before its creation step in the same Mentor session.
    Cross-app library producers must be published or pre-existing before the
    consuming app uses them.
+
+10. **Do NOT call a generated entity action from a screen or client action.**
+    `Create<E>`, `CreateOrUpdate<E>`, `Update<E>` and `Delete<E>` are
+    server-side; calling one from the client raises `Security Warning . You're
+    exposing a database operation in the client side. Validate the data in a
+    Server Action before changing the database.` Route every write through a
+    Server Action that validates before it writes — a pass-through wrapper
+    silences the warning without earning it. See
+    `outsystems-mentor-implementation` `odc-platform-guardrails.md`, Security
+    Server-Trust Gate.
 
 ## Guardrail 7 override for modification plans
 

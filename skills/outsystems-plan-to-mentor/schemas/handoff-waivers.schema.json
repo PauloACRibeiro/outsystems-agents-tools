@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://outsystems-agent-skills/plan-to-mentor/handoff-waivers.schema.json",
+  "title": "Handoff gate waivers",
+  "description": "The waiver file read by scripts/check_handoff_gate.py --waivers. A waiver is the gate's only exit: it moves one named clause from FAIL to WAIVED, and WAIVED is never PASS. This schema is the published contract; the gate enforces the same rules in code, and a drift test pins the two together. Any invalid entry voids the whole file rather than being dropped on its own, so a file its author clearly got wrong can never move the verdict.",
+  "type": "object",
+  "required": ["waivers"],
+  "additionalProperties": false,
+  "properties": {
+    "waivers": {
+      "type": "array",
+      "description": "Whole-clause waivers. v1 is whole-clause only: there is no per-finding waiver, because findings carry no stable codes.",
+      "items": {
+        "type": "object",
+        "required": ["clause", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "clause": {
+            "type": "string",
+            "description": "The clause being waived. Must be a member of CLAUSE_NAMES in check_handoff_gate.py; a waiver naming anything else is refused.",
+            "enum": [
+              "requirement-coverage",
+              "outcome-coverage",
+              "handoff-scan"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why this clause is excused, recorded for the audit trail and printed in the gate's report. A blank or whitespace-only reason is refused: a reasonless waiver is an auto-accept, which turns an unsatisfied rule into a permanent pass."
+          }
+        }
+      }
+    }
+  }
+}

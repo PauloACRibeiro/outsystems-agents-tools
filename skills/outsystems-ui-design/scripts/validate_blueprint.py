@@ -61,7 +61,24 @@ O11_ONLY_BLOCKS = {
     "ListRecords": "List (or TableRecords for a tabular layout)",
 }
 _O11_ONLY_RE = re.compile(r"\b(" + "|".join(O11_ONLY_BLOCKS) + r")\b")
-NUMERIC_TYPES = {"integer", "longInteger", "decimal", "currency"}
+# Both registers: a ProgressBar bound to an `Integer` attribute is as numeric as
+# one bound to an `integer`. Widening the data_type vocabulary without widening
+# this set would have turned a spurious warning into a common one.
+NUMERIC_TYPES = {
+    "integer", "longInteger", "decimal", "currency",
+    "Integer", "Long Integer", "Decimal", "Currency",
+}
+
+# Shaped like the relationship form and fatal at publish. `Integer Identifier`
+# and `Text Identifier` match the schema's `<Target> Identifier` pattern, so the
+# pattern alone waves them through; `Identifier` and `Long Integer Identifier`
+# are listed too so the rule reads as one rule rather than two halves. All four
+# validate cleanly and then fail every publish with OS-RDBS-GEN-40002, masked as
+# OS-DPL-50203 through the MCP path (SKILL.md, "Typed data model").
+RESERVED_IDENTIFIER_TYPES = (
+    "Identifier", "Integer Identifier", "Long Integer Identifier",
+    "Text Identifier",
+)
 _NUMERIC_WIDGET_RE = re.compile(r"\b(ProgressBar|Counter)\b")
 # (?!\s*=) - F-E: don't match HTML property syntax like "AdvancedHtml Tag=p".
 _STATUS_WIDGET_RE = re.compile(r"\b(Tag|Badge)\b(?!\s*=)")
@@ -73,16 +90,233 @@ _TYPES = {
     "boolean": bool,
     "number": (int, float),
     "integer": int,
+    "null": type(None),
 }
 
 
+def _expected_types(expected):
+    """A schema `type` is either one name or a union list of them."""
+    names = expected if isinstance(expected, list) else [expected]
+    types = ()
+    for name in names:
+        entry = _TYPES[name]
+        types += entry if isinstance(entry, tuple) else (entry,)
+    return types
+
+
+# --- placeholder ban (L12) --------------------------------------------------
+#
+# A blueprint whose entity name is `TBD` satisfies every shape rule in the
+# contract and hands the downstream Mentor conversion a literal entity called
+# TBD. Markers are rejected in a NAMED field set - the fields whose value
+# becomes a model element, a binding, or a name acted on downstream - and
+# deliberately NOT in the free-prose channels, where "TODO: confirm with the
+# client" is a legitimate note. See placeholder_fields() for the set and for
+# what it excludes.
+#
+# DUPLICATED verbatim in the sibling validator (outsystems-screen-inventory's
+# validate_screen_inventory.py / outsystems-ui-design's validate_blueprint.py):
+# no cross-skill Python import exists and the packs do not ship one. The drift
+# gate is test_marker_list_matches_the_* in both suites.
+PLACEHOLDER_MARKERS = ("TODO", "TBD", "FIXME", "PLACEHOLDER")
+BARE_PLACEHOLDER_VALUES = ("...", "…")
+# `<fill in>` / `[FILL-IN: colour]` / `{fill_in}`. Bracketed only: the bare
+# phrase "users fill in the form" is ordinary prose in a behaviour field.
+FILL_IN_PATTERN = r"[<\[{]\s*fill[ _-]?in[^>\]}]{0,24}[>\]}]"
+
+_MARKER_RE = re.compile(
+    r"(?<![A-Za-z0-9])(?:"
+    + "|".join(re.escape(m) for m in PLACEHOLDER_MARKERS)
+    + r")(?![A-Za-z0-9])",
+    re.IGNORECASE,
+)
+_FILL_IN_RE = re.compile(FILL_IN_PATTERN, re.IGNORECASE)
+
+
+class Finding(str):
+    """A warning that carries its own handoff severity.
+
+    Graduation, in one type: `graduating=True` means advisory while the author
+    is still working, and blocking once they run `--handoff`. It is a `str`
+    subclass on purpose - every consumer formats warnings as `f"WARNING: {w}"`
+    and both suites compare them against plain strings, so the report stays
+    byte-identical for anyone who never passes the flag.
+
+    `graduating` is required, never defaulted: a warning added later has to
+    decide, rather than inheriting "advisory" by saying nothing. The AST drift
+    gate refuses a bare `warnings.append("...")` for the same reason.
+
+    A warning graduates only if it is unconditionally author-fixable - there is
+    always an action that clears it and clearing it is always right. Anything
+    that can be a legitimate final state stays advisory, because neither
+    validator has a waiver channel to clear it with.
+
+    DUPLICATED verbatim in the sibling validator (outsystems-screen-inventory's
+    validate_screen_inventory.py / outsystems-ui-design's validate_blueprint.py):
+    no cross-skill Python import exists and the packs do not ship one. The drift
+    gate is test_every_warning_classifies_itself in both suites.
+    """
+
+    def __new__(cls, text, graduating):
+        finding = super().__new__(cls, text)
+        finding.graduating = graduating
+        return finding
+
+
+def graduating_findings(warnings):
+    """The subset that blocks at handoff - emission order, text verbatim."""
+    return [w for w in warnings if getattr(w, "graduating", False)]
+
+
+def advisory_findings(warnings):
+    """The complement: what still prints as a plain WARNING at handoff."""
+    return [w for w in warnings if not getattr(w, "graduating", False)]
+
+
+
+def placeholder_in(text):
+    """The placeholder marker in `text`, or None. Case-insensitive."""
+    if not isinstance(text, str):
+        return None
+    if text.strip() in BARE_PLACEHOLDER_VALUES:
+        return text.strip()
+    match = _FILL_IN_RE.search(text) or _MARKER_RE.search(text)
+    return match.group(0) if match else None
+
+
+def _pf(path, value):
+    """Yield (path, text) for a string field or a list-of-strings field."""
+    if isinstance(value, str):
+        yield path, value
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            if isinstance(item, str):
+                yield f"{path}[{index}]", item
+
+
+def _regions(screen):
+    """Every region on a screen, groups flattened, with its path."""
+    for i, region in enumerate(_as_list(screen.get("main_content"))):
+        if not isinstance(region, dict):
+            continue
+        base = f"main_content[{i}]"
+        yield base, region
+        if region.get("type") == "group":
+            for j, item in enumerate(_as_list(region.get("items"))):
+                if isinstance(item, dict):
+                    yield f"{base}.items[{j}]", item
+
+
+def placeholder_fields(bp):
+    """The NAMED field set the placeholder ban covers.
+
+    EXCLUDED on purpose: `evidence_boundary.*` and `target_context.review_notes`
+    (the channels for recording what is not yet settled), `acceptance_checklist`
+    (advisory human-facing prose by its own schema description), and
+    `design_system.*` (free-form visual rules). A deferral note belongs there.
+    """
+    if not isinstance(bp, dict):
+        return
+    for key in ("name", "description", "primary_color"):
+        yield from _pf(key, bp.get(key))
+
+    tc = bp.get("target_context")
+    if isinstance(tc, dict):
+        for key in ("readable_app_name", "canonical_app_key", "existing_assets",
+                    "target_surfaces"):
+            yield from _pf(f"target_context.{key}", tc.get(key))
+
+    chrome = bp.get("app_chrome")
+    if isinstance(chrome, dict):
+        for key in ("layout_block", "app_title"):
+            yield from _pf(f"app_chrome.{key}", chrome.get(key))
+        for i, entry in enumerate(_as_list(chrome.get("menu"))):
+            if isinstance(entry, dict):
+                yield from _pf(f"app_chrome.menu[{i}].label", entry.get("label"))
+
+    for i, block in enumerate(_as_list(bp.get("blocks"))):
+        if isinstance(block, dict):
+            for key in ("name", "description"):
+                yield from _pf(f"blocks[{i}].{key}", block.get(key))
+
+    for i, entity in enumerate(_as_list(bp.get("entities"))):
+        if not isinstance(entity, dict):
+            continue
+        for key in ("name", "type", "records"):
+            yield from _pf(f"entities[{i}].{key}", entity.get(key))
+        for j, attr in enumerate(_as_list(entity.get("attributes"))):
+            if isinstance(attr, dict):
+                for key in ("name", "data_type", "enum_values"):
+                    yield from _pf(f"entities[{i}].attributes[{j}].{key}", attr.get(key))
+
+    for i, screen in enumerate(_as_list(bp.get("screens"))):
+        if not isinstance(screen, dict):
+            continue
+        for key in ("name", "type", "description"):
+            yield from _pf(f"screens[{i}].{key}", screen.get(key))
+        for rpath, region in _regions(screen):
+            for key in ("name", "id", "description", "content"):
+                yield from _pf(f"screens[{i}].{rpath}.{key}", region.get(key))
+            hints = region.get("outsystems_hints")
+            if isinstance(hints, dict):
+                yield from _pf(f"screens[{i}].{rpath}.outsystems_hints.block",
+                               hints.get("block"))
+            reuse = region.get("reuse")
+            if isinstance(reuse, dict):
+                yield from _pf(f"screens[{i}].{rpath}.reuse.block", reuse.get("block"))
+
+    for i, icon in enumerate(_as_list(bp.get("icon_mapping"))):
+        if isinstance(icon, dict):
+            for key in ("role", "outsystems_icon"):
+                yield from _pf(f"icon_mapping[{i}].{key}", icon.get(key))
+
+    for i, role in enumerate(_as_list(bp.get("roles"))):
+        if isinstance(role, dict):
+            for key in ("name", "description"):
+                yield from _pf(f"roles[{i}].{key}", role.get(key))
+
+
+def _check_placeholders(bp, errors):
+    """Fail-closed: an unresolved marker in a gate-bearing field is an error."""
+    for path, text in placeholder_fields(bp):
+        marker = placeholder_in(text)
+        if marker:
+            errors.append(
+                f"{path}: active placeholder {marker!r} - a gate-bearing field "
+                "must carry the real value, not a marker to resolve later"
+            )
+
+
+def _schema_branch_errors(node, schema, path):
+    """A branch's own errors, collected without polluting the caller's list -
+    `oneOf` needs to try a branch and discard it when another one matches."""
+    found = []
+    _check_schema(node, schema, path, found)
+    return found
+
+
 def _check_schema(node, schema, path, errors):
+    # `oneOf` is the one combinator this projection uses (data_type: a closed
+    # basic-type enum, OR a length-bearing Text, OR the relationship form). It
+    # is checked before `type`, because the branches carry their own.
+    if "oneOf" in schema:
+        if any(not _schema_branch_errors(node, branch, path)
+               for branch in schema["oneOf"]):
+            return
+        errors.append(
+            f"{path}: value {node!r} matches none of the {len(schema['oneOf'])} "
+            "permitted forms - see the field's schema description")
+        return
     expected = schema.get("type")
-    if expected and not isinstance(node, _TYPES[expected]):
+    if expected and not isinstance(node, _expected_types(expected)):
         errors.append(f"{path}: expected {expected}, got {type(node).__name__}")
         return
     if "enum" in schema and node not in schema["enum"]:
         errors.append(f"{path}: value {node!r} not in {schema['enum']}")
+    if "pattern" in schema:
+        if not isinstance(node, str) or not re.search(schema["pattern"], node):
+            errors.append(f"{path}: value {node!r} does not match "
+                          f"{schema['pattern']!r}")
     if isinstance(node, dict):
         for req in schema.get("required", []):
             if req not in node:
@@ -93,6 +327,51 @@ def _check_schema(node, schema, path, errors):
     if isinstance(node, list) and "items" in schema:
         for i, item in enumerate(node):
             _check_schema(item, schema["items"], f"{path}[{i}]", errors)
+
+
+def _as_list(value):
+    """Malformed input reports its own error from the schema check; here it must
+    not crash. `.get(key, [])` is not enough: a key present and null returns
+    None."""
+    return value if isinstance(value, list) else []
+
+
+def _check_reserved_identifier_types(bp, errors):
+    """The four `Identifier`-shaped strings that pass every gate and fail at
+    publish. Two of them (`Integer Identifier`, `Text Identifier`) have exactly
+    the shape of a legitimate `<Target> Identifier`, so the schema's pattern
+    cannot tell them apart from a real relationship type - only a name can.
+
+    Scoped to entity ATTRIBUTES, which is the path the rule was measured on: an
+    `Identifier`-suffixed type on an action parameter publishes normally.
+
+    Defensive on every node, because this runs BEFORE `_check_schema` and so
+    sees unvalidated input (AH-2026-08-27-019, Codex). Note `.get(key, [])`
+    returns None for a key that is PRESENT and null - the default only covers an
+    absent key - so each list is type-checked rather than defaulted. Skip what
+    cannot be read; never stop reading.
+    """
+    if not isinstance(bp, dict):
+        return
+    for entity in _as_list(bp.get("entities")):
+        if not isinstance(entity, dict):
+            continue
+        for attribute in _as_list(entity.get("attributes")):
+            if not isinstance(attribute, dict):
+                continue
+            value = attribute.get("data_type")
+            if not isinstance(value, str) or value.strip() not in RESERVED_IDENTIFIER_TYPES:
+                continue
+            errors.append(
+                f"entity '{entity.get('name', '?')}' attribute "
+                f"'{attribute.get('name', '?')}': data_type {value.strip()!r} "
+                "validates cleanly and then fails every publish "
+                "(OS-RDBS-GEN-40002, masked as OS-DPL-50203). An ordinary "
+                "auto-number primary key is the literal 'Long Integer'; a "
+                "relationship is '<TargetEntity> Identifier'. A genuine 64-bit "
+                "key requirement is a Mentor/publish-path limitation to raise "
+                "in evidence_boundary.review_notes, never silently narrowed"
+            )
 
 
 def _check_single_layout(bp, errors):
@@ -468,21 +747,27 @@ def _check_binding_type_fit(bp, warnings):
         if not attr:
             continue  # existence gate already errors
         if _NUMERIC_WIDGET_RE.search(element) and attr.get("data_type") not in NUMERIC_TYPES:
-            warnings.append(
+            warnings.append(Finding(
                 f"screen '{sname}': {element} binds to "
                 f"{binds['entity']}.{binds['attribute']} (data_type "
                 f"{attr.get('data_type')!r}), which is not numeric - a "
-                "ProgressBar/Counter expects a numeric attribute"
-            )
+                "ProgressBar/Counter expects a numeric attribute",
+                # Decided by a widget-NAME regex, and a Text attribute holding a
+                # number is a modelling choice rather than a contract breach.
+                graduating=False,
+            ))
         if _STATUS_WIDGET_RE.search(element) and not (
             attr.get("is_foreign_key") and attr.get("enum_values")
         ):
-            warnings.append(
+            warnings.append(Finding(
                 f"screen '{sname}': {element} binds to "
                 f"{binds['entity']}.{binds['attribute']}, which is not backed by a "
                 "static entity - a status Tag/Badge expects a static-entity-backed "
-                "attribute"
-            )
+                "attribute",
+                # Same name-regex heuristic: a Badge showing a count is a
+                # legitimate final state, so this advises rather than blocks.
+                graduating=False,
+            ))
 
 
 _ASSERTION_WIDGETS = {"links": "Link", "buttons": "Button", "inputs": "Input"}
@@ -619,10 +904,14 @@ def _check_existing_asset_announcement(bp, warnings):
     bound.extend(("existing entity", n) for n in sorted(_existing_entities(bp)) if n)
     for kind, name in bound:
         if name not in known and name.rsplit("/", 1)[-1] not in known:
-            warnings.append(
+            warnings.append(Finding(
                 f"{kind} {name!r} is bound in the blueprint but not named in "
-                "target_context.existing_assets - announce it there too"
-            )
+                "target_context.existing_assets - announce it there too",
+                # Blocks at handoff: plain set membership over names the
+                # blueprint already carries, and naming the asset always clears
+                # it. The target boundary is what OMI reads on intake.
+                graduating=True,
+            ))
 
 
 def _datasource_entities(bp):
@@ -709,6 +998,77 @@ def _check_dual_seed_mismatch(bp, errors):
             )
 
 
+# `<X> Identifier` types the platform supplies rather than the app declaring
+# them. `User Identifier` is listed outright in the Mentor Web data type
+# reference and ODC wires the relationship to its own `User` entity from the
+# type alone (docs-odc building-apps/data/modeling/relationship/
+# relationship-one-to-one.md); `Role Identifier` is the same shape (docs-odc
+# reference/built-in-functions/roles.md). ODC's workflow system entities are
+# deliberately absent: the platform publishes no `<X> Identifier` type for them,
+# and an app that binds one adds it as a public element - which belongs in
+# entities[] flagged exists: true, a route this check already accepts.
+PLATFORM_IDENTIFIER_TARGETS = frozenset({"User", "Role"})
+
+
+def declared_entity_names(bp):
+    """Entity names this blueprint's entities[] declares, whatever their type.
+
+    Public because multi-path mode unions it across the design directory: N
+    per-screen blueprints are one app, and OMI merges their entity sets into one
+    data model on intake.
+    """
+    return {e.get("name") for e in bp.get("entities", []) if isinstance(e, dict)}
+
+
+def _check_fk_target_declared(bp, errors, extra_declared=None):
+    """Producer-side half of OMI's Typed Create-Only rule 5: "When `enum_values`
+    is `null`, require the target to be another declared create-only entity."
+
+    OMI's sub-schema closes with "Do not invent a missing target entity ... stop
+    prompt emission and return the blueprint for correction", and mandates a
+    matching producer-side gate for a sub-schema contradiction before producer
+    and consumer count as aligned - the same pairing the dual-seed rule has.
+    Until this check existed a foreign key typed '<Target> Identifier' whose
+    target appeared in no entities[] entry and was seeded by no enum_values
+    validated clean, and OMI's build brief then instructed Mentor to create the
+    relationship to an entity nothing in the pipeline asks to be created.
+
+    extra_declared (multi-path only): entity names a SIBLING blueprint of the
+    same design directory declares, so the guard does not false-error on a
+    legitimate cross-blueprint projection - the same allowance F-B2 makes for a
+    seed that lives in a sibling.
+
+    `target_context.existing_assets` is deliberately NOT a declaration route: it
+    announces THAT the app has assets, while the declared, explicit way to bind
+    one is an entities[] entry flagged `exists: true`. Prose-matching it would
+    also re-open the false negative the announcement check had to solve - 'User'
+    is a substring of the routinely announced 'UserProfile'.
+    """
+    declared = declared_entity_names(bp) | set(extra_declared or ())
+    seeded = {t.strip() for t in _fk_enum_targets(bp)}
+    for ent in bp.get("entities", []):
+        if not isinstance(ent, dict):
+            continue
+        for a in ent.get("attributes", []) or []:
+            if not isinstance(a, dict) or not a.get("is_foreign_key"):
+                continue
+            dt = (a.get("data_type") or "").strip()
+            if not dt.endswith(" Identifier"):
+                continue
+            target = dt[: -len(" Identifier")].strip()
+            if not target or target in declared or target in seeded \
+                    or target in PLATFORM_IDENTIFIER_TARGETS:
+                continue
+            errors.append(
+                f"entity '{ent.get('name', '?')}' attribute '{a.get('name', '?')}' "
+                f"is a foreign key to '{target}' via data_type {dt!r}, but "
+                f"'{target}' is declared nowhere - declare it in entities[] (flag "
+                "exists: true if it already exists in the target app), or seed it "
+                "as a static entity by putting its records in this attribute's "
+                "enum_values; OMI must not invent a missing target entity"
+            )
+
+
 def _check_static_datasource_unpopulated(bp, errors, extra_targets=None):
     types = {e.get("name"): (e.get("type") or "") for e in bp.get("entities", [])
              if isinstance(e, dict)}
@@ -747,27 +1107,65 @@ def _check_repeat_prose_columns(bp, warnings):
                 element = item.get("element", "")
                 if _REPEAT_RE.search(element) and not isinstance(item.get("binds"), dict):
                     label = region.get("name") or region.get("id") or "?"
-                    warnings.append(
+                    warnings.append(Finding(
                         f"screen '{sname}' region '{label}': repeat widget "
                         f"'{element}' over '{entity}' has no structured binds - its "
                         f"columns are prose-only and cannot be verified against "
-                        f"'{entity}'s attributes"
-                    )
+                        f"'{entity}'s attributes",
+                        # Blocks at handoff, which is what SKILL.md already
+                        # says of it: "worth fixing before handoff". Adding
+                        # binds always clears it.
+                        graduating=True,
+                    ))
 
 
-def collect_errors(bp, extra_seed_targets=None):
+def _check_acceptance_checklist_not_empty(bp, errors):
+    """The one required section with no legitimate empty state.
+
+    Adopted 2026-08-24 (UX-UI-Hub X-16). The field was previously unchecked, so
+    a blueprint that produced no acceptance items validated clean - which is
+    exactly how a section quietly stops being produced. Sections that ARE
+    legitimately empty (blocks, entities, icon_mapping, roles) are listed in
+    SKILL.md under "When a section is legitimately empty"; this is the
+    counterpart that keeps that list from licensing over-omission.
+    """
+    if not bp.get("acceptance_checklist"):
+        errors.append(
+            "acceptance_checklist is empty. It is the one required section with "
+            "no legitimate empty state - a screen with nothing worth checking is "
+            "a screen with nothing worth building. See SKILL.md, 'When a section "
+            "is legitimately empty'."
+        )
+
+
+def collect_errors(bp, extra_seed_targets=None, extra_declared=None):
     """Return a list of human-readable contract violations (empty = valid).
 
     extra_seed_targets (multi-path only): entity names seeded in a sibling
     blueprint - by an incoming FK+enum or by declared records - so F-B2 does
     not false-error on a static entity whose seed lives in another blueprint
     of the same app.
+
+    extra_declared (multi-path only): entity names a sibling blueprint declares
+    in its own entities[], for the foreign-key target check - a separate union,
+    because a sibling DECLARING a static entity does not SEED it.
     """
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     errors = []
+    # Ahead of the schema check, which short-circuits: two of these four match
+    # the relationship pattern and two do not, so leaving it downstream would
+    # answer the same defect with a diagnosis in one half of the cases and a
+    # generic "matches none of the permitted forms" in the other.
+    _check_reserved_identifier_types(bp, errors)
+    # Same reason, and now load-bearing: `data_type` is a closed vocabulary, so
+    # a marker like "TBD" written there is rejected by the schema first and
+    # would be reported as an unknown type rather than as the unresolved
+    # placeholder it is. The walker is defensive on every node it touches.
+    _check_placeholders(bp, errors)
     _check_schema(bp, schema, "$", errors)
     if errors:
         return errors
+    _check_acceptance_checklist_not_empty(bp, errors)
     _check_region_shapes(bp, errors)
     _check_single_layout(bp, errors)
     _check_region_mapping(bp, errors)
@@ -783,6 +1181,7 @@ def collect_errors(bp, extra_seed_targets=None):
     _check_existing_asset_channel(bp, errors)
     _check_records_on_non_static(bp, errors)
     _check_dual_seed_mismatch(bp, errors)
+    _check_fk_target_declared(bp, errors, extra_declared)
     _check_static_datasource_unpopulated(bp, errors, extra_seed_targets)
     _check_assertion_parity(bp, errors)
     return errors
@@ -795,7 +1194,43 @@ def collect_warnings(bp):
     _check_repeat_prose_columns(bp, warnings)
     _check_menu_chrome(bp, warnings)
     _check_existing_asset_announcement(bp, warnings)
+    _check_buttongroup_onchange(bp, warnings)
     return warnings
+
+
+def _check_buttongroup_onchange(bp, warnings):
+    """Surface the unsettled `ButtonGroup.OnChange` observation at design time.
+
+    A real build recorded the native `OnChange` never dispatching, and the OML
+    of the failing revision showed the handler correctly wired - so no static
+    check can tell a working ButtonGroup from a broken one. This fires where a
+    human can still act on it: the moment a blueprint designs one.
+
+    Advisory forever, never graduating. The observation is N=1, and a
+    presentational ButtonGroup is a legitimate final state; blocking handoff on
+    one unreproduced report would reject correct blueprints.
+    """
+    screens = []
+    for screen in bp.get("screens", []):
+        for region, sname in _leaf_regions(screen):
+            block = (region.get("outsystems_hints") or {}).get("block")
+            if block in ("ButtonGroup", "ButtonGroupItem") and sname not in screens:
+                screens.append(sname)
+    if not screens:
+        return
+    warnings.append(Finding(
+        "screen(s) %s design a ButtonGroup: its native OnChange was observed "
+        "not to dispatch on one real ODC build (search-engine-sandbox rev-261, "
+        "2026-08) and the observation has never been reproduced or cleared. If "
+        "the selection drives behaviour, either verify the handler fires or use "
+        "Dropdown; if this build ships one, settle it - see the "
+        "ButtonGroup.OnChange note in references/ui-reference.md for the "
+        "three-widget sentinel check"
+        % ", ".join(repr(s) for s in screens),
+        # Never graduates: N=1, and a presentational ButtonGroup is a valid
+        # final state, so this must not block a correct blueprint at handoff.
+        graduating=False,
+    ))
 
 
 def _check_menu_chrome(bp, warnings):
@@ -804,11 +1239,14 @@ def _check_menu_chrome(bp, warnings):
     because chrome content may legitimately be absent from the wireframe."""
     chrome = bp.get("app_chrome", {})
     if chrome.get("layout_block") in MENU_BEARING_LAYOUTS and not chrome.get("menu"):
-        warnings.append(
+        warnings.append(Finding(
             "app_chrome: layout %r has no 'menu' content - OMI reviews shared "
             "chrome from the blueprint; add app_chrome.menu ([{label, active}]) "
-            "if the wireframe shows page links" % chrome.get("layout_block")
-        )
+            "if the wireframe shows page links" % chrome.get("layout_block"),
+            # Never blocks: chrome content may legitimately be absent from the
+            # wireframe, as this check's own docstring says.
+            graduating=False,
+        ))
 
 
 def _entity_decls(bp, source):
@@ -999,6 +1437,212 @@ def collect_plan_agreement_errors(plan_text, named_blueprints):
     return errors
 
 
+# --- Inventory agreement (the inventory -> blueprint tier boundary) -----------
+#
+# For a multi-screen app the screen inventory is the upstream artifact: it holds
+# the one chrome decision, the authoritative screen list, and the assertion
+# counts each screen's requirement asked for. Those facts reached the design run
+# as prose (outsystems-screen-inventory's `format_brief`) and nothing checked
+# that the blueprint it produced still carried them. `_collect_chrome_conflicts`
+# comes closest, but it needs two blueprints to compare - so a one-screen design
+# run had no chrome anchor at all.
+#
+# Direction is inventory -> blueprint only. A design run validates the screen it
+# just built; the other N-1 inventory screens have simply not been designed yet,
+# so an inventory screen with no blueprint is never a finding.
+
+
+def _inventory_menu_for_screen(inv, screen_name):
+    """The inventory's `{label, target}` menu in the blueprint's `{label, active}`
+    shape: `target` never enters a blueprint, it becomes this screen's `active`.
+
+    Duplicated on purpose from outsystems-screen-inventory's
+    `blueprint_menu_for_screen` rather than imported - the two skills ship in
+    different export packs and neither may depend on the other being installed.
+    That suite's `test_menu_translation_matches_the_design_validator` is the
+    drift gate.
+    """
+    chrome = inv.get("app_chrome")
+    menu = chrome.get("menu") if isinstance(chrome, dict) else None
+    return [
+        {"label": e.get("label"), "active": e.get("target") == screen_name}
+        for e in (menu if isinstance(menu, list) else [])
+        if isinstance(e, dict)
+    ]
+
+
+def _inventory_screens(inv):
+    return {
+        s["name"]: s for s in (inv.get("screens") or [])
+        if isinstance(s, dict) and isinstance(s.get("name"), str)
+    }
+
+
+def _blueprint_screen_names(bp):
+    return [s.get("name") for s in bp.get("screens", []) if isinstance(s, dict)]
+
+
+def _check_inventory_screen_names(inv_screens, source, bp, errors):
+    for name in _blueprint_screen_names(bp):
+        if name in inv_screens:
+            continue
+        known = ", ".join(sorted(inv_screens)) or "(none)"
+        errors.append(
+            f"{source}: screen {name!r} is not in the inventory - the inventory "
+            "is the authoritative screen list, so a screen designed without an "
+            "entry there has no recorded purpose, archetype or behaviour. "
+            f"Inventory screens: {known}"
+        )
+
+
+def _check_inventory_chrome(inv, inv_screens, source, bp, errors):
+    inv_chrome = inv.get("app_chrome") if isinstance(inv.get("app_chrome"), dict) else {}
+    bp_chrome = bp.get("app_chrome") if isinstance(bp.get("app_chrome"), dict) else {}
+
+    for field in ("layout_block", "app_title"):
+        expected = inv_chrome.get(field)
+        if expected is None:
+            continue  # a half-built inventory fails its own validator, not this one
+        actual = bp_chrome.get(field)
+        if actual != expected:
+            errors.append(
+                f"{source}: app_chrome.{field} is {actual!r} but the inventory "
+                f"decided {expected!r} - the chrome decision is made once for "
+                "the whole app and copied into every blueprint"
+            )
+
+    if "menu" not in inv_chrome:
+        return
+    # `active` is per-screen while the menu is app-level, so it is only decidable
+    # when the file carries exactly one screen. Labels are checked either way.
+    named = [n for n in _blueprint_screen_names(bp) if n in inv_screens]
+    anchor = named[0] if len(_blueprint_screen_names(bp)) == 1 and named else None
+    expected = _inventory_menu_for_screen(inv, anchor)
+    raw = bp_chrome.get("menu")
+    actual = [e for e in raw if isinstance(e, dict)] if isinstance(raw, list) else []
+
+    expected_labels = [e["label"] for e in expected]
+    actual_labels = [e.get("label") for e in actual]
+    if expected_labels != actual_labels:
+        errors.append(
+            f"{source}: app_chrome.menu carries {actual_labels} but the "
+            f"inventory decided {expected_labels} - every screen in one app "
+            "carries the same navigation, in the inventory's order"
+        )
+        return  # comparing `active` on a different menu would only add noise
+
+    if anchor is None:
+        return
+    expected_on = [e["label"] for e in expected if e["active"]]
+    actual_on = [e.get("label") for e in actual if e.get("active") is True]
+    if expected_on != actual_on:
+        errors.append(
+            f"{source}: screen {anchor!r} marks {actual_on} as the active menu "
+            f"entry, but the inventory's menu targets make it {expected_on} - "
+            "`active` is derived from which entry targets this screen, never "
+            "chosen per blueprint"
+        )
+
+
+def _check_inventory_assertions(inv_screens, source, bp, errors):
+    """The inventory's counts come from the requirement and are carried through.
+
+    This failure gets its own message on purpose. `_check_assertion_parity`
+    already forces the blueprint's counts to equal its own `main_content`, so
+    telling the operator to edit the number here would put them between two
+    rules that cannot both be satisfied. The repair is upstream: either the
+    design is missing something the requirement asked for, or the inventory's
+    count was wrong.
+    """
+    for screen in bp.get("screens", []):
+        if not isinstance(screen, dict):
+            continue
+        inv_screen = inv_screens.get(screen.get("name"))
+        if inv_screen is None:
+            continue
+        declared = inv_screen.get("assertions")
+        if not isinstance(declared, dict):
+            continue
+        carried = screen.get("assertions")
+        carried = carried if isinstance(carried, dict) else {}
+        for key, count in sorted(declared.items()):
+            # The inventory's own validator owns its vocabulary; re-reporting an
+            # unsupported key here would fail two artifacts for one typo.
+            if key not in _ASSERTION_WIDGETS:
+                continue
+            if carried.get(key) == count:
+                continue
+            errors.append(
+                f"{source}: screen {screen.get('name')!r} carries "
+                f"assertions.{key} = {carried.get(key)!r}, but the inventory "
+                f"declared {count} - the inventory's counts come from the "
+                "requirement and are carried into the blueprint unchanged. Do "
+                "not edit the number to agree: either the design is missing "
+                f"{key} the requirement asked for (add them to the screen and "
+                "re-derive), or the inventory's count was wrong (fix the "
+                "inventory and re-run its validator)"
+            )
+
+
+def collect_inventory_agreement_errors(inv, named_blueprints):
+    """Flag every place a blueprint contradicts the inventory it was built from.
+
+    Screen names, chrome and carried assertions are errors: the inventory is
+    definitionally authoritative on all three. Entity bindings are advisory and
+    live in `collect_inventory_agreement_warnings`.
+    """
+    if not isinstance(inv, dict):
+        return ["inventory: top level must be a JSON object"]
+    inv_screens = _inventory_screens(inv)
+    errors = []
+    for source, bp in named_blueprints:
+        _check_inventory_screen_names(inv_screens, source, bp, errors)
+        _check_inventory_chrome(inv, inv_screens, source, bp, errors)
+        _check_inventory_assertions(inv_screens, source, bp, errors)
+    return errors
+
+
+def collect_inventory_agreement_warnings(inv, named_blueprints):
+    """Advisory: an entity the inventory bound to a screen that the screen's
+    blueprint never declares.
+
+    Never an error. A legitimate design can surface an entity through a reused
+    block or a foreign-key lookup without declaring it, so blocking here would
+    fail correct work. `kind: "action"` bindings are not checked at all - a
+    blueprint has no home for an action name, so any finding about one would be
+    undischargeable.
+    """
+    if not isinstance(inv, dict):
+        return []
+    inv_screens = _inventory_screens(inv)
+    warnings = []
+    for source, bp in named_blueprints:
+        declared = {
+            e.get("name") for e in bp.get("entities", []) if isinstance(e, dict)
+        }
+        for name in _blueprint_screen_names(bp):
+            inv_screen = inv_screens.get(name)
+            if inv_screen is None:
+                continue
+            for binding in inv_screen.get("data_bindings") or []:
+                if not isinstance(binding, dict) or binding.get("kind") != "entity":
+                    continue
+                bound = binding.get("name")
+                if bound in declared:
+                    continue
+                warnings.append(Finding(
+                    f"{source}: screen {name!r} does not declare entity "
+                    f"{bound!r}, which the inventory lists as a data binding "
+                    "for it - advisory only, since the screen may legitimately "
+                    "reach that entity through a reused block or a foreign-key "
+                    "lookup",
+                    # Never blocks: the screen may reach the entity through a
+                    # reused block or a foreign-key lookup, as the text says.
+                    graduating=False,
+                ))
+    return warnings
+
+
 def _expand_paths(raw_paths):
     out = []
     for rp in raw_paths:
@@ -1017,11 +1661,14 @@ def _expand_paths(raw_paths):
     return out
 
 
-def _validate_one(bp_path, report_path, extra_seed_targets=None):
+def _validate_one(bp_path, report_path, extra_seed_targets=None,
+                  extra_declared=None, handoff=False):
     """Existing single-file behaviour. Returns (exit_code, bp_or_None).
 
-    extra_seed_targets is passed through to collect_errors for multi-path
-    F-B2 evaluation; single-path callers omit it, so behaviour is unchanged.
+    extra_seed_targets and extra_declared are passed through to collect_errors
+    for multi-path evaluation - the sibling seed union for F-B2, the sibling
+    entity-name union for the foreign-key target check. Single-path callers omit
+    both, so behaviour is unchanged.
     """
     try:
         bp = json.loads(bp_path.read_text(encoding="utf-8"))
@@ -1033,18 +1680,33 @@ def _validate_one(bp_path, report_path, extra_seed_targets=None):
             pass
         sys.stdout.write(report)
         return 2, None
-    errors = collect_errors(bp, extra_seed_targets=extra_seed_targets)
+    errors = collect_errors(bp, extra_seed_targets=extra_seed_targets,
+                            extra_declared=extra_declared)
     warnings = collect_warnings(bp)
+    # Graduation. Two regimes over one finding set: while the design is being
+    # drawn every warning advises, and at handoff the graduating subset blocks
+    # instead. The finding text is identical either way - only the channel it
+    # prints in, and the exit code, depend on the regime. A graduating warning
+    # is never counted as a contract error: the blueprint still conforms.
+    blocking = graduating_findings(warnings) if handoff else []
+    advisory = advisory_findings(warnings) if handoff else warnings
     if errors:
         lines = [f"INVALID: {len(errors)} contract error(s)."] + [f"- {e}" for e in errors]
     else:
         lines = ["VALID: blueprint conforms to the OMI enriched-blueprint contract."]
-    for w in warnings:
+    for w in advisory:
         lines.append(f"WARNING: {w}")
+    if blocking:
+        plural = "" if len(blocking) == 1 else "s"
+        lines.append(
+            f"HANDOFF BLOCKED: {len(blocking)} graduating warning{plural} - "
+            "advisory while the design is being drawn, blocking here. "
+            "Each is fixable in the blueprint; fix and re-validate")
+        lines += [f"- {w}" for w in blocking]
     report = "\n".join(lines) + "\n"
     report_path.write_text(report, encoding="utf-8")
     sys.stdout.write(report)
-    return (1 if errors else 0), bp
+    return (1 if (errors or blocking) else 0), bp
 
 
 def _emit_plan_agreement(plan_path, loaded):
@@ -1065,6 +1727,33 @@ def _emit_plan_agreement(plan_path, loaded):
     return False
 
 
+def _emit_inventory_agreement(inventory_path, loaded):
+    """Print the inventory-to-blueprint reconciliation. True means they disagree.
+
+    An unreadable inventory disagrees. The gate exists because the boundary was
+    unchecked; a missing file silently restoring that state is the fail-open
+    shape this chain keeps paying for.
+    """
+    try:
+        inv = json.loads(Path(inventory_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        sys.stdout.write(
+            f"INVENTORY AGREEMENT: cannot read inventory {inventory_path}: {exc}\n")
+        return True
+    errors = collect_inventory_agreement_errors(inv, loaded)
+    if errors:
+        sys.stdout.write(f"INVENTORY AGREEMENT: {len(errors)} disagreement(s).\n")
+        for e in errors:
+            sys.stdout.write(f"- {e}\n")
+    else:
+        sys.stdout.write(
+            "INVENTORY AGREEMENT: screen names, chrome and carried assertions "
+            f"match {inventory_path}.\n")
+    for w in collect_inventory_agreement_warnings(inv, loaded):
+        sys.stdout.write(f"INVENTORY AGREEMENT WARNING: {w}\n")
+    return bool(errors)
+
+
 def main(argv=None):
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
@@ -1075,6 +1764,15 @@ def main(argv=None):
     parser.add_argument("--plan",
                         help="Implementation plan (markdown) to reconcile entity "
                              "names against - the chain's cross-route boundary")
+    parser.add_argument("--inventory",
+                        help="screen-inventory.json this design run was briefed "
+                             "from - the tier boundary: screen names, chrome and "
+                             "carried assertions must still agree with it")
+    parser.add_argument("--handoff", action="store_true",
+                        help="Grade this run as a handoff rather than a draft: "
+                             "the graduating warnings - the ones always fixable "
+                             "by the author - block instead of advising. Without "
+                             "it the report is unchanged, byte for byte")
     args = parser.parse_args(argv)
 
     paths = _expand_paths(args.paths)
@@ -1089,10 +1787,15 @@ def main(argv=None):
     if len(paths) == 1:
         bp_path = paths[0]
         report_path = Path(args.report) if args.report else bp_path.with_name("validation-report.txt")
-        code, bp = _validate_one(bp_path, report_path)
-        if args.plan and bp is not None and _emit_plan_agreement(
-                args.plan, [(str(bp_path), bp)]):
-            code = code or 1
+        code, bp = _validate_one(bp_path, report_path, handoff=args.handoff)
+        if bp is not None:
+            named = [(str(bp_path), bp)]
+            # Single-path is where this matters most: the cross-blueprint chrome
+            # pass needs two files, so until now one screen had no chrome anchor.
+            if args.inventory and _emit_inventory_agreement(args.inventory, named):
+                code = code or 1
+            if args.plan and _emit_plan_agreement(args.plan, named):
+                code = code or 1
         return code
 
     # Multi-path: per-file reports beside each, then the cross-blueprint pass.
@@ -1101,19 +1804,23 @@ def main(argv=None):
     # a static entity whose seed lives in a sibling blueprint (a legitimate
     # cross-blueprint projection).
     union_seed_targets = set()
+    union_declared = set()
     for bp_path in paths:
         try:
             _bp = json.loads(bp_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
         union_seed_targets |= _fk_enum_targets(_bp) | _records_targets(_bp)
+        union_declared |= declared_entity_names(_bp)
 
     any_error = False
     loaded = []
     for bp_path in paths:
         report_path = bp_path.with_name("validation-report.txt")
         code, bp = _validate_one(bp_path, report_path,
-                                 extra_seed_targets=union_seed_targets)
+                                 extra_seed_targets=union_seed_targets,
+                                 extra_declared=union_declared,
+                                 handoff=args.handoff)
         if code != 0:
             any_error = True
         if bp is not None:
@@ -1127,6 +1834,8 @@ def main(argv=None):
                 sys.stdout.write(f"- {c}\n")
         else:
             sys.stdout.write("CROSS-BLUEPRINT: no conflicts.\n")
+    if args.inventory and loaded and _emit_inventory_agreement(args.inventory, loaded):
+        any_error = True
     if args.plan and loaded and _emit_plan_agreement(args.plan, loaded):
         any_error = True
     return 1 if any_error else 0

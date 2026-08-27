@@ -168,6 +168,21 @@ This rule has an executable form: `scripts/blueprint_intake_plan.py
 verifications exactly as above and exits non-zero on any
 return-to-producer condition. Run it as a pre-flight before prompt emission.
 
+### Declare assertions, or the post-publish guard has nothing to check
+
+`scripts/recompute_assertions.py` is the one mechanical check of the built model
+against the blueprint — and it is **inert when no screen declares
+`assertions`**. It has nothing to recompute, so it reports nothing, and its
+silence is indistinguishable from a pass. A run whose blueprints declare no
+assertions has quietly dropped that guard.
+
+So carry at least the **read-only zero-affordance assertions** on every screen —
+the ones that say a display-only screen holds no `Button`, no `Input`, no
+`Link`, no form widget. They cost a line each, they are true by construction on
+a screen that was designed read-only, and they give the post-publish guard a
+contract to fail against. Richer per-widget assertions are better; none at all
+is the case to avoid.
+
 The canonical **example asset is deliberately greenfield**: it carries neither
 `reuse` nor `exists`, because every element in it is created. Read it for
 structure, not as evidence that the existing-app path does not exist.
@@ -237,7 +252,18 @@ steps:
    surface it as a Mentor/publish-path limitation requiring a deliberate
    platform or manual resolution.
 3. For `is_foreign_key: true`, require `data_type` to use the relationship form
-   `<TargetEntityName> Identifier`.
+   `<TargetEntityName> Identifier`. **Instruct the delete rule away explicitly**:
+   every data-model prompt carries the line **`create FK attributes with no
+   delete-rule configuration, system references included`**. Mentor sets delete
+   rules by default, and `ModelFeature_DeleteRuleOnReferences` /
+   `ModelFeature_DeleteRuleOnSystemReferences` are removed ODC features, so the
+   authoring turn is clean (`error_count: 0`, `change_applied: true`) and the
+   publish fails — the same validation-passes-publish-fails class as the
+   `DataType` and static-entity autonumber rules above, reported as
+   `OS-RDBS-GEN-40002` ("Invalid delete rule") plus `OS-BLD-40409` and
+   `OS-DPL-50205`. Referential behaviour belongs in the server action that
+   performs the delete. The rule is owned by `odc-mentor-hardening.md` and its
+   error treatment by `odc-platform-guardrails.md`.
 4. When that foreign-key attribute has a non-empty `enum_values` list, treat
    `<TargetEntityName>` as a Static Entity: create the Static Entity first, add
    one record for each `enum_values` item, set the consuming attribute's type to

@@ -92,8 +92,9 @@ Use the existing UI generation flow:
 
 1. Open `odc-ui-generation.md`.
 2. Use `odc-ui-prompt-recipes.md` for common screen goals.
-3. Use `odc-ui-pattern-catalog.json` for exact OutSystems UI pattern names, properties, events, placeholders, compatibility notes, and security notes.
-4. Preserve producer-first order.
+3. Use `odc-ui-pattern-catalog.json` for exact OutSystems UI pattern names, properties, events, placeholders, client actions, compatibility notes, and security notes. A pattern's `client_actions` are the named actions the official docs give for driving it from an action flow (for example `SidebarOpen` / `SidebarClose`); an empty list means the docs name none, not that none exist.
+4. For keyboard focus, skip links, ARIA roles and text spacing, use the catalog's top-level `accessibility_client_actions` block. These six actions live in ODC Studio under **Logic > OutSystemsUI > Accessibility** and are NOT per-pattern — they are called from any screen or block action flow, so they do not appear in any pattern's `client_actions`. Reach for them when a screen needs the accessibility behaviour that criteria C4/C5/C6 of `outsystems-runtime-ui-audit` score: `SetFocus` and `MasterDetailSetContentFocus` for focus placement, `SkipToContent` for the skip link, `SetAccessibilityRole` and `SetAriaHidden` for ARIA state, `ToggleTextSpacing` for readability.
+5. Preserve producer-first order.
 
 Do not change the existing Mentor Studio prompt output shape for this case.
 

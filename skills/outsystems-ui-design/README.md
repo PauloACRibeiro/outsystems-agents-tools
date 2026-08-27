@@ -35,7 +35,7 @@ the loop up to an approved blueprint and nothing past it.
 | --- | --- |
 | `outsystems-ui-design` (this skill) | Design loop: wireframe → iterate with human → validated blueprint. Never calls the OutSystems MCP; no Mentor, no tenant access. |
 | `outsystems-mentor-implementation` | Execution: consumes the blueprint via its existing visual-source route; owns all Mentor/tenant discipline and approval gates. |
-| `outsystems-design-to-app` | Unchanged. Non-interactive one-shot path from design source to app. |
+| `outsystems-design-to-app` (not part of the colleague sprint-loop pack) | Unchanged. Non-interactive one-shot path from design source to app. |
 
 ## Which skill to reach for
 
@@ -43,9 +43,9 @@ the loop up to an approved blueprint and nothing past it.
   design first, with a human in the loop, before anything touches a tenant. You
   have a wireframe, you are not yet certain of every mapping, and you want to
   see and steer the design round by round until it is right.
-- **Use `outsystems-design-to-app`** when you already know exactly what you want
-  and want a one-shot, non-interactive path straight from a design source
-  (Figma URL, image, HTML mockup) to an app — no refinement rounds.
+- **Use `outsystems-design-to-app`** (not part of the colleague sprint-loop pack) when you already know exactly
+  what you want and want a one-shot, non-interactive path straight from a design
+  source (Figma URL, image, HTML mockup) to an app — no refinement rounds.
 - **Use `outsystems-mentor-implementation`** when you already have an approved
   blueprint and are ready to execute it against Mentor. That skill owns all the
   Mentor and tenant discipline; this skill hands the blueprint to it and stops.
@@ -60,6 +60,13 @@ The loop is built to refuse to fake things rather than guess quietly:
 - **An unreadable or ambiguous wireframe** gets a plain request for a better
   crop or a higher-resolution export of the unclear area — never a whole-screen
   guess from an image the agent cannot actually read.
+- **A live mockup URL or HTML page instead of a screenshot** is a supported
+  source: the agent reads the page's real computed styles for the design tokens,
+  records what it read in `wireframe.md`, designs the one screen you name, and
+  says plainly when a screen has no surface in the mockup rather than inventing
+  one. Where the mockup shows more product than your requirements approved, it
+  adopts the visual language and raises the scope conflict instead of absorbing
+  it.
 - **A region that matches no OutSystems UI pattern** is flagged
   `custom_block_needed` in both the pattern tree and the blueprint, with a
   one-line note on what that custom block must do — never approximated with a
@@ -98,7 +105,9 @@ visible deliverable, not a hidden cache:
 
 ```
 design/<screen-slug>/
-  wireframe.<ext>          # copy of your input screenshot
+  wireframe.<ext>          # copy of your input screenshot — or wireframe.md
+                           # (source URL, observed anatomy, extracted design
+                           # tokens) when the source is a live URL or HTML page
   pattern-tree.md          # current round's tree
   preview.html             # current round's self-contained HTML preview
   blueprint.json           # emitted only on your approval

@@ -70,6 +70,34 @@ Choose the asset type before writing pseudocode.
 | AI model invocation | `Call<AIModelName>` | Use when a direct model call is enough. |
 | Autonomous multi-step AI behavior | Agentic app and `Call<AgentName>` / `CallAgentV2` | Use when orchestration, tools, memory, or decision-making are required. |
 
+### Give a mutating Server Action a validation head and an outcome pair
+
+Server-side re-validation is mandatory, not defensive: client-side logic can be
+intercepted or bypassed, and a caller can craft a request straight at the Server
+Action, skipping every client-side check. Plan the validation *before* the write
+in the same Server Action, so there is no path that reaches the entity action
+without passing it.
+
+Give such an action an outcome the caller can branch on. ODC's own
+self-registration walkthrough builds exactly this shape — an `IsSuccess` assign,
+then `If` nodes that set `ErrorMessage` per failure reason — so `IsSuccess`
+(Boolean) plus `ErrorMessage` (Text) is a documented ODC convention rather than
+an imported one. Pair it with the outcome-consumption rule in
+`odc-mentor-hardening.md`: an outcome nothing branches on is the same as no
+outcome.
+
+**Corroboration**: `outsystems-tech-content` `docs-next`, query `validate data in
+server action before saving IsSuccess ErrorMessage output validation server
+side` — *Secure your mobile app's data* ("Mandatory server-side validation
+ensures your logic processes trusted data"), *Best practices for mobile app
+security* §Re-validate inputs on the server, *Best practices for logic*
+§Validate user permissions on server-side logic, and *Create logic to register a
+user*, which carries the `IsSuccess` / `ErrorMessage` steps verbatim. Adopted
+from the legacy requirement-gap adoption round
+(`docs/adoption/legacy-requirement-gaps-adoption.md`) row R3; the source's stricter claim
+that validation must be the literal first node is a convention, not a platform
+rule, and is not stated here.
+
 ### Choose app type early
 
 From current ODC guidance:
@@ -632,9 +660,10 @@ Important ODC constraints:
 
 ### Timeout handling pattern
 
-- Long AI model calls (>30s) require an async wrapper or background execution rather than synchronous Server Action with raised `Server Request Timeout`.
-- Synchronous timeout extension is fragile; the recommended pattern is to fire the AI call from a background flow (Timer or async event) and surface results via state polling or notification.
-- Source: `https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/build-ai-powered-apps/agent-long-running.md` (`Current official`).
+- For AI-agent calls, the documented first measure is to raise `Server Request Timeout` to 60 seconds — set it on the app, or individually on each Call Agent action. The app default is 10 seconds.
+- When the call needs to run beyond 60 seconds, move it to asynchronous processing: one server action to start the agent call and a second to check the answer status, surfacing results via state polling or notification.
+- Scope: this is the AI-agent rule only. The consumed-REST `Server Request Timeout` guidance above is a different source and is unchanged.
+- Source: `https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/build-ai-powered-apps/agent-long-running.md` (`Current official`); app default from `https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/libraries/app-lib-properties-edit.md` (`Current official`).
 
 ### AI call error handling
 

@@ -217,6 +217,42 @@ Two replacements:
 
 The **only legitimate use of a project-prefixed custom class** is when the visual treatment can't be expressed via OS UI utility classes AND you're scoped to a specific block instance — e.g. setting the block's `ExtendedClass` argument to `"linear-background-primary"` where `linear-background-primary` is defined in the theme stylesheet as a one-off gradient. **Even then, the class must be defined somewhere** — applying a class name without defining it is a no-op, and the widget renders with default styling.
 
+### When the mapping is forced: ask, don't bypass
+
+The two replacements above assume one of them fits. Sometimes neither does — the
+region is a known shape but the nearest block distorts what the wireframe shows,
+or the fallback ladder in `ui-reference.md` (block → `AdvancedHtml` with a
+semantic tag → `Container` + utility classes) only reaches the region by
+spending its last rung. Both cases feel like friction while you are filling the
+inventory, and **the awkwardness is the signal to ask, not the signal to
+bypass.** Taking the forced block quietly, or dropping a rung because the block
+is uncomfortable, converts a design question into a mapping the user never saw.
+
+The surface already exists: the refinement round prints the pattern tree with
+every flagged ambiguity as a numbered question. A forced mapping is one of those
+questions. Give it (1) the region and what it has to do, (2) the closest blocks
+and why each falls short, (3) the mapping you would otherwise take — forced
+block, semantic-HTML fallback, or a wrapper block per `extensibility.md` — and
+let the answer come back before the blueprint commits to it. A round is the cheap
+surface; a blueprint that has already committed is not.
+
+This does not turn every close call into a question. If competent engineers given
+this same wireframe and this same block set would converge on the mapping, it is
+settled, not raised. So are the degradations already decided elsewhere: a
+genuinely one-off ornament takes utility classes, a region that needs more than a
+pattern's inputs goes through `extensibility.md`'s four levels before anything is
+declared custom, and a tabular region stays `TableRecords` wherever the Data Grid
+is not installed. **A composed workaround that the compose-and-disclose rule
+already covers is disclosed, not asked** — disclosure is the settled path.
+What earns a numbered question is the narrower case where the composition itself
+distorts what the design is asking for, and no amount of honest disclosure makes
+that a decision the mapper should take alone.
+
+> Scope: this is the block-level statement. The inventory-level criterion — which
+> screens exist, how they fuse, what chrome they share — lives in
+> `outsystems-screen-inventory` and stays there; it already routes block and
+> visual questions here rather than restating them.
+
 ### Why this catches the v3 fintech failure
 
 In the v3 fintech run, the agent's plan said "use Card, UserAvatar, IconBadge, ProgressBar, StackedCards, ListItemContent." The execution wrote ZERO instances of those blocks; everything was a `Container` with classes like `hb-stat-card`, `hb-vcard--indigo`, `hb-toggle-card`, `hb-progress-track`. The **plan and the execution diverged** because the agent never committed to specific block names per-region. The block-inventory step closes that gap by requiring an explicit "for THIS region, the block is X" mapping before any code runs.

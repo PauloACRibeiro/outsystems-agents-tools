@@ -1,0 +1,417 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OutSystems Screen Inventory (shared artifact for N outsystems-ui-design runs)",
+  "x_downstream_contract": {
+    "note": "app_chrome, assertions and archetype are borrowed vocabulary, not new ones. app_chrome.layout_block/app_title/menu are the exact fields outsystems-ui-design's cross-blueprint chrome pass compares; assertions accepts only the links/buttons/inputs vocabulary shared with that validator and outsystems-mentor-implementation/scripts/recompute_assertions.py; archetype is one of the 14 archetypes outsystems-ui-design confirms at Step 1. Changing any of them here without changing them there breaks the loop.",
+    "authority": "scripts/validate_screen_inventory.py is the enforced contract; this schema documents it."
+  },
+  "type": "object",
+  "required": [
+    "schema_version",
+    "app_name",
+    "source",
+    "app_chrome",
+    "candidates",
+    "screens",
+    "navigation"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1"
+      ]
+    },
+    "app_name": {
+      "type": "string"
+    },
+    "design_tokens_source": {
+      "type": "string",
+      "description": "OPTIONAL. Where the design runs read visual identity (colors, typography) from — an approved sibling blueprint, an as-built theme. Greenfield trial G-05: the brief carried no tokens and the design run mined a sibling blueprint on its own; when a source exists, record it so --brief hands it over. When absent, the brief derives a default from source.kind (modernization: the as-built theme; requirements-doc: states there is no source yet)."
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "kind",
+        "refs"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "requirements-doc",
+            "existing-app-modernization"
+          ],
+          "description": "Where the candidates came from. 'requirements-doc': a PRD/brief, candidates are the screen-worthy capabilities it names. 'existing-app-modernization': a live app, candidates are its existing screens."
+        },
+        "refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Paths or citations for the source document(s). An inventory with no traceable source cannot be audited against its requirements."
+        },
+        "grounding_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "app_chrome": {
+      "type": "object",
+      "required": [
+        "layout_block",
+        "app_title"
+      ],
+      "description": "The one chrome decision, made up front and copied verbatim into every blueprint. Deciding it per screen is what the cross-blueprint chrome pass exists to catch.",
+      "properties": {
+        "layout_block": {
+          "type": "string",
+          "enum": [
+            "LayoutSideMenu",
+            "LayoutTopMenu",
+            "LayoutBlank",
+            "LayoutBase",
+            "LayoutBaseSection"
+          ]
+        },
+        "app_title": {
+          "type": "string"
+        },
+        "menu": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "target"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string",
+                "description": "Must name a screen in screens[]."
+              }
+            }
+          },
+          "description": "Menu entries IN ORDER. Order is compared across blueprints downstream; `active` is deliberately not carried here because each screen highlights its own entry. When the app's copy is localized, `label` is the half that is translated; `target` is the stable screen identity plan traceability and blueprints resolve against and is never translated."
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Every screen-worthy thing the source named, before fusion. No candidate is silently dropped: each one resolves to at least one screen, is explicitly dissolved into something that is not a screen, or is explicitly excluded from this build with a stated reason.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source_ref",
+          "disposition",
+          "rationale"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string",
+            "description": "Where in the source this candidate came from. When source.kind is 'requirements-doc' this MUST name at least one requirement ID the source defines, in the grammar outsystems-plan-to-mentor owns (BR-/UC-/C-, optionally with a scope infix), with free prose as a trailing note: 'BR-SC-002 - the room list section'. Without the ID the requirement-to-screen binding exists only as prose here and gets invented a second time in the capability plan's Traceability table. For 'existing-app-modernization' the check does not apply: candidates trace to an existing app's screens and there is no ID grammar to cite."
+          },
+          "disposition": {
+            "type": "string",
+            "enum": [
+              "mapped",
+              "dissolved",
+              "deferred",
+              "out-of-scope",
+              "accepted-risk"
+            ],
+            "description": "In scope — 'mapped': at least one screen absorbs it; 'dissolved': not a destination, but the capability lives somewhere else in this build (say where, in dissolved_into). Excluded — 'deferred' (a later build takes it), 'out-of-scope' (it belongs to another product), 'accepted-risk' (a known gap nobody owns): the candidate is not in this build at all. These three are borrowed verbatim from outsystems-plan-to-mentor's closed requirement-disposition vocabulary so an excluded id keeps its meaning downstream. An excluded candidate carries neither resolves_to nor dissolved_into, states its reason in rationale, and is rendered by --brief as a do-NOT-implement line so the exclusion survives the handoff instead of dying here."
+          },
+          "resolves_to": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Screens that absorb this candidate. More than one is legitimate — a candidate can split across screens (the reference half of a page becoming onboarding, the console half becoming an operation)."
+          },
+          "dissolved_into": {
+            "type": "string",
+            "description": "Required when dissolved: where the capability lives now. It was never a destination, but it still has to exist somewhere."
+          },
+          "rationale": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "non_screen_requirements": {
+      "type": "array",
+      "description": "OPTIONAL. Requirements the source defines that produce no screen — a hashing rule, a retention policy, a background job. Listing one here is how the --source absorption check distinguishes a deliberate non-screen decision from an oversight; without this slot, silence would be the only way to say either. Acceptance criteria (C- rows) belong here as a normal, expected category and often in bulk: a criterion states how a screen is verified, not that one exists. Give each the same one-line reason - `acceptance criterion - verified against <screen>, produces no screen`. An ID listed here must not also be cited as a candidate's provenance.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A requirement ID in the same grammar as candidates[].source_ref (BR-/UC-/C- with an optional scope infix). It must be defined in the --source document when one is supplied."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this requirement produces no screen. A bare exclusion list is indistinguishable from an oversight."
+          }
+        }
+      }
+    },
+    "screens": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "purpose",
+          "archetype",
+          "behavior",
+          "key_interactions",
+          "data_bindings"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "archetype": {
+            "type": "string",
+            "enum": [
+              "calendar",
+              "dashboard",
+              "detail-view",
+              "edit-form",
+              "gallery-grid",
+              "inbox-notifications",
+              "instructional",
+              "kanban",
+              "list-table",
+              "map-view",
+              "master-detail",
+              "settings",
+              "timeline",
+              "wizard"
+            ]
+          },
+          "presentation_pattern": {
+            "type": "string",
+            "enum": [
+              "TableRecords",
+              "Gallery",
+              "IList+Card",
+              "MasterDetail",
+              "Accordion"
+            ],
+            "description": "OPTIONAL refinement of archetype: the ODC presentation block this screen's main collection is laid out in, named in outsystems-ui-design's own block vocabulary (references/blocks-index.md). Taking it here takes the list-vs-gallery-vs-cards decision ONCE, for the whole app, instead of N design runs each re-taking it from the same requirements. A design run reads it from --brief as a HINT: it may diverge, but not silently - a divergence is a design decision it has to state. Absent is the normal answer wherever the screen lays out no collection (edit-form, wizard, settings, instructional), and a plain non-card list (IList + ListItemContent) has no value here on purpose - omit rather than approximate."
+          },
+          "behavior": {
+            "type": "string",
+            "description": "What the screen DOES. Trial F-11: an inventory of names alone left block choices and interactions to be reconciled by hand."
+          },
+          "key_interactions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "data_bindings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "kind",
+                "usage"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "entity",
+                    "action"
+                  ]
+                },
+                "usage": {
+                  "type": "string"
+                },
+                "behavior_notes": {
+                  "type": "string",
+                  "description": "Behavioural contract of the binding — caps, limits, states, async semantics. Trial F-11: a 10-row cap on the action a whole screen read through sat one field away from what the inventory captured."
+                },
+                "introduced_here": {
+                  "type": "boolean",
+                  "description": "True when this inventory is where the name was born (greenfield trial G-05). Entities only — a new action's name is born in the capability plan, never here (the no-logic-design scope guard; method R8's greenfield asymmetry). The --brief output prints a delegation line for these: names are authoritative, attribute shapes are the capability plan's to type, and a design run must not invent them."
+                }
+              }
+            }
+          },
+          "accepts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Payload names this screen can receive from another screen. A navigation edge carrying a payload must find it here (trial F-12)."
+          },
+          "assertions": {
+            "type": "object",
+            "description": "OPTIONAL and restricted to the shared vocabulary. Declare a count only when the requirement itself pins it; this is a carry-forward seed for the blueprint, not a design decision made at inventory time.",
+            "additionalProperties": false,
+            "properties": {
+              "links": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "buttons": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "inputs": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "entry_point": {
+            "type": "boolean",
+            "description": "True when users land on this screen from outside the app's own navigation (deep link, external URL, notification). Such a screen is a reachability root alongside the menu targets; without it, a screen no menu entry or navigation path reaches is an error."
+          },
+          "access_classification": {
+            "type": "string",
+            "enum": ["preview_public", "public", "authenticated", "role", "unresolved"],
+            "description": "OPTIONAL. Who this screen is FOR, declared as intent so a later run can reconcile the built app against it rather than re-deriving it from the model. The writer default is never the policy: a screen nobody decided is 'unresolved', not 'public'. 'unresolved' blocks the screen from being built - stop and ask. 'preview_public' is a build-time convenience that must never survive to promotion. Reconciliation keys on the built screen's anonymousAccess plus roles[], never on a Public:true flag."
+          },
+          "access_role": {
+            "type": "string",
+            "description": "Required when access_classification is 'role': the role name that gates this screen. The role's existence is a PRECONDITION - verify it exists before the screen is created, not after. Validation checks only that a role screen names a role; it cannot check that the role exists, because this artifact is authored with no tenant to ask. A named role is a claim to verify, not a verified fact."
+          }
+        }
+      }
+    },
+    "open_decisions": {
+      "type": "array",
+      "description": "OPTIONAL. Decisions this inventory has NOT taken, as typed data rather than prose. Hard gate 5's autonomous-run disclosure previously instructed the model to name its least-confident fusion in chat, which the artifact does not carry; this is the slot that does. Each entry is a real choice: 2-4 options, each naming exactly what this inventory would say if that option were taken. An open decision never fails validation - it marks the inventory PROPOSED, NOT APPROVED in the validation report and rides the per-screen --brief so a design run cannot settle it unknowingly.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "about",
+          "category",
+          "options",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "about": {
+            "type": "string",
+            "description": "The decision itself, stated so a reviewer can take it without reconstructing it."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "candidate-disposition",
+              "screen-fusion",
+              "chrome",
+              "navigation",
+              "binding"
+            ],
+            "description": "Deliberately this skill's own scope and nothing wider: candidate-disposition (hard gate 2 - is this candidate a screen at all), screen-fusion (hard gate 5 - are these one screen or two), chrome (hard gate 3), navigation (R7), binding (R6/R8 - which entity or action, by name). A decision about block choice, visual design or logic belongs to outsystems-ui-design or the capability plan; recording it here would create a second declaration site neither of them reads."
+          },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "description": "One option is a position and five is a survey; neither is a decision a reviewer can take in one pass.",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "label",
+                "consequence"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "consequence": {
+                  "type": "string",
+                  "description": "Exactly what this inventory would say if this option were taken - the screen that appears or disappears, the menu entry gained or lost, the binding that changes. A label alone is the prose the typed slot exists to replace."
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "resolved"
+            ]
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Required when resolved, and forbidden while open: the id of the option taken. A resolved decision with no resolution records that someone decided and not what they decided."
+          },
+          "affects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "OPTIONAL. Screen names this decision bears on; each must name a screen in screens[]. Omit it when the decision is app-wide (chrome, most navigation) - an unscoped decision reaches EVERY screen's brief, so the decisions with the widest blast radius are not the silent ones."
+          }
+        }
+      }
+    },
+    "navigation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "trigger"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string",
+            "description": "What is handed to the target screen. The target must list it in `accepts`."
+          }
+        }
+      }
+    }
+  }
+}

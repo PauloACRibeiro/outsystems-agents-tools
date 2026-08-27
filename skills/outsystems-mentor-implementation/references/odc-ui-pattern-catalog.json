@@ -1,11 +1,62 @@
 {
-  "generated_at_utc": "2026-05-20T23:13:03+00:00",
+  "accessibility_client_actions": [
+    {
+      "doc_path": "src/eap/building-apps/ui/accessibility/ui-patterns-accessibility-reference.md",
+      "evidence_status": "Current official",
+      "name": "MasterDetailSetContentFocus",
+      "purpose": "Switch focus to the Master Detail pattern's detail pane, preferably after the pane is populated.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/accessibility/ui-patterns-accessibility-reference.md",
+      "studio_location": "Logic > OutSystemsUI > Accessibility"
+    },
+    {
+      "doc_path": "src/eap/building-apps/ui/accessibility/ui-patterns-accessibility-reference.md",
+      "evidence_status": "Current official",
+      "name": "SetAccessibilityRole",
+      "purpose": "Set a widget's ARIA role at runtime (WidgetId, Role) -- for example giving an Alert the \"status\" role.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/accessibility/ui-patterns-accessibility-reference.md",
+      "studio_location": "Logic > OutSystemsUI > Accessibility"
+    },
+    {
+      "doc_path": "src/eap/building-apps/ui/accessibility/ui-patterns-accessibility-reference.md",
+      "evidence_status": "Current official",
+      "name": "SetAriaHidden",
+      "purpose": "Update a widget's aria-hidden attribute when toggling its visibility, so assistive technology follows the change.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/accessibility/ui-patterns-accessibility-reference.md",
+      "studio_location": "Logic > OutSystemsUI > Accessibility"
+    },
+    {
+      "doc_path": "src/eap/building-apps/ui/accessibility/intro.md",
+      "evidence_status": "Current official",
+      "name": "SetFocus",
+      "purpose": "Move keyboard focus to a named widget (WidgetId), for example highlighting an input when a screen with a form opens.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/accessibility/intro.md",
+      "studio_location": "Logic > OutSystemsUI > Accessibility"
+    },
+    {
+      "doc_path": "src/eap/building-apps/ui/accessibility/intro.md",
+      "evidence_status": "Current official",
+      "name": "SkipToContent",
+      "purpose": "Send keyboard focus past the layout chrome to the main content region (TargetId). The layout's own SkipToContentOnClick screen action wraps this node -- SkipToContent is the framework action.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/accessibility/intro.md",
+      "studio_location": "Logic > OutSystemsUI > Accessibility"
+    },
+    {
+      "doc_path": "src/eap/building-apps/ui/accessibility/intro.md",
+      "evidence_status": "Current official",
+      "name": "ToggleTextSpacing",
+      "purpose": "Let the user increase text spacing for readability; call it from an action wired to a control the user operates.",
+      "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/accessibility/intro.md",
+      "studio_location": "Logic > OutSystemsUI > Accessibility"
+    }
+  ],
+  "generated_at_utc": "2026-08-23T15:20:20+00:00",
   "patterns": [
     {
       "applies_to": [
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -33,6 +84,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -57,6 +109,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -85,6 +138,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -109,7 +163,7 @@
         "Pattern placeholders described in source",
         "RightContent"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) supports the Master Detail Pattern for displaying lists and their details in applications.",
+      "purpose": "Master Detail Pattern in OutSystems Developer Cloud (ODC): build a list-detail view using aggregates, filters, and client actions in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/adaptive/masterdetail.md"
     },
@@ -118,6 +172,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only.",
         "**Note:** By default, the Accordion widget contains 3 **AccordionItem** widgets. You can add or delete Accordion Items as required."
@@ -141,7 +196,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Explore how to implement and customize the Accordion UI Pattern in OutSystems Developer Cloud (ODC) to enhance application interfaces.",
+      "purpose": "Accordion UI Pattern in ODC lets you build collapsible content sections with AccordionItem widgets, configurable icons, and MultipleItems support.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/accordion.md"
     },
@@ -150,6 +205,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -178,6 +234,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -205,6 +262,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -223,7 +281,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Explore how to effectively utilize the Cards UI Pattern in OutSystems Developer Cloud (ODC) to organize and display information.",
+      "purpose": "Card UI Pattern in OutSystems Developer Cloud (ODC) groups and highlights small content blocks. Add it in ODC Studio and customize padding and style properties.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/card.md"
     },
@@ -232,6 +290,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -252,7 +311,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Learn to enhance app interfaces using the Card Background UI Pattern in OutSystems Developer Cloud (ODC).",
+      "purpose": "Card Background UI Pattern in ODC groups content blocks with a background image \u2014 set color, height, and custom styles in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/cardbackground.md"
     },
@@ -261,6 +320,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -278,7 +338,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Learn how to implement the Card Item UI Pattern in OutSystems Developer Cloud (ODC) to enhance mobile app interfaces.",
+      "purpose": "Card Item UI Pattern in ODC lets you list items with images, icons, titles, descriptions, and actions using ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/carditem.md"
     },
@@ -287,6 +347,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -316,6 +377,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -345,6 +407,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -364,7 +427,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) features the Flip Content UI Pattern for interactive content display in applications.",
+      "purpose": "Flip Content UI Pattern in OutSystems Developer Cloud (ODC) adds interactive flip cards with CardFront, CardBack, and FlipOnClick properties.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/flipcontent.md"
     },
@@ -373,6 +436,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -404,6 +468,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -421,7 +486,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) features the List Item Content UI Pattern for organizing and displaying content efficiently in applications.",
+      "purpose": "List Item Content UI Pattern in ODC lets you organize icons, text, and actions in a list by dragging the widget into your app in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/listitemcontent.md"
     },
@@ -430,6 +495,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -457,6 +523,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -476,7 +543,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Explore how to implement and customize the Section Group UI Pattern in OutSystems Developer Cloud (ODC) to enhance application interfaces.",
+      "purpose": "Section Group UI Pattern in OutSystems Developer Cloud (ODC) lets you keep section headers sticky while scrolling by configuring HasStickyTitles in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/content/sectiongroup.md"
     },
@@ -485,6 +552,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -517,6 +585,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -548,6 +617,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only.",
         "Note: You can also add the expression by navigating through the Expression Editor's **Scope** tree and double-clicking on the **Name** output parameter."
@@ -582,6 +652,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -602,7 +673,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Learn how to implement and customize the Action Sheet UI Pattern in OutSystems Developer Cloud (ODC) to enhance mobile app interfaces.",
+      "purpose": "Action Sheet UI Pattern in ODC lets you add a bottom-sliding menu to mobile apps by configuring IsOpen and OnClose events in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/actionsheet.md"
     },
@@ -611,6 +682,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -641,6 +713,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -668,6 +741,10 @@
       "applies_to": [
         "mobile apps"
       ],
+      "client_actions": [
+        "BottomSheetClose",
+        "BottomSheetOpen"
+      ],
       "compatibility_notes": [
         "Applies to Mobile Apps only.",
         "Applies to the OutSystems UI framework only."
@@ -683,12 +760,12 @@
         "ShowHandler"
       ],
       "mandatory_properties": [],
-      "mentor_prompt_fragment": "Use the Bottom Sheet pattern and configure its documented properties before wiring events.",
+      "mentor_prompt_fragment": "Use the Bottom Sheet pattern and configure its documented properties before wiring events. Drive it from an action flow with: BottomSheetClose, BottomSheetOpen.",
       "name": "Bottom Sheet",
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) enables the use of the Bottom Sheet UI pattern in mobile apps.",
+      "purpose": "Bottom Sheet UI pattern in ODC: add it to a mobile app screen, configure open/close actions, and customize its shape and handler properties.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/bottomsheet.md"
     },
@@ -697,6 +774,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -731,6 +809,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -764,6 +843,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -797,6 +877,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -838,6 +919,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -875,6 +957,7 @@
       "applies_to": [
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -898,6 +981,7 @@
       "applies_to": [
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -926,6 +1010,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -947,7 +1032,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Learn how to implement the Floating Actions UI Pattern in OutSystems Developer Cloud (ODC) to enhance user interface design.",
+      "purpose": "ODC Floating Actions UI Pattern lets you add a floating button with expandable sub-actions to your screen, using IsExpanded and IsHover properties.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/floatingactions.md"
     },
@@ -956,6 +1041,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -983,6 +1069,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1004,7 +1091,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Explore the Lightbox Image UI Pattern in OutSystems Developer Cloud (ODC) for creating detailed image galleries in applications.",
+      "purpose": "Lightbox Image UI Pattern in ODC opens thumbnail images in full screen mode, with step-by-step setup, grouping, zoom, and URL properties.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/lightboximage.md"
     },
@@ -1013,6 +1100,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1043,6 +1131,10 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [
+        "NotificationClose",
+        "NotificationOpen"
+      ],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1060,7 +1152,7 @@
         "Width"
       ],
       "mandatory_properties": [],
-      "mentor_prompt_fragment": "Use the Notification pattern and configure its documented properties before wiring events.",
+      "mentor_prompt_fragment": "Use the Notification pattern and configure its documented properties before wiring events. Drive it from an action flow with: NotificationClose, NotificationOpen.",
       "name": "Notification",
       "placeholders": [
         "Pattern placeholders described in source"
@@ -1073,6 +1165,7 @@
       "applies_to": [
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1097,6 +1190,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1129,7 +1223,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) supports the Range Slider UI Pattern, enabling users to select values within a defined range.",
+      "purpose": "Range Slider UI Pattern in ODC lets you add a single-value slider to your app, set min/max values, and handle value changes with a client action.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/rangeslider.md"
     },
@@ -1138,6 +1232,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1171,13 +1266,17 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Explore the Range Slider Interval Pattern in OutSystems Developer Cloud (ODC) for selecting values within a defined range using the noUiSlider library.",
+      "purpose": "Range Slider Interval pattern in OutSystems Developer Cloud (ODC) lets you build a dual-handle slider for selecting value ranges using noUiSlider.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/rangesliderinterval.md"
     },
     {
       "applies_to": [
         "reactive web apps"
+      ],
+      "client_actions": [
+        "GetChangedLines",
+        "MarkChangesAsSaved"
       ],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only.",
@@ -1193,7 +1292,7 @@
       "family": "interaction",
       "important_optional_properties": [],
       "mandatory_properties": [],
-      "mentor_prompt_fragment": "Use the Save changes in OutSystems Data Grid pattern and configure its documented properties before wiring events.",
+      "mentor_prompt_fragment": "Use the Save changes in OutSystems Data Grid pattern and configure its documented properties before wiring events. Drive it from an action flow with: GetChangedLines, MarkChangesAsSaved.",
       "name": "Save changes in OutSystems Data Grid",
       "placeholders": [
         "Pattern placeholders described in source"
@@ -1207,6 +1306,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1228,7 +1328,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) features a Scrollable Area Pattern for creating scrollable content blocks in applications.",
+      "purpose": "ODC Scrollable Area Pattern lets you create scrollable content blocks with configurable orientation, dimensions, and scrollbar type.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/scrollablearea.md"
     },
@@ -1237,6 +1337,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1263,6 +1364,10 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [
+        "SidebarClose",
+        "SidebarOpen"
+      ],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only.",
         "**Note:** To avoid conflicts with the browser native gestures, the Sidebar pattern only works with gestures on Native Apps not running as PWA."
@@ -1280,12 +1385,12 @@
         "Width"
       ],
       "mandatory_properties": [],
-      "mentor_prompt_fragment": "Use the Sidebar pattern and configure its documented properties before wiring events.",
+      "mentor_prompt_fragment": "Use the Sidebar pattern and configure its documented properties before wiring events. Drive it from an action flow with: SidebarClose, SidebarOpen.",
       "name": "Sidebar",
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) enhances app functionality with a Sidebar UI Pattern for displaying additional content.",
+      "purpose": "OutSystems Developer Cloud (ODC) Sidebar UI Pattern: add it in ODC Studio, configure properties, and toggle it using client actions.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/interaction/sidebar.md"
     },
@@ -1294,6 +1399,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1327,6 +1433,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1357,6 +1464,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1389,6 +1497,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1415,6 +1524,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1441,6 +1551,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1475,6 +1586,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1505,6 +1617,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1531,6 +1644,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1564,6 +1678,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1592,6 +1707,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1626,6 +1742,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only.",
         "Note: You can also add the expression by navigating through the Expression Editor's **Scope** tree and double-clicking on the **Count** output parameter."
@@ -1649,7 +1766,7 @@
       "mentor_prompt_fragment": "Use the Badge pattern and configure its documented properties before wiring events.",
       "name": "Badge",
       "placeholders": [],
-      "purpose": "Learn how to use the Badge UI Pattern in OutSystems Developer Cloud (ODC) to display numerical notifications such as unread messages or registered users.",
+      "purpose": "Badge UI Pattern in OutSystems Developer Cloud (ODC) displays numerical info like unread messages or user counts in your apps.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/badge.md"
     },
@@ -1658,6 +1775,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1680,7 +1798,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Learn how to use the Counter UI Pattern in OutSystems Developer Cloud (ODC) to display numerical data effectively.",
+      "purpose": "Counter UI Pattern in ODC lets you display numerical notifications by binding aggregates to a widget and customizing height and orientation.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/counter.md"
     },
@@ -1689,6 +1807,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1712,7 +1831,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "OutSystems Developer Cloud (ODC) features the Icon Badge UI Pattern for displaying notifications such as unread messages or user counts.",
+      "purpose": "Icon Badge UI Pattern in ODC lets you display numerical notifications like unread messages or user counts by binding an aggregate to the Number property.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/iconbadge.md"
     },
@@ -1721,6 +1840,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1752,6 +1872,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1783,6 +1904,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1803,7 +1925,7 @@
       "mentor_prompt_fragment": "Use the Rating pattern and configure its documented properties before wiring events.",
       "name": "Rating",
       "placeholders": [],
-      "purpose": "Explore how to implement and customize the Rating UI Pattern in OutSystems Developer Cloud (ODC) to enhance user interaction.",
+      "purpose": "Rating UI Pattern in ODC lets you add star, heart, or custom icon ratings \u2014 set RatingValue, RatingScale, IsEdit, and Size properties in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/numbers/rating.md"
     },
@@ -1812,6 +1934,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1839,6 +1962,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1859,7 +1983,7 @@
       "mentor_prompt_fragment": "Use the Button Loading pattern and configure its documented properties before wiring events.",
       "name": "Button Loading",
       "placeholders": [],
-      "purpose": "Explore the Button Loading UI Pattern in OutSystems Developer Cloud (ODC) for enhanced user feedback.",
+      "purpose": "Button Loading UI Pattern in ODC adds a loading spinner to a button, disabling it during action execution until the action completes.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/buttonloading.md"
     },
@@ -1868,6 +1992,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1894,6 +2019,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1921,6 +2047,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1938,7 +2065,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Learn how to add symmetrical padding in your applications using the Margin Container UI Pattern in OutSystems Developer Cloud (ODC).",
+      "purpose": "Margin Container UI Pattern in OutSystems Developer Cloud (ODC) adds symmetrical padding around a container using ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/margincontainer.md"
     },
@@ -1947,6 +2074,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -1966,7 +2094,7 @@
       "placeholders": [
         "Pattern placeholders described in source"
       ],
-      "purpose": "Explore how to implement precise element selection using the Mouse Events UI Pattern in OutSystems Developer Cloud (ODC).",
+      "purpose": "Mouse Events UI Pattern in OutSystems Developer Cloud (ODC) lets you track mouse movement and drag distance using OffsetX and OffsetY in ODC Studio.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/mouseevents.md"
     },
@@ -1975,6 +2103,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -2002,6 +2131,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -2017,7 +2147,7 @@
       "mentor_prompt_fragment": "Use the Swipe Events pattern and configure its documented properties before wiring events.",
       "name": "Swipe Events",
       "placeholders": [],
-      "purpose": "Learn how to implement swipe gestures to manipulate data in your app using the Swipe Events UI pattern in OutSystems Developer Cloud (ODC).",
+      "purpose": "Swipe Events UI pattern in OutSystems Developer Cloud (ODC) lets you enable swipe gestures on widgets and trigger left/right swipe actions in mobile apps.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/swipeevents.md"
     },
@@ -2026,6 +2156,7 @@
         "mobile apps",
         "reactive web apps"
       ],
+      "client_actions": [],
       "compatibility_notes": [
         "Applies to the OutSystems UI framework only."
       ],
@@ -2039,7 +2170,7 @@
       "mentor_prompt_fragment": "Use the Touch Events pattern and configure its documented properties before wiring events.",
       "name": "Touch Events",
       "placeholders": [],
-      "purpose": "Explore touch event customization in mobile apps using OutSystems Developer Cloud (ODC).",
+      "purpose": "Touch Events UI Pattern in OutSystems Developer Cloud (ODC) lets you enable touch events on widgets, use event.preventDefault(), and hide headers on scroll.",
       "security_or_sanitization_notes": [],
       "source_url": "https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/patterns/utilities/touchevents.md"
     }
@@ -2047,6 +2178,7 @@
   "source_family": "official_outsystems_docs_odc",
   "source_pattern_root": "src/eap/building-apps/ui/patterns",
   "summary": {
+    "accessibility_client_action_count": 6,
     "families": {
       "adaptive": 4,
       "content": 16,

@@ -9,7 +9,7 @@ refinement or Mentor Studio / ODC Studio surgical improvement.
 
 This bridge is shared by:
 
-- `mentor-app-generator`, for Post-Generation Review Mode.
+- `mentor-app-generator` (not part of the colleague sprint-loop pack), for Post-Generation Review Mode.
 - `outsystems-mentor-implementation`, for Generated App Snapshot Intake Mode.
 
 The bridge optimizes speed first and quality second. The default answer should
@@ -162,7 +162,8 @@ Allowed `decision.recommendation` values:
 
 Allowed `decision.next_skill` values:
 
-- `mentor-app-generator`
+- `mentor-app-generator` (not part of the colleague sprint-loop pack; a snapshot recommending it is a
+  hand-off out of this pack, not a step inside it)
 - `outsystems-mentor-implementation`
 - `none`
 
@@ -273,20 +274,9 @@ request raw OML or source exports.
 
 ## Implementation Validation
 
-After editing skills or this reference, run:
-
-Before relying on post-generation artifacts, validate the snapshot/review pair
-with the generated-app artifact validator.
-
-```bash
-python3 skills/mentor-app-generator/scripts/validate_generated_app_artifacts.py --snapshot skills/mentor-app-generator/fixtures/generated-app-snapshot-example.yaml --review skills/mentor-app-generator/fixtures/generated-app-review-expected.md
-python3 skills/mentor-app-generator/tests/test_generated_app_bridge.py -v
-rg --hidden --no-ignore -n "Post-Generation Review Mode|mentor-generated-app-bridge" skills/mentor-app-generator
-rg --hidden --no-ignore -n "Generated App Snapshot Intake Mode|mentor-generated-app-bridge" skills/outsystems-mentor-implementation
-rg --hidden --no-ignore -n "tenant-changing actions used|read-only" skills/shared/mentor-generated-app-bridge.md
-git diff --check -- docs/superpowers/agent-handoff.md docs/superpowers/plans/2026-05-23-mentor-generated-app-bridge.md
-python3 projects/workspace-agent-tools/scripts/agent_handoff_health.py --workspace-root .
-```
-
-On Windows PowerShell, use `python` instead of `python3` — `python3` is not a
-command there.
+The validation harness for this bridge — the artifact validator, the bridge
+test suite and the cross-file consistency sweeps — is maintainer-side and runs
+against the source repository, not against an installed skill directory. If you
+are holding this file as part of an installed pack, there is nothing here for
+you to run: validate a snapshot/review pair by checking it against the contract
+above.

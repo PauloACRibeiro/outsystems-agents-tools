@@ -68,6 +68,16 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
    Cross-app library producers must be published or pre-existing before the
    consuming app uses them.
 
+10. **Do NOT call a generated entity action from a screen or client action.**
+    `Create<E>`, `CreateOrUpdate<E>`, `Update<E>` and `Delete<E>` are
+    server-side; calling one from the client raises `Security Warning . You're
+    exposing a database operation in the client side. Validate the data in a
+    Server Action before changing the database.` Route every write through a
+    Server Action that validates before it writes — a pass-through wrapper
+    silences the warning without earning it. See
+    `outsystems-mentor-implementation` `odc-platform-guardrails.md`, Security
+    Server-Trust Gate.
+
 ## Guardrail 7 override for modification plans
 
 For existing-app modifications, replace guardrail 7 with:
@@ -136,5 +146,13 @@ Before final Mentor-ready output, check:
 - CSS: each new class is either theme-level or screen-local, not both.
 - Blocks: similar block names remain distinct.
 - Connectors: connector calls are preserved unless explicitly requested.
-- Batching: batch groups are homogeneous and explain why.
+- Batching: batch groups are homogeneous and explain why. Size them down as the target app grows — above a length threshold Mentor swaps the app summary its coding agent sees for a simplified, shorter version (verified in the coding agent's private source, `current_asset/summary.py`; see `outsystems-mentor-implementation` execution-gates §4), so on a large app it is working from a reduced view of the model and is not told so. Name every element the batch touches explicitly; never refer to one by position or as "the screen we just added".
+- Functions: any Section 5 action specified as a Function declares **exactly
+  one** output parameter — two raises `Only One Output Parameter Allowed`, zero
+  raises `Output parameter required`, and neither publishes. A Data Action is
+  the separate case: at least one output, not exactly one.
+- Load-time data: no Section 5 screen spec fetches server data from
+  `OnInitialize` or another render-blocking handler — that raises a Performance
+  Warning directing the fetch to an Aggregate or Data Action. `OnInitialize`
+  remains the right home for the variable assigns those queries read.
 - Warning baseline: post-Mentor warning deltas are measurable when a baseline is available.

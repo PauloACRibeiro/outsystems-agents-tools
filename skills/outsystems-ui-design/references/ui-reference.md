@@ -326,7 +326,7 @@ These are native OutSystems widgets, not OutSystems UI blocks:
 | image lightbox | `LightBoxImage` |
 | pagination | `Pagination` (bound to a paginated aggregate) |
 | tabs | `Tabs` + `TabsHeaderItem` + `TabsContentItem` |
-| segmented control / mode selector / view toggle | `ButtonGroup` + `ButtonGroupItem` (2–5 options). More than ~5: `Dropdown`, or `Button`s with an active-state class |
+| segmented control / mode selector / view toggle | `ButtonGroup` + `ButtonGroupItem` (2–5 options) — ⚠️ see the `ButtonGroup.OnChange` note below. More than ~5: `Dropdown`, or `Button`s with an active-state class |
 | wizard / steps | `Wizard` + `WizardItem` |
 | breadcrumbs | `Breadcrumbs` + `BreadcrumbsItem` |
 | timeline | `TimelineItem` |
@@ -347,6 +347,41 @@ These are native OutSystems widgets, not OutSystems UI blocks:
 | visual divider | `Separator` |
 | centered content | `AlignCenter` (1D) / `CenterContent` (with top/center/bottom zones) |
 | button with spinner | `ButtonLoading` |
+
+> ⚠️ **`ButtonGroup.OnChange` was observed not to dispatch (one real build).**
+> On a real ODC build, a `ButtonGroup` used as a context selector never fired
+> its native `OnChange`, and the fix was to replace it with `Dropdown` — this
+> reference's own >5-option fallback. Observed once, on one build, by one
+> author (`sprint-history` search-engine-sandbox rev-261, 2026-08); it is not
+> established as a standing platform limitation. **Verify the handler actually
+> fires before shipping a `ButtonGroup` whose behaviour depends on it.** A
+> `ButtonGroup` that is purely presentational, or whose selection is read
+> elsewhere, is unaffected.
+>
+> **Settle it on the next build that ships one.** The observation cannot be
+> confirmed or cleared from a model — the OML shows the handler correctly
+> wired in the revision that failed. It takes a running screen and a click.
+> So when a build legitimately needs a segmented control, make that build the
+> experiment; do not construct a probe app for it.
+>
+> Put three widgets on the screen, each writing a DISTINCT sentinel string to
+> a local variable rendered in an `Expression`:
+>
+> | Widget | Role |
+> |---|---|
+> | the `ButtonGroup` the screen needed | subject |
+> | a `Dropdown` with an equivalent handler | control — separates "this widget" from "this app" |
+> | any plain `Button` | control — proves the page dispatches events at all |
+>
+> Then load the screen, confirm no sentinel is present, click the second
+> `ButtonGroupItem`, and re-read. Subject sentinel absent while both controls'
+> sentinels appear is a clean reproduction; all three present clears the
+> caveat. Record the date, the build, and the outcome here either way.
+>
+> Make the sentinel an unmistakable visible string. The original handler's
+> only observable effect was a data refresh, which is why it is not knowable
+> now whether "never dispatches" was measured or inferred from a page that
+> did not visibly change.
 
 ## Critical rules
 

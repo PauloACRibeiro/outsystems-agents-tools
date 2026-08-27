@@ -3,6 +3,7 @@
 
 > **Harvested from:** a curated OutSystems UI screen-guide reference set (`states-and-feedback.md`) (read-only source, harvested 2026-07-13).
 > **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
+> **Merge note:** the in-flight composer subsection was added locally 2026-08-27 — local additions preserved where noted in `maintenance/refresh-checklist.md`.
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
 
 Every screen and interactive element must communicate its state. Missing state feedback is one of the top usability failures.
@@ -21,6 +22,22 @@ After a user clicks a submit/save/action button:
 - Button immediately shows loading state: disabled + spinner icon inside, or label changes to "Saving..."
 - No "dead click" — user must see immediate visual feedback that their action registered
 - Re-enable button after completion (success or error)
+
+### Composer / async answer in flight
+
+A submit button is not the only control that has to lock. Where the user types into a
+composer and waits for an answer — a chat or assistant stream, a long-running search, any
+surface whose reply arrives asynchronously — disable **the text input as well as the send
+button** until the answer lands or fails:
+
+- A live composer invites a second message over the first, which either duplicates the
+  request or arrives out of order
+- Show the pending state where the answer will appear (a placeholder bubble or skeleton in
+  the stream), not only on the button — the composer is at the bottom of the user's attention
+- Re-enable on completion **and** on error, and leave the typed text in place so a failed
+  send is retried rather than retyped
+
+See `timeline.md`, `## Variant: Conversation / chat`, for the surface this most often applies to.
 
 ## Error States
 

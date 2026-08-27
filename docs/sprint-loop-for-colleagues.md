@@ -1,4 +1,4 @@
-# The OutSystems sprint loop for colleagues, steps 1–6 (+ grading)
+# The OutSystems sprint loop for colleagues, steps 1–7 (+ grading)
 
 This is the loop for taking an OutSystems screen or feature from an idea to a
 published, graded revision — and, just as importantly, the order the steps have
@@ -20,15 +20,23 @@ Read this once end to end before your first run, then use it as the checklist.
 - **Node.js and Google Chrome** for the grading step. The capture script drives
   your installed Chrome through Playwright; it installs one npm package into a
   scratch folder and does not download a browser.
-- **A machine enrolled in company MDM, if you will sign in to GitHub from it.**
-  GitHub's device-code sign-in goes through company conditional access, and on
-  an unenrolled machine it fails outright — no retry fixes it and there is no
-  local workaround. Enrol first. This is a hard stop, not a slow path, and it
-  blocks anything needing a GitHub login, including returning a feedback bundle
-  that way rather than by email.
-- **The four skills in this pack**, installed into your agent's skills
-  directory: `outsystems-ui-design`, `outsystems-plan-to-mentor`,
-  `outsystems-mentor-implementation`, and `outsystems-runtime-ui-audit`. Follow
+- **A GitHub login is NOT required to run the loop.** Nothing in steps 1-7 signs
+  in to GitHub, and the feedback bundler is offline and read-only — it writes a
+  `.tgz` you email, and uploads nothing. One optional capability needs a login:
+  regenerating `outsystems-ui-design`'s built-in widget inventory, which reads an
+  OutSystems-internal repository. If you skip it the design skill still works,
+  degraded, falling back to documented guidance instead of verifying widget
+  properties against the inventory.
+  If you do want it and browser sign-in is refused because your machine is not
+  enrolled in company MDM, **that is not a dead end**: a classic personal access
+  token works from an unmanaged machine — measured on one whose browser login had
+  just been refused. The skill's `skills/outsystems-ui-design/references/built-in-widgets-regeneration.md`
+  carries the procedure, including the SSO authorization step people miss and the
+  trap where regenerating a token silently drops that authorization.
+- **The five skills in this pack**, installed into your agent's skills
+  directory: `outsystems-screen-inventory`, `outsystems-ui-design`,
+  `outsystems-plan-to-mentor`, `outsystems-mentor-implementation`, and
+  `outsystems-runtime-ui-audit`. Follow
   the bundled release install document for your OS
   (`INSTALL-SPRINT-LOOP-MACOS.md` / `INSTALL-SPRINT-LOOP-WINDOWS.md`, attached
   to the same release you downloaded this pack from).
@@ -37,6 +45,17 @@ Read this once end to end before your first run, then use it as the checklist.
   provider, and if none is reachable it stops and waits. The **OutSystems
   Public Knowledge MCP server** satisfies it and ships in the same release as
   this pack — install it before your first run (see below).
+- **The OutSystems MCP plugin, if you want the loop to touch your tenant.**
+  This is the difference between the two delivery modes, so it is worth deciding
+  up front rather than discovering at step 5. **Without it you are in paste mode:**
+  the loop still runs end to end and still produces everything — plans, blueprints,
+  pseudocode, paste-ready Mentor prompts — but nothing reaches your tenant until
+  you run those prompts yourself in Mentor Studio. **With it you can use direct
+  mode:** step 5 drives the Mentor edit for you and step 6 publishes, each edit
+  approval-gated on the exact step about to run. Paste mode needs no tenant
+  connection at all and is a perfectly good first run. Install instructions and the
+  OAuth walkthrough are in step 6 below and in the plugin's own repository:
+  <https://github.com/OutSystems/outsystems-mcp>
 
 You do **not** need a VPN, and you do not need an OutSystems employee account —
 the Public Knowledge server stands in for the VPN-only internal one.
@@ -48,7 +67,7 @@ the Public Knowledge server stands in for the VPN-only internal one.
 | 1–2 | The public **Superpowers** plugin | Installed separately — see below. Not redistributed here. |
 | 3, 4, 5, grading | The four skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
 | 5 (knowledge) | The **OutSystems Public Knowledge MCP server** | Same release as this pack, own install docs — see below. |
-| 6 | The public **OutSystems MCP** plugin | `outsystems@outsystems` — see below. |
+| 5 (direct mode), 6 | The public **OutSystems MCP** plugin | Optional — paste mode needs no tenant. `outsystems@outsystems` — see below. |
 
 ### Steps 1–2 — install Superpowers yourself
 
@@ -206,7 +225,13 @@ tenant here; blueprints are local files until step 5.
 Two things to know:
 
 - **It is deliberately single-screen.** A five-screen app is five runs sharing
-  one screen inventory and one navigation decision made up front.
+  one screen inventory and one navigation decision made up front. Decide those
+  first with `outsystems-screen-inventory`: it turns your requirements document
+  into one `screen-inventory.json` holding the screen list, the archetype and
+  behaviour per screen, the entity and action bindings by name, the single shared
+  chrome decision, and the navigation between screens. Every per-screen design
+  run then reads that file instead of re-deciding the archetype each time. Under
+  three screens, skip it and go straight to the design loop.
 - **Declare `assertions` on every screen** — for example
   `"assertions": {"buttons": 10, "inputs": 1, "links": 0}`. The validator
   recounts those from the screen's content and hard-fails a mismatch. It is the
@@ -322,6 +347,43 @@ Practical habits from real runs:
   investigate at twenty rather than cancelling. A cancelled run still consumes
   the session.
 - **Three consecutive failed iterations means stop the run**, not push harder.
+
+### Step 7 — Test it, and get a real pass/fail
+
+**Skill: `outsystems-bdd-tests`.** Optional, and it needs two Forge components a
+human installs — see the skill's Prerequisites.
+
+Everything before this point checks that the app was *built*. This is the only
+step that executes the app's own logic and tells you whether it *works*. It sits
+between the publish and the grading because it needs a published app and its
+answer should inform whether grading is worth doing at all.
+
+Two halves, and you can use either alone:
+
+- **Generate** composes a Mentor prompt that builds an `<AppName>Tests` module —
+  a separate module, so tests deploy and are excluded independently of your
+  production code. You still approve each Mentor edit, as in Step 6.
+- **Execute** calls the BDD Framework API's runner and reports per-scenario
+  pass/fail with an exit code you can gate on.
+
+```bash
+python3 scripts/odc_bdd_tests.py --hostname <tenant>-<env>.outsystems.app preflight
+python3 scripts/odc_bdd_tests.py --hostname <tenant>-<env>.outsystems.app \
+  run --module <YourApp>Tests --suite <YourSuiteScreen>
+```
+
+Three things worth knowing before you read a result:
+
+- **The publish is the commit.** A Mentor turn writes into the session, so after
+  it, Studio, the revision count and the Context Service all correctly show
+  nothing. Publish first, then run the skill's `verify` readback gate to confirm
+  the publish carried what Mentor claimed.
+- **A green `IsSuccess` is not enough.** The API computes it so that an
+  all-skipped suite reports success. The skill requires at least one genuinely
+  passing scenario before it will exit 0, and you should too.
+- **Exit 2 means inconclusive, not failed.** A rejected token, an unreachable
+  host or a self-contradictory response are all exit 2. Do not read them as a
+  test failure, and do not read them as a pass.
 
 ### Grading — the runtime UI audit
 

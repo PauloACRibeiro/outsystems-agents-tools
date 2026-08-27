@@ -7,6 +7,8 @@ Deterministic checks shared with golden_scenario_check.py:
 - h3 heading contract for Evidence Status
 - ### Unknowns And Fallback Behavior only after ### Evidence Status
 - no tenant-mutation tool identifiers in visual-source-ui visible answers
+- for --mode plan-to-mentor only: the seven required Studio-Native Pseudocode
+  subsections, present and in order inside that section
 
 Generic (scorecard-free) shape checks, always run regardless of mode:
 - unresolved placeholder text (TBD:/TODO:/FIXME:, lorem ipsum, manifest
@@ -20,6 +22,12 @@ Generic (scorecard-free) shape checks, always run regardless of mode:
   manifest is not held to the manifest contract); minimum coverage-entry
   count defaults to 1 (a manifest with zero entries is unconditionally
   broken) - a stricter minimum stays scorecard-only, not a generic default
+
+Source-fidelity check (opt-in, only when a source artifact is supplied):
+- omission direction only - every in-scope screen and entity the enriched
+  blueprint or screen inventory declares must be named somewhere in the
+  answer. The INVENTION direction (a name in the answer that resolves to no
+  source artifact) is deliberately NOT implemented; see check_source_fidelity.
 
 This is the same lint SKILL.md's Final Self-Check requires running before
 every answer (mandatory, not conditional on saving a draft file) - see the
@@ -71,7 +79,37 @@ MODE_SECTIONS = {
         "### Protected Contract",
         "### Execution Boundary",
     ],
+    # `Invocation mode: outsystems-plan-to-mentor` package (SKILL.md, "Output
+    # Contract - when invoked by outsystems-plan-to-mentor"). Its four required
+    # sections are h2 - that is the level the invocation actually emits - and
+    # the universal `### Evidence Status` h3 closes the package.
+    "plan-to-mentor": [
+        "## Manual Setup Gate",
+        "## Session Readiness Matrix",
+        "## Studio-Native Pseudocode",
+        "## Mentor Executable Sessions",
+        "### Evidence Status",
+    ],
 }
+
+PLAN_TO_MENTOR_MODE = "plan-to-mentor"
+PLAN_TO_MENTOR_PSEUDOCODE_HEADING = "## Studio-Native Pseudocode"
+PLAN_TO_MENTOR_SESSIONS_HEADING = "## Mentor Executable Sessions"
+# Required subsections of the plan-to-mentor `Studio-Native Pseudocode`
+# section, in the order SKILL.md lists them. All seven are required, not
+# "whichever applied": a package that genuinely has no roles still has to say
+# so under `### Role Pseudocode`, because a silently absent subsection and a
+# deliberately empty one are indistinguishable to the reader who has to decide
+# whether the plan was covered.
+PLAN_TO_MENTOR_SUBSECTIONS = [
+    "### Data Model Pseudocode",
+    "### Role Pseudocode",
+    "### Server Action Pseudocode",
+    "### Client Action Pseudocode",
+    "### Screen And UI Pseudocode",
+    "### Navigation Pseudocode",
+    "### Verification Pseudocode",
+]
 
 MUTATION_TOOL_IDENTIFIERS = ["app_create", "mentor_start", "publish_start", "deploy_start"]
 TOOL_NAME_FORBIDDEN_MODES = {"visual-source-ui"}
@@ -282,7 +320,163 @@ def check_prompt_structure(text, min_blocks):
     return failures
 
 
-def lint(text, mode):
+def check_plan_to_mentor_subsections(text):
+    """Required subsections inside the plan-to-mentor pseudocode section.
+
+    Scoped to the region between `## Studio-Native Pseudocode` and
+    `## Mentor Executable Sessions`, so a subsection heading that drifted into
+    the sessions package reads as missing rather than as satisfied. When the
+    pseudocode section itself is absent the section-order check already names
+    that, so nothing is reported here.
+    """
+    start = find_heading_position(text, PLAN_TO_MENTOR_PSEUDOCODE_HEADING)
+    if start == -1:
+        return []
+    end = find_heading_position(text, PLAN_TO_MENTOR_SESSIONS_HEADING)
+    region = text[start:end] if end > start else text[start:]
+
+    failures = []
+    last = -1
+    for heading in PLAN_TO_MENTOR_SUBSECTIONS:
+        index = find_heading_position(region, heading)
+        if index == -1:
+            failures.append({
+                "check": "pseudocode_subsection",
+                "detail": (f"missing subsection {heading!r} inside "
+                           f"{PLAN_TO_MENTOR_PSEUDOCODE_HEADING!r}")})
+        elif index < last:
+            failures.append({
+                "check": "pseudocode_subsection",
+                "detail": f"subsection {heading!r} out of order"})
+        else:
+            last = index
+    return failures
+
+
+def _named_elements(items, key="name"):
+    """Non-empty string `key` values, in artifact order, from a list of dicts."""
+    names = []
+    for item in items if isinstance(items, list) else []:
+        if not isinstance(item, dict):
+            continue
+        value = item.get(key)
+        if isinstance(value, str) and value.strip():
+            names.append(value.strip())
+    return names
+
+
+def blueprint_scope_names(blueprint):
+    """(kind, name) pairs an enriched blueprint puts in scope for the build.
+
+    Screens and entities only - `blocks`, `roles` and region-level names are
+    outside the narrowed scope of this check. An entity flagged
+    ``exists: true`` stays in scope: the build still has to name it to verify
+    or reuse it (see blueprint_intake_plan.build_intake_plan).
+    """
+    pairs = [("screen", name) for name in _named_elements(blueprint.get("screens"))]
+    pairs += [("entity", name) for name in _named_elements(blueprint.get("entities"))]
+    return pairs
+
+
+def inventory_scope_names(inventory):
+    """(kind, name) pairs a screen inventory puts in scope for the build.
+
+    Screens, plus the entity-kind data bindings they declare. Action bindings
+    are excluded on purpose: an action's name is born in the capability plan,
+    not the inventory (screen-inventory.schema.json, `introduced_here`), so the
+    inventory is not authoritative for it. Candidates are not read either -
+    a dissolved candidate is by definition not a destination, and a mapped one
+    already resolves to a screen in ``screens``.
+    """
+    pairs = []
+    for screen in inventory.get("screens") if isinstance(inventory.get("screens"), list) else []:
+        if not isinstance(screen, dict):
+            continue
+        name = screen.get("name")
+        if isinstance(name, str) and name.strip():
+            pairs.append(("screen", name.strip()))
+        for binding in screen.get("data_bindings") if isinstance(
+                screen.get("data_bindings"), list) else []:
+            if not isinstance(binding, dict) or binding.get("kind") != "entity":
+                continue
+            bound = binding.get("name")
+            if isinstance(bound, str) and bound.strip():
+                pairs.append(("entity", bound.strip()))
+    return pairs
+
+
+def _is_named(text, name):
+    """True when `name` appears in `text` as a whole identifier.
+
+    Exact spelling is required - a longer identifier that merely contains the
+    name does not satisfy it. This is the same source-spelling-preservation
+    rule the Mentor session contract already imposes (SKILL.md, `Traps`), so
+    `Orders` does not stand in for an element the artifact spells `Order`.
+    """
+    return re.search(rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])",
+                     text) is not None
+
+
+def check_source_fidelity(text, blueprint=None, inventory=None):
+    """Omission half of the prompt-hop fidelity lint.
+
+    Returns ``(failures, checked)`` where `checked` is how many distinct
+    in-scope names were measured - a caller can tell a real pass from a
+    vacuous one.
+
+    OMISSION ONLY. The invention direction - a PascalCase name in the answer
+    that resolves to nothing in the source artifact - is explicitly held as a
+    separate, evidence-gated experiment (fx-blueprint disposition, W1.5 group
+    O3): upstream gets it free from a structural node index, whereas here it
+    would need a name regex plus a whole-widget-surface allowlist, and a wrong
+    allowlist flags correct answers.
+
+    Both artifacts are optional because a lint run may be scoped to a partial
+    answer; pass them only when the answer is the full build handoff derived
+    from them, or every screen it legitimately does not cover reads as an
+    omission.
+    """
+    failures = []
+    pairs = []
+    for label, artifact, extract in (
+            ("blueprint", blueprint, blueprint_scope_names),
+            ("inventory", inventory, inventory_scope_names)):
+        if artifact is None:
+            continue
+        if not isinstance(artifact, dict):
+            failures.append({
+                "check": "source_artifact",
+                "detail": f"{label} artifact is not a JSON object"})
+            continue
+        found = extract(artifact)
+        if not found:
+            failures.append({
+                "check": "source_artifact",
+                "detail": (f"{label} artifact declares no in-scope screens or "
+                           "entities - there is nothing to check the answer against")})
+        pairs += [(label, kind, name) for kind, name in found]
+
+    seen = set()
+    checked = 0
+    for label, kind, name in pairs:
+        if (kind, name) in seen:
+            continue
+        seen.add((kind, name))
+        checked += 1
+        if not _is_named(text, name):
+            failures.append({
+                "check": "source_omission",
+                "detail": (f"{label} {kind} {name!r} is in scope but is never "
+                           "named in the answer")})
+    return failures, checked
+
+
+def lint(text, mode, blueprint=None, inventory=None):
+    """Failures only. Use lint_report when the in-scope name count is wanted."""
+    return lint_report(text, mode, blueprint, inventory)[0]
+
+
+def lint_report(text, mode, blueprint=None, inventory=None):
     expected = {
         "required_sections_in_order": MODE_SECTIONS[mode],
         "allowed_evidence_labels": ALL_LABELS,
@@ -306,6 +500,9 @@ def lint(text, mode):
             "detail": "### Unknowns And Fallback Behavior must follow ### Evidence Status",
         })
 
+    if mode == PLAN_TO_MENTOR_MODE:
+        failures += check_plan_to_mentor_subsections(text)
+
     # Generic shape checks - no scorecard needed, run on every answer.
     failures += scan_placeholders(text)
     failures += check_prompt_structure(text, min_blocks=0)
@@ -313,19 +510,52 @@ def lint(text, mode):
     if re.search(r"^coverage_map:", text, re.MULTILINE):
         failures += check_manifest(text, GENERIC_MIN_MANIFEST_ENTRIES)
 
-    return failures
+    # Opt-in source-fidelity check: runs only when an artifact was supplied.
+    fidelity, checked = check_source_fidelity(text, blueprint, inventory)
+    failures += fidelity
+
+    return failures, checked
+
+
+def _load_artifact(path, label, failures):
+    """Parse a source artifact, or record why it could not be read."""
+    if path is None:
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        failures.append({
+            "check": "source_artifact",
+            "detail": f"{label} artifact {str(path)!r} could not be read: {error}"})
+        return None
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--answer", required=True, type=Path)
     parser.add_argument("--mode", required=True, choices=sorted(MODE_SECTIONS))
+    parser.add_argument("--blueprint", type=Path,
+                        help="enriched blueprint JSON this answer was built from; "
+                             "every screen and entity it declares must be named "
+                             "in the answer")
+    parser.add_argument("--inventory", type=Path,
+                        help="screen inventory JSON this answer was built from; "
+                             "every screen and entity binding it declares must be "
+                             "named in the answer")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
-    failures = lint(args.answer.read_text(encoding="utf-8"), args.mode)
+    artifact_failures = []
+    blueprint = _load_artifact(args.blueprint, "blueprint", artifact_failures)
+    inventory = _load_artifact(args.inventory, "inventory", artifact_failures)
+
+    failures, checked = lint_report(
+        args.answer.read_text(encoding="utf-8"), args.mode, blueprint, inventory)
+    failures = artifact_failures + failures
     if args.json:
-        print(json.dumps({"mode": args.mode, "pass": not failures, "failures": failures}, indent=2))
+        print(json.dumps({"mode": args.mode, "pass": not failures,
+                          "source_names_checked": checked, "failures": failures},
+                         indent=2))
     else:
         for failure in failures:
             print(f"FAIL [{failure['check']}] {failure['detail']}")

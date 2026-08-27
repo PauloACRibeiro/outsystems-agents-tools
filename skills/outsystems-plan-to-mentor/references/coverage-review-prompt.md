@@ -9,10 +9,17 @@ Load `references/requirement-id-conventions.md` first. The coverage number
 and the coverage verdict come from `scripts/check_requirement_coverage.py`;
 they are computed, never hand-authored.
 
+This gate audits the plan against the spec and stops at conversion. Auditing
+the *built* app back against the same spec is a separate pass this skill does
+not run; `references/post-build-gap-pass.md` records its shape for a run that
+wants one.
+
 ```text
 Using the original request/PRD already in this conversation as the source of truth, audit the plan you just produced for coverage and alignment.
 
 First, establish the Requirement Inventory. If the source already carries stable requirement IDs (BR- business rules, UC- use cases, C- acceptance criteria), use them unchanged. If it does not, assign IDs per the requirement ID conventions and write the `## Requirement Inventory` table at the top of the coverage review artifact. IDs stay stable across passes: later passes reuse the same inventory and may only append.
+
+While writing the inventory, watch for a requirement that asserts two obligations. The checker scores whole ID tokens, so two obligations wearing one ID score as covered the moment the plan addresses either half. When you meet one, split it in pass 1: append the second obligation as a new ID and leave existing rows unchanged. Never renumber, and never invent a sub-ID (`BR-007.a`) — the checker cannot see one. Pass 1 is the only cheap moment, because from pass 2 on the plan already cites the IDs; a later pass records the compound in the matrix's Patch / Risk column instead of resplitting it.
 
 For each requirement in the inventory:
 
@@ -84,6 +91,29 @@ note and citation-only coverage; do not retrofit a table into in-flight run
 artifacts. Every NEW plan, and every patched plan this review writes, includes
 the table.
 
+## Requirement Dispositions Table
+
+Every requirement the patched plan does not build goes in a
+`## Requirement Dispositions` section, in the shape the requirement ID
+conventions define:
+
+| ID | Disposition | Reason |
+|---|---|---|
+
+The vocabulary is closed — `built`, `deferred`, `out-of-scope`,
+`accepted-risk` — and each of the three terminal dispositions requires a
+reason. A dispositioned requirement leaves the numerator and the denominator
+both, so the checker reports `covered/in-scope` with the defined and
+dispositioned counts beside it: the verdict then distinguishes a plan that
+builds twelve requirements from one that builds three and defers nine.
+
+This is a gain in signal, not a fix for a broken rule. Discharging a deferral
+by citing its ID in the scope boundaries stays valid and the checker still
+accepts it; a plan with no disposition table keeps the exact prior behaviour.
+Write the table anyway whenever the plan defers anything, and do not
+disposition a requirement to make a NOT READY verdict go away — a terminal
+disposition is a scope decision the user owns, so raise it as one.
+
 **Gate checklist for a changed spec or plan.** Before accepting any change:
 
 - [ ] Every story has acceptance criteria.
@@ -101,7 +131,7 @@ Audit these in the same pass and record findings in the matrix's Patch / Risk co
 * References resolve: anything a step depends on is defined earlier in the plan or in the recorded existing scaffold, never assumed.
 * Producers come before consumers in the plan's ordering.
 * Everything the plan introduces is reachable from a user workflow; no orphaned deliverables.
-* Deferred or out-of-scope requirements are cited by ID in the scope boundaries or accepted-risk section with their disposition; nothing is silently absent.
+* Deferred or out-of-scope requirements are carried in the `## Requirement Dispositions` table with a reason, or failing that cited by ID in the scope boundaries or accepted-risk section with their disposition; nothing is silently absent.
 * No generic bucket sections ("Misc", "Utilities", "Other").
 
 Then:
@@ -109,6 +139,8 @@ Then:
 1. Run `python3 scripts/check_requirement_coverage.py <inventory-or-prd> <plan-under-review>` (on Windows PowerShell, `python` — `python3` is not a command there) and copy its full output verbatim into the review artifact. The coverage numbers, the uncovered and dangling lists, and the `coverage verdict:` line are computed, never hand-authored; do not restate them as your own estimate. The checker proves every ID is cited; the Evidence column stays the judgement check that each citation is honest.
 2. List the **top gaps** (uncovered IDs, Partial rows, or unclear assumptions), prioritized by impact.
 3. Produce a **patched version of the plan** that closes those gaps with **minimal changes**, preserving the original structure where possible (add/adjust sections rather than rewriting everything). The patched plan cites each requirement ID inline where it is addressed. The patched version must be the full plan text after edits. Do not write a summary-only patched artifact.
+
+**The patched plan preserves every original heading verbatim, the H1 title included.** The handoff scanner's structural non-regression check compares heading text between the original plan and the patched one, level-insensitively, and it reads the document title as a heading like any other -- so renaming `# Booking Plan` to `# Booking Plan (patched)` registers as a dropped section and fails the scan. That is a correct catch: a renamed title is indistinguishable, to a text comparison, from a section that vanished. Record what the patch changed by appending a `## Change Summary` section rather than renaming anything. The patched plan is identified by its filename (`{plan-stem}-patched.md`), never by its title. Adding headings is always free; the check never reports additions.
 
 Before writing the patched plan file, replace any generic Superpowers execution handoff. The patched plan should point to `outsystems-plan-to-mentor` and `outsystems-mentor-implementation`.
 
@@ -124,7 +156,7 @@ The scanner and Mentor invocation must use the same full patched plan file.
 
 Convergence requires:
 
-* `scripts/check_requirement_coverage.py` reports `coverage verdict: READY` on the patched plan -- no uncovered IDs, no dangling references. An accepted-risk requirement converges by being cited in the plan's scope boundaries with its disposition, not by being waived from the checker.
+* `scripts/check_requirement_coverage.py` reports `coverage verdict: READY` on the patched plan -- no uncovered IDs, no dangling references, and no disposition-table failures. Uncovered is computed over the in-scope set when the plan carries a Requirement Dispositions table. An accepted-risk requirement converges by carrying a reasoned row in the Requirement Dispositions table, or by being cited in the plan's scope boundaries with its disposition -- not by being waived from the checker. Report the in-scope and dispositioned counts as the checker prints them; a READY verdict over three in-scope requirements is not a claim about the other nine.
 * `scripts/check_outcome_coverage.py` reports `outcome verdict: READY` -- every declared refusal outcome is reached by a verification row. An outcome that is genuinely untestable converges by being cited in scope boundaries with its reason, not by being dropped from the design's declared results.
 * no Missing rows.
 * no Partial except explicitly accepted platform/runtime uncertainty.

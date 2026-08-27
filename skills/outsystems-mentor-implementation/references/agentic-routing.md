@@ -90,7 +90,7 @@ the claim `Unverified gap`.
 - MCP/prebuilt connector tools are external dependencies. Imported tools behave like callable server actions, but unsupported MCP data structures must be handled before import.
 - Agent evaluations run against a published agent service action and a dataset. They are quality gates around agent behavior, not Studio runtime logic.
 - Deploy the agent app before the consumer app; deploying in the wrong order breaks the `CallAgentV2` / `Call<AgentName>` reference.
-- For long AI calls, use the dedicated long-running guidance. The pattern involves async wrapper or background processing and is not a simple timeout parameter change.
+- For long AI calls, use the dedicated long-running guidance: raise `Server Request Timeout` to 60 seconds first (on the app or on the individual Call Agent action), then move to an async wrapper or background processing when the call needs to run beyond 60 seconds.
 - Guardrails are configured in the ODC Portal, not in Studio; pseudocode should note "configure guardrails in Portal" rather than showing Studio elements for that step.
 
 ## Agent Guardrail Coverage Audit
