@@ -247,6 +247,15 @@ python3 scripts/check_control_wiring.py --oml <published .oml> \
     --blueprint <blueprint.json>      # or --screens A,B,C
 ```
 
+**Portability boundary:** the checker is estate-internal — it converts the
+`.oml` through the internal extraction CLI (`OML_EXTRACT_CLI`) and does not
+ship in the colleague pack. On an install without that CLI the REQUIREMENT
+stands but the mechanization does not: perform the wiring check manually —
+exercise every control the phase built, signed in, expecting an observable
+effect (navigation, network request, or DOM change) from each, and treat any
+control with no observable effect as the same failed phase. Only the tooling
+is internal; the gate is not optional.
+
 The measured rule this row exists for:
 
 > a screen generated from a blueprint reliably contains the right widgets and
