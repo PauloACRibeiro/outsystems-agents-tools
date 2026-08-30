@@ -857,6 +857,24 @@ counts them as inputs fails with a bare number mismatch. And declare the
 deliberately on read-only screens: it turns a no-editing business rule into a
 fact the post-publish recompute checks mechanically.
 
+**Assertions are REQUIRED for filter regions and empty states.** Everywhere else
+`assertions` stays optional; on a screen whose `main_content` declares a region
+bound to `Tabs`, `ButtonGroup`, `BlankSlate` or `EmptyState`, the validator
+**hard-fails a screen that omits them** (an empty `{}` does not satisfy it
+either). The trigger is the region's declared **block token**, never its prose —
+region names are written in the project's own language, and a keyword rule in
+one language is not a rule. `reuse.block` wins over `outsystems_hints.block`,
+the same precedence OMI's region diff uses: a region carrying both is already
+rejected here, and where two controls read the same field they must not
+disagree about which one they read. This is a separate mechanism from the counts and
+does **not** extend the counting vocabulary, which stays exactly Link, Button
+and Input. Measured (restaurant-app-v2, 2026-08-28/29): two screens shipped with
+whole regions missing — the filter tabs and the empty states — and nothing
+caught it, because those screens declared no assertions at all, so OMI's
+post-publish recompute reported `no screen declares assertions - nothing was
+checked`. The regions that went missing are exactly the ones this rule makes
+non-optional, so the recompute is never inert for them.
+
 **Type-fit is advice, not law.** A ProgressBar/Counter bound to a non-numeric
 attribute, or a status Tag not backed by a static entity, produces a `WARNING`
 that never blocks — it flags a likely wrong-widget-for-the-data choice for you to

@@ -804,6 +804,60 @@ def _derive_counts(screen):
     return counts
 
 
+# Q3b (approved 2026-08-30): the two region classes that shipped MISSING on
+# restaurant-app-v2 (2026-08-28/29) - the filter tabs and the empty states - did
+# so undetected because the screens declared no `assertions`, leaving OMI's
+# post-publish recompute with no contract to check. A screen declaring either
+# class must therefore declare assertions; they stop being optional for exactly
+# the regions that went missing.
+#
+# The trigger is the region's declared BLOCK token, never its prose: the region
+# names on that app were Portuguese ("Filtro por seccao"), and a keyword rule in
+# one language is not a rule. This is a separate mechanism from the counts and
+# does not touch `_ASSERTION_WIDGETS`.
+_ASSERTION_REQUIRED_BLOCKS = {"Tabs", "ButtonGroup", "BlankSlate", "EmptyState"}
+
+
+def _assertion_forcing_blocks(screen):
+    found = []
+    for region, _sn in _leaf_regions(screen):
+        hints = region.get("outsystems_hints") or {}
+        reuse = region.get("reuse") or {}
+        # `reuse` first - the SHARED precedence with OMI's region diff
+        # (check_control_wiring.py). Reading the hint first let a region
+        # carrying both be matched there as Tabs while evading this control
+        # (Codex correction 1, AH-2026-08-30-007 round 1).
+        block = reuse.get("block") or hints.get("block")
+        if not isinstance(block, str):
+            continue
+        token = block.split("/")[-1].strip()
+        if token in _ASSERTION_REQUIRED_BLOCKS:
+            found.append((region.get("name", region.get("id", "?")), token))
+    return found
+
+
+def _check_assertions_required_for_filter_and_empty_state(bp, errors):
+    for screen in bp.get("screens", []):
+        if not isinstance(screen, dict):
+            continue
+        forcing = _assertion_forcing_blocks(screen)
+        if not forcing:
+            continue
+        assertions = screen.get("assertions")
+        if isinstance(assertions, dict) and assertions:
+            continue
+        sname = screen.get("name", "?")
+        named = ", ".join(f"'{n}' ({b})" for n, b in forcing)
+        errors.append(
+            f"screen '{sname}': region(s) {named} declare a filter or "
+            "empty-state block, so this screen's `assertions` are REQUIRED, not "
+            "optional - without them OMI's post-publish recompute reports "
+            "'no screen declares assertions - nothing was checked', which is how "
+            "two screens shipped with these exact regions missing "
+            "(restaurant-app-v2, 2026-08-28)"
+        )
+
+
 def _check_assertion_parity(bp, errors):
     for screen in bp.get("screens", []):
         assertions = screen.get("assertions")
@@ -1627,6 +1681,7 @@ def collect_errors(bp, extra_seed_targets=None, extra_declared=None):
     _check_fk_target_declared(bp, errors, extra_declared)
     _check_static_datasource_unpopulated(bp, errors, extra_seed_targets)
     _check_assertion_parity(bp, errors)
+    _check_assertions_required_for_filter_and_empty_state(bp, errors)
     _check_render_gate_shape(bp, errors)
     _check_render_gate_near_miss(bp, errors)
     return errors

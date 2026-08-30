@@ -236,6 +236,53 @@ Two halves, and the prompt half is the one that prevents it:
   item, not a note. Mentor does warn about this — the warning was there and was
   read past.
 
+### (c) Run the static wiring checker after the screens phase publishes — REQUIRED
+
+**After the screens phase publishes, run the wiring checker over every screen
+the phase built. Any unwired control = failed phase.** Not a note, not a
+follow-up: the phase does not complete.
+
+```
+python3 scripts/check_control_wiring.py --oml <published .oml> \
+    --blueprint <blueprint.json>      # or --screens A,B,C
+```
+
+The measured rule this row exists for:
+
+> a screen generated from a blueprint reliably contains the right widgets and
+> unreliably contains their behaviour; nothing in the pipeline distinguishes a
+> wired control from an unwired one — only executing it does
+>
+> — restaurant-app-v2, nine controls, 2026-08-28
+
+**What this catches.** Nine controls across nine screens rendered perfectly and
+had **no handler at all** — no navigation, no network request, no console
+error. Both "+ Add" buttons were among them, so the app shipped with **no
+data-entry path**. Every one of the nine passed validation (0 errors), publish,
+the digest gate, enumeration and role checks, and the assertion recompute. Each
+was found only by a human clicking it. The recompute counts widgets; this is the
+first check that asks whether any of them do anything.
+
+**Verdict.** A Button or Link must reach a destination — a screen, or a client
+action with a non-empty flow; a `Start→End` handler with no body is unwired, not
+wired. The input family is judged on `bound Variable OR handler`, because every
+Input in the measured revision carries an empty `OnChange` (an input commits
+through its variable, not through an event) and failing on that alone would have
+produced sixteen false failures on one screen.
+
+**Region coverage, same run.** With `--blueprint` the checker also diffs the
+blueprint's `main_content` regions against the built tree — two screens shipped
+missing whole regions (filter tabs, empty states) and nothing noticed. Regions
+whose token names no asset the model holds are reported `UNSUPPORTED` and do
+**not** fail the run; the compensating control is upstream, in
+`outsystems-ui-design` Step 4, where a filter region or an empty state now
+**requires** per-screen `assertions`.
+
+**Ordering is structural, like the recompute's.** Session edits are server-side;
+there is no element tree to inspect before the revision lands. `--oml` needs the
+internal extraction CLI (`OML_EXTRACT_CLI`) and there is no portable substitute —
+the MCP `context_screens` payload carries no widget data at all.
+
 ## 3. Remedy gate — per fix
 
 **A fix is not closed on the model's report that it was applied.** Hold a remedy

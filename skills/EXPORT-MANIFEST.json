@@ -51,7 +51,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/SKILL.md",
-      "sha256": "aa915962f4d9132e0a7486455b0d4772238afea15a83000ba015a758a7106e59"
+      "sha256": "d035454334a138c48ed82354a4ba03caed502fb668dc88105a1a44d3504b1761"
     },
     {
       "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -67,7 +67,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-      "sha256": "b6f81535b28bf9dc15e8385928687d103dec24c4a7761c4be838ab057b3afd0d"
+      "sha256": "1459418d6c2baac12dab24acc7a0e0ac9d2840a13583bd77d5e7ae14dd6a9e58"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -439,7 +439,7 @@
     },
     {
       "path": "skills/outsystems-ui-design/SKILL.md",
-      "sha256": "2309871b591b9694d15486f199963e26b1946df754eda7ee460599d33635aa3a"
+      "sha256": "3bb726aaa2093f1b7d302aeb89033d9fa40c2e412f305739e5798cb4fe609d2e"
     },
     {
       "path": "skills/outsystems-ui-design/references/atomic-design.md",
@@ -631,7 +631,7 @@
     },
     {
       "path": "skills/outsystems-ui-design/scripts/validate_blueprint.py",
-      "sha256": "cfa618ba7e29695a6d5fc4fa7ef49453a0f9c2183f75be9ab13e24c2a7547f85"
+      "sha256": "9390d05b37dad5a661ce7b06a544087122c28cf2139fc0110b488f1286536f28"
     },
     {
       "path": "skills/outsystems-ui-design/templates/preview-shell.html",
@@ -674,7 +674,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "aa915962f4d9132e0a7486455b0d4772238afea15a83000ba015a758a7106e59"
+          "sha256": "d035454334a138c48ed82354a4ba03caed502fb668dc88105a1a44d3504b1761"
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -690,7 +690,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-          "sha256": "b6f81535b28bf9dc15e8385928687d103dec24c4a7761c4be838ab057b3afd0d"
+          "sha256": "1459418d6c2baac12dab24acc7a0e0ac9d2840a13583bd77d5e7ae14dd6a9e58"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -950,8 +950,8 @@
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -967,7 +967,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "aa915962f4d9132e0a7486455b0d4772238afea15a83000ba015a758a7106e59"
+          "sha256": "d035454334a138c48ed82354a4ba03caed502fb668dc88105a1a44d3504b1761"
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -983,7 +983,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-          "sha256": "b6f81535b28bf9dc15e8385928687d103dec24c4a7761c4be838ab057b3afd0d"
+          "sha256": "1459418d6c2baac12dab24acc7a0e0ac9d2840a13583bd77d5e7ae14dd6a9e58"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -1219,8 +1219,8 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -1300,8 +1300,8 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -1337,8 +1337,8 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -1370,8 +1370,8 @@
         }
       ],
       "pack_name": "outsystems-screen-inventory",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -1395,8 +1395,8 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -1448,7 +1448,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/SKILL.md",
-          "sha256": "aa915962f4d9132e0a7486455b0d4772238afea15a83000ba015a758a7106e59"
+          "sha256": "d035454334a138c48ed82354a4ba03caed502fb668dc88105a1a44d3504b1761"
         },
         {
           "path": "skills/outsystems-mentor-implementation/agents/openai.yaml",
@@ -1464,7 +1464,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-          "sha256": "b6f81535b28bf9dc15e8385928687d103dec24c4a7761c4be838ab057b3afd0d"
+          "sha256": "1459418d6c2baac12dab24acc7a0e0ac9d2840a13583bd77d5e7ae14dd6a9e58"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -1812,7 +1812,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/SKILL.md",
-          "sha256": "2309871b591b9694d15486f199963e26b1946df754eda7ee460599d33635aa3a"
+          "sha256": "3bb726aaa2093f1b7d302aeb89033d9fa40c2e412f305739e5798cb4fe609d2e"
         },
         {
           "path": "skills/outsystems-ui-design/references/atomic-design.md",
@@ -2004,7 +2004,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/scripts/validate_blueprint.py",
-          "sha256": "cfa618ba7e29695a6d5fc4fa7ef49453a0f9c2183f75be9ab13e24c2a7547f85"
+          "sha256": "9390d05b37dad5a661ce7b06a544087122c28cf2139fc0110b488f1286536f28"
         },
         {
           "path": "skills/outsystems-ui-design/templates/preview-shell.html",
@@ -2028,8 +2028,8 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     },
     {
       "build_date_utc": "2026-08-30",
@@ -2041,7 +2041,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/SKILL.md",
-          "sha256": "2309871b591b9694d15486f199963e26b1946df754eda7ee460599d33635aa3a"
+          "sha256": "3bb726aaa2093f1b7d302aeb89033d9fa40c2e412f305739e5798cb4fe609d2e"
         },
         {
           "path": "skills/outsystems-ui-design/references/atomic-design.md",
@@ -2233,7 +2233,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/scripts/validate_blueprint.py",
-          "sha256": "cfa618ba7e29695a6d5fc4fa7ef49453a0f9c2183f75be9ab13e24c2a7547f85"
+          "sha256": "9390d05b37dad5a661ce7b06a544087122c28cf2139fc0110b488f1286536f28"
         },
         {
           "path": "skills/outsystems-ui-design/templates/preview-shell.html",
@@ -2241,8 +2241,8 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "13dc15df3f0fd9beb6169bee58b3187a3bda35a0",
-      "version": "2026-08-30"
+      "source_commit": "3e58d3f169d3c8d6638253dd436fc2e6807f8671",
+      "version": "2026-08-30.1"
     }
   ]
 }
