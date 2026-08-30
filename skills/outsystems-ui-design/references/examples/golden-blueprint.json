@@ -13,16 +13,17 @@
       "Screen"
     ],
     "review_notes": [
-      "target_context left unresolved by design; OMI resolves the app key."
+      "target_context left unresolved by design; OMI resolves the app key. [no-runtime-claim]"
     ]
   },
   "evidence_boundary": {
     "evidence_status": "Catalog-backed official",
     "grounding_notes": [
-      "Pattern facts from the bundled outsystems-ui-design reference catalog."
+      "Pattern facts from the bundled outsystems-ui-design reference catalog. [no-runtime-claim]"
     ],
     "review_notes": [
-      "No MCP enrichment in this fixture."
+      "No MCP enrichment in this fixture. [no-runtime-claim]",
+      "The Review notes panel is static copy, so what it says is part of the screen rather than of the data. [render-gate: review-notes-copy]"
     ]
   },
   "app_chrome": {
@@ -188,6 +189,24 @@
               }
             }
           ]
+        }
+      ],
+      "render_gate": [
+        {
+          "label": "kpi-cards-present",
+          "assert": "widget",
+          "selector": "div[data-container]"
+        },
+        {
+          "label": "queue-row-populated",
+          "assert": "populated",
+          "selector": "div[data-list] span[data-expression]"
+        },
+        {
+          "label": "review-notes-copy",
+          "assert": "text",
+          "selector": "#reviewnotes",
+          "contains": "review notes"
         }
       ]
     }

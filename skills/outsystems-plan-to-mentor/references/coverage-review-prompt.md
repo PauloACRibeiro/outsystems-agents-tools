@@ -49,7 +49,7 @@ Do not declare convergence while any platform feasibility row is Infeasible or U
 
 Every build-time signal this loop relies on -- validation, coverage, enumeration, `change_applied`, retry count, publish status -- describes whether the right *shapes* exist. None of them can observe whether the logic inside those shapes does its job. A server action can pass every one of them and do nothing at all; that is a measured outcome, not a hypothetical.
 
-So: **every non-success result value the design declares for a server action must have at least one verification row that reaches it by executing the action.** A success path is exercised by any happy-path test; a refusal branch is reached only on purpose.
+So: **every non-success result value the design declares for a server action must have at least one verification row that reaches it by executing the action.** A refusal branch is reached only on purpose — and so, it turned out, is the success path: "any happy-path test reaches it" held until restaurant-app-v2 shipped with no happy-path test at all, which is why the success-path pairing rules below exist.
 
 Write the verification matrix so each row is machine-checkable: one row per line beginning `V<N>`, naming the outcome it reaches, with indented continuation lines where a row wraps.
 
@@ -60,6 +60,15 @@ Write the verification matrix so each row is machine-checkable: one row per line
 Both rules are deliberately conservative: an outcome genuinely exercised but written without an arrow reads as unexercised and the run says `NOT READY`. That costs a plan edit. The opposite error ships an untested refusal branch — which is how a row asserting two refusals were *never* returned once scored them as fully covered.
 
 **Each refusal row must record the relevant state before and after the call, not the message the caller saw.** A refusal that returns the right value while writing a row is a defect no message-only assertion can see. State the evidence as the before/after reading, not as a screenshot of the refusal.
+
+**Tests that verify the guard but never the thing the guard protects are the failure class the next four rules close.** Measured on restaurant-app-v2 (2026-08-27): every translation-failure row and the approval-refused row passed, while no row asserted that a menu with nothing to translate can reach `Traduzida` and be approved — so the app's DEFAULT single-language configuration shipped with its main happy path hard-blocked, and every gate said READY.
+
+1. **Every refusal/guard row pairs with at least one success-path row that reaches the state the guard protects.** For each action with refusal rows, write a V-row that names the action and observes a success value after the `->`. A guard proven to refuse is worthless when the protected state is reachable by nothing.
+2. **An action that changes a status or state declares a transition table** — `| from-state | action | to-state |` — in the design, **and every transition gets a V-row** reaching its to-state. An early-exit that skips a transition is exactly what a refusal-only matrix cannot see.
+3. **The app's DEFAULT configuration is the first happy-path case.** Write the first success row against the configuration the app ships with, before any special setup. The v2 block lived precisely in the most common configuration, which no row ever ran.
+4. **Absence checks pair with presence checks.** A row scanning for what must NOT appear (no prices, no PII) pairs with a row asserting the legitimate content IS present — an empty page passes every absence check.
+
+The checker enforces rule 1 mechanically when the design opts in by carrying the marker `<!-- outcome-coverage: success-rows-required -->` (put it in the spec beside the result declarations; every NEW spec carries it). With the marker, each action that declares non-success results also needs a success row — one that names the action on a word boundary and observes a success value (`Success`, `Created`, ...) after the arrow, same denial scoping as refusals — and the checker prints `success coverage: k/n` and fails the verdict on any miss. Without the marker the checker keeps its pre-rule semantics, so plans written before this rule keep their verdicts. Rules 2–4 are review judgement, not machine-checked: audit them in this pass and record misses in the Patch / Risk column.
 
 Run the checker and copy its full output verbatim into the review artifact:
 
@@ -157,7 +166,7 @@ The scanner and Mentor invocation must use the same full patched plan file.
 Convergence requires:
 
 * `scripts/check_requirement_coverage.py` reports `coverage verdict: READY` on the patched plan -- no uncovered IDs, no dangling references, and no disposition-table failures. Uncovered is computed over the in-scope set when the plan carries a Requirement Dispositions table. An accepted-risk requirement converges by carrying a reasoned row in the Requirement Dispositions table, or by being cited in the plan's scope boundaries with its disposition -- not by being waived from the checker. Report the in-scope and dispositioned counts as the checker prints them; a READY verdict over three in-scope requirements is not a claim about the other nine.
-* `scripts/check_outcome_coverage.py` reports `outcome verdict: READY` -- every declared refusal outcome is reached by a verification row. An outcome that is genuinely untestable converges by being cited in scope boundaries with its reason, not by being dropped from the design's declared results.
+* `scripts/check_outcome_coverage.py` reports `outcome verdict: READY` -- every declared refusal outcome is reached by a verification row, and, when the design carries the success-rows marker, every action's success path too. An outcome that is genuinely untestable converges by being cited in scope boundaries with its reason, not by being dropped from the design's declared results.
 * no Missing rows.
 * no Partial except explicitly accepted platform/runtime uncertainty.
 * no Infeasible or Unverified platform feasibility rows.

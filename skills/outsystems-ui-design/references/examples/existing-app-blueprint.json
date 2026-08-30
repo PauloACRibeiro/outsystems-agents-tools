@@ -17,17 +17,18 @@
       "Screen"
     ],
     "review_notes": [
-      "Existing assets verified from an offline scaffold inventory of the published revision.",
-      "target_context left unresolved by design; OMI resolves the app key."
+      "Existing assets verified from an offline scaffold inventory of the published revision. [no-runtime-claim]",
+      "target_context left unresolved by design; OMI resolves the app key. [no-runtime-claim]"
     ]
   },
   "evidence_boundary": {
     "evidence_status": "Catalog-backed official",
     "grounding_notes": [
-      "Pattern facts from the bundled outsystems-ui-design reference catalog."
+      "Pattern facts from the bundled outsystems-ui-design reference catalog. [no-runtime-claim]"
     ],
     "review_notes": [
-      "Reused block and existing entities are bound here, not recreated."
+      "Reused block and existing entities are bound here, not recreated. [no-runtime-claim]",
+      "The Recent queries panel is the app's own block, so what it renders is verified rather than built. [render-gate: status-filter-present]"
     ]
   },
   "app_chrome": {
@@ -212,6 +213,23 @@
           "outsystems_hints": {
             "block": "Card"
           }
+        }
+      ],
+      "render_gate": [
+        {
+          "label": "history-rows-populated",
+          "assert": "populated",
+          "selector": "div[data-list] span[data-expression]"
+        },
+        {
+          "label": "status-filter-present",
+          "assert": "widget",
+          "selector": "[data-block='MainFlow.RecentQueriesPanel']"
+        },
+        {
+          "label": "remove-confirmation",
+          "assert": "known-unverified",
+          "reason": "Bulk actions confirms before it removes, and the confirmation only exists after a click; this gate never clicks, so the confirmed-before-it-runs behaviour is left to the execution gate."
         }
       ]
     }

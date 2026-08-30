@@ -154,6 +154,28 @@ Keep Tailwind as extraction evidence only. Any machine-readable hint that looks
 like a prose sentence instead of a bare block name should be rewritten before
 prompt emission.
 
+## Theme-Rule-First For Cross-Screen Treatments
+
+A text or layout treatment the design applies **across screens** — label
+wrapping, heading scale, card padding, the truncation rule for long names — is
+authored once as a rule in the app **Theme**. A per-widget override is for the
+genuine **one-off**: the single element the design deliberately treats
+differently from its siblings.
+
+Decide which one it is before writing the fix, because the wrong choice is not
+merely untidy, it is unbounded. The v2 run fixed button labels breaking mid-word
+per widget across two revisions, each pass finding the widgets the previous pass
+had missed, before one Theme rule settled every screen at once. The per-widget
+route also cannot converge by inspection: nothing tells you the set of widgets
+is complete, so "fixed" only ever means "fixed everywhere I looked".
+
+Two consequences for prompt emission:
+
+- If a fix instruction would name more than one widget, or name a widget "and
+  the others like it", it is a Theme rule. Write it as one.
+- If it is genuinely a one-off, say so in the prompt, so a later fix does not
+  read the override as the app's convention and propagate it.
+
 ## Theme-Collision Review Nuance
 
 Treat theme collision as a review signal, not blanket permission for
@@ -307,9 +329,51 @@ Describe what the section does in user terms: display-only, filter, select, navi
 
 Every clickable element must have a target behavior. Buttons need an `OnClick` action or an explicitly named action to create.
 
+Where the section shows or hides something *because* an action ran, its
+visibility condition is subject to Persisted-State Gating below.
+
 ### PRESENTATION ORDER
 
 List ordered content such as cards, columns, rows, status steps, nav items, tabs, and timeline items.
+
+## Persisted-State Gating
+
+Every affordance that appears *after* an action — the next-step link, the status
+badge, the newly available tab — is gated on **persisted state**: an Aggregate
+over the database that re-reads what the action wrote, and never on the action's
+result variable, which exists only for the session that ran the action.
+
+Two defects shipped on one screen from this single gap (v2 run, 2026-08-28), and
+they are worth naming separately because the second one survives the first one's
+fix:
+
+- **The reopen case.** "Continuar para distribuicao" was bound to the in-session
+  approve result, so it appeared for the operator who had just approved the menu
+  and for nobody else. An approved menu opened in any later session had no route
+  to Dispatch at all. The screen was correct exactly once — in the session that
+  produced it — and the walkthrough that caught it was simply the first one to
+  open the screen twice.
+- **The stale-display case.** The status Tag kept rendering the pre-approval
+  value until the operator reloaded by hand, because the approve handler changed
+  the row and refreshed nothing.
+
+Three rules, each with a place in the prompt:
+
+1. **Gate on persisted state.** A post-action affordance's visibility condition
+   names an Aggregate output, never an action result. Where no Aggregate reads
+   that state yet, the prompt creates one — producer before consumer, as
+   everywhere else in this file.
+2. **Refresh what the action changed.** Every state-changing handler ends by
+   refreshing the aggregates that display the state it changed (`Refresh Data`,
+   naming each one). A handler that writes and does not refresh ships a screen
+   that lies until reloaded.
+3. **Disable what is now meaningless.** An action button whose work is already
+   done — `Aprovar` on an approved menu — is `disabled` from that same persisted
+   state. Left live, its only available outcomes are a no-op and an error.
+
+The three travel together because they fail together: a screen gated on
+persisted state but never refreshed displays the *previous* persisted state,
+which is the stale-display defect wearing the fix's clothes.
 
 ## Data-Flow Parity Gate
 

@@ -72,13 +72,34 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
     value backticked, ``Result is one of `Success`, `MemberNotFound`.``
     (`outsystems-sprint-init` — not part of the colleague sprint-loop pack —
     scaffolds that section into `docs/specs/TEMPLATE.md`, so a scaffolded run
-    already has the shape; write it by hand otherwise.)
+    already has the shape; write it by hand otherwise.) Beside those
+    declarations, put the marker `<!-- outcome-coverage: success-rows-required -->`
+    — every NEW spec carries it; it opts the checker into requiring success
+    rows (below), and omitting it keeps the pre-rule semantics for artifacts
+    that predate the rule. Where an action changes a status or state, the spec
+    also declares a **transition table** (`| from-state | action | to-state |`);
+    state names are capability vocabulary, not element design.
   - In the **plan**, give every **non-success** value at least one `V<N>`
     verification row that reaches it by executing the action. The row grammar is
     machine-checkable and defined in `references/coverage-review-prompt.md` —
     in particular the rule that the observed result counts only after a `->`,
-    and that a row denying an outcome does not exercise it. `Success` needs no
-    dedicated row; any happy path reaches it.
+    and that a row denying an outcome does not exercise it.
+  - **Pair every guard with the thing it protects** (restaurant-app-v2,
+    2026-08-27: every guard was tested, no row reached the state the guards
+    protect, and the app shipped with its main happy path hard-blocked while
+    every gate said READY):
+    - Every refusal/guard row pairs with at least one **success-path row** that
+      reaches the state the guard protects. Per action, write a row that names
+      the action and observes a success value after the `->`
+      (``V7  C-007  `Enrol` an eligible user on an open course -> `Success`.``);
+      with the spec marker present, the checker fails the verdict without one.
+    - Every row of the spec's transition table gets a V-row reaching its
+      to-state.
+    - The app's **default configuration** is the first happy-path case — the
+      first success row runs the configuration the app ships with, before any
+      special setup.
+    - Absence checks (no prices, no PII) pair with a **presence** check of the
+      legitimate content; an empty page passes every absence check.
   - Declaring result values is capability intent: it says which outcomes the
     business rules distinguish, which is the same kind of statement as a
     business rule. It is not element design and does not breach the boundary

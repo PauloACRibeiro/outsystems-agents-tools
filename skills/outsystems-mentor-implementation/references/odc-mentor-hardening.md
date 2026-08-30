@@ -421,6 +421,53 @@ Tested `outsystems-spec-driven-build` prompt-builder guardrail for `TableRecords
 
 Row-count discipline (one append per source row, never truncated): External field evidence: an internal OutSystems project (adopted 2026-08-14, round 2; folded here 2026-08-17 per Codex ruling on AH-2026-08-17-001); field-observed over the Mentor MCP, not in official docs.
 
+### Gate Post-Action Affordances On Persisted State
+
+Mentor binds an affordance that appears after an action to whatever the action
+just returned, because that is the variable in scope where it writes the
+handler. The result is a screen that is correct exactly once — in the session
+that ran the action — and wrong every time the record is reopened.
+
+Every prompt that creates a post-action affordance carries this line:
+
+```
+gate this on persisted state read back through an Aggregate, never on the action's result variable
+```
+
+Two failures, both shipped on the same screen (v2 run, 2026-08-28):
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| The next-step link was absent when an approved record was reopened in a later session | Visibility bound to the in-session approve result | Bind it to an Aggregate over the persisted status |
+| The status Tag stayed stale after approving, until a manual reload | The approve handler wrote the row and refreshed nothing | `Refresh Data` on the aggregates that display the changed state |
+
+An action button that becomes meaningless on success is the third case, and the
+easiest to miss because nothing about it looks broken: gate its `Enabled` on the
+same persisted state, so `Aprovar` cannot be pressed on an approved record.
+
+**Why**
+
+Neither half is visible to any build-time gate. The enumeration gate finds the
+link and the Tag, the assertion recompute finds the widgets, the render gate
+renders the screen — and all three pass on the wrong binding, because the
+binding is correct *for the session doing the checking*. Only reopening the
+record in a fresh session separates a correct gate from this one, which is why
+this is a prompt-time convention rather than a review note: by review time the
+evidence that would distinguish them is gone.
+
+**When to ask**
+
+Ask when the state an affordance depends on is written by one action and read by
+another screen or session, and no Aggregate yet reads it back — that producer is
+a prerequisite, not an optimization.
+
+**Evidence**
+
+Live execution walkthrough, restaurant-app-v2, 2026-08-28; field-observed over
+the Mentor MCP, not in official docs. Screen-prompt authoring guidance for the
+same rule is owned by `odc-visual-source-ui-discipline.md` (Persisted-State
+Gating).
+
 ## ODC SQL Generation
 
 ### Prefer Aggregates For Simple Reads

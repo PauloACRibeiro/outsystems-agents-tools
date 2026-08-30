@@ -1,0 +1,479 @@
+{
+  "name": "ReadableAppName",
+  "description": "Portable OMI-owned enriched blueprint for turning a visual source or reviewed shell-first scaffold into structured UI guidance before prompt emission.",
+  "primary_color": "#2563EB",
+  "target_context": {
+    "target_mode": "existing-app | verified blank shell | shell-first scaffold",
+    "readable_app_name": "Readable app name for the verified or explicitly approved target",
+    "canonical_app_key": "Canonical app key once verified or returned by an approved create flow",
+    "verified_shell_required": true,
+    "existing_assets": [
+      "Verified screen names, blocks, entities, roles, or theme assets already present in the target app"
+    ],
+    "target_surfaces": [
+      "Screen",
+      "Web Block",
+      "Theme"
+    ],
+    "review_notes": [
+      "Record boundary decisions, deferred chrome work, and review-only assumptions here"
+    ]
+  },
+  "evidence_boundary": {
+    "evidence_status": "Current official | Catalog-backed official | OutSystems-public implementation evidence | Unverified gap",
+    "grounding_notes": [
+      "Name the current docs, generated catalogs, implementation references, or tenant observations that ground the artifact"
+    ],
+    "review_notes": [
+      "Keep unresolved visual-source assumptions, shell-state unknowns, and follow-up checks here"
+    ]
+  },
+  "app_chrome": {
+    "_comment": "Shared layout chrome defined once and reused across authenticated screens. Shell-first scaffold work may defer chrome only when the review notes say so explicitly.",
+    "layout_block": "LayoutSideMenu | LayoutTopMenu",
+    "sidebar": {
+      "width": "280px",
+      "background": "var(--surface-bg)",
+      "logo": {
+        "text": "App logo text or image reference",
+        "style": "compact brand mark with restrained border radius and theme-aligned background"
+      },
+      "app_title": "Readable app title shown in chrome",
+      "app_subtitle": "Short operating-context subtitle",
+      "nav_groups": [
+        {
+          "label": "Primary",
+          "items": [
+            {
+              "label": "Overview",
+              "icon": "house",
+              "screen": "Overview"
+            },
+            {
+              "label": "Records",
+              "icon": "list",
+              "screen": "RecordList"
+            }
+          ]
+        }
+      ],
+      "active_style": "Muted surface tint, left-edge emphasis, and strong label contrast for the active item",
+      "inactive_style": "Low-noise label treatment with hover feedback and no decorative gradients"
+    },
+    "header": {
+      "height": "72px",
+      "background": "var(--page-bg)",
+      "content": [
+        {
+          "element": "Global search",
+          "style": "Search input with icon, compact radius, and quiet background tint",
+          "action": "Filters or routes to the primary searchable view"
+        },
+        {
+          "element": "User profile summary",
+          "style": "Avatar plus short identity text aligned to the right",
+          "action": "Opens account or sign-out options"
+        }
+      ]
+    }
+  },
+  "blocks": [
+    {
+      "_comment": "Reusable Web Blocks defined once in Common UIFlow and referenced by name from sections instead of re-describing the same pattern inline.",
+      "name": "MetricCard",
+      "description": "Compact KPI card with title, value, delta, and optional supporting note",
+      "inputs": [
+        {
+          "name": "Title",
+          "type": "text",
+          "description": "Short label for the KPI being displayed"
+        },
+        {
+          "name": "Value",
+          "type": "text",
+          "description": "Primary KPI value already formatted for display"
+        },
+        {
+          "name": "TrendIsPositive",
+          "type": "boolean",
+          "description": "Controls positive or warning visual treatment"
+        }
+      ],
+      "layout": "Vertical stack with compact title row, large value row, and secondary note aligned under the value",
+      "placeholders": [
+        "FooterActions"
+      ],
+      "extended_class": "metric-card",
+      "usage_example": "Overview screen uses MetricCard in the top KPI group; list detail summaries reuse the same block with different footer actions"
+    }
+  ],
+  "design_system": {
+    "_comment": "Complete visual design system carried into OMI so prompt packets and scaffold work stay anchored to explicit tokens instead of ad hoc styling.",
+    "colors": {
+      "page_bg": {
+        "var": "--page-bg",
+        "value": "#F7F9FC",
+        "usage": "Primary application canvas"
+      },
+      "surface": {
+        "var": "--surface-bg",
+        "value": "#FFFFFF",
+        "usage": "Cards, filters, and block backgrounds"
+      },
+      "card": {
+        "var": "--card-bg",
+        "value": "#FFFFFF",
+        "usage": "Primary card fill"
+      },
+      "text_primary": {
+        "var": "--text-primary",
+        "value": "#0F172A",
+        "usage": "Headlines and labels"
+      },
+      "text_secondary": {
+        "var": "--text-secondary",
+        "value": "#475569",
+        "usage": "Supporting copy and subtitles"
+      },
+      "positive": {
+        "var": "--positive",
+        "value": "#15803D",
+        "usage": "Success states and positive trends"
+      },
+      "negative": {
+        "var": "--negative",
+        "value": "#B91C1C",
+        "usage": "Error states and destructive actions"
+      },
+      "warning": {
+        "var": "--warning",
+        "value": "#B45309",
+        "usage": "Pending or caution states"
+      },
+      "info": {
+        "var": "--info",
+        "value": "#1D4ED8",
+        "usage": "Informational callouts"
+      },
+      "border": {
+        "var": "--border",
+        "value": "#CBD5E1",
+        "usage": "Card outlines and dividers"
+      },
+      "gradients": [
+        {
+          "var": "--banner-gradient",
+          "value": "linear-gradient(90deg, #DBEAFE 0%, #EFF6FF 100%)",
+          "usage": "Restrained emphasis for summary banners only"
+        }
+      ]
+    },
+    "typography": [
+      {
+        "role": "page-title",
+        "font": "Inter",
+        "size": "28px",
+        "weight": 700,
+        "line_height": 1.2,
+        "color": "--text-primary",
+        "usage": "Screen titles"
+      },
+      {
+        "role": "body",
+        "font": "Inter",
+        "size": "14px",
+        "weight": 400,
+        "line_height": 1.5,
+        "color": "--text-secondary",
+        "usage": "Default supporting text"
+      }
+    ],
+    "spacing": {
+      "base_unit": "8px",
+      "scale": [
+        {
+          "name": "xs",
+          "value": "4px",
+          "usage": "Tight inline gaps"
+        },
+        {
+          "name": "sm",
+          "value": "8px",
+          "usage": "Small padding"
+        },
+        {
+          "name": "md",
+          "value": "12px",
+          "usage": "Control spacing"
+        },
+        {
+          "name": "lg",
+          "value": "16px",
+          "usage": "Card padding"
+        },
+        {
+          "name": "xl",
+          "value": "24px",
+          "usage": "Section gaps"
+        },
+        {
+          "name": "2xl",
+          "value": "32px",
+          "usage": "Major section separation"
+        }
+      ]
+    },
+    "border_radius": [
+      {
+        "name": "sm",
+        "value": "4px",
+        "usage": "Small chips and tags"
+      },
+      {
+        "name": "default",
+        "value": "8px",
+        "usage": "Buttons and inputs"
+      },
+      {
+        "name": "lg",
+        "value": "12px",
+        "usage": "Cards and panels"
+      },
+      {
+        "name": "pill",
+        "value": "20px",
+        "usage": "Badges and filter chips"
+      },
+      {
+        "name": "full",
+        "value": "50%",
+        "usage": "Avatars and dots"
+      }
+    ],
+    "shadows": [
+      {
+        "name": "card-shadow",
+        "value": "0px 8px 24px rgba(15, 23, 42, 0.08)",
+        "usage": "Primary card elevation"
+      }
+    ],
+    "visual_rules": [
+      "Prefer OutSystems UI utilities before custom classes.",
+      "Keep chrome restrained and operational rather than decorative.",
+      "Preserve contrast and explicit hover or active feedback for commands.",
+      "Use tokenized colors and spacing instead of screen-local styling drift."
+    ],
+    "theme_extensions": {
+      "_comment": "Single source of truth for custom CSS variables and classes that are not covered by standard OutSystems UI utilities.",
+      "css_variables": {
+        "--page-bg": "#F7F9FC",
+        "--surface-bg": "#FFFFFF",
+        "--text-primary": "#0F172A",
+        "--text-secondary": "#475569",
+        "--border": "#CBD5E1",
+        "--card-shadow": "0px 8px 24px rgba(15, 23, 42, 0.08)"
+      },
+      "classes": [
+        {
+          "_comment": "Each class should stay thin and rely on variables above.",
+          "name": "metric-card",
+          "rule": "background: var(--surface-bg); border: 1px solid var(--border); box-shadow: var(--card-shadow); border-radius: 12px;"
+        },
+        {
+          "name": "summary-banner",
+          "rule": "background: var(--banner-gradient); border-radius: 12px;"
+        }
+      ]
+    }
+  },
+  "entities": [
+    {
+      "_comment": "Create-only data model for the reviewed scope. Keep separately verified reusable tenant assets in target_context.existing_assets; do not duplicate them in entities.",
+      "name": "WorkItem",
+      "type": "transaction",
+      "attributes": [
+        {
+          "name": "Id",
+          "data_type": "integerIdentifier",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "Title",
+          "data_type": "text",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "enum_values": null
+        },
+        {
+          "name": "StatusId",
+          "data_type": "WorkItemStatus Identifier",
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "enum_values": [
+            "Draft",
+            "InProgress",
+            "Done"
+          ]
+        }
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "_comment_authenticated": "Authenticated screen that uses shared app_chrome. Title and subtitle describe the screen-level frame; main_content describes only the body sections.",
+      "name": "Overview",
+      "type": "dashboard",
+      "description": "Operational overview of work items, status distribution, and next actions.",
+      "entities": [
+        "WorkItem",
+        "WorkItemStatus"
+      ],
+      "template": "Dashboard",
+      "title": "Overview",
+      "subtitle": "Current workload, recent movement, and action points.",
+      "main_content": [
+        {
+          "_comment": "Standalone KPI summary section.",
+          "id": "1",
+          "name": "KPI Summary",
+          "margin_bottom": "32px",
+          "description": "Top-level KPI cards showing active work, blocked work, and completed work.",
+          "layout": {
+            "direction": "vertical",
+            "padding": "24px",
+            "background": "var(--surface-bg)",
+            "radius": "12px"
+          },
+          "data_source": {
+            "entity": "WorkItem",
+            "joins": [
+              "WorkItemStatus"
+            ],
+            "filter": "Show current items relevant to the signed-in user's workspace",
+            "sort": "Newest activity first for secondary lists; KPI counts aggregate across the filtered set",
+            "max_records": 50
+          },
+          "content": [
+            {
+              "element": "Columns3 of MetricCard blocks",
+              "data": "Aggregate counts for active, blocked, and completed work items",
+              "label": "Summary KPIs",
+              "typography": "page-title for values, body for labels and notes",
+              "action": "Cards are display-first; optional footer actions route to filtered list views"
+            }
+          ],
+          "conditional_rendering": "Trend markers and status color treatment change according to the aggregate result set.",
+          "outsystems_hints": {
+            "block": "Columns3",
+            "extended_class": "summary-banner"
+          }
+        },
+        {
+          "_comment": "Group section for list and sidebar detail.",
+          "id": "2",
+          "type": "group",
+          "name": "Work Queue And Notes",
+          "columns": "ColumnsMediumRight",
+          "columns_config": {
+            "GutterSize": "Entities.GutterSize.Large",
+            "PhoneBehavior": "Entities.BreakColumns.All"
+          },
+          "margin_bottom": "32px",
+          "items": [
+            {
+              "id": "2a",
+              "column": 1,
+              "name": "Priority queue",
+              "description": "Most urgent work items with status badge, owner, and due date",
+              "data_source": {
+                "entity": "WorkItem",
+                "filter": "Priority or due-soon items only"
+              },
+              "content": [
+                {
+                  "element": "ListRecords card row",
+                  "data": "Title, owner, due date, and status badge"
+                }
+              ],
+              "outsystems_hints": {
+                "block": "Card with UsePadding True"
+              }
+            },
+            {
+              "id": "2b",
+              "column": 2,
+              "name": "Review notes",
+              "content": [
+                "Display the shell-state notes, open issues, or deferred chrome decisions from review_notes."
+              ]
+            }
+          ]
+        }
+      ],
+      "popups": [
+        {
+          "_comment": "Optional filter summary popup.",
+          "name": "FilterSummaryPopup",
+          "trigger": "Filter summary button in the header",
+          "style": "popup-dialog",
+          "content": [
+            {
+              "element": "Filter state summary",
+              "data": "Selected filters, sort order, and data freshness note"
+            },
+            {
+              "element": "Close button",
+              "label": "Close",
+              "action": "Set ShowFilterSummary = False"
+            }
+          ]
+        }
+      ],
+      "permissions": {
+        "authentication": "IsAnonymous=false",
+        "roles": {
+          "Admin": "Full",
+          "Contributor": "Edit",
+          "Viewer": "View"
+        }
+      }
+    }
+  ],
+  "icon_mapping": [
+    {
+      "role": "navigation-overview",
+      "outsystems_icon": "house"
+    },
+    {
+      "role": "status-warning",
+      "outsystems_icon": "warning-circle"
+    }
+  ],
+  "roles": [
+    {
+      "name": "Admin",
+      "description": "Full access to configuration and operational workflows."
+    },
+    {
+      "name": "Contributor",
+      "description": "Can update records and act on assigned work."
+    },
+    {
+      "name": "Viewer",
+      "description": "Read-only access to dashboards and record details."
+    }
+  ],
+  "acceptance_checklist": [
+    "target_context captures the verified or explicitly approved target before prompt emission.",
+    "evidence_boundary records the grounded evidence status plus review-only gaps.",
+    "app_chrome is defined once and reused consistently across authenticated screens.",
+    "Reusable blocks are named, parameterized, and referenced instead of copied inline.",
+    "design_system tokens drive colors, spacing, radius, shadows, and custom classes.",
+    "entities stay aligned with the reviewed scope and reuse verified shell assets where possible.",
+    "screens preserve producer-first data flow, section ordering, and explicit permissions.",
+    "Visual-Source UI Prompt Packet is emitted from this enriched blueprint rather than replacing it.",
+    "No mentor_session_id, mentor_session_token, env_key, implicit mentor_start, implicit publish, or Claude-only cache paths are added to the asset."
+  ]
+}

@@ -168,6 +168,17 @@ SETTING_DEFAULT_LABEL = re.compile(r"Default Value\s*:(.*)$", re.IGNORECASE)
 FENCE_OPEN = re.compile(r"^(`{3,}|~{3,})")
 CODE_SPAN = re.compile(r"^(`+)(.*)\1$", re.DOTALL)
 
+# A class attribute holds class NAMES. A colon in its value means the slot was
+# filled with something else -- a CSS declaration (`class="white-space: nowrap"`,
+# which is inert) or a Tailwind variant (`md:flex`), and this skill forbids both.
+# The sweep exists because presence checks cannot see it: the class IS present,
+# so "already correct" is the honest reading of the wrong question. Measured on
+# the restaurant-app-v2 run, 2026-08-28, at 24 widgets across 8 screens.
+# Deliberately scoped to the quoted attribute form -- the measured signature.
+# The deployed side is covered by the computed-style measurement in
+# references/execution-gates.md 2b, not here.
+CLASS_ATTRIBUTE = re.compile(r"""class\s*=\s*["']([^"']*)["']""")
+
 
 def scan_placeholders(text):
     failures = []
@@ -180,6 +191,28 @@ def scan_placeholders(text):
         if literal in text:
             failures.append({"check": "template_literal",
                              "detail": f"unresolved manifest template {literal!r}"})
+    return failures
+
+
+def check_class_attributes(text):
+    """Flag class attribute values that are not class names.
+
+    Runs over the whole document, fenced blocks included: a Mentor prompt
+    package carries its instructions inside fences, so skipping them would skip
+    exactly where this ships.
+    """
+    failures = []
+    seen = set()
+    for match in CLASS_ATTRIBUTE.finditer(text):
+        value = match.group(1).strip()
+        if ":" not in value or value in seen:
+            continue
+        seen.add(value)
+        failures.append({
+            "check": "class_attribute_value",
+            "detail": (f"class attribute value {value!r} contains ':' — a class "
+                       "attribute holds class names, so this is inert"),
+        })
     return failures
 
 
@@ -507,6 +540,7 @@ def lint_report(text, mode, blueprint=None, inventory=None):
     failures += scan_placeholders(text)
     failures += check_prompt_structure(text, min_blocks=0)
     failures += check_setting_defaults(text)
+    failures += check_class_attributes(text)
     if re.search(r"^coverage_map:", text, re.MULTILINE):
         failures += check_manifest(text, GENERIC_MIN_MANIFEST_ENTRIES)
 

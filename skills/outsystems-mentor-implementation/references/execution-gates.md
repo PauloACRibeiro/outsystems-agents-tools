@@ -151,6 +151,49 @@ nothing about any of them, because none of them are structural — every item
 here is true or false on a screen where every widget is the correct type.
 Derive the verdict from the render, never from the summary.
 
+### Measured computed style, not class presence
+
+> **Mentor's summaries are reliable about what it wrote and unreliable about whether it works.**
+> Adopted verbatim as this rule's motto from the v2 run's verdict (2026-08-28),
+> because it is the whole of the rule: the summary is a faithful account of the
+> edit and no account at all of the effect.
+
+A UI fix is verified by **measuring the rendered result** — computed style or
+geometry, read out of the browser — in the **same tab**, after a **fresh
+reload**, at the **breakpoint** where the defect manifests. It is never verified
+by the class being present in the markup.
+
+Three ways that run's fixes passed a presence check and changed nothing:
+
+- **A declaration smuggled into the class attribute.** Mentor wrote
+  `class="white-space: nowrap"` on 24 widgets across 8 screens. A CSS
+  declaration is not a class name, so the attribute is inert. **The sweep is
+  mechanical and it is the response lint**: a `class` value containing a `:` is
+  reported as `class_attribute_value` by
+  `scripts/response_contract_lint.py --answer <draft-file> --mode <mode>`, which
+  the Final Self-Check already runs before sending. Run it on the assembled
+  prompt package in MCP delivery mode too, where there is otherwise no file —
+  the same assembled file the chrome coverage gate needs. On the deployed side
+  there is no separate sweep and none is needed: the measurement above catches
+  it, because an inert class attribute produces no computed style.
+- **A class the theme never defined.** `align-items-end` was applied across the
+  build and resolves to no rule at all in this app's theme. In the markup it is
+  indistinguishable from a working fix.
+- **A property with no effect on its target.** `align-self` was set on a widget
+  whose parent is not a flex container, where the property does not apply.
+
+All three were reported applied, and one batch of rows was reported "already
+correct" **because the class was present** — the report and the check were the
+same operation, so the check could not fail.
+
+**Run a utility-class audit once per app, at the first layout fix**, and keep the
+answer **cached** for the rest of the run: take the theme classes the build
+relies on, resolve each in the running app, and record which ones actually
+produce a rule. It is a single pass, and without it every later layout fix
+re-argues `align-items-end` from scratch. The audit answers "does this class
+resolve in this app?"; the per-fix measurement above answers "did this fix
+work?". Neither substitutes for the other.
+
 ## 2c. Post-screen checks — per screen, required rows
 
 The render gate asks whether the screen renders and the polish gate asks
@@ -235,6 +278,34 @@ empty, plan on this basis:
 **So a published change may be irreversible within the session that made it** —
 which is precisely why rendering before publishing is the primary protection
 here rather than a refinement of it.
+
+### Escalate to ODC Studio after three failed fix turns
+
+**After three Mentor fix turns on the same defect have failed, stop.** A fourth
+turn is not a fourth chance: by then the diagnosis and the remedy have both been
+argued from the same source — Mentor's account of the model — and were that
+account reliable, one of the three would have worked.
+
+Record the defect in the project's `docs/defects/` with an explicit ODC Studio
+inspection handoff: the symptom, the measured evidence, what each attempt
+*established* rather than merely that it failed, and the specific question
+somebody opening the app in ODC Studio should answer. Then continue with the
+rest of the phase. The defect is parked with a route out, not dropped.
+
+**Measured.** The v2 run's digital-switch defect consumed four attempts
+(revisions 19-22) before being parked. Each of attempts 2, 3 and 4 disproved a
+hypothesis, and by the third the evidence had already moved off the action's
+contents and onto the widget-to-action binding — precisely the class of question
+Mentor cannot answer about itself, since its summaries had asserted that binding
+existed across three separate turns while the runtime showed the handler never
+running.
+
+That is the general shape, and it is why the threshold is a rule rather than a
+judgement call: three failures on one defect usually mean the defect sits in
+something the builder *reports on* rather than something it *builds*, and
+inspection is the only instrument left. Revisions spent past that point buy
+hypotheses, not fixes — and each one publishes, so each one carries the
+irreversibility above.
 
 ## 3b. The digest gate is per publish, never across a session
 

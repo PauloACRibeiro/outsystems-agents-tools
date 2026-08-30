@@ -1,0 +1,705 @@
+---
+name: omi-execution-gates
+description: The three runtime gates that cover what build-time signals cannot see — execute an action before building on it, render a screen as a principal who can reach it, and never close a fix on the model's report. Use during any live build or fix iteration.
+---
+
+# Execution gates
+
+<!-- upstream-pin: 0.16.0 -->
+
+> Mentor operation cadence: see `../../shared/reference/mentor-operations-registry.md` for the canonical index.
+
+> **Why these exist.** Every other gate in this skill — digest, enumeration,
+> assertion recompute — is a **build-time** signal. Each describes whether the
+> right *shapes* exist. None can observe whether the logic inside those shapes
+> does its job. In the second live run an action passed all of them and could
+> never create a record.
+>
+> Derived by execution from a live two-day build-and-grade run, 2026-08-10/11,
+> in which an app was built end to end and then partly broken by a fix accepted
+> on the model's report. Each gate below carries the specific observation that
+> produced it.
+
+## 1. Execution gate — per server action, before anything is built on it
+
+**After an action's approved publish, execute it** against the verification rows
+the plan declares for it, **before building any screen that calls it.**
+
+**What this catches.** `Enrol` passed blueprint validation, coverage review
+38/38, cross-blueprint check, plan agreement, enumeration with the exact
+specified signature, `change_applied: true`, `internal_retry_count: 1`, and a
+clean publish. It could never create an enrolment **for any course**: the create
+step held an empty record literal `{}` and its outgoing connector pointed at the
+`AlreadyEnrolled` assign instead of `Success`. A codegen defect, not prompt
+ambiguity — all four `If` conditions were verbatim correct.
+
+**The load-bearing point is ordering, not cleverness.** One happy-path call at
+the moment the action was built would have found it, because the empty literal
+breaks *every* path including the successful one. Instead it was found after
+five screens had been built on a dead action. The tests existed and were
+correct; they ran at the end.
+
+**Refusal-branch coverage is enforced separately and mechanically** by
+`check_outcome_coverage.py` in `outsystems-plan-to-mentor`: every non-success
+result the design declares must have a verification row that reaches it. That
+checker proves the tests were *written*; this gate is what makes them *run in
+time*.
+
+## 2. Render gate — per screen
+
+**A screen is not verified until it has been rendered by a principal who can
+reach it.** Role-gated screens are verified signed in, or they are not verified.
+**Reading the deployed artifact is not a substitute.**
+
+**What this catches.** `CourseEdit`'s date fields were verified from the
+compiled JS chunk — a deliberate choice, since the screen is admin-gated and
+could not be loaded anonymously. Every structural claim was true: real
+`DatePicker` pattern blocks, correct bindings, `TimeFormat` present, zero
+`type="date"`. On an **existing** record the fields rendered **blank and
+un-typeable**, and the calendar opened on today rather than the record's own
+date — so an administrator checking a date could overwrite a value never shown
+to them. The defect lived in what the control did with existing data *on load*,
+which no artifact read can reach.
+
+**Where displayed values derive from a fetch, render more than once** — or
+remove the timing dependence by construction, which is the better fix. A single
+green observation cannot distinguish *correct* from *correct this time*: one
+revision was verified by loading it in a browser and looked right, while
+carrying the same race that made the next revision visibly wrong. It was lucky,
+not correct.
+
+**Sizing note.** For the app this came from, the authenticated surface was
+**half the application**, and it is where the defects were. A verification pass
+that stops at the anonymous surface grades the easy half.
+
+### The tooling cannot satisfy this gate for you
+
+`outsystems-runtime-ui-audit` **does not log in** — auth-gated runtimes are
+explicitly out of its scope, and it is right to stop rather than score a login
+page as if it were the app. The colleague guide says the same: the URL it audits
+must work without login.
+
+**So for a role-gated screen the audit is not a route to this gate**, and
+saying "the audit passed" does not discharge it. Two consequences, both learned
+the hard way:
+
+- **A clean audit of the anonymous surface is not evidence about the gated one.**
+  It is evidence about a different half of the app.
+- **An unauthenticated harness is not a substitute either.** A role-gated server
+  action invoked without a user context answers *"Not authorised."* — an HTTP
+  200 that a sweep can easily record as a correct refusal. Measured 2026-08-12.
+
+**What discharges the gate for a gated screen** is a human or an authenticated
+browser session opening the screen **as a principal holding the role**, on an
+**existing** record as well as a new one, and reporting what rendered. The
+automated route is `outsystems-render-gate` (not part of the colleague sprint-loop pack): the operator
+bootstraps a test principal's session once, the run derives a check spec per
+screen, and the gate
+emits verification rows (naming that principal, with screenshots) for exactly
+this discharge — where it cannot run, record it as a manual verification row
+with the principal named instead. If nobody does either, the screen is
+**unverified** — write that word rather than a tier.
+
+**Only a clean run discharges it.** A run that returns **exit 4 does not
+discharge this gate**: exit 4 means `unasserted` rows — nothing failed, but
+nothing checked those rows either, and a gap is not a pass. Each such row needs
+the recorded **human screenshot verdict** written as a manual verification row
+naming the principal, per that skill's Result semantics, before the phase
+proceeds. A completed run is not by itself the evidence; its exit code is.
+
+## 2b. Polish gate — per screen, after the render gate
+
+> **Source:** re-expressed from `outsystems-frontend-skills`
+> `ui-frameworks/outsystems-ui/polish-checklist.md` (upstream tip `c7a376e7d`,
+> 2026-07-20, dormant). The upstream file is written as `execute_code` calls;
+> only its criteria are adopted here. Dimension labels are
+> `outsystems-runtime-ui-audit` criteria, so build time and audit time argue
+> in one vocabulary.
+
+A screen that passes the render gate renders. It does not follow that it looks
+finished. OS UI's defaults are functional and vanilla, so a structurally
+correct screen reads as a wireframe until an explicit pass fixes it — and the
+runtime audit will score exactly that, one full converge iteration later.
+
+Run every item per screen. A "no" is a fix, not a note.
+
+The right-hand column is provenance, not weight: it says where this dimension
+gets scored later, so build time and audit time argue in one vocabulary. It is
+not a tally. Three rows carry C14 because one unpolished screen commonly fails
+all three from a single root cause — nobody made a typography-and-semantics
+pass — and that is ONE finding with three symptoms, not three findings. Fix the
+cause; do not count the rows.
+
+| # | Check | Scored downstream as |
+|---|---|---|
+| 1 | Type sizes carry a hierarchy — a heading is not body text at body weight | C14 Modern vs. Dated |
+| 2 | The brand colour marks the primary action and little else; it is not spread across every surface | C1 Theme & Styling |
+| 3 | Spacing utilities give sections breathing room; nothing is flush against its neighbour or the viewport edge | C8 Margin & Padding |
+| 4 | Content is realistic for the domain — real names, plausible amounts, sensible dates. No `Lorem ipsum`, no `Sample_`, no `Title 1` | C13 Content & Data Quality |
+| 5 | The active item in any navigation is visually distinguishable from its siblings | C14 Modern vs. Dated |
+| 6 | Section headings are real headings, not styled containers | C14 Modern vs. Dated |
+
+Default children are a separate failure with its own owner — see
+`odc-mentor-hardening.md`. A block still showing "Use this placeholder to…"
+fails that check, not this one.
+
+### The builder's summary does not discharge this gate
+
+The gate is discharged by looking at the rendered screen from the render gate,
+against the six rows above. A build summary reporting a completed screen says
+nothing about any of them, because none of them are structural — every item
+here is true or false on a screen where every widget is the correct type.
+Derive the verdict from the render, never from the summary.
+
+## 2c. Post-screen checks — per screen, required rows
+
+The render gate asks whether the screen renders and the polish gate asks
+whether it looks finished. Neither asks **who can reach it** or **where it
+writes**. Both of those were carried as initiative, and both leaked on the same
+live run. They are **required rows** now: a screen phase does not complete
+until each has an answer written down.
+
+### (a) Enumerate the screen's deployed roles
+
+**The platform grants the app's default role — `Template_WebApp` on a
+template-scaffolded app — to every screen at creation.** Screen role checks are
+**OR** semantics, so a screen the prompt asked to restrict to `PlatformAdmin`
+ships readable by anyone holding the default role, which is everyone. Mentor's
+summary said "PlatformAdmin role only"; the deployed screen carried both.
+
+So enumerate the roles **on the deployed screen**, per screen, and compare
+against the spec. Do not read the roles off the prompt or off the builder's
+summary — the leak is precisely the gap between them. This is AB-07, and
+2026-08-27 is its **second live confirmation**; one recurrence is why it stops
+being initiative.
+
+**Caution — do not strip the default role everywhere.** Login and
+password-recovery screens must **keep** it: they are reached by principals who
+hold nothing else, and removing it locks every user out of the app's front
+door. The row is "enumerate and compare", not "remove the default role".
+
+### (b) Check for client-side database writes
+
+Mentor generated screens that write entities **directly from client flows**,
+while the ten server actions built to perform those writes sat unused. The app
+worked; the boundary did not exist.
+
+Two halves, and the prompt half is the one that prevents it:
+
+- **Every screen prompt carries this line:** `all writes go through the named
+  server actions; no entity CRUD from client flows`.
+- **The post-screen check greps the turn's summary and warnings for client-side
+  database-operation warnings** and treats any hit as a **fix-before-done**
+  item, not a note. Mentor does warn about this — the warning was there and was
+  read past.
+
+## 3. Remedy gate — per fix
+
+**A fix is not closed on the model's report that it was applied.** Hold a remedy
+to the same standard of evidence as its diagnosis: if you can say how you
+measured the cause, you must be able to say how you measured the cure.
+`change_applied: true` with zero retries does not answer the second question.
+
+**What this catches.** Twice in one afternoon the diagnosis was established
+empirically — measured in the DOM, reproduced across three screens — and the
+remedy was accepted on the model's report. The diagnosis was right both times.
+The remedy was wrong both times, and once took three live screens off the air
+with `OS-CLRT-60500 [View] TypeError: Cannot read properties of undefined
+(reading 'render')`.
+
+That asymmetry is the failure mode: rigour on the cause, credulity on the cure.
+
+### Check recovery before you need it
+
+**`deploy_rollback` requires prior Deploy operations.** An app changed only
+through `publish_start` — which publishes an AVS revision directly into the dev
+environment — has none, so `deploy_list` returns zero rows and **there is
+nothing to roll back to.** Structural, not transient.
+
+Read `deploy_list` **before** treating rollback as a fallback. Where it is
+empty, plan on this basis:
+
+- The only recovery is a forward Mentor turn: a full cycle, the same risk as any
+  other change, and observably slower than the change it undoes.
+- **"Cancel and retry" is not a recovery plan either.** `mentor_cancel` has been
+  observed stuck in `cancelling` past the documented SIGKILL window, and
+  `max_turn_time` bounds the agent subprocess's event stream, not the run's
+  wall clock — a run also waits, uncapped, on the per-session lock behind a
+  prior same-session turn, on the per-replica turn permit, and on S3 I/O, so
+  runs have sailed past their bounds without the ceiling ever failing to fire.
+  Mechanism and citations: §4c.
+- Two wedge signatures exist and neither is visible from `status` alone: a run
+  emitting *stalled* events (identical event ids), and one emitting *no* events
+  at all.
+
+**So a published change may be irreversible within the session that made it** —
+which is precisely why rendering before publishing is the primary protection
+here rather than a refinement of it.
+
+## 3b. The digest gate is per publish, never across a session
+
+**A `modelDigest` can return to a value it held before.** Measured on
+TrainingHub: three apply-then-revert pairs — revisions **15 = 17, 18 = 20,
+30 = 32** — so **32 distinct digests across 35 revisions**. A digest is a
+content hash, not a unique revision id.
+
+**The consequence for the gate.** A before/after comparison that spans a revert
+reports `DIGEST: unchanged` while **two deploys actually landed**. Baseline
+therefore belongs **immediately before each approved publish**, not once per
+iteration — which is how the gate was originally written, and was wrong for
+exactly this case.
+
+**And the digest cannot carry the gate alone.** Revisions 3, 6 and 8 each
+*minted a revision with a distinct digest after a failed deployment*: rev 3 took
+seven attempts, revs 6 and 8 three each, every attempt terminal-with-error. The
+digest moved every time. So:
+
+| Signal | Answers |
+|---|---|
+| `modelDigest` | **the model changed** |
+| terminal deploy state | **the deployment succeeded** |
+
+Neither substitutes for the other, and a publish is only verified when both
+agree.
+
+**Match the terminal state exactly.** `env_deploy_history` reports **two**
+terminal states — `Finished` and `FinishedWithError` — and a prefix or substring
+test matches both. Measured on one environment page: **76 `Finished`, 24
+`FinishedWithError`**; on TrainingHub, `== "Finished"` returns **30 rows** while
+`startsWith("Finished")` returns **43**. A loose match **swallows 13 failed
+deployments and reports them as landed.** Failures return in seconds, successes
+take ~30s, so speed is a hint but not a test.
+
+> **Provenance.** Measured 2026-08-11 by an independent verification session
+> against the run's app and a second control app, after it asked whether our
+> digest gate had this hazard. It did.
+
+**Publish mechanics, recorded here because the runbook alone
+demonstrably fails to carry them (each bullet carries its own provenance):**
+
+- **`publish_start` rejects a `message` over 500 characters** — a hard
+  validation error: the call never fires. Keep the drafted message under ~480
+  for headroom and trim to load-bearing nouns (entity/screen/action names plus
+  the one-line why) rather than restating Mentor's summary. Rediscovered the
+  hard way twice on 2026-08-11; until then the limit lived only in the runbook.
+- **The `operation_id` a gateway `publish_start` returns is not the key the
+  log tools take.** `publish_logs` and `deploy_messages` both return HTTP 404
+  for it. For the per-line error trail, find the app's record in
+  `env_deploy_history` and use that record's key as the `operation_key`. The
+  bridge works in flight — the row is at the top of the window — but the
+  history is a 100-row unpaged window (V73), so retrospectively the row may
+  already be gone, and an empty result is not "never deployed".
+- **Revision notes attach on publish, not on promotion.** A deployment
+  operation carries no comment field of its own; the publish `message` is the
+  only place a note is written, and promoting moves an existing revision, so
+  the note set at publish is the one that travels to the target environment.
+  When a `commit -m`-style comment is asked for on a promotion, point at the
+  publish that created the revision rather than reporting it as unsupported.
+  (Upstream 0.13.1, verified verbatim, rev.17 P1 re-diff 2026-08-13.)
+- **A `failed` publish carrying `indeterminate: true` has no observed outcome, and re-publishing on it is the wedge.** Upstream 0.16.0 states it plainly: the server lost sight of the publish, so it may still be building and may yet succeed. Re-poll `publish_status` with the `publication_key` from the payload, or verify with `env_app`; a second `publish_start` on the same app while the first is still running is exactly what wedges it — and §3a is why that matters here specifically: a `publish_start`-only app has no `deploy_list` rows and no rollback. This is the one publish outcome that must NOT be handed to the digest gate: an unresolved publish has no landed-or-not answer to grade, so resolve it first, then gate. A `failed` without `indeterminate` is genuinely terminal — transient `OS-BEW-*` / `OS-DPL-*` are retried server-side, so a returned code means the retries were exhausted; surface the code rather than re-publishing. **Read the code's band before acting on that sentence: it is a claim about the 5xx band, and a 4xx tail calls for a different action regardless of it.** The build worker's message catalogs group codes by their five-digit tail, and a 4xx tail is a deterministic validation error raised off the model as authored — a static entity with an auto-number identifier, a server action exposed on a weak application reference, a name that is not a valid C# identifier. The catalogs establish that those are deterministic; they say nothing about what the pipeline retries, and the distinction does not matter here. The same OML fails the same way every time, so an unchanged re-publish cannot pass whether or not it was retried first: fix the model. Keep that boundary when citing this — the server-side-retry claim above is the upstream contract's, not the catalogs'. The 5xx band is the one the retry lore is about, and even there it is not uniformly transient — the same band carries deterministic business errors that no retry would clear. Bands decode once, in `odc-error-registry.md`; this bullet does not restate them.
+- **`publish_start` can refuse the session outright, and the refusal is not a publish to retry.** Upstream 0.16.0: the refusal message names the reason and the fix, and the remedy is a further Mentor turn that completes the work. The `turn_error` case in §3c is the common cause — a `succeeded` run carrying it is not a finished task, so there is nothing complete for the publish to take. Retrying the publish re-asks the same incomplete session and gets the same refusal.
+- **`deploy_list`: read `truncated` before treating `total` as a count.** `total` is exact only when `truncated` is `false`; when `truncated` is `true` it is a **lower bound**, because the upstream endpoint carries no total on the wire and completeness is derived from `next_page_offset`. So "N deploy operations" is "N or more", and an absent row is not proof of absence — the same failure shape as the `env_deploy_history` 100-row unpaged window above. **Paging is not the remedy: `deploy_list` takes no offset argument**, so a truncated result is narrowed by scoping `asset_key` / `env_key`, not by asking for the next page.
+- **`env_apps` search is server-side, and it is literal about whitespace.** The `search` argument is sent as the upstream `nameContains` filter — case-insensitive substring, matched by the server, not re-filtered by the client. The server does NOT trim the filter, so a padded `" widget "` requires those spaces inside the app name and silently returns nothing; an empty or whitespace-only search is dropped to "no filter" rather than matching nothing. An empty result therefore means the server's matching rule answered, not that ours narrowed: check the fragment for stray whitespace, then widen it, before concluding an app is absent.
+
+  > **Provenance.** Both bullets verified 2026-08-26 in the upstream plugin's private source repository via `gh api`, not taken from the mining brief that raised them: `src/models/deploy.rs` blob `43270191205a6f9d10a4be9f05efc3ef9cbeea3c` (the `DeployListResponse` doc comment states the lower-bound and no-offset rules verbatim) and `src/clients/publish.rs` blob `86952bcd4dcba8bd19ece8fef14a7695f9cc8008` (the `list_deployed` doc comment and the `nameContains` query construction, including the trim behaviour). Neither fact appears in the plugin's own `SKILL.md` at 0.16.0 — Codex flagged exactly that gap on AH-2026-08-26-008, which is why these carry blob SHAs rather than ticket numbers.
+- **`context_*` reads lag a successful publish by ~20–90s** (external field
+  measurement, two builds; worst after a phase touching several screens' role
+  lists at once), and `context_search` has been observed to catch up faster
+  than the paginated listings. Terminal state and digest are the immediate
+  signals; content enumeration is the delayed one — see the enumeration gate's
+  wait rule in SKILL.md before reading a miss as a failed phase.
+
+> **Provenance.** The `operation_id` bridge and the `context_*` lag figures
+> are field evidence from the same external ODC build work as §4 — **not
+> measured by us.** The 500-character limit and the window caveat are our own.
+
+### 3c. A `succeeded` publish can mint no revision — the tip is the arbiter
+
+`change_applied: true`, `validation.error_count: 0`, a read-back quoting the new value, and
+`publish_status` returning `state: succeeded` with `no_changes_detected: false` are **four
+signals that can all be green over a write that never happened**.
+
+**Check `turn_error` as a fifth signal — it was absent here, which is why the four above were
+the whole story.** Upstream plugin 0.16.0 adds the rule that a `succeeded` run carrying
+`turn_error` is NOT a finished task, and that you must follow the `hint` beside it rather than
+report the task done. That is a different failure from this one: it catches a run that admits a
+problem in a field agents were ignoring, whereas the no-op below admitted nothing anywhere.
+Check both — `turn_error` first because it is cheap and self-declared, then the tip revision
+for the silent case.
+
+Measured 2026-08-23 (Elastic Search Sandbox, Login screen): asked twice to change one
+inline-style property, Mentor reported success and quoted the new value back both times —
+on the retry it claimed to have read the new value out of the model *before* writing — while
+the runtime kept serving the old value and `app_revisions` showed the **tip revision never
+moved**. The publish created no revision at all.
+
+- **Asking Mentor to confirm its own edit buys nothing.** A read-back is only as trustworthy
+  as the writer. Confirm in the rendered DOM or the published client bundle instead.
+- **`app_revisions` is the cheap arbiter.** If the tip did not move, nothing shipped —
+  regardless of `state`, and regardless of `no_changes_detected`, which reported `false`
+  (i.e. "something deployed") across a no-op.
+- **Find a control that shares the failure's scope.** Two margin values in the *same* inline
+  style string on the *same* element did land, which is what ruled out cache, stale bundle
+  and failed publish, and localised the fault to a single property.
+- **Stop after two attempts** and route the change to ODC Studio rather than spending a third
+  turn on a write the transport cannot perform.
+
+### 3d. Stale-base publishes are last-writer-wins — check the tip BEFORE publishing too
+
+§3c checks the tip *after* a publish to prove something shipped. This gate checks it
+*before*, to prove the publish won't erase someone else's work.
+
+**A Mentor session is pinned to the app state at session start, and its publish deploys
+that session's full OML snapshot — a whole-app, last-writer-wins swap, not a 3-way merge.**
+(Vendor-confirmed: OutSystems, Deniz Arin, Slack, 2026-08-24 — not our measurement.) The
+serialization of publishes (`waiting_for_prior`) protects the *build engine* from
+concurrent builds; it does nothing for *content*. If sessions A and B both branch from
+revision N: A publishes N+1, then B publishes N+2 built from N — **A's changes are
+silently gone**. `no_changes_detected` is a no-op check, not a merge signal, and no signal
+anywhere reports the overwrite.
+
+This bites a single long-lived session too, not just parallel agents: a session held open
+across *anyone else's* publish — ODC Studio, a colleague, another agent session — erases
+those revisions the moment it publishes.
+
+The gate:
+
+- **Record the tip revision (`app_revisions`) when the session starts.** Without the
+  baseline the pre-publish check has nothing to compare against.
+- **Re-check `app_revisions` immediately before `publish_start`.** Tip unchanged → publish.
+  Tip advanced → **do not publish**; the session's snapshot no longer contains the newer
+  revisions and will destroy them.
+- **Attribute the advance before you block on it — your own failed publish is not a foreign writer.** A **`failed`** publish can still advance the tip. Measured 2026-08-27 (restaurant-app-v2): a publish that failed on delete-rule model features moved the app from revision 1 to 2 and its `modelDigest` from `20264c2a` to `fdd82d67`. Read without provenance, "tip advanced ⇒ do not publish" then blocks the session on the wreckage of its own attempt, and the fix turn that would clear it can never ship. So: **record every `publication_key` this session starts.** On a tip advance, resolve the advancing publication — `env_deploy_history` for the app, `publish_status` on the keys you hold — and compare. An advance whose publication matches one of your own is **not** a foreign writer: proceed. An **unmatched** advance still blocks, exactly as above. Provenance is the only thing this relaxes; where the evidence does not settle which publication moved the tip, treat it as unmatched and block.
+- **Recovery is replay, not merge.** `fresh_context` does NOT rebase — it re-opens over
+  the session's *own* OML (SKILL.md's semantics), never the latest published revision.
+  The only rebase is a brand-new `app_key` session (which reads the new tip as its base)
+  and replaying the prompts so Mentor regenerates against it.
+- **The app is the isolation boundary.** Partition work one app/library per agent;
+  a shared app forces the serialize-and-replay discipline above.
+
+## 4. Mid-run loop triage — one `details: true` poll at 5–6 minutes
+
+**A stuck turn is invisible to the normal polling cadence until it is too late.**
+`internal_retry_count` — the field that says definitively that a turn is looping
+— appears **only in the terminal `result`/`error` object. By the time a
+status-only poll can see it, the turn has finished and its whole budget is
+spent.**
+
+So at the **5–6 minute mark**, do **one** `details: true` poll with a small
+`events_limit` (~10–15) and read the `tool_begin`/`tool_end` payloads:
+
+| Healthy | Looping |
+|---|---|
+| New Aggregates, nodes and assigns being built one after another — including across a legitimate "delete and rebuild this action" self-correction | The **same action name** with a **near-identical broken expression** recurring across consecutive `tool_begin` events |
+
+**This is a spot-check, not a polling mode.** One poll, then straight back to
+status-only. Making it habitual is exactly the token cost the polling-behaviour
+discipline exists to avoid.
+
+**A timed-out turn discards its work.** The platform's own error text says
+*"Do not create a new app or discard work already applied."* **That is
+aspirational, not a guarantee.** Mentor edits an in-memory OML working copy that
+is checkpointed only on `status: succeeded`; a hard timeout kills the turn before
+any checkpoint, so a resumed session reloads the last good state. On any
+`"Agent turn timed out"` result, **ask Mentor to report what currently exists in
+the model** rather than building on the assumption partial work survived.
+
+**Turn size is the lever, not the timeout value.** Raising `max_turn_time` does
+not reliably help — a scoped-down turn still hangs if it contains a single
+operation Mentor can loop on. Split ambitious work into single-concern turns
+sized to finish well inside 15–20 minutes, passing the session forward and
+telling Mentor explicitly what already exists and not to recreate it. One shape
+deserves pre-flight counting rather than triage: a single Server Action asked
+to originate several grouped-Aggregate list outputs (the "get all the dashboard
+data" shape) has crashed a turn outright on the same external evidence,
+discarding all of its work — same remedy at a coarser grain, one small action
+per list, decided before the turn is fired (see the hardening guide's
+turn-shaping entry).
+
+> **Provenance.** This section is field evidence from another team's ODC build
+> work (two production-shaped builds, 2026-08-07 → 08-10).
+> **It was not measured by us.** Adopted because it is a read-only diagnostic
+> whose only cost is one extra poll. Our own corroboration is negative and partial: two Mentor
+> sessions wedged on one objective on 2026-08-11, one repeating identical event
+> ids for 15 minutes and one emitting nothing for 20, and in both cases we could
+> see *that* they were stuck and nothing about *why*.
+
+**On a large app the turn is also working from a reduced view of the model, so
+name every element explicitly.** Above a length threshold, Mentor's coding agent
+swaps the app summary it is given for a **simplified, shorter** version and logs
+the substitution as a warning — the agent is not told it is working from a
+reduced view, and neither is the caller. Verified 2026-08-26 in the
+coding agent's private source repository via `gh api`, not from the mining brief
+that raised it:
+`outsystems.ai.agents.coding/outsystems/ai/agents/coding/model_api_agent/current_asset/summary.py`,
+blob `4ca02371b1f0dfcd0eb962d7d007a75827289a29`, whose `resolve_asset_summary`
+logs `"App summary length %d exceeds threshold; using simplified %d length
+version."` and records `simplified` / `original_length` on the span. (The brief
+described this as truncation and pointed at a root-level path; both were wrong —
+the mechanism is a simplified substitute, and the paths are nested under
+`outsystems.ai.agents.coding/`.) This is mechanism for a symptom this estate has been treating as flakiness —
+"Mentor forgets elements on big apps". Three consequences, and they compound
+with the turn-size rule above rather than restating it: batch smaller as the app
+grows, because the reduction is a property of app size, not turn size; **never
+refer to an element by position, by "the screen we just added", or by any
+description that assumes the agent can see the whole app** — give the exact
+element name every time; and do not read a Mentor summary's silence about an
+element as evidence the element is absent, because the summary may simply never
+have held it. The enumeration gate in SKILL.md remains the arbiter — a reduced
+view makes the summary less trustworthy, not the tenant.
+
+## 4b. Cancel calibration and token hygiene
+
+External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
+
+RECONCILIATION — three existing OMI rules stay binding; this section calibrates the *voluntary* cancel decision underneath them: (1) `max_turn_time` must still be passed explicitly on every `mentor_start` (SKILL.md driving contract) — but as a *requested* ceiling, not an enforced terminal bound: §3 records runs sailing past it, so never treat the ceiling as a guarantee that the turn will terminate; (2) the §4 `details: true` poll at 5–6 minutes is diagnostic — it is never by itself a reason to cancel; (3) §3's warning that `mentor_cancel` can wedge in `cancelling` stands — cancel is a last resort, not a recovery plan.
+
+- **A slow Mentor turn is not a wedged one.** Heavy structural turns legitimately run **8–12 minutes with silent stretches** (~7 quiet minutes is normal). Healthy small turns on this estate go terminal in 1–5 minutes — both profiles are real; judge against the turn's size.
+- **Give a heavy turn ~12–14 minutes before considering `mentor_cancel`** — and cancel only if you also intend to split the work smaller. A cancel that re-runs the same oversized prompt buys nothing.
+- **Cancel economics:** a cancel costs >3 minutes to settle, a cancelled turn commits **nothing** (failed/cancelled turns never advance OML), and a cancel against an already-succeeded run is a **no-op you will misread as a wedge** — re-poll the `runId` before concluding anything from a cancel.
+- **Hang tell:** a `nextCursor` unchanged for ~7–10 minutes is the cursor-side signature of the §4 wedge classes (stalled event ids / no events). One `details: true` poll to confirm, then apply the cancel calibration above.
+- **Earlier hang tell: no `currentStep` at all — but only when it PERSISTS.** Upstream plugin 0.16.0 states plainly that `currentStep` and `message` are **optional** fields and that when neither moved you should restate `status` rather than assert progress, so a single poll without `currentStep` proves nothing and must not be read as a wedge. The cursor-side tell above needs ~7–10 minutes; the narration-side tell is readable in about two. A healthy run reports a `currentStep` (`runQuery`, `applyModelApiCode`, `message`, `complete`) within ~60s and keeps advancing it. Measured 2026-08-23 (Elastic Search Sandbox): a wedged turn returned `status: running` with the `currentStep` field **absent entirely** and `events: []` even under `details: true`, for ~15 minutes — while two sibling turns on the **same app and same session** had each reported a step inside 60s, which is the control that makes the absence diagnostic rather than merely slow. `mentor_cancel` then held in `cancelling` for >4 minutes and never reached terminal, so the >3-minute settle figure above is a floor, not a bound: do not wait for a cancel to go terminal before acting.
+- **The wedge escape the resume rule does not cover: check publish state, not the error code.** SKILL.md routes a failed turn to "resume the same session", starting fresh only on `session_not_found`. A wedged run never goes terminal, so it emits **no error `code` at all** and that rule has no exit. Decide on unpublished work instead: if the session's edits are already published, a fresh `app_key` session costs nothing — it re-downloads the pristine OML and loses no state (the identical prompt then completed in ~2 minutes). Fight for the wedged session only when unpublished edits are genuinely at stake. One correlation, recorded as correlation and not cause: the wedged turn was the only one in that sequence started with `fresh_context: true`.
+- **Copy `mentor_session_token` verbatim — never retype it.** One mistyped character returns `signature_invalid`. Read the rejection's reason before choosing a recovery path: the server emits `signature_invalid`, `expired` or `malformed` as three distinct reasons under the single `mentor_session_token_rejected` code, and it re-tries the previous signing key before reporting `signature_invalid` — so that reason means transcription, or a token minted before a key rotation older than the previous-key window, and never expiry. Mechanism and citations: §4c.
+- **Cancelled-run token recovery — payload token first, last-successful as fallback, established sessions only.** On a failed or cancelled run the terminal `error` payload carries the same `mentor_session_id` plus a freshly minted `mentor_session_token`; resume an established session — one that has already reached at least one successful turn — with those credentials, per the SKILL.md driving contract (verified against upstream 0.13.x; the rule is unchanged in 0.16.0). Keep your last SUCCESSFUL token as the fallback for exactly one case: that established session's freshly minted token is rejected as `signature_invalid`. That rejection has two causes — a hand-transcribed character (see the verbatim rule above) and a payload token the server will not accept — so re-check transcription before concluding the minted token is bad. **This fallback does not apply to a bare first-turn `app_key` init failure**: that error carries no token at all, and by definition no turn in this session has ever succeeded, so no last-successful token can exist to fall back to — SKILL.md routes that case to starting fresh, not to any token fallback. The external source for this section states the last-successful rule unconditionally but names no server version; this estate's version-anchored measurement takes precedence, and the unconditional form is narrowed to the established-session `signature_invalid` case only.
+
+## 4c. What the gateway and the agent services enforce
+
+Source-verified 2026-08-19 against the OutSystems-internal service repositories
+that own this surface — the service behind the MCP `mentor_*` tools and the
+conversation layer beneath it (repository names and per-fact file:line citations
+are recorded in the mining disposition, not here). Everything here describes those services' own
+behaviour, for which their source is authoritative — they are **not claims about
+ODC or Mentor as a product**, and must not be repeated as one. Deployed figures
+come from the gateway's Helm chart (`manifests/helm/values.yaml`), which is
+**configuration, not code invariants**: the chart can change without a code
+change, so read every number below as dated, not fixed.
+
+**`max_turn_time` is enforced — over the agent subprocess, not the run.** A hard
+`tokio::time::timeout` wraps the subprocess event loop, with a real kill behind
+it: SIGTERM to the process group, SIGKILL after 5s, and a force-kill of orphaned
+helpers (`clients/dotnet_cli.rs:886`, `:1002`, `:541-613`; buffered path
+`:1262-1264`). What sits *outside* that timeout is everything before the event
+loop starts — the per-session mutex, which a prior same-session turn holds for
+its entire duration including its S3 PUT (`http/mentor_handlers.rs:895-905`),
+the per-replica turn permit, the first-turn OML download, the resume-path S3
+GET — plus the closing S3 PUT. So a turn queued behind another turn on the same
+session accrues wall clock its ceiling never sees. **Do not run two turns on one
+session**; that, not a higher ceiling, is the lever §4b already points at.
+
+**A second, tighter bound: the inter-event idle timeout.** Each event read is
+wrapped in its own timeout (`clients/dotnet_cli.rs:640-657`); on elapse the turn
+fails with terminal code `idle_timeout` at HTTP 504 — the same status the
+subprocess's own `timeout` returns, so route on the code, never the status
+(`http/mentor_handlers.rs:191-199`). It measures **event SILENCE, not elapsed
+time**; `0` disables it, and it is clamped to at most `max_turn_time`
+(`config.rs:38-48`), so at the deployed 600s
+(`MCP_MENTOR_IDLE_EVENT_TIMEOUT_SECS`) it always fires first. Diagnostic
+consequence: a long run that never tripped it was **emitting events throughout**
+— slow, not hung. OMI's own 26-minute war story is therefore a slow run, not a
+silent one.
+
+**`run_not_found` is a single envelope over four causes, and none is
+recoverable.** The four (`http/mentor_handlers.rs:694`;
+`http/run_registry_redis.rs:940-975`):
+
+- a `runId` that is not a UUID (`http/mentor_handlers.rs:183`);
+- the `by-run` pointer absent or **TTL-expired** (`run_registry_redis.rs:947-949`);
+- the pointer's tag not matching `<tenant>|<user>|` — the same live run polled by
+  a **different principal** (`:952-958`);
+- the pointer resolving but the **state HASH** gone (`:965-972`).
+
+They are deliberately indistinguishable, to defeat tenant enumeration
+(`commands/mcp_schema.rs:1092-1095`), so the code tells you nothing about which
+one you hit. There is **no rebuild path** from any of them: never treat
+`run_not_found` as a state you can resume from.
+
+**The run's lookup key expires on a schedule nothing refreshes.** The state
+HASH, the event stream and the by-session pointer are all re-`PEXPIRE`d on every
+event, so an actively-emitting run keeps them alive
+(`run_registry_redis.rs:197-199`). The `by-run` pointer is not: it is set once at
+`start_run` and **never refreshed** (`:420-431`), for a lifetime of
+`max(1200s, max_turn_time + 300s)` (`http/mentor_run.rs:1283-1291`). A turn that
+outlives that window goes invisible to `mentor_get_run` while still running.
+This is why the SKILL.md rule is "pass an explicit `max_turn_time`" and not
+"pass a small one" — too low a ceiling is its own failure mode.
+
+**Sessions are bound to the principal that created them.** The session key is the
+triple `(TenantId, UserId, SessionId)` (`http/mentor_session.rs:50-55`, hashtag
+at `:66-68`), and the user component is taken from the authenticated principal on
+every call (`http/mentor_handlers.rs:409`, used at `:448-451`). A valid
+`mentor_session_id` + `mentor_session_token` pair **will not resume the session
+under a different principal**. Nor does the attempt announce itself: polling
+another principal's run returns the opaque `run_not_found` above, **not a
+permission error**. Relevant wherever a loop changes hands — a second agent
+identity, a different OAuth principal, a re-auth that lands on another subject.
+
+**Silent conversation-state loss is a second cause of mid-session amnesia.** In
+the AISA layer, restoring a connection's stored agent state is wrapped in a
+warn-and-continue `except` — on failure the turn proceeds with a fresh, empty
+agent — and the read helper swallows its own failures and returns `None`
+(source citations: the mining disposition, §restore-path). Nothing reaches the
+client: no error, no code, no notification. Contrast agent *creation* failure,
+which raises `ConversationInitializationError` and does surface. So
+"Mentor forgot the conversation" has **two causes, not one** — prompt drift, and
+context that was silently never restored. The recovery is the same
+(`fresh_context: true`), but do not spend a round rewriting a prompt that was
+never the problem.
+
+**There is no server-side retry at the AISA layer, and retryability never
+reaches the client.** Every error mapping returns an `(error, retryable)` pair
+and the chat service discards the flag on the way out —
+`app_error, _ = self.error_mapper(exc, connection_id)`
+(source citation: the mining disposition, §retryability); each error arm sends the
+error and re-raises, and the file contains no retry loop at all. Retry is
+entirely the caller's job. The service's own classification, read at source on
+2026-08-19 (citations: the mining disposition, §error-classification):
+
+- **Retryable** — OS-AISA-50003 initialize-conversation, OS-AISA-40005
+  app-state-retrieval, OS-AISA-50004 session-persistence, OS-AISA-42902
+  tenant-too-many-requests, OS-AISA-42901 too-many-requests-to-provider,
+  OS-AISA-50301 llm-gateway-down, OS-AISA-50002 ai-provider, OS-AISA-50001
+  unknown.
+- **Not retryable** — OS-AISA-40001 conversation-context-limit, OS-AISA-40002
+  agent-mode-changed, OS-AISA-40006 attachment-download, OS-AISA-42903
+  daily-token-limit, OS-AISA-49901 cancelled-conversation.
+
+The catch-all (OS-AISA-50001 unknown) is classified **retryable**, which is what
+makes OMI's existing "retry the same session on an unexplained failure" posture
+the right one. Because the flag is discarded, none of this is on the wire: the
+list is a triage aid for a code you already have, not something to parse.
+
+**`hint` is not a general field.** The terminal `error.hint` OMI relies on for
+the max-length recovery is minted only when the upstream message carries the
+literal OS-AISA-40001, and only on the Failed/`SubprocessError` arm
+(`http/mentor_handlers.rs:875-884`, wired at `:1282-1286`). Cancelled terminals,
+idle-timeout terminals and the bookkeeping-failure paths carry none — so do not
+build a general "read the hint" rule on it.
+
+**`fresh_context`'s strict typing is load-bearing, not pedantry.** The server
+rejects `"true"` and `1` rather than coercing them
+(`http/mentor_handlers.rs:221-227`) precisely because silently coercing a
+mistyped flag would re-resume the maxed-out conversation straight back into the
+OS-AISA-40001 the caller was escaping (`:216-220`).
+
+**Two deployed numbers that change a decision.**
+
+- **A finished run stays readable for 24h**, not minutes
+  (`MCP_MENTOR_RUN_RETENTION_SECS`, matched to the session window on purpose,
+  `values.yaml:93-95`). A late poll on a terminal run still returns its result.
+  This does not soften the separate SKILL.md point that a terminal run's *event
+  history* is unreachable — result and event history are different surfaces.
+- **The event stream is capped at 2048 entries**
+  (`MCP_MENTOR_EVENTS_STREAM_MAXLEN`), and it is the only event-retention
+  surface. A verbose long turn trims its own earliest events past that cap,
+  which is what produces `cursor_dropped` (`commands/mcp_schema.rs:1094-1097`) —
+  recover by re-polling with `cursor` omitted, exactly as the first-poll rule
+  already says.
+
+**Why there is no caps-and-limits table here.** W1.6 produced a full one. It is
+deliberately not imported: the remaining figures (sessions per tenant, session
+inactivity, token TTL, per-replica turn concurrency, byte caps, event-page
+limits) are Helm values that can change without a code change and that change no
+decision this skill asks an agent to make — carrying them would be maintenance
+debt asserted by tests. The two above are recorded because they each change one.
+Where a limit already has an OMI rule — the tenant-wide session cap and its ~24h
+reap, in `odc-mentor-hardening.md` — that rule is now corroborated at source and
+stands unchanged.
+
+## 5. Summary admissions — the confession is in the fine print, never the headline
+
+**A turn summary's follow-up notes and caveats are required reading, not
+optional colour — especially for anything RBAC-shaped.** Mentor has been
+observed to self-report a real spec gap in its own summary — a role's data
+scoping passing an empty region list — while the same turn reported
+**zero validation errors** and a complete-sounding feature list. A skim that
+stops at "zero errors" misses exactly this kind of admission.
+
+This is "the friendly surface lies toward success" (V76) read from the other
+side. The summary is **untrustworthy for success claims** — the enumeration
+gate exists because one described five parts of an action that was never
+created — and **load-bearing for failure admissions.** Its admissions are
+findings: anything the summary flags as a scoping gap, a manual step, or a
+"needs a follow-up turn" note is either fixed before the phase closes or
+carried explicitly as an open item — never silently rolled forward into the
+build report as if resolved.
+
+> **Provenance.** The self-reported RBAC gap is field evidence from the same
+> external ODC build work as §4 — **not measured by us.** Our own runs supply
+> the success-direction half (2026-08-09 enumeration incident, V76).
+
+### 5b. Derive the checklist from the spec, never from the builder's summary
+
+§5 governs how to *read* a summary. This is the separate rule about where the
+verification checklist **comes from**: when scoring or verifying a build, derive
+the checklist by reading the spec, plan, or blueprint files directly. The
+builder's own summary of what it built **must not** set the checklist — a
+builder summarizing its own work is precisely the bias a fresh verification pass
+exists to remove, and a checklist derived from it can only ever confirm what the
+builder already believes it did. Anything the spec required but the summary never
+mentions is exactly the item this ordering is designed to catch.
+
+Corollary for verdicts: where some criteria were checked and others could not be
+driven at all, the result is PARTIAL, never rounded up to PASS. "Unverifiable"
+and "verified" are different findings.
+
+> **Provenance.** External field evidence from an internal OutSystems project
+> @ 3524310 (adopted 2026-08-14, round 2); field-observed in that project's own
+> verification agent, not in official docs, and **not measured by us.**
+
+### 5c. Post-run triage — order the questions, and stop at hypothesis
+
+§4 is the mid-run spot-check and §5 is how to read a summary. This is the
+after-the-fact question: the turn is terminal, the result is wrong, slow, or
+looping, and you have to say why. **Answer these in order.** The ordering is the
+whole point — each one changes what the next one means, and the usual failure is
+jumping to a mechanism from the first error string you see.
+
+1. **Did anything change?** Read the model back — `context_*`, the app's tip
+   revision, or an OML diff. Do this *before* opening the run's evidence, so the
+   run's own account of itself cannot frame the question. `change_applied` and
+   the turn summary are claims about the model; the model is the model.
+2. **Did it change the right things, and only those?** §5b's rule holds: derive
+   the checklist from the spec, never from the summary. Unrelated mutations are a
+   finding in their own right, not noise around the real one.
+3. **What was the FIRST error, not the last?** A turn that retried the same
+   operation five times has one cause and four echoes. Cluster the near-identical
+   attempts (§4's tell — the same target with a near-identical broken
+   expression), then report the earliest failure and let the retry count be a
+   magnitude, not the finding. A retry count is never itself a diagnosis; §4b
+   already says why `internal_retry_count` is not auditable after the fact.
+4. **Is the error text the real error?** Very often it is not. A generic
+   transport-level message can sit on top of a specific host exception you cannot
+   see from here, and a validation rejection may not have been reported as a
+   failure at all — the hardening guide's host-execution-model entry has the
+   mechanics. Practical effect: a vague error message narrows almost nothing, and
+   a *missing* error is not evidence that nothing failed.
+5. **If something is missing, do not say "rolled back."** Reach for that only
+   with an explicit rollback or undo marker in the evidence. Absence is not a
+   marker. The hardening guide lists the three candidates and why they have
+   opposite fixes.
+6. **Was it slow, or was it stuck?** Different findings, per §4b — heavy
+   structural turns legitimately run 8–12 minutes with silent stretches. Judge
+   against the turn's size before calling anything a wedge.
+7. **Could it have been asked to do the impossible?** A prompt that asks for
+   something the target cannot express produces retry friction that looks like a
+   platform fault. Check the instruction against the capability matrix before
+   filing a product bug.
+
+**Then stop at the right confidence.** An error string is not a mechanism. The
+evidence available from this surface shows you *what* happened; it rarely proves
+*why*, because the layer where the cause lives is not readable from here. A cause
+you have not observed is a **hypothesis — label it one, out loud, in the report.**
+Reproducing an outcome is not the same as knowing its cause, and a green re-run
+proves less than it appears to: if the failing path is one that never classified
+as a failure to begin with, a passing re-run says nothing about whether that path
+fired. This is the same discipline §5 applies to summaries, pointed at your own
+conclusions.
+
+> **Provenance.** Adapted 2026-08-26 from another team's Mentor session-diagnosis
+> practice, and **re-based**: their checklist reads host-side traces and per-call
+> ledgers that this surface cannot reach, so every step above was rewritten
+> against evidence a run here actually yields. The ordering discipline and the
+> stop-at-hypothesis rule are theirs; **not measured by us.** Steps 3 and 6 are
+> corroborated by our own §4/§4b measurements. Claims table and provenance detail
+> are in the mining disposition under `docs/adoption/`.

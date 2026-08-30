@@ -48,6 +48,33 @@ OMI adds two top-level sections that design-to-app did not use in the same way:
 These additions keep the artifact aligned with OMI's reviewed-shell and
 existing-app boundaries.
 
+## Every evidence_boundary Disclosure Owes A Check
+
+An `evidence_boundary` entry carried into a Mentor package must map to a named,
+executable **post-publish** check **before the phase is reported done**. Exactly
+two forms count:
+
+- a **render-gate row** — the disclosure becomes something a principal opening
+  the screen can see to be true or false, recorded with the screen and that
+  principal named
+- an **enumeration assertion** — the disclosure becomes a named element, count,
+  or record list diffed against the deployed model
+
+A disclosure with neither is not a caveat. It is a known gap the run has agreed
+not to look at.
+
+On the v2 run the most loudly disclosed trap of the entire build — the dispatch
+payload display, `BR-SC-006` — was carried into the package, restated in the
+prompt, and restated in the summary, and it shipped unmet. Nothing was hidden
+and nothing was checked: every reader of that phase saw the disclosure and read
+it as evidence that the risk was being managed. Volume of disclosure is not
+coverage, and it correlates with the opposite often enough to be a warning sign.
+
+Write the check into `acceptance_checklist` at the moment the disclosure is
+written, not later. A disclosure authored on its own is authored at the moment
+somebody decided not to solve the problem, which is the worst available moment
+to be trusted to remember it.
+
 ## primary_color
 
 `primary_color` is the top-level brand anchor for the blueprint. Set it to the

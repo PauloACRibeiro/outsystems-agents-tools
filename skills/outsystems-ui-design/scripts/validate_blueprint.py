@@ -214,6 +214,13 @@ def placeholder_fields(bp):
     (the channels for recording what is not yet settled), `acceptance_checklist`
     (advisory human-facing prose by its own schema description), and
     `design_system.*` (free-form visual rules). A deferral note belongs there.
+
+    INCLUDED since 2026-08-30: `screens[].render_gate[].label` and `.selector`.
+    That key is gate-bearing by construction - a label names a row a downstream
+    gate emits and a selector is executed against a live DOM - so it belongs
+    with the named fields, not with the prose. Its `contains`/`equals`/`reason`
+    stay out: those are literals about the UI, and a screen that renders the
+    word "TBD" must stay assertable.
     """
     if not isinstance(bp, dict):
         return
@@ -254,6 +261,17 @@ def placeholder_fields(bp):
             continue
         for key in ("name", "type", "description"):
             yield from _pf(f"screens[{i}].{key}", screen.get(key))
+        # A render-gate label names a row and a selector is executed, so both
+        # are gate-bearing in the strictest sense. `contains`/`equals`/`reason`
+        # are NOT: they are literals copied from the UI or a statement about
+        # it, and a screen that legitimately renders the word "TBD" must stay
+        # assertable. The marker regex is also English-only by construction, so
+        # scoping it here is the honest reach - it is not a defence against
+        # placeholder CONTENT, which is what a `text` assertion is for.
+        for j, entry in enumerate(_as_list(screen.get("render_gate"))):
+            if isinstance(entry, dict):
+                for key in ("label", "selector"):
+                    yield from _pf(f"screens[{i}].render_gate[{j}].{key}", entry.get(key))
         for rpath, region in _regions(screen):
             for key in ("name", "id", "description", "content"):
                 yield from _pf(f"screens[{i}].{rpath}.{key}", region.get(key))
@@ -1119,6 +1137,431 @@ def _check_repeat_prose_columns(bp, warnings):
                     ))
 
 
+# --- render-gate assertions -------------------------------------------------
+#
+# The measured failure (restaurant-app-v2, 2026-08-28): the blueprint's loudest
+# disclosure - the dispatch screen must show the payload each channel will
+# actually receive, BR-SC-006 "show exactly what each channel will receive" -
+# shipped unmet, with the channel cards rendering placeholder descriptions. It
+# had been written down twice, in review_notes and in acceptance_checklist, and
+# neither channel carries authority: the checklist says so in its own schema
+# description. A disclosure that reads like coverage and discharges nothing is
+# worse than silence, because it stops anyone looking.
+#
+# Everything below is keyed on STRUCTURE and on requirement-id tokens, never on
+# a phrase. The blueprint that motivated this is written in European
+# Portuguese ("Os quatro canais mostram... o payload exato que receberiam
+# (BR-SC-006)."), so an English-wording trigger would have fired on nothing.
+
+# `[render-gate: <label>]` or `[no-runtime-claim]`, exactly.
+_RG_MARKER_RE = re.compile(r"\[render-gate:\s*([^\]]+?)\s*\]")
+_RG_NO_CLAIM_RE = re.compile(r"\[no-runtime-claim\]")
+# Anything that was TRYING to be one of the two. A near-miss must never be
+# quieter than a miss: `[render gate: X]` is invisible prose otherwise, and the
+# author believes they wrote a link.
+#
+# Both patterns are deliberately narrow, because the words themselves are
+# ordinary. A review note reading "the render gate never clicks" is correct
+# prose and must not be a contract error, so only two shapes count: something
+# BRACKETED that was reaching for a marker, and a line that OPENS with the
+# token, which is an assertion written where prose goes.
+_RG_MALFORMED_MARKER_RE = re.compile(
+    r"\[[^\]]*(?:render[\s\-_]?gate|no[\s\-_]?runtime[\s\-_]?claim)[^\]]*\]",
+    re.IGNORECASE)
+_RG_PROSE_ASSERTION_RE = re.compile(r"^\s*[-*]?\s*render[\s\-_]?gate\b", re.IGNORECASE)
+
+# A requirement id as the PRD assigns them: LETTER segments and a 2-4 digit
+# tail. This rule blocks at handoff, so a false positive is expensive - and
+# plenty of ordinary prose has the shape. Two extra conditions do the work of a
+# deny-list, without a list to maintain:
+#   - every letter segment is letters ONLY, so `A4-PDF-300` is not an id;
+#   - the id has TWO letter segments (BR-SC-006) or a zero-padded tail
+#     (UC-005, C-016, BR-001), so `AH-2026`, `SLA-99` and `ISO-8601` are not.
+# A 5-digit tail is excluded by the pattern, which is what keeps the ODC error
+# codes (`OS-CLRT-00000`) out. KNOWN MISS, stated: an unpadded single-segment id
+# such as `US-9` is not detected - the workspace's PRDs zero-pad, and widening
+# the rule to catch it would readmit every version and ratio in the prose.
+_REQ_ID_RE = re.compile(r"\b([A-Z]{1,6})((?:-[A-Z]{1,6}){0,2})-(\d{2,4})\b")
+
+
+def _is_requirement_id(match):
+    _first, middle, tail = match.groups()
+    return bool(middle) or tail.startswith("0")
+
+# The three channels a disclosure is written to. `grounding_notes` is in the
+# list because SKILL.md routes the EXTRAPOLATED disclosure there - the screen
+# whose runtime behaviour is least evidenced is exactly the one that must not
+# be exempt.
+DISCLOSURE_CHANNELS = (
+    ("evidence_boundary", "review_notes"),
+    ("evidence_boundary", "grounding_notes"),
+    ("target_context", "review_notes"),
+)
+
+_RG_ASSERTS = ("widget", "populated", "text", "known-unverified")
+RENDER_GATE_MIN_REASON = 20
+
+
+def _nfc(text):
+    """NFC, so a name typed NFD and stored NFC is not two different names.
+
+    macOS hands NFD strings out of filenames and some paste paths, and every
+    join below is a raw `==`. Two visually identical names that do not compare
+    equal produce a diagnosis pointing at nothing.
+    """
+    import unicodedata
+    return unicodedata.normalize("NFC", text) if isinstance(text, str) else text
+
+
+def _render_gate_entries(bp):
+    """(screen_index, screen_name, entry_index, entry) for every declared entry."""
+    for si, screen in enumerate(_as_list(bp.get("screens"))):
+        if not isinstance(screen, dict):
+            continue
+        for ei, entry in enumerate(_as_list(screen.get("render_gate"))):
+            if isinstance(entry, dict):
+                yield si, screen.get("name", "?"), ei, entry
+
+
+def _render_gate_labels(bp):
+    return {_nfc(e.get("label")) for _si, _sn, _ei, e in _render_gate_entries(bp)
+            if isinstance(e.get("label"), str)}
+
+
+def _disclosure_lines(bp):
+    """(path, text) for every disclosure line, in emission order."""
+    for section, key in DISCLOSURE_CHANNELS:
+        holder = bp.get(section)
+        if not isinstance(holder, dict):
+            continue
+        for i, line in enumerate(_as_list(holder.get(key))):
+            if isinstance(line, str):
+                yield f"{section}.{key}[{i}]", line
+
+
+def _declared_tokens(bp):
+    """Every name the blueprint itself declares, for anchoring a stated gap.
+
+    A length floor is the weakest content test there is, and weaker still in a
+    language whose filler happens to be long. Requiring the reason to name
+    something the blueprint declares forces it to be concrete, in any language.
+
+    What the anchor buys, stated exactly: the reason names SOMETHING this
+    blueprint declares. It cannot show that the thing named is the thing left
+    uncovered - a reason mentioning an incidental entity clears it. The claim
+    is worth making anyway, because it rejects the bare "not checkable here"
+    that a length floor accepts, and a reviewer reads the rest.
+
+    Region `id` is deliberately NOT a token, and nothing under three characters
+    is: the shipped fixtures number their regions "1", "2", "2a", so admitting
+    them would let any reason containing a digit clear the anchor - a check that
+    passes on everything is not a check.
+    """
+    tokens = set()
+    for screen in _as_list(bp.get("screens")):
+        if not isinstance(screen, dict):
+            continue
+        if isinstance(screen.get("name"), str):
+            tokens.add(_nfc(screen["name"]))
+        for region, _g, _sn in _leaf_regions(screen, with_group=True):
+            if isinstance(region.get("name"), str):
+                tokens.add(_nfc(region["name"]))
+        for region in _as_list(screen.get("main_content")):
+            if isinstance(region, dict) and isinstance(region.get("name"), str):
+                tokens.add(_nfc(region["name"]))
+    for entity in _as_list(bp.get("entities")):
+        if isinstance(entity, dict) and isinstance(entity.get("name"), str):
+            tokens.add(_nfc(entity["name"]))
+            for attr in _as_list(entity.get("attributes")):
+                if isinstance(attr, dict) and isinstance(attr.get("name"), str):
+                    tokens.add(_nfc(attr["name"]))
+    for block in _as_list(bp.get("blocks")):
+        if isinstance(block, dict) and isinstance(block.get("name"), str):
+            tokens.add(_nfc(block["name"]))
+    tokens |= cited_requirement_ids(bp)
+    return {t for t in tokens if t and len(t) >= 3}
+
+
+def cited_requirement_ids(bp):
+    """Requirement ids the blueprint itself cites, from every prose channel."""
+    found = set()
+    sources = [line for _p, line in _disclosure_lines(bp)]
+    sources += [s for s in _as_list(bp.get("acceptance_checklist")) if isinstance(s, str)]
+    for line in sources:
+        for match in _REQ_ID_RE.finditer(line):
+            if _is_requirement_id(match):
+                found.add(match.group(0))
+    return found
+
+
+def _check_render_gate_shape(bp, errors):
+    """The assertion contract the schema cannot express: which companion field
+    each `assert` needs, and which it must not carry."""
+    seen = {}
+    for _si, sname, ei, entry in _render_gate_entries(bp):
+        at = f"screen '{sname}' render_gate[{ei}]"
+        label = entry.get("label")
+        if not isinstance(label, str) or not label.strip():
+            errors.append(f"{at}: label must be a non-empty string - it names the gate row")
+            continue
+        key = _nfc(label)
+        if key in seen:
+            errors.append(
+                f"{at}: duplicate label {label!r} (also on screen '{seen[key]}') - a "
+                "disclosure references an assertion by this name alone, so a repeat "
+                "makes the reference ambiguous")
+        seen[key] = sname
+        kind = entry.get("assert")
+        if kind not in _RG_ASSERTS:
+            errors.append(
+                f"{at}: assert must be one of {', '.join(_RG_ASSERTS)}, not {kind!r}")
+            continue
+        selector = entry.get("selector")
+        if kind == "known-unverified":
+            for banned in ("selector", "contains", "equals"):
+                if entry.get(banned) is not None:
+                    errors.append(
+                        f"{at}: a known-unverified entry declares that NO assertion is "
+                        f"derivable, so it carries no {banned}")
+            reason = entry.get("reason")
+            if not isinstance(reason, str) or len(reason.strip()) < RENDER_GATE_MIN_REASON:
+                errors.append(
+                    f"{at}: known-unverified needs a reason of at least "
+                    f"{RENDER_GATE_MIN_REASON} characters - a coverage hole is stated, "
+                    "never abbreviated")
+            else:
+                # The entry's OWN screen is excluded: naming the screen you are
+                # already on is free, and "not checkable on this screen" is
+                # precisely the sentence the anchor exists to reject.
+                anchors = _declared_tokens(bp) - {_nfc(sname)}
+                if not any(tok and tok in _nfc(reason) for tok in anchors):
+                    errors.append(
+                        f"{at}: the reason names nothing this blueprint declares. State "
+                        "which requirement id, region or entity is left uncovered - a "
+                        "length floor accepts filler in any language, an anchor does not")
+            _check_discharges_shape(bp, entry, kind, selector, at, errors)
+            continue
+        if entry.get("reason") is not None:
+            errors.append(f"{at}: reason belongs to a known-unverified entry only")
+        if not isinstance(selector, str):
+            errors.append(
+                f"{at}: {kind} needs a selector (an empty string is the honest "
+                "'no confident selector' - the gate records that screenshot-only)")
+        has_contains = entry.get("contains") is not None
+        has_equals = entry.get("equals") is not None
+        if kind == "text":
+            if has_contains == has_equals:
+                errors.append(
+                    f"{at}: a text assertion needs exactly one of contains or equals - "
+                    + ("both were given" if has_contains else "neither was given"))
+            else:
+                expected = entry.get("contains") if has_contains else entry.get("equals")
+                if not isinstance(expected, str) or not expected.strip():
+                    errors.append(
+                        f"{at}: {'contains' if has_contains else 'equals'} must be a "
+                        "non-empty string")
+        elif has_contains or has_equals:
+            errors.append(
+                f"{at}: contains/equals belong to a text assertion - "
+                f"{kind!r} asserts presence, not content")
+        _check_discharges_shape(bp, entry, kind, selector, at, errors)
+
+
+def _check_discharges_shape(bp, entry, kind, selector, at, errors):
+    """What an entry is allowed to CLAIM it answers.
+
+    Three constraints, each closing a measured way to make eleven requirements
+    look answered by one trivially-true assertion (reproduced on the real
+    restaurant-app-v2 dispatch blueprint: one `widget` on `body` carrying all
+    eleven cited ids validated clean, with zero warnings).
+
+    Stated limit, because a guarantee this rule does NOT provide is worse than
+    a limit it admits: nothing here can judge whether a selector names the
+    thing the requirement is about. These make the claim cheap to AUDIT - one
+    id per element, one id per presence check, and no claim at all from an
+    entry the gate will record `unasserted`. A reviewer still reads them.
+    """
+    names = _as_list(entry.get("discharges"))
+    if not names:
+        return
+    for name in names:
+        if not isinstance(name, str) or not name.strip():
+            errors.append(f"{at}: discharges entries must be non-empty requirement ids")
+            continue
+        if len(_REQ_ID_RE.findall(name)) > 1:
+            errors.append(
+                f"{at}: discharges entry {name!r} names more than one requirement - "
+                "one id per element, so the claim can be read one line at a time")
+    if kind != "known-unverified" and isinstance(selector, str) and not selector.strip():
+        errors.append(
+            f"{at}: an entry with an empty selector is recorded `unasserted` by the "
+            "gate - screenshot-only - so it answers no requirement. Either name a "
+            "selector or declare the gap with assert 'known-unverified'")
+    if kind in ("widget", "populated") and len(names) > 1:
+        errors.append(
+            f"{at}: a {kind} assertion answers ONE question about ONE element, so it "
+            f"discharges at most one requirement; this one claims {len(names)}. Split "
+            "it, or say plainly what is uncovered with assert 'known-unverified'")
+
+
+def _check_render_gate_near_miss(bp, errors):
+    """A near-miss must never be quieter than a miss.
+
+    `[render gate: X]` and `[Render-Gate: X]` are ordinary prose to every other
+    rule here, so an author who wrote the link and mistyped it gets silence -
+    the same failure shape this whole section exists to remove.
+    """
+    lines = list(_disclosure_lines(bp))
+    lines += [(f"acceptance_checklist[{i}]", s)
+              for i, s in enumerate(_as_list(bp.get("acceptance_checklist")))
+              if isinstance(s, str)]
+    labels = _render_gate_labels(bp)
+    for path, line in lines:
+        residue = _RG_NO_CLAIM_RE.sub("", _RG_MARKER_RE.sub("", line))
+        if _RG_MALFORMED_MARKER_RE.search(residue):
+            errors.append(
+                f"{path}: carries something that reads as a render-gate marker but is "
+                "not one. Write exactly '[render-gate: <label>]' or '[no-runtime-claim]' "
+                f"- a mistyped marker is invisible to every check. Line: {line.strip()[:120]!r}")
+        elif _RG_PROSE_ASSERTION_RE.search(residue):
+            errors.append(
+                f"{path}: opens with a render-gate token, so it reads as an assertion "
+                "written into prose. Assertions live in screens[].render_gate, where a "
+                "gate can execute them; prose carries only the '[render-gate: <label>]' "
+                f"marker pointing at one. Line: {line.strip()[:120]!r}")
+        for label in _RG_MARKER_RE.findall(line):
+            if _nfc(label) not in labels:
+                errors.append(
+                    f"{path}: marker [render-gate: {label}] names no render_gate entry on "
+                    "this blueprint - the link points at nothing")
+
+
+def _check_render_gate_coverage(bp, warnings):
+    """Advisory, never graduating: a screen with no assertion at all.
+
+    Deliberately does NOT block at handoff. SKILL.md names a screen archetype
+    with legitimately nothing to assert - an `instructional` screen, "a
+    getting-started page, a launcher, a reference card. It explains rather than
+    operates" - and blocking it would force the operator to invent a stated gap,
+    which is the padding SKILL.md's "When a section is legitimately empty"
+    exists to prevent. The rule that DOES block is the disclosure and
+    requirement discharge below, because both are triggered by something the
+    author themselves wrote.
+    """
+    bare = [s.get("name", "?") for s in _as_list(bp.get("screens"))
+            if isinstance(s, dict) and not _as_list(s.get("render_gate"))]
+    if not bare:
+        return
+    warnings.append(Finding(
+        "screen(s) %s declare no render_gate assertion - nothing about what they "
+        "must SHOW at runtime is checkable, so the render gate can only report "
+        "them reached. If that is right (an instructional screen explains rather "
+        "than operates), leave it; otherwise name the assertion, or declare the "
+        "gap with assert 'known-unverified'"
+        % ", ".join(repr(s) for s in bare),
+        graduating=False,
+    ))
+
+
+def _check_disclosure_discharge(bp, warnings):
+    """Graduating: every disclosure says where it is discharged.
+
+    The structural slot, at the granularity of the failure. A disclosure line
+    either names the assertion that covers it or says it makes no runtime claim
+    - and one of the two is always the right answer, which is what lets this
+    block at handoff without a waiver channel. A per-screen count cannot do this
+    job: the v2 screen was not check-free, it was check-incomplete, and one
+    trivial assertion would have cleared any floor.
+    """
+    unmarked = []
+    for path, line in _disclosure_lines(bp):
+        if _RG_MARKER_RE.search(line) or _RG_NO_CLAIM_RE.search(line):
+            continue
+        unmarked.append((path, line))
+    if not unmarked:
+        return
+    warnings.append(Finding(
+        "%d disclosure line(s) say where they are discharged and %d do not: %s. "
+        "End each with '[render-gate: <label>]' naming the assertion that checks "
+        "it, or '[no-runtime-claim]' if it asserts nothing observable on the "
+        "rendered screen. A disclosure that reads like coverage and discharges "
+        "nothing is the defect this rule exists to remove"
+        % (sum(1 for _ in _disclosure_lines(bp)) - len(unmarked), len(unmarked),
+           "; ".join(f"{p}: {t.strip()[:70]!r}" for p, t in unmarked[:4])
+           + (" ..." if len(unmarked) > 4 else "")),
+        graduating=True,
+    ))
+
+
+def _check_requirement_discharge(bp, warnings):
+    """Graduating: every requirement id the blueprint cites is answered.
+
+    Opt-in by the author's own citation - a blueprint that cites no ids gets no
+    finding, so this can never force invented content. It fires on the specific
+    v2 miss rather than on general absence: BR-SC-006 was cited in the checklist
+    and answered by nothing.
+    """
+    cited = cited_requirement_ids(bp)
+    if not cited:
+        return
+    answered = set()
+    for _si, _sn, _ei, entry in _render_gate_entries(bp):
+        haystack = " ".join(str(entry.get(k, "")) for k in ("label", "reason"))
+        haystack += " " + " ".join(str(d) for d in _as_list(entry.get("discharges")))
+        for req in cited:
+            if req in haystack:
+                answered.add(req)
+    missing = sorted(cited - answered)
+    if not missing:
+        return
+    warnings.append(Finding(
+        "requirement id(s) %s are cited by this blueprint and answered by no "
+        "render_gate entry. Name each in a `discharges` array on the assertion "
+        "that checks it, or in the reason of a known-unverified entry saying why "
+        "this screen cannot show it - a requirement the artifact claims to serve "
+        "and nothing checks is how BR-SC-006 shipped unmet"
+        % ", ".join(missing),
+        graduating=True,
+    ))
+
+
+def render_gate_screens(bp):
+    """Project the declared assertions into render-gate `screens[]` entries.
+
+    The projection is MECHANICAL on purpose. A mapping table in a reference
+    would leave the last hop - a human retyping an assertion into a check spec -
+    as the one step that already failed once. What this cannot supply is `path`
+    and `recordState`: neither is a design fact, both belong to the run. The
+    gate rejects a screen missing either, loudly, so the omission cannot pass
+    for a check.
+    """
+    out = []
+    for screen in _as_list(bp.get("screens")):
+        if not isinstance(screen, dict):
+            continue
+        entries = [e for e in _as_list(screen.get("render_gate")) if isinstance(e, dict)]
+        if not entries:
+            continue
+        projected = {"name": screen.get("name")}
+        families = {"widget": "expectWidgets", "populated": "expectPopulated"}
+        for entry in entries:
+            kind = entry.get("assert")
+            if kind in families:
+                projected.setdefault(families[kind], []).append(
+                    {"label": entry.get("label"), "selector": entry.get("selector", "")})
+            elif kind == "text":
+                row = {"label": entry.get("label"), "selector": entry.get("selector", "")}
+                row["contains" if entry.get("contains") is not None else "equals"] = (
+                    entry.get("contains") if entry.get("contains") is not None
+                    else entry.get("equals"))
+                projected.setdefault("expectText", []).append(row)
+            elif kind == "known-unverified":
+                projected.setdefault("knownUnverified", []).append(
+                    {"label": entry.get("label"), "reason": entry.get("reason")})
+        out.append(projected)
+    return out
+
+
 def _check_acceptance_checklist_not_empty(bp, errors):
     """The one required section with no legitimate empty state.
 
@@ -1184,6 +1627,8 @@ def collect_errors(bp, extra_seed_targets=None, extra_declared=None):
     _check_fk_target_declared(bp, errors, extra_declared)
     _check_static_datasource_unpopulated(bp, errors, extra_seed_targets)
     _check_assertion_parity(bp, errors)
+    _check_render_gate_shape(bp, errors)
+    _check_render_gate_near_miss(bp, errors)
     return errors
 
 
@@ -1195,6 +1640,9 @@ def collect_warnings(bp):
     _check_menu_chrome(bp, warnings)
     _check_existing_asset_announcement(bp, warnings)
     _check_buttongroup_onchange(bp, warnings)
+    _check_render_gate_coverage(bp, warnings)
+    _check_disclosure_discharge(bp, warnings)
+    _check_requirement_discharge(bp, warnings)
     return warnings
 
 
@@ -1754,6 +2202,28 @@ def _emit_inventory_agreement(inventory_path, loaded):
     return bool(errors)
 
 
+def _cross_blueprint_unions(paths):
+    """(seed targets, declared entity names) across every parseable blueprint.
+
+    F-B2 and the foreign-key target check are hard ERRORS evaluated against
+    this union, so a legitimate cross-blueprint projection - an entity declared
+    in one blueprint and seeded from a sibling - is not false-flagged. Shared
+    by every path that evaluates the contract, because a second path computing
+    it differently applies a stricter contract than the verdict the operator
+    was shown.
+    """
+    seeds = set()
+    declared = set()
+    for bp_path in paths:
+        try:
+            bp = json.loads(bp_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        seeds |= _fk_enum_targets(bp) | _records_targets(bp)
+        declared |= declared_entity_names(bp)
+    return seeds, declared
+
+
 def main(argv=None):
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
@@ -1768,6 +2238,11 @@ def main(argv=None):
                         help="screen-inventory.json this design run was briefed "
                              "from - the tier boundary: screen names, chrome and "
                              "carried assertions must still agree with it")
+    parser.add_argument("--emit-render-gate-spec", metavar="PATH",
+                        help="Write the declared render_gate assertions as render-gate "
+                             "screens[] entries, so the check spec is projected rather "
+                             "than retyped. `path` and `recordState` belong to the run "
+                             "and are added by the operator")
     parser.add_argument("--handoff", action="store_true",
                         help="Grade this run as a handoff rather than a draft: "
                              "the graduating warnings - the ones always fixable "
@@ -1782,6 +2257,45 @@ def main(argv=None):
             f"INVALID: no blueprint files found in: {' '.join(args.paths)}\n"
         )
         return 2
+
+    # Emitted BEFORE the report and only from a blueprint that passes the
+    # contract: projecting an executable spec out of a blueprint the validator
+    # rejects would hand the gate assertions nobody has checked the shape of,
+    # which is the silent-garbage path this whole feature exists to close.
+    if args.emit_render_gate_spec:
+        emit_seeds, emit_declared = _cross_blueprint_unions(paths)
+        screens = []
+        for bp_path in paths:
+            try:
+                bp = json.loads(bp_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                sys.stdout.write(f"INVALID: {bp_path}: {exc}\n")
+                return 2
+            # Evaluated on the SAME footing as the report below, unions and
+            # all. Re-running collect_errors bare applied a stricter contract
+            # than the validator's own verdict: a legitimate cross-blueprint
+            # projection (entity declared in A, seeded from B) validated clean
+            # in the report and was refused here, with a diagnosis that was
+            # simply false - the blueprint was not broken.
+            found = collect_errors(bp, extra_seed_targets=emit_seeds,
+                                   extra_declared=emit_declared)
+            if found:
+                sys.stdout.write(
+                    f"INVALID: {bp_path} carries {len(found)} contract error(s); no "
+                    "render-gate spec projected. Fix the blueprint first - an "
+                    "assertion set derived from a rejected blueprint is not evidence "
+                    "of anything.\n")
+                for error in found:
+                    sys.stdout.write(f"- {error}\n")
+                return 2
+            screens.extend(render_gate_screens(bp))
+        Path(args.emit_render_gate_spec).write_text(
+            json.dumps({"screens": screens}, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+        sys.stdout.write(
+            f"RENDER-GATE SPEC: {len(screens)} screen(s) projected to "
+            f"{args.emit_render_gate_spec}. Add `path` and `recordState` per record "
+            "state before running the gate.\n")
 
     # Single-path: identical to the historical behaviour, including exit code 2.
     if len(paths) == 1:
@@ -1799,19 +2313,7 @@ def main(argv=None):
         return code
 
     # Multi-path: per-file reports beside each, then the cross-blueprint pass.
-    # First compute the union of seed targets (incoming FK-enum + declared
-    # records) across every parseable blueprint, so F-B2 does not false-warn on
-    # a static entity whose seed lives in a sibling blueprint (a legitimate
-    # cross-blueprint projection).
-    union_seed_targets = set()
-    union_declared = set()
-    for bp_path in paths:
-        try:
-            _bp = json.loads(bp_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        union_seed_targets |= _fk_enum_targets(_bp) | _records_targets(_bp)
-        union_declared |= declared_entity_names(_bp)
+    union_seed_targets, union_declared = _cross_blueprint_unions(paths)
 
     any_error = False
     loaded = []

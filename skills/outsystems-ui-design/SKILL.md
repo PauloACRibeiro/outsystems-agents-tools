@@ -208,6 +208,7 @@ concluding an asset is missing. It is not a sign the skill failed to install.
 | A region needs behavior beyond a pattern's inputs — before flagging `custom_block_needed` | `references/extensibility.md` |
 | The design source is a **live URL or a local HTML file** rather than an image | `references/live-source-inspection.md` — how to drive a mockup SPA without misreading it, and the computed-style token pull the live-URL intake mode depends on |
 | The screen's direction is genuinely open — a rough sketch that commits to no layout, a close-call archetype the user could not settle, or an explicit ask to see options before converging | `references/divergent-alternatives.md` — the optional pre-loop alternatives round. **Not** for a wireframe that already commits to a layout |
+| Writing `screens[].render_gate` at Step 4 — any disclosure about what the screen must SHOW, or any requirement id the blueprint cites | `references/render-gate-assertions.md` — the assertion contract, the two discharge rules, and the worked case the rule comes from |
 | Screen archetype confirmed at Step 1 | The matching archetype guide (below) |
 | A cross-cutting design concern surfaces | The matching cross-cutting guide (below) |
 
@@ -585,6 +586,30 @@ On approval, fill the OMI enriched blueprint at
   asset on this field — imitate the rule.** `scripts/validate_blueprint.py` now
   rejects class syntax, so a wrong value fails loudly instead of reaching OMI
   unpatched (Phase 3 GAP-6, where it did exactly that across eight screens).
+- `screens[].render_gate` — **the one gate-bearing channel for a runtime
+  claim**, and the section this step is most likely to skip. Every disclosure
+  about what the screen must SHOW, and every requirement the blueprint cites,
+  is written here as a **named assertion** — or as an explicit
+  `known-unverified` entry saying why none is derivable. Full contract, grammar
+  and the worked case: `references/render-gate-assertions.md`.
+  **Why it is a slot and not prose:** a disclosure that reads like coverage and
+  discharges nothing is worse than silence, because it stops anyone looking —
+  the reference carries the run that measured that. Two rules bind, both keyed
+  on structure rather than on wording, because the artifact behind them is
+  written in European Portuguese and an English phrase trigger fires on
+  nothing:
+  1. **Every disclosure says where it is discharged.** Each line of
+     `evidence_boundary.review_notes`, `evidence_boundary.grounding_notes` and
+     `target_context.review_notes` carries `[render-gate: <label>]` naming the
+     assertion that checks it, or `[no-runtime-claim]` if it asserts nothing
+     observable on the rendered screen. Write the marker **while writing the
+     note**. A mistyped one is a contract error, never silent prose.
+  2. **Every requirement id the blueprint cites is answered** by some entry's
+     `discharges`, `label` or `reason`. Opt-in by your own citation, so it can
+     never force invented content.
+  `populated` is not the assertion for "shows the right thing" — a placeholder
+  is not empty, so it **passes** a populated check. Use `assert: "text"` with
+  the expected string.
 - `roles`, `acceptance_checklist` — see **When a section is legitimately
   empty** below before writing either one.
 
@@ -606,6 +631,7 @@ chart: content that exists to make the artifact look complete.
 | `entities` | the screen names no data producer at all | an `instructional` screen — a getting-started page, a launcher, a reference card. It explains rather than operates, so there is nothing for it to bind |
 | `icon_mapping` | the wireframe shows no icons | a plain form or a text-only detail view. Do not map an icon the wireframe never drew, and do not add one "for polish" — that is a design decision the user never approved |
 | `roles` | nothing on the screen is role-gated | a screen every principal the app admits can reach. An empty `roles` says *no gating was designed*; it does not say the app is anonymous |
+| `screens[].render_gate` | the screen makes no claim about what it must show at runtime | an `instructional` screen — it explains rather than operates, so there is no displayed state to assert. This is why the missing-assertion warning stays **advisory** and never blocks at handoff: forcing an entry here would produce exactly the padding this section exists to prevent. The rules that DO block are the two discharge rules, and both are triggered by something the author wrote |
 
 **`acceptance_checklist` is never empty.** It is the one required section with
 no legitimate empty state: a screen with nothing worth checking is a screen with
@@ -892,8 +918,9 @@ Windows PowerShell:
 python scripts\validate_blueprint.py design\<screen-slug>\blueprint.json --handoff
 ```
 
-The graduating warnings — the prose-only repeat widget above, and a bound asset
-missing from `target_context.existing_assets` — then print under
+The graduating warnings — the prose-only repeat widget above, a bound asset
+missing from `target_context.existing_assets`, an undischarged disclosure line,
+and a cited requirement id no `render_gate` entry answers — then print under
 `HANDOFF BLOCKED:` and exit 1 instead of advising. The finding text is
 identical; only the channel and the exit code change, and the contract verdict
 is untouched: a graduating warning is not a contract error and the blueprint
@@ -1020,11 +1047,26 @@ the unchecked boundary.
 
 ### Step 5 — Handoff
 
+Grade the run as a handoff first: `--handoff` is what turns the graduating
+findings from advice into defects, and the two discharge rules above are among
+them. A blueprint that blocks there is not handed over; reopen the loop, write
+the missing assertion or the missing marker, and re-validate.
+
+Then project the assertions rather than leaving them to be retyped later —
+retyping is the step that already failed once:
+
+```bash
+python3 scripts/validate_blueprint.py design/<screen-slug>/blueprint.json \
+  --emit-render-gate-spec design/<screen-slug>/render-gate-screens.json
+```
+
 The final message names the exact blueprint path
-(`design/<screen-slug>/blueprint.json`) and the exact next step: **invoke
+(`design/<screen-slug>/blueprint.json`), the projected assertions file if one
+was written, and the exact next step: **invoke
 `outsystems-mentor-implementation` with that file**. Nothing is auto-invoked — the
 user decides if and when execution happens. Do not start Mentor work, do not chain
-into any other skill.
+into any other skill. The projected assertions are consumed later, by whoever
+runs the render gate (`outsystems-render-gate`, which is not part of the colleague sprint-loop pack) — this skill does not run it and does not need it installed.
 
 ## MCP enrichment and degraded mode
 

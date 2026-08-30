@@ -105,6 +105,27 @@
         "required": ["name", "type", "description", "main_content"],
         "properties": {
           "name": {"type": "string"},
+          "render_gate": {
+            "type": "array",
+            "description": "Optional, and the ONE gate-bearing channel for a runtime claim. Each entry is a named assertion a render gate can execute, or an explicit declaration that no assertion is derivable. This is where a disclosure about what the screen must SHOW stops being prose: the acceptance_checklist stays advisory by design, so a claim that must be checked belongs here, exactly as an enforced count belongs in the screen's `assertions` object. SKILL-LOCAL EXTENSION, added 2026-08-30: the OMI contract this file projects does not carry this key and ignores it, exactly as it ignores `assertions`. It is per-screen and optional so the divergence stays bounded - the top-level `required` list is untouched, and a blueprint without it is the same artifact it was before. Cross-field rules the shape cannot express are in scripts/validate_blueprint.py.",
+            "items": {
+              "type": "object",
+              "required": ["label", "assert"],
+              "properties": {
+                "label": {"type": "string", "description": "Names the gate row. Unique across the blueprint, because a disclosure references it by this name alone."},
+                "assert": {
+                  "type": "string",
+                  "enum": ["widget", "populated", "text", "known-unverified"],
+                  "description": "widget: the element is present. populated: it carries some value. text: it displays THIS content - the only one that can fail on a placeholder, since a placeholder is not empty. known-unverified: no assertion is derivable and the reason is stated rather than left unsaid."
+                },
+                "selector": {"type": "string", "description": "CSS. Required on widget/populated/text; forbidden on known-unverified. An empty string is the honest 'no confident selector' - the gate records that screenshot-only."},
+                "contains": {"type": "string", "description": "text only, exclusive with equals: a fragment the displayed text must carry. Case-insensitive at the gate."},
+                "equals": {"type": "string", "description": "text only, exclusive with contains: the exact displayed text. Case-sensitive at the gate."},
+                "reason": {"type": "string", "description": "known-unverified only: why no assertion is derivable. Must name a token the blueprint already declares - a requirement id, a screen, a region or an entity - so a coverage hole is stated in terms of what it leaves uncovered."},
+                "discharges": {"type": "array", "items": {"type": "string"}, "description": "Requirement ids this entry answers (BR-SC-006, UC-005). The link a reviewer follows from a cited requirement to the check that covers it."}
+              }
+            }
+          },
           "main_content": {
             "type": "array",
             "items": {
