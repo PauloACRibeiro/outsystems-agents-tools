@@ -1,5 +1,5 @@
 {
-  "file_count": 163,
+  "file_count": 164,
   "files": [
     {
       "path": "docs/colleague-feedback/FEEDBACK.md",
@@ -20,6 +20,10 @@
     {
       "path": "docs/sprint-loop-for-colleagues.md",
       "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
+    },
+    {
+      "path": "docs/sprint-loop-manual.md",
+      "sha256": "ef89a0499375b9ef33219de7de65e24f63604c11b102a97c649e68bf6f2e8956"
     },
     {
       "path": "scripts/install_skill_pack.py",
@@ -950,7 +954,7 @@
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
@@ -1219,7 +1223,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
@@ -1300,7 +1304,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
@@ -1337,7 +1341,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
@@ -1370,12 +1374,12 @@
         }
       ],
       "pack_name": "outsystems-screen-inventory",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
-      "file_count": 4,
+      "file_count": 5,
       "files": [
         {
           "path": "docs/colleague-feedback/FEEDBACK.md",
@@ -1392,15 +1396,19 @@
         {
           "path": "docs/sprint-loop-for-colleagues.md",
           "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
+        },
+        {
+          "path": "docs/sprint-loop-manual.md",
+          "sha256": "ef89a0499375b9ef33219de7de65e24f63604c11b102a97c649e68bf6f2e8956"
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
-      "file_count": 156,
+      "file_count": 157,
       "files": [
         {
           "path": "docs/colleague-feedback/FEEDBACK.md",
@@ -1421,6 +1429,10 @@
         {
           "path": "docs/sprint-loop-for-colleagues.md",
           "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
+        },
+        {
+          "path": "docs/sprint-loop-manual.md",
+          "sha256": "ef89a0499375b9ef33219de7de65e24f63604c11b102a97c649e68bf6f2e8956"
         },
         {
           "path": "skills/outsystems-bdd-tests/SKILL.md",
@@ -2028,7 +2040,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     },
     {
@@ -2241,7 +2253,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
       "version": "2026-08-31"
     }
   ]

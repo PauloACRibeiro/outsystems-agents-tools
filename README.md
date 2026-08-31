@@ -34,6 +34,10 @@ run without a knowledge source: install the **OutSystems Public Knowledge MCP
 server** too — next section, same release. (OutSystems employees already
 running the internal tech-content server over VPN are covered.)
 
+**Installed? Start here: [the sprint loop manual](docs/sprint-loop-manual.md)**
+— the quick start from installed to first app, one paste-ready prompt per step
+with its gate, plus the tenant-connection step neither installer covers.
+
 Then read [the sprint loop entry doc](docs/sprint-loop-for-colleagues.md) before
 your first run. It is short, and it covers the two things that cost people the
 most time: the order the steps have to run in, and the six points where the loop
@@ -138,7 +142,7 @@ breaks, open an issue; it may or may not be picked up.
 |---|---|---|
 | [Releases](../../releases/latest) | Both products' assets — the `outsystems-public-knowledge` component (ZIP + `.sha256`) and the sprint loop pack (`.tgz` + `.sha256`), each with its own per-OS install instructions | Component built from `workspace-knowledge-cc`; pack built from `portable-agent-skills` |
 | [`skills/`](skills/) | Browsable source for the six published skills | Derived from `portable-agent-skills` |
-| [`docs/`](docs/) | The sprint loop entry doc, the feedback kit, and the knowledge-provider setup notes | Derived from `portable-agent-skills` |
+| [`docs/`](docs/) | The sprint loop manual, the entry doc, the feedback kit, and the knowledge-provider setup notes | Derived from `portable-agent-skills` |
 
 Every release carries **both** products' assets, so `/releases/latest/download/…`
 resolves for either one regardless of which product a given release was cut for.
