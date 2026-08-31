@@ -6,7 +6,7 @@ not published here.
 
 > **Status: published.** Two things ship here, and they install separately: the
 > **OutSystems Public Knowledge MCP server** (a local documentation server) and
-> the **OutSystems sprint loop pack** (four agent skills). Both are Release
+> the **OutSystems sprint loop pack** (six agent skills). Both are Release
 > assets, and every link below resolves to the
 > [latest release](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest)
 > rather than to a fixed version — so the prompts stay correct as new versions
@@ -14,7 +14,7 @@ not published here.
 
 ## Install the OutSystems sprint loop pack
 
-Four skills that take an OutSystems screen from an idea to a published, graded
+Six skills that take an OutSystems screen from an idea to a published, graded
 revision. Paste this into Claude Code or Codex:
 
 ```text
@@ -117,7 +117,7 @@ breaks, open an issue; it may or may not be picked up.
 | Area | Contents | Source of truth |
 |---|---|---|
 | [Releases](../../releases/latest) | Both products' assets — the `outsystems-public-knowledge` component (ZIP + `.sha256`) and the sprint loop pack (`.tgz` + `.sha256`), each with its own per-OS install instructions | Component built from `workspace-knowledge-cc`; pack built from `portable-agent-skills` |
-| [`skills/`](skills/) | Browsable source for the four published skills | Derived from `portable-agent-skills` |
+| [`skills/`](skills/) | Browsable source for the six published skills | Derived from `portable-agent-skills` |
 | [`docs/`](docs/) | The sprint loop entry doc, the feedback kit, and the knowledge-provider setup notes | Derived from `portable-agent-skills` |
 
 Every release carries **both** products' assets, so `/releases/latest/download/…`
@@ -152,9 +152,11 @@ outsystems-agents-tools/
 ├── docs/                             # generated — entry doc + feedback kit
 └── skills/                           # generated — one directory per skill
     ├── EXPORT-MANIFEST.json          # per-pack provenance + per-file sha256
+    ├── outsystems-screen-inventory/
     ├── outsystems-ui-design/
     ├── outsystems-plan-to-mentor/
     ├── outsystems-mentor-implementation/
+    ├── outsystems-bdd-tests/
     ├── outsystems-runtime-ui-audit/
     └── shared/                       # not a skill; a file the build skill references
 ```
