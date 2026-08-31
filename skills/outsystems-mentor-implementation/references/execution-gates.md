@@ -1,6 +1,6 @@
 ---
 name: omi-execution-gates
-description: The runtime gates that cover what build-time signals cannot see — execute an action before building on it, check the durable row rather than the badge, render a screen as a principal who can reach it, baseline roles and rendered output before a turn changes them, and never close a fix on the model's report. Ends in the failure-shapes catalog: ten defect shapes that all validated clean, each with the probe that discriminates it. Use during any live build or fix iteration.
+description: The runtime gates that cover what build-time signals cannot see — execute an action before building on it, check the durable row rather than the badge, render a screen as a principal who can reach it, baseline roles and rendered output before a turn changes them, and never close a fix on the model's report. Ends in the failure-shapes catalog: twelve defect shapes that all validated clean, each with the probe that discriminates it. Use during any live build or fix iteration.
 ---
 
 # Execution gates
@@ -74,6 +74,18 @@ costs a single call. **Re-rendering the widget is not a reload** — where the
 screen holds the value in a local variable, only re-fetching proves anything,
 and the second incident above is what a widget refresh looks like when it
 convinces you the write failed.
+
+**The screen you are reading is older than the probe you just ran.** On-screen
+feedback messages and list counts persist across probes, so a verdict taken off
+a screen that has not been reloaded is a verdict about an earlier probe.
+Measured twice on restaurant-app-v2 (2026-08-31): a *"Escreva o nome do
+prato."* left standing from earlier empty-name probes was read as a free-text
+regression that did not exist, and a pre-refresh item count was read as
+"nothing was added" over an item that had been added. Neither screen was
+lying — both were answering a question asked several probes ago. **A
+verification verdict is valid only from a post-reload read of ground truth**,
+which for a message means reloading before believing it and for a count means
+re-fetching before comparing it.
 
 ## 2. Render gate — per screen
 
@@ -209,6 +221,14 @@ Three ways that run's fixes passed a presence check and changed nothing:
 - **A class the theme never defined.** `align-items-end` was applied across the
   build and resolves to no rule at all in this app's theme. In the markup it is
   indistinguishable from a working fix.
+
+  The measured known-bad list for this theme, growing as runs find them:
+  `badge-primary`, `align-items-end`, `cursor-pointer`. All three resolve to
+  nothing; `cursor-pointer` computes to `cursor: auto`, which is the tell.
+  **`cursor-pointer` carries a second failure on top of the silent one** — a
+  row made to look clickable by styling alone has no handler behind it, so the
+  class not resolving is the visible half of shape 1. Treat a "clickable"
+  styled row as unwired until the network log says otherwise.
 - **A property with no effect on its target.** `align-self` was set on a widget
   whose parent is not a flex container, where the property does not apply.
 
@@ -930,14 +950,34 @@ conclusions.
 > corroborated by our own §4/§4b measurements. Claims table and provenance detail
 > are in the mining disposition under `docs/adoption/`.
 
-## 6. The failure-shapes catalog — ten shapes, none of which validation could see
+### 5d. Record the WARNING count per turn, and treat an unexpected jump as a finding
+
+**Write down the validation WARNING count for every Mentor turn, and diff it
+against the previous turn's.** Errors get read because zero is the gate;
+warnings get skimmed because they never block. But the count is a structured
+field, and by the meta-rule in §6 that makes it fact — the only per-turn number
+that moves when a turn does something it was not asked to do.
+
+Measured on restaurant-app-v2, 2026-08-31: a turn whose whole job was to
+**remove** a shared aggregate took the count from **61 to 71**. Errors stayed at
+zero and the turn published. A removal that adds ten warnings has done
+something besides removing.
+
+The rule is narrow: an unexpected delta means **enumerate the new warnings
+before publishing** — not that warnings must reach zero, and not that a stable
+count clears the turn. A count that holds steady is one signal agreeing with
+the others; a count that jumps on a turn with no reason to grow is a cheap read
+that has already told you where to look.
+
+## 6. The failure-shapes catalog — twelve shapes, none of which validation could see
 
 A single day of UI review on restaurant-app-v2 (2026-08-30) produced ten
-distinct defect shapes. **Every one passed Mentor validation with
-`error_count: 0`**, and most also passed publish, the digest gate and
-enumeration. So the useful column is the third one: these shapes are not
-distinguishable from one another by any build-time signal — only by the probe
-that discriminates them. Reach for the probe, not for another screenshot.
+distinct defect shapes; the typeahead work on the same app the next day
+(2026-08-31, revisions 47→49) added two more. **Every one passed Mentor
+validation with `error_count: 0`**, and most also passed publish, the digest
+gate and enumeration. So the useful column is the third one: these shapes are
+not distinguishable from one another by any build-time signal — only by the
+probe that discriminates them. Reach for the probe, not for another screenshot.
 
 | # | Shape | The probe that discriminates it |
 |---|---|---|
@@ -951,6 +991,8 @@ that discriminates them. Reach for the probe, not for another screenshot.
 | 8 | Off-by-one inside a well-formed expression — zero-based `Index()` tested with `> 0` | Vary the input's **position**: prefix, mid-string, and no-match. A mid-string match passes and hides it |
 | 9 | Two computations of the same business fact disagreeing — a stored status flag against a live count | Compare both paths **on the same record** |
 | 10 | An expression entered as a literal string — the caption renders the raw `If(...)` | Look at the rendered text |
+| 11 | Live logic behind a UI-unsatisfiable condition — a complete, correct branch guarded by a condition no user action can make true | For every guarded branch in a new or changed action, **name the UI element that makes the condition true**. No such element, no way to fire it: the branch is dead-but-live, and the aggregate feeding it is fetching for nobody |
+| 12 | `.Current` read in a handler bound to something other than the row's own event — a Container's Click inside a list is not the List Item's On Click | Click the row and read what the handler received: **some values set and others cleared**, then the follow-on write does nothing. Pass the row's values as input arguments on the widget's event rather than re-deriving them from the aggregate |
 
 **The meta-rule the day proved: structured fields are fact; prose is
 hypothesis.** Mentor's structured fields — `error_count`, the validation
@@ -964,3 +1006,38 @@ That is not a reason to stop reading summaries — §5 is why you must, since
 their admissions are load-bearing. It is a rule about what a summary can
 settle: read the fields, and treat the narrative around them as a hypothesis
 that costs one probe to check.
+
+**Shapes 11 and 12 are one fallacy at two levels, and the day that produced
+them produced both.** Restaurant-app-v2's MenuComposer typeahead, 2026-08-31,
+revisions 47→49. Five section "Adicionar" buttons each carried a complete and
+correct library-suggestion branch, every branch guarded on
+`GetDishSuggestions.List.Current` against **one shared five-record screen
+aggregate** — a condition no user action could make true, because no picker
+existed and typing drove nothing. Validation saw healthy logic. The `.opc`
+rendered a fully implemented feature. Only clicking through the UI showed the
+branch could never fire. The corrective turn then wired the suggestion row's
+**Container** Click — not the List Item's own On Click — and read name and
+price from `GetDishSuggestionsSopa.List.Current` inside that handler. The click
+set some values, cleared others, and the add that followed did nothing at all.
+
+Two rules come out of that pairing. First, **delete an aggregate that ends up
+with no consumer** rather than leaving it fetching for nobody — dead-but-live
+code is exactly what made shape 11 invisible, since every part of it was real.
+Second, **pass the row's values as input arguments on the widget's event
+instead of re-deriving them from the aggregate inside the handler.** That is
+the platform's own pattern for acting on a clicked row: ODC's *Navigate to a
+Detail Screen* has the List Item's On Click take the current item's identifier
+as an input argument rather than have the target look it up. An argument the
+event supplies does not depend on where the cursor sits when the handler runs;
+`.Current` inside the handler does.
+
+**Scope this one honestly.** `.Current` is not invalid in a handler — it is
+legitimate where the event is bound in the row's own context, and OutSystems
+guidance covers that use. What was measured here is the other case: a
+Container's Click, which is not the List Item's On Click, reading `.Current`
+and getting values that were not the clicked row's. The mechanism behind that
+was not measured, so the rule is stated as the binding case it was observed in
+and the explicit-argument pattern as the robust alternative — not as a claim
+about when expressions evaluate. The prompt-side form is
+`references/odc-mentor-hardening.md` →
+`` ## Pass The Clicked Row As Arguments, Not As `.Current` ``.

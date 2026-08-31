@@ -1649,6 +1649,47 @@ Real session (restaurant-app v2, 2026-08-30): search results built inside a 56px
 
 ---
 
+### Style Only With Classes Verified Present In This App's Theme
+
+**Failure pattern**
+
+Prompting for a style by naming the class the effect would have in a generic utility framework, and accepting the applied class as the fix:
+
+```text
+# Wrong: plausible utility names, none of which this theme defines
+Add class badge-primary to the status label.
+Add class align-items-end to the row container.
+Add class cursor-pointer to the suggestion row so it looks clickable.
+```
+
+Each one applies cleanly, publishes, and produces no rule at all. The markup is indistinguishable from a working fix, which is why the class being present is never the check.
+
+**Preferred pattern**
+
+Name only classes verified to resolve in this app's theme, and say how the result is verified:
+
+```text
+Use only classes that already resolve in this app's theme; do not introduce a
+class name from a generic utility framework. Verify the result by computed
+style in the running app, never by the class being present in the markup.
+```
+
+Where the design needs an effect no theme class provides, ask for the property on the widget's style rather than inventing a class name for it.
+
+**Why**
+
+The measured known-bad list for this theme, growing as runs find them: `badge-primary`, `align-items-end`, `cursor-pointer`. `cursor-pointer` is the instructive one — it computes to `cursor: auto`, and a row made to *look* clickable by styling alone has no handler behind it either, so the dead class and the dead control arrive together. The per-app audit that resolves these once and caches the answer, and the computed-style measurement that closes each fix, are `references/execution-gates.md` → `### Measured computed style, not class presence`.
+
+**When to ask**
+
+Before emitting any class name that was not read off this app's theme, and before reporting a styling fix as applied on the strength of the class attribute.
+
+**Evidence**
+
+Real session (restaurant-app v2, 2026-08-30 → 08-31): all three classes above were applied across the build and resolved to nothing; `cursor-pointer` was measured computing to `cursor: auto` on a suggestion row that also had no click handler. Field-observed over the Mentor MCP.
+
+---
+
 ## Button Widget Rules
 
 ### Button OnClick Is Required — Never Leave It Empty
@@ -2704,3 +2745,13 @@ Lessons from a full agentic-app build (PlayRight "Member Support") driven end-to
 - When to ask: whenever a spec sentence contains *once*, *after*, *when*, or *has resolved* **and** the subject is fetched data. This is not a blanket rewrite of every timing word — the rule applies where a fetch is involved.
 - Minimal example: not "assign the local variable once the fetch has resolved", but `GetItem.On After Fetch: If ItemId = NullIdentifier() -> End ; Else If GetItem.List.Empty -> Assign LocalItem.Id = ItemId ... ; Else -> Assign LocalItem = GetItem.List.Current.Item`. Do not call `GetUserId()` inside On After Fetch — the platform documents it can return empty there.
 - Bounded exception — **render-time visibility flags**: On After Fetch is the right home for logic that *consumes* fetched data and the wrong home for a flag that a widget's `Visible` reads on the **first** render. The documented timing is "after data arrives, before widgets bind" (Language-elements handbook, `Current official`) and that is the timing relative to *that aggregate's own* binding; what a reactive screen does overall is paint first and fill in as each fetch resolves, so a flag assigned in a fetch handler is set after the render that needed it, and the section flashes or renders in the wrong state before correcting itself. Do not derive a render-time visibility flag from a fetch handler at all — give the widget a condition the platform re-evaluates when the data changes. For "is this section empty", that is a per-section aggregate with `Max. Records = 1`: it looks like an extra query sitting beside the main one, and the widget reads it directly, so the platform re-evaluates the condition whenever that data changes instead of leaving a handler-assigned flag stale. The probe does not resolve any sooner than the flag did — an unfetched aggregate reports `.List.Empty` as True — so bind the condition as `<Probe>.IsDataFetched and <Probe>.List.Empty` (Language-elements handbook, Aggregate runtime outputs), never on emptiness alone, or the first paint shows the empty state and corrects itself. This does **not** overturn the emptiness rule in the Language-elements handbook. That rule governs an aggregate you have already fetched, where `.List.Empty` beats `.Count = 0` and a second query buys nothing; here no such aggregate is in scope for that section, and a bounded one-row probe is cheaper than the full fetch it stands in for. The post-action half of the same persisted-state doctrine is `### Gate Post-Action Affordances On Persisted State`. Field-observed (restaurant-app v2, 2026-08-30), scoped to render-time visibility flags only.
+
+## Pass The Clicked Row As Arguments, Not As `.Current`
+
+- Scope: any prompt wiring a click or tap on a widget **inside** a List, Table or repeated container where the handler needs the acted-on row's values, and the binding is **not** the row's own event — a Container, Icon or Image Click rather than the List Item's On Click. Where the event *is* the row's own, `.Current` is legitimate and this rule is about the prompt shape, not a prohibition.
+- Failure pattern: writing the handler to re-derive the row from the aggregate — `Assign LocalName = GetDishSuggestions.List.Current.Dish.Name` **inside** the screen action — while the thing that fired is a Container's Click. It reads as obviously correct, and it is the one part of the wiring nothing checks. The symptom is partial, which is what makes it expensive to diagnose: the click assigns some values and clears others, and the add or save that follows silently does nothing, with no error anywhere.
+- Preferred pattern: **declare the handler with one input per value the row supplies and pass them as arguments on the widget's event.** `AddSuggestedDish(InDishId, InName, InPrice)`, with the three arguments bound on the event and the action body reading only its own inputs. The handler then never mentions the aggregate, so there is nothing for it to be wrong about.
+- Why safer: this is the platform's documented shape for acting on a clicked row. ODC's *Navigate to a Detail Screen* wires the List Item's On Click to the target and passes **the current item's identifier as an input argument**, rather than having the target look the record up; the same construction carries any other values the row supplies. An argument the event hands over does not depend on what the cursor points at when the handler runs, and a handler reading `.Current` does. Nothing at build time asks the question either way: the aggregate exists, the attribute exists, the assignment compiles, and validation returns `error_count: 0`.
+- When to ask: whenever a handler for a row-level control mentions `List.Current`, ask **which event it is bound to** first. On the List Item's own On Click the read is defensible; on a Container or Icon Click, make each needed value an input. Ask this before reporting a row click as wired on the strength of the handler reading "the right" attributes.
+- Minimal example: not `Container OnClick -> AddDish ; AddDish reads GetDishSuggestions.List.Current.Dish.Name`, but `Screen Action AddSuggestedDish(InDishId <Entity> Identifier, InName Text, InPrice Decimal)` with the row's Click passing `GetDishSuggestions.List.Current.Dish.Id`, `.Name` and `.Price` as its three arguments, and the action body using only `InDishId` / `InName` / `InPrice`.
+- Evidence: real session (restaurant-app v2, 2026-08-31, revisions 47→49). The corrective turn for a dead suggestion branch wired the row **Container's** Click and read name and price from `GetDishSuggestionsSopa.List.Current` inside the handler; the click set some values, cleared others, and the subsequent add did nothing. The mechanism was not measured — only the binding case and the outcome — so the rule is scoped to that binding and to the explicit-argument alternative, and makes no claim about when expressions evaluate (Codex correction, `AH-2026-08-31-003` round 1). Runtime half: `references/execution-gates.md` §6 shapes 11 and 12. Field-observed over the Mentor MCP; the argument-passing pattern is documented, the failure is not.

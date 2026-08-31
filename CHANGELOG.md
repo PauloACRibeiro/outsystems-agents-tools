@@ -8,6 +8,34 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Export 2026-08-31.1 (PAS `63311456`)
+
+Build skill only — three reference files. Retrospective #6 from the
+restaurant-app-v2 typeahead work, where one mistaken assumption about
+`.Current` produced two separate defects in a day and validation reported
+`error_count: 0` for both.
+
+- **Failure-shapes catalog grows to twelve.** #11 is live logic behind a
+  condition the UI cannot satisfy — a complete, correct branch guarded on a
+  shared aggregate no user action could point at. The probe is to name the UI
+  element that makes each guarded branch's condition true; where there is none,
+  delete the aggregate feeding it rather than leave it fetching for nobody.
+  #12 is a handler reading `.Current` when the thing bound is a Container's
+  Click rather than the List Item's own On Click.
+- **Pass the clicked row as arguments.** The prompt-side rule for #12, in the
+  Mentor hardening reference: give the handler one input per value the row
+  supplies. This follows ODC's own documented shape for a row click, where the
+  List Item's On Click passes the current item's identifier as an input
+  argument. Scoped to the binding actually measured — `.Current` on the row's
+  own event is legitimate, and the entry says so.
+- **Stale screens, warning counts, dead theme classes.** A verification verdict
+  now requires a post-reload read, because feedback messages and list counts
+  survive across probes and were twice misread. The validation WARNING count is
+  recorded per turn and diffed — a turn meant to remove an aggregate took it
+  from 61 to 71 with errors at zero. And the measured list of theme classes
+  that resolve to nothing grows: `badge-primary`, `align-items-end`,
+  `cursor-pointer`.
+
 ### Export 2026-08-31 (PAS `0f3b4843`)
 
 Publishes four exports at once: the three cut on 2026-08-30 were committed
