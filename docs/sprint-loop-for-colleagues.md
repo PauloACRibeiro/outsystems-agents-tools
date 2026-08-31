@@ -192,6 +192,12 @@ you, and it is the biggest hands-on step on an app with six or more screens.
 
 ### Step 2 — Capability plan
 
+**Before this step, on an app of three screens or more:** run
+`outsystems-screen-inventory` on the PRD first — it decides the screen list and
+the one chrome decision every design run shares, and the plan reads its entity
+names from that inventory. The quick-start manual
+(`sprint-loop-manual.md`) carries the loop in that order.
+
 **Skill: `superpowers:writing-plans`.**
 
 You get back an implementation plan written in terms of **business capabilities

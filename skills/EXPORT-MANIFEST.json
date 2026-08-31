@@ -19,11 +19,11 @@
     },
     {
       "path": "docs/sprint-loop-for-colleagues.md",
-      "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
+      "sha256": "133c99d100cbdbc3d97056d0da2b09387d0ad82dc14cfeb73b920fc449f4384a"
     },
     {
       "path": "docs/sprint-loop-manual.md",
-      "sha256": "ef89a0499375b9ef33219de7de65e24f63604c11b102a97c649e68bf6f2e8956"
+      "sha256": "bdc3161946a65aef61fbc64f0dc0082c0824da67287e979784da52d3b7f68f63"
     },
     {
       "path": "scripts/install_skill_pack.py",
@@ -954,7 +954,7 @@
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -1223,7 +1223,7 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -1304,7 +1304,7 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -1341,7 +1341,7 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -1374,7 +1374,7 @@
         }
       ],
       "pack_name": "outsystems-screen-inventory",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -1395,15 +1395,15 @@
         },
         {
           "path": "docs/sprint-loop-for-colleagues.md",
-          "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
+          "sha256": "133c99d100cbdbc3d97056d0da2b09387d0ad82dc14cfeb73b920fc449f4384a"
         },
         {
           "path": "docs/sprint-loop-manual.md",
-          "sha256": "ef89a0499375b9ef33219de7de65e24f63604c11b102a97c649e68bf6f2e8956"
+          "sha256": "bdc3161946a65aef61fbc64f0dc0082c0824da67287e979784da52d3b7f68f63"
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -1428,11 +1428,11 @@
         },
         {
           "path": "docs/sprint-loop-for-colleagues.md",
-          "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
+          "sha256": "133c99d100cbdbc3d97056d0da2b09387d0ad82dc14cfeb73b920fc449f4384a"
         },
         {
           "path": "docs/sprint-loop-manual.md",
-          "sha256": "ef89a0499375b9ef33219de7de65e24f63604c11b102a97c649e68bf6f2e8956"
+          "sha256": "bdc3161946a65aef61fbc64f0dc0082c0824da67287e979784da52d3b7f68f63"
         },
         {
           "path": "skills/outsystems-bdd-tests/SKILL.md",
@@ -2040,7 +2040,7 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     },
     {
@@ -2253,7 +2253,7 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "159902159b958000067f11eba40c9c96e03a601c",
+      "source_commit": "6c6603cc89bd064c060b208ffb0e77baeeea3d1c",
       "version": "2026-08-31"
     }
   ]

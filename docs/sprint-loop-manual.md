@@ -9,15 +9,17 @@ Two things to know before you start:
 
 - **The loop is human-in-the-loop.** It stops and waits for you at six points —
   a stop is the design working, not a malfunction. Do not plan an unattended run.
-- **This page is the quick start.** The full companion —
+- **This page is authoritative on step ORDER** (the screen inventory runs
+  before the capability plan). The full companion —
   [`sprint-loop-for-colleagues.md`](sprint-loop-for-colleagues.md), installed on
   your disk with the pack — explains each step's traps and is worth one full
   read before your first run.
 
 ## One-time setup that the install prompts did not cover
 
-1. **Connect your OutSystems tenant.** In a terminal (replace the hostname with
-   your tenant's):
+1. **Connect your OutSystems tenant** — needed for direct tenant execution
+   (steps 6–8). Steps 1–5 are local and also run without it, as does step 6's
+   paste mode. In a terminal (replace the hostname with your tenant's):
 
    ```
    claude mcp add -s user --transport http outsystems https://<your-tenant>.outsystems.dev/mcp
@@ -49,12 +51,17 @@ back before moving on; the artifacts build on each other.
 | 4 | Screen design | `Use the outsystems-ui-design skill for the [name] screen.` — once per screen | An HTML preview to react to, then a blueprint. **Gate: you approve each screen.** |
 | 5 | Plan review | `Use the outsystems-plan-to-mentor skill to review the plan against the PRD.` | A coverage review; real gaps block until fixed or waived. |
 | 6 | Build | `Use the outsystems-mentor-implementation skill to execute the patched plan on my tenant.` | Mentor builds phase by phase on your tenant. **Gates: every publish asks you first.** |
-| 7 | Test | `Use the outsystems-bdd-tests skill to generate and run the test suite.` | Generated BDD tests executed against the running app — real pass/fail per scenario. |
+| 7 | Test *(optional)* | `Use the outsystems-bdd-tests skill to generate and run the test suite.` | Generated BDD tests executed against the running app — real pass/fail per scenario. **Prerequisite:** two Forge components installed on the tenant by a human first; the skill's preflight names them and stops if they are missing. |
 | 8 | Grade | `Use the outsystems-runtime-ui-audit skill on [the app's runtime URL].` | A 16-criterion scored UI audit of the deployed app. |
 
-Steps 4–8 also **seed and click through the app signed in** as part of their
-own verification — if an agent reports a screen "done" that nobody has ever
-rendered or clicked, that is a skipped step, not a finished one.
+Each step verifies its own output in its own way: steps 4–5 validate local
+artifacts against the PRD; step 6's build gates require the deployed screens to
+be **seeded with data and exercised signed-in** before any phase is called done
+— if an agent reports a screen "done" that nobody has ever rendered or clicked,
+that is a skipped gate, not a finished screen; step 7 runs generated tests
+against the live app; step 8 audits the deployed UI from its runtime URL (it
+needs a reachable URL and stops at a login wall — audit a screen an anonymous
+visitor can reach, or capture evidence signed-in via step 6's gates instead).
 
 ## When something goes wrong
 
