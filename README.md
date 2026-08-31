@@ -46,6 +46,26 @@ You can read the install instructions before running anything:
 [macOS](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md)
 · [Windows](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md).
 
+### Updating the pack
+
+New releases ship regularly. To move to the latest version, paste this:
+
+```text
+Update the OutSystems sprint loop pack on this machine to the latest release.
+
+Detect my OS, then download and follow the UPDATE operation in the matching
+instructions:
+  macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md
+  Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md
+
+Follow that document literally — an update is a per-skill replacement, never a
+merge. When you are done, tell me the version I moved from and to, and remind
+me that the updated skills are only picked up in a NEW conversation.
+```
+
+Updating the pack does not touch the Public Knowledge server — refresh that
+separately with its own prompt below.
+
 ### Telling us what broke
 
 There is a friction-log template and an offline bundler under
