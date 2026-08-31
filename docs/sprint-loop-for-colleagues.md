@@ -33,10 +33,10 @@ Read this once end to end before your first run, then use it as the checklist.
   just been refused. The skill's `skills/outsystems-ui-design/references/built-in-widgets-regeneration.md`
   carries the procedure, including the SSO authorization step people miss and the
   trap where regenerating a token silently drops that authorization.
-- **The five skills in this pack**, installed into your agent's skills
+- **The six skills in this pack**, installed into your agent's skills
   directory: `outsystems-screen-inventory`, `outsystems-ui-design`,
-  `outsystems-plan-to-mentor`, `outsystems-mentor-implementation`, and
-  `outsystems-runtime-ui-audit`. Follow
+  `outsystems-plan-to-mentor`, `outsystems-mentor-implementation`,
+  `outsystems-bdd-tests`, and `outsystems-runtime-ui-audit`. Follow
   the bundled release install document for your OS
   (`INSTALL-SPRINT-LOOP-MACOS.md` / `INSTALL-SPRINT-LOOP-WINDOWS.md`, attached
   to the same release you downloaded this pack from).
@@ -65,7 +65,7 @@ the Public Knowledge server stands in for the VPN-only internal one.
 | Steps | Owned by | How you get it |
 |---|---|---|
 | 1–2 | The public **Superpowers** plugin | Installed separately — see below. Not redistributed here. |
-| 3, 4, 5, grading | The four skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
+| 3, 4, 5, 7, grading | The six skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
 | 5 (knowledge) | The **OutSystems Public Knowledge MCP server** | Same release as this pack, own install docs — see below. |
 | 5 (direct mode), 6 | The public **OutSystems MCP** plugin | Optional — paste mode needs no tenant. `outsystems@outsystems` — see below. |
 

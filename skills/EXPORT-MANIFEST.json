@@ -11,7 +11,7 @@
     },
     {
       "path": "docs/colleague-public-knowledge-setup.md",
-      "sha256": "b13ff05cc7c08030d8cdd3918c8447c21267c8cfd046d427ef559a1ad59e5fb4"
+      "sha256": "6a24087628910c35af2a24eeb66301f6582f0cb41431b4881f5ccc38f7bde848"
     },
     {
       "path": "docs/post-install-checks.md",
@@ -19,7 +19,7 @@
     },
     {
       "path": "docs/sprint-loop-for-colleagues.md",
-      "sha256": "f2c415fc65e5cbf976d471c69dd37c717f0604c09ac238d1518440e04c4b6b30"
+      "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
     },
     {
       "path": "scripts/install_skill_pack.py",
@@ -662,7 +662,7 @@
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
-          "sha256": "b13ff05cc7c08030d8cdd3918c8447c21267c8cfd046d427ef559a1ad59e5fb4"
+          "sha256": "6a24087628910c35af2a24eeb66301f6582f0cb41431b4881f5ccc38f7bde848"
         },
         {
           "path": "scripts/install_skill_pack.py",
@@ -950,8 +950,8 @@
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -959,7 +959,7 @@
       "files": [
         {
           "path": "docs/colleague-public-knowledge-setup.md",
-          "sha256": "b13ff05cc7c08030d8cdd3918c8447c21267c8cfd046d427ef559a1ad59e5fb4"
+          "sha256": "6a24087628910c35af2a24eeb66301f6582f0cb41431b4881f5ccc38f7bde848"
         },
         {
           "path": "skills/outsystems-mentor-implementation/README.md",
@@ -1219,8 +1219,8 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -1300,8 +1300,8 @@
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -1337,8 +1337,8 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -1370,8 +1370,8 @@
         }
       ],
       "pack_name": "outsystems-screen-inventory",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -1391,12 +1391,12 @@
         },
         {
           "path": "docs/sprint-loop-for-colleagues.md",
-          "sha256": "f2c415fc65e5cbf976d471c69dd37c717f0604c09ac238d1518440e04c4b6b30"
+          "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -1412,7 +1412,7 @@
         },
         {
           "path": "docs/colleague-public-knowledge-setup.md",
-          "sha256": "b13ff05cc7c08030d8cdd3918c8447c21267c8cfd046d427ef559a1ad59e5fb4"
+          "sha256": "6a24087628910c35af2a24eeb66301f6582f0cb41431b4881f5ccc38f7bde848"
         },
         {
           "path": "docs/post-install-checks.md",
@@ -1420,7 +1420,7 @@
         },
         {
           "path": "docs/sprint-loop-for-colleagues.md",
-          "sha256": "f2c415fc65e5cbf976d471c69dd37c717f0604c09ac238d1518440e04c4b6b30"
+          "sha256": "c33b33e38643b3da0636652ded2e94fe854ca3a661aa95deaf62634399e466c7"
         },
         {
           "path": "skills/outsystems-bdd-tests/SKILL.md",
@@ -2028,8 +2028,8 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     },
     {
       "build_date_utc": "2026-08-31",
@@ -2241,8 +2241,8 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "633114567232618dbd177be63f99fc9734b16d09",
-      "version": "2026-08-31.1"
+      "source_commit": "763e8bc13187509de7cfe22a696fa39cb2be8a9c",
+      "version": "2026-08-31"
     }
   ]
 }
