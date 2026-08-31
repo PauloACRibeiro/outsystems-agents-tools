@@ -78,6 +78,33 @@ class VerifyExportIntegrityTests(unittest.TestCase):
             problems = v.verify(root)
             self.assertTrue(any("untracked" in p and "SNEAKED-IN.md" in p for p in problems), problems)
 
+    def test_detects_unmanaged_skill_root(self):
+        # Regression, 2026-08-31: a macOS conflict-copy of a whole skill
+        # ("skills/<name> 2/") passed this check, because the managed roots are
+        # derived from the manifest and a root the manifest owns no file under
+        # was therefore never scanned. Codex reproduced it on an archived copy
+        # of the published tree (AH-2026-08-31-002).
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            make_export(root)
+            write(root / "skills" / "demo-skill 2" / "SKILL.md", "stale conflict copy\n")
+            problems = v.verify(root)
+            self.assertTrue(
+                any("unmanaged root" in p and "demo-skill 2" in p for p in problems),
+                problems,
+            )
+            self.assertEqual(v.main([str(root)]), 1)
+
+    def test_list_managed_covers_manifest_and_excludes_strays(self):
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            make_export(root)
+            write(root / "skills" / "demo-skill 2" / "SKILL.md", "stale conflict copy\n")
+            managed = v.list_managed(root)
+            self.assertIn("skills/demo-skill/SKILL.md", managed)
+            self.assertIn("skills/EXPORT-MANIFEST.json", managed)
+            self.assertFalse([p for p in managed if "demo-skill 2" in p], managed)
+
     def test_missing_manifest_is_a_problem(self):
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)

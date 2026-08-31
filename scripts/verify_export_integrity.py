@@ -67,14 +67,41 @@ def verify(repo_root: Path) -> list[str]:
     # out-of-band addition. Repo-authored siblings under skills/ (README.md,
     # .gitkeep, the manifest itself) live outside every skills/<name> root and
     # are therefore ignored.
-    for sub in managed_subtrees(list(listed)):
+    subtrees = managed_subtrees(list(listed))
+    for sub in subtrees:
         for path in sorted((repo_root / sub).rglob("*")):
             if path.is_file():
                 rel = path.relative_to(repo_root).as_posix()
                 if rel not in listed:
                     problems.append(f"untracked: {rel} (present but not in manifest)")
 
+    # A whole skills/<name> directory the manifest owns no file under is
+    # invisible to the loop above, because the managed roots are derived from
+    # the manifest rather than from disk. That is how a 66-file macOS
+    # conflict-copy of a skill ("skills/<name> 2/") was committed with this
+    # check passing, and it would have been published had the export commit
+    # carrying it ever been pushed (2026-08-31). Every directory directly
+    # under skills/ must be a root the manifest owns.
+    owned_roots = {sub for sub in subtrees if sub.startswith("skills/")}
+    skills_dir = repo_root / "skills"
+    if skills_dir.is_dir():
+        for path in sorted(skills_dir.iterdir()):
+            if path.is_dir():
+                rel = path.relative_to(repo_root).as_posix()
+                if rel not in owned_roots:
+                    problems.append(
+                        f"unmanaged root: {rel}/ (directory under skills/ that the "
+                        "manifest owns no file under)"
+                    )
+
     return problems
+
+
+def list_managed(repo_root: Path) -> list[str]:
+    """Every path the manifest owns, for staging exactly the generated set."""
+    manifest_path = Path(repo_root) / MANIFEST_REL
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    return sorted({entry["path"] for entry in manifest.get("files", [])} | {MANIFEST_REL})
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -82,7 +109,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "repo_root", nargs="?", default=".", help="Repository root (default: cwd)"
     )
+    parser.add_argument(
+        "--list-managed",
+        action="store_true",
+        help="print the manifest-owned paths and exit; pipe to git add instead of "
+        "staging skills/ wholesale, which sweeps in unmanaged files",
+    )
+    parser.add_argument(
+        "-z",
+        "--null",
+        action="store_true",
+        help="with --list-managed, separate paths with NUL (for xargs -0)",
+    )
     args = parser.parse_args(argv)
+
+    if args.list_managed:
+        sep = "\0" if args.null else "\n"
+        sys.stdout.write(sep.join(list_managed(Path(args.repo_root))) + sep)
+        return 0
 
     problems = verify(Path(args.repo_root))
     if problems:
@@ -91,7 +135,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  - {problem}")
         print(
             "\nDo not hand-edit files under skills/<name>/. Re-run the exporter in the "
-            "source repo and commit the refreshed tree + EXPORT-MANIFEST.json."
+            "source repo and commit the refreshed tree + EXPORT-MANIFEST.json.\n"
+            "An 'unmanaged root' is usually not an edit at all but a stray directory "
+            "next to the generated tree — a macOS conflict-copy such as "
+            "'<name> 2/' — which must be deleted, not exported."
         )
         return 1
     print("Export integrity check passed: generated skills/ tree matches EXPORT-MANIFEST.json.")
