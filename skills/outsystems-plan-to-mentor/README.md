@@ -162,6 +162,18 @@ builds twelve requirements from one that builds three and defers nine, since
 both printed `12/12 READY`. A plan with no disposition table keeps the exact
 prior verdict.
 
+Given `--design`, the coverage checker also reads the design's
+``Inputs are `A`, `B`.`` sentences and reports, as a **note**, every declared
+action input that nothing accounts for — not named where the plan or the
+screen inventory says a user supplies it, and carrying neither `(internal)`
+nor `(waived: <reason>)`. It never moves the verdict, because it matches on
+the name rather than on a declared token and because the sentence is opt-in:
+a blocking form would let a spec that declares nothing keep READY while one
+that declares its inputs can lose it. It exists because restaurant-app-v2
+shipped `OpenMenuForDate` — date-parameterised, with duplicate-date handling —
+behind a UI whose only control was "Criar ementa de hoje", so the product's
+core carry-over claim was unreachable and every gate said READY.
+
 The three checkers are not sequenced by hand. `scripts/check_handoff_gate.py`
 invokes `check_requirement_coverage.py`, `check_outcome_coverage.py` and
 `check_plan_handoff.py` as subprocesses and computes one `handoff verdict:`

@@ -305,6 +305,30 @@
           "access_role": {
             "type": "string",
             "description": "Required when access_classification is 'role': the role name that gates this screen. The role's existence is a PRECONDITION - verify it exists before the screen is created, not after. Validation checks only that a role screen names a role; it cannot check that the role exists, because this artifact is authored with no tenant to ask. A named role is a claim to verify, not a verified fact."
+          },
+          "record_actions": {
+            "type": "array",
+            "description": "OPTIONAL. Where this screen's create / edit / detail on a record actually happens. A list screen that offers CREATE or EDIT and says nowhere it happens is warned, and blocked at --handoff: two apps shipped 'add' and per-row 'edit' controls whose destination screens were in nobody's inventory, so the controls were built, rendered, and did nothing. Declaring is the only way to settle it, because prose does not: on the app that paid for this rule the behavior field asserted the mutation happened on the screen while the build produced navigation controls to screens that did not exist. 'detail' is declarable and a declared one is held to its rules, but an undeclared row-open is never warned about - it is the commonest edge in any list app, its trigger names the gesture rather than the verb ('select an item row'), and inferring it accused screens whose row-open was already correctly closed. A declared entry is held to its rules; an inventory written before the field existed is untouched.",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["action", "resolves_to"],
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "enum": ["create", "edit", "detail"],
+                  "description": "The record action this entry answers for. Each may be declared at most once per screen."
+                },
+                "resolves_to": {
+                  "type": "string",
+                  "description": "One of three answers: the name of the screen this action opens (which must be a screen in this inventory AND the target of a navigation edge from this one, because a control that opens a screen IS an edge and the edge is what carries the trigger and the payload); the literal 'inline' when it happens on this screen; or the literal 'out-of-scope' when the action is not in this build - in which case the control must NOT be built, and no key interaction may still offer it, because a screen that describes an action while declaring its control unbuilt has said both things at once."
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Required when resolves_to is 'out-of-scope'. An unexplained one is a capability deleted silently."
+                }
+              }
+            }
           }
         }
       }

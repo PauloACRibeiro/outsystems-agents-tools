@@ -43,6 +43,20 @@ plan's scope boundaries is the discharge path
 specified. What it cannot do is tell twelve built from three built and nine
 deferred, because both print the same ``12/12 READY``. The table recovers that
 distinction. Plans without the table keep the exact prior behavior.
+
+CONTRACT REACHABILITY (2026-08-30). With ``--design``, one more comparison
+runs: every input the design declares for a server action must be accounted
+for -- named where the build says what a user supplies, or annotated with
+where it comes from. It is always a note and never moves the verdict.
+
+The gap it closes, measured on restaurant-app-v2. The spec's contract for
+menu creation was ``OpenMenuForDate``, "opens the menu for a restaurant and
+date", and the date was the whole point: the product's carry-over claim is
+about tomorrow's menu. The UI as planned and as built offered one control,
+"Criar ementa de hoje". No date input existed anywhere, so tomorrow's menu
+could not be created and the core claim was untestable until an unplanned
+Mentor turn added a date field. The action's parameter was unreachable from
+the UI, and nothing compared action contracts against UI affordances.
 """
 
 from __future__ import annotations
@@ -292,6 +306,318 @@ def load_screen_names(path: Path) -> set[str]:
     }
 
 
+def load_destinations(path: Path) -> list[tuple[str, str, str]]:
+    """`(source_screen, control, destination_screen)` the inventory declares.
+
+    Two producers, both from `outsystems-screen-inventory`:
+
+    - `navigation[]` edges, whose `trigger` is the control that follows them;
+    - `screens[].record_actions[]` entries resolving to a screen name, whose
+      control is the record action itself (`create` / `edit` / `detail`).
+      An entry resolving to `inline` or `out-of-scope` names no destination:
+      the first happens on the screen, and the second is the author's recorded
+      statement that the control is not built at all.
+
+    Malformed entries are skipped rather than reported, and so is a file that
+    is not JSON at all. This checker validates a PLAN against an inventory;
+    the inventory's own shape is the sibling validator's job, and failing here
+    would report one defect twice — or, for unreadable JSON, would newly crash
+    a run that used to reach a verdict without ever opening the file.
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    if not isinstance(data, dict):
+        return []
+    out: list[tuple[str, str, str]] = []
+    for edge in data.get("navigation", []) or []:
+        if not isinstance(edge, dict):
+            continue
+        src, dst = edge.get("from"), edge.get("to")
+        trigger = edge.get("trigger") or "an unnamed control"
+        if isinstance(src, str) and isinstance(dst, str) and src and dst:
+            out.append((src, str(trigger), dst))
+    for screen in data.get("screens", []) or []:
+        if not isinstance(screen, dict):
+            continue
+        src = screen.get("name")
+        if not isinstance(src, str) or not src:
+            continue
+        for entry in screen.get("record_actions", []) or []:
+            if not isinstance(entry, dict):
+                continue
+            action, dst = entry.get("action"), entry.get("resolves_to")
+            if not isinstance(action, str) or not isinstance(dst, str):
+                continue
+            if dst in ("inline", "out-of-scope") or not dst:
+                continue
+            out.append((src, f"the {action} action", dst))
+    return out
+
+
+def check_destinations(
+    destinations: list[tuple[str, str, str]], plan_text: str
+) -> list[str]:
+    """Every destination reachable from a screen the plan builds must itself
+    be built by the plan.
+
+    The gap this closes (2026-08-30): two apps shipped list screens whose add
+    and per-row edit controls opened screens no plan item ever built. They
+    rendered and did nothing. The inventory said where the control went; the
+    plan simply had no item for the far end, and nothing compared the two.
+
+    "The plan builds screen X" is "the plan names X somewhere". Deliberately
+    generous: a screen can be built by an item that owns no traceability row,
+    and on the measured evidence one was, so keying this on the Traceability
+    Design column alone accused a screen the plan really did build. Erring
+    toward silence is the right error here - this check exists to catch a
+    destination nobody wrote down at all, and that one is named nowhere.
+    """
+    failures: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for source_screen, control, destination in destinations:
+        if source_screen not in plan_text:
+            continue
+        if destination in plan_text:
+            continue
+        # A `record_actions` entry and the edge it requires describe ONE
+        # control, and the sibling validator refuses the entry unless the edge
+        # exists. Reporting both would bill one missing screen twice; the edge
+        # is kept because its `trigger` names the control the user sees.
+        if (source_screen, destination) in seen:
+            continue
+        seen.add((source_screen, destination))
+        failures.append(
+            f"- unbuilt destination: {control} on screen '{source_screen}' "
+            f"opens '{destination}', which no plan item builds"
+        )
+    return failures
+
+
+# The design declares an action's inputs beside its results, in the same
+# sentence grammar `check_outcome_coverage.py` reads for result values:
+# ``Inputs are `RestaurantId` (internal), `MenuDate`.`` The value list stops at
+# the first period, exactly as the result declaration's does.
+INPUTS_DECLARATION = re.compile(
+    r"Inputs?\s+(?:is|are)\s*:?\s*(?P<values>[^.]+)\.",
+    re.IGNORECASE | re.DOTALL,
+)
+
+# The action heading a declaration belongs to, in the shape the outcome
+# checker already reads, so one spec section feeds both: "#### `OpenMenuForDate`".
+ACTION_HEADING = re.compile(
+    r"^#{2,4}\s+`(?P<name>[A-Za-z_][A-Za-z0-9_]*)", re.MULTILINE
+)
+
+# One declared input: a backticked name, optionally followed by a parenthesised
+# origin. Parsed by scanning names rather than splitting the sentence on
+# commas, so a waiver reason is free to contain commas.
+INPUT_ITEM = re.compile(
+    r"`(?P<name>[A-Za-z_][A-Za-z0-9_]*)`\s*(?:\((?P<origin>[^)]*)\))?"
+)
+
+# Closed vocabulary, split the way the disposition table splits: the cheap word
+# needs no reason, the deliberate one does. `internal` says no UI can supply
+# this by construction (a session binding, a constant); `waived` says one could
+# and this build does not offer it, on purpose.
+ORIGIN_INTERNAL = "internal"
+ORIGIN_WAIVED = "waived"
+
+# Origins that are accounted for without a UI, plus the unparseable state.
+ORIGIN_CHECKED = ""
+ORIGIN_INVALID = "invalid"
+
+
+def load_action_inputs(design_text: str) -> dict[str, list[tuple[str, str]]]:
+    """Map action name -> [(input name, origin annotation)] from the design's
+    ``Inputs are ...`` sentences.
+
+    Ownership is resolved the way `check_outcome_coverage.py` resolves a result
+    declaration's: the nearest action heading above the sentence. A sentence
+    with no heading above it, or one naming no backticked input, is skipped --
+    ordinary prose ("Inputs are validated on the server.") must not read as a
+    declaration.
+    """
+    headings = [
+        (m.start(), m.group("name")) for m in ACTION_HEADING.finditer(design_text)
+    ]
+    out: dict[str, list[tuple[str, str]]] = {}
+    for match in INPUTS_DECLARATION.finditer(design_text):
+        owner = None
+        for pos, name in headings:
+            if pos < match.start():
+                owner = name
+            else:
+                break
+        if owner is None:
+            continue
+        items = [
+            (m.group("name"), (m.group("origin") or "").strip())
+            for m in INPUT_ITEM.finditer(match.group("values"))
+        ]
+        if items:
+            out.setdefault(owner, []).extend(items)
+    return out
+
+
+def load_affordances(path: Path) -> str:
+    """The inventory text describing what a user can supply on a screen.
+
+    Three fields, each a place a value enters the app: `screens[].accepts` (a
+    payload the screen receives -- the route or query parameter),
+    `navigation[].payload` (a value handed across an edge), and
+    `screens[].key_interactions` (what the screen offers the user).
+
+    Narrative `behavior` is deliberately not read, for the reason the sibling
+    destination check does not read it either: prose describes intent and
+    discharges nothing. `screens[].data_bindings` is not read for the same
+    reason it would be tempting to -- it names the entity or action a screen
+    reads THROUGH, which says nothing about who chose the value.
+
+    Malformed entries and unreadable JSON yield the empty string rather than a
+    report: the inventory's own shape is the sibling validator's job.
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    if not isinstance(data, dict):
+        return ""
+    parts: list[str] = []
+    for screen in data.get("screens", []) or []:
+        if not isinstance(screen, dict):
+            continue
+        for field_name in ("accepts", "key_interactions"):
+            for item in screen.get(field_name, []) or []:
+                if isinstance(item, str):
+                    parts.append(item)
+    for edge in data.get("navigation", []) or []:
+        if isinstance(edge, dict) and isinstance(edge.get("payload"), str):
+            parts.append(edge["payload"])
+    return "\n".join(parts)
+
+
+def classify_origin(origin: str) -> tuple[str, str | None]:
+    """Return (kind, error) for one input's origin annotation.
+
+    `ORIGIN_CHECKED` (the empty annotation) means the input must be traceable
+    to an affordance. `internal` and `waived: <reason>` each account for it
+    without one. A reasonless `waived` is an auto-accept wearing a decision's
+    clothes, so it is refused the way the disposition table refuses a terminal
+    disposition with no reason.
+
+    `internal` takes an optional reason and `waived` requires one, which is the
+    same asymmetry `built` and the terminal dispositions carry. An author who
+    writes `(internal: resolved from the session binding)` is being more
+    informative than the vocabulary demands and must not be refused for it.
+    """
+    if not origin:
+        return ORIGIN_CHECKED, None
+    head, _, tail = origin.partition(":")
+    head = head.strip().lower()
+    if head == ORIGIN_INTERNAL:
+        return ORIGIN_INTERNAL, None
+    if head == ORIGIN_WAIVED:
+        if not tail.strip():
+            return ORIGIN_INVALID, "waived without a recorded reason"
+        return ORIGIN_WAIVED, None
+    return ORIGIN_INVALID, f"'{origin}' is not an origin"
+
+
+def check_contract_reachability(
+    actions: dict[str, list[tuple[str, str]]], plan_text: str, affordances: str
+) -> tuple[str, list[str]]:
+    """Return (summary line, findings) for the design's declared action inputs.
+
+    An input is accounted for when its name appears, on a word boundary, in the
+    plan or in the inventory's affordance fields -- or when its origin says no
+    affordance is expected.
+
+    THE MATCH IS ON THE NAME, WHICH IS EVIDENCE OF NAMING AND NOT OF A CONTROL.
+    An affordance the author spelled in the product's own language -- the v2
+    inventory carries the payload as `menu date`, not `MenuDate` -- reads as
+    unaccounted-for. That direction is deliberate and it is why this is a note:
+    the cost is one annotation, and writing it is the moment the author has to
+    say out loud where the value comes from. On the incident that answer was
+    "always today", which is the sentence nobody in that run ever wrote.
+
+    Two scopings were tried against the incident artifacts and dropped, because
+    each would have silenced it:
+
+    - Only checking actions the plan names. The v2 plan, patched and original,
+      names `OpenMenuForDate` zero times.
+    - Reading the blueprint as an affordance source. `MenuDate` appears in the
+      v2 blueprints exactly twice, as the entity's attribute declaration and as
+      a read binding on a display widget. Neither sets anything, the blueprint's
+      block vocabulary is open so no rule separates an input widget from a
+      label, and including it reported the parameter reachable.
+    """
+    findings: list[str] = []
+    total = traceable = internal = waived = 0
+
+    for action in sorted(actions):
+        for name, origin in actions[action]:
+            total += 1
+            kind, error = classify_origin(origin)
+            if kind == ORIGIN_INVALID:
+                findings.append(
+                    f"- parameter {name} of {action}: {error} "
+                    f"(write `{name}` (internal), or `{name}` "
+                    f"(waived: <reason>))"
+                )
+                continue
+            if kind == ORIGIN_INTERNAL:
+                internal += 1
+                continue
+            if kind == ORIGIN_WAIVED:
+                waived += 1
+                continue
+            pattern = rf"\b{re.escape(name)}\b"
+            if re.search(pattern, plan_text) or re.search(pattern, affordances):
+                traceable += 1
+                continue
+            findings.append(
+                f"- parameter {name} of {action} is not settable from any "
+                "planned UI (the name appears in neither the plan nor the "
+                "screen inventory's affordances)"
+            )
+
+    # The four buckets sum to the total on purpose: a reader who has to work
+    # out where the missing one went is reading a report that hides it.
+    summary = (
+        f"contract reachability: {total} declared input(s) across "
+        f"{len(actions)} action(s) -- {traceable} traceable to a planned UI, "
+        f"{internal} internal, {waived} waived, {len(findings)} not "
+        "accounted for"
+    )
+    return summary, findings
+
+
+def contract_reachability_header(count: int) -> str:
+    """Header for the declared inputs nothing accounts for.
+
+    It covers both findings this check can produce -- an input no planned UI
+    supplies, and one whose origin annotation cannot be read -- because both
+    have the same fix: say where the value comes from.
+
+    A note, with no ``--strict`` form, for a reason the sibling destination
+    check does not share. That one is a set difference over tokens both
+    artifacts declare; this one asks whether a NAME turns up in free text, and
+    a heuristic that can be wrong must not deny READY. The decisive half is the
+    incentive: the ``Inputs are`` sentence is opt-in, `check_handoff_gate.py`
+    always passes ``--strict``, and a failing form would mean a spec that
+    declares nothing keeps READY while a spec that declares its inputs can lose
+    it. Honesty must not be the expensive option.
+    """
+    noun = "input is" if count == 1 else "inputs are"
+    return (
+        f"note: {count} declared action {noun} not accounted for (name it "
+        "where the UI supplies it, or annotate it `(internal)` or "
+        "`(waived: <reason>)`):"
+    )
+
+
 def parse_design_cell(cell: str) -> tuple[list[tuple[str, str]] | None, str | None]:
     """Return (refs, error). refs is [] for an explicit none-cell."""
     if cell.lower() in DESIGN_NONE:
@@ -522,6 +848,15 @@ def main(argv: list[str] | None = None) -> int:
         help="screen-inventory.json to resolve inventory:<Screen> refs against",
     )
     parser.add_argument(
+        "--design",
+        type=Path,
+        default=None,
+        help=(
+            "design file declaring action contracts; enables the contract "
+            "reachability note over its `Inputs are ...` sentences"
+        ),
+    )
+    parser.add_argument(
         "--strict",
         action="store_true",
         help=(
@@ -546,7 +881,9 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     paths = [args.source, args.plan]
-    paths += [p for p in (args.blueprint, args.inventory) if p is not None]
+    paths += [
+        p for p in (args.blueprint, args.inventory, args.design) if p is not None
+    ]
     for path in paths:
         if not path.is_file():
             print(f"file not found: {path}", file=sys.stderr)
@@ -676,7 +1013,45 @@ def main(argv: list[str] | None = None) -> int:
             for line in dispositioned_only:
                 print(line)
 
-    if uncovered or dangling or trace_failures or disposition_failures:
+    # Runs only with `--inventory`: the inventory is where a control is bound
+    # to a destination, so without it there is nothing to compare and no
+    # silent skip is introduced -- a plan that cites `inventory:<Screen>` refs
+    # without supplying the file is already failed by the unresolved-ref rule.
+    destination_failures: list[str] = []
+    if args.inventory is not None:
+        destination_failures = check_destinations(
+            load_destinations(args.inventory), plan_text
+        )
+        if destination_failures:
+            print(
+                f"{len(destination_failures)} destination(s) reachable from a "
+                "screen this plan builds are built by no plan item:"
+            )
+            for line in destination_failures:
+                print(line)
+
+    # Runs only with `--design`: the design is where an action's inputs are
+    # declared, so without it there is nothing to compare and no check is
+    # silently skipped. The gate cannot reach READY without a design file
+    # anyway -- `outcome-coverage` fails `input-not-supplied` without one.
+    # Nothing below touches the verdict; see `contract_reachability_header`.
+    if args.design is not None:
+        actions = load_action_inputs(args.design.read_text(encoding="utf-8"))
+        if actions:
+            affordances = (
+                load_affordances(args.inventory) if args.inventory else ""
+            )
+            summary, reachability_findings = check_contract_reachability(
+                actions, plan_text, affordances
+            )
+            print(summary)
+            if reachability_findings:
+                print(contract_reachability_header(len(reachability_findings)))
+                for line in reachability_findings:
+                    print(line)
+
+    if (uncovered or dangling or trace_failures or disposition_failures
+            or destination_failures):
         print("coverage verdict: NOT READY")
         return 1
 

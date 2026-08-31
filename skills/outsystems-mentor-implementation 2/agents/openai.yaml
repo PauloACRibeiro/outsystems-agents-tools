@@ -1,3 +1,0 @@
-display_name: OutSystems Mentor Implementation
-short_description: Write Mentor Studio-ready ODC logic, UI prompts, and structured intent with placement, producer-first ordering, evidence status, and deterministic Mentor checks.
-default_prompt: Write Mentor Studio-ready ODC logic, UI prompts, or Architect Mode structured intent for a deterministic Mentor plan covering a feature, screen, block, action, flow, timer, event, integration, agentic app, A2A tool, MCP connector, or workflow.

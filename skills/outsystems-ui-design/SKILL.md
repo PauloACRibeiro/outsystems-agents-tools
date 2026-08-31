@@ -141,7 +141,7 @@ design/<screen-slug>/
                            # intake, wireframe.html, a verbatim copy of preview.html
   wireframe.md             # the design-source slot INSTEAD of wireframe.<ext> when
                            # the source is a live URL or local HTML: source URL,
-                           # observed anatomy, extracted design tokens
+                           # observed anatomy, measured token table
   pattern-tree.md          # current round's tree — overwritten every round
   preview.html             # current round's HTML preview — overwritten every round
   blueprint.json           # emitted only at approval (Step 4)
@@ -328,9 +328,11 @@ There is no image to copy, so the design-source slot is a written record:
 1. **The source URL** (or file path) and the date it was read.
 2. **The observed anatomy** of this screen, read out of the rendered DOM rather
    than transcribed from a screenshot by eye.
-3. **The extracted design tokens** — brand/accent colour, corner radius, font
-   stack, surface and input backgrounds, elevation, spacing rhythm — each with
-   the selector it was read from.
+3. **The measured token table** — brand/accent colour, corner radius, surface and
+   input backgrounds, elevation, spacing rhythm, and **type per role** (family,
+   size, weight, letter-spacing and colour for the display heading, the section
+   label, body copy and numeric text) — each with the selector it was read from
+   and the value exactly as measured.
 
 A screenshot is still a useful reading aid even though no image is required:
 keep any capture beside the record as `wireframe-<state>.png` and reference it
@@ -340,12 +342,25 @@ not the capture, is the design-source slot.
 **Extracting those tokens from computed style is a required step of this mode,
 not optional polish.** A live source is the one design input that carries its own
 exact values, and they seed the blueprint's `design_system` (and `primary_color`)
-directly. Skipping the pull and eyeballing colours instead throws away the only
-advantage the source has over a screenshot. The recipe is in
+directly. Skipping the pull and eyeballing colours or type instead throws away the
+only advantage the source has over a screenshot. The recipe is in
 `references/live-source-inspection.md`; the values land in `wireframe.md` first so
 every token in `design_system` traces to something measured.
 
-Three situations this mode has to answer, all of which the v2 run met:
+**The table comes before the prescription.** Nothing that prescribes a visual
+value — a `design_system` token, a region's `typography` descriptor, a restyle
+prompt aimed at an already-built screen, which `outsystems-mentor-implementation`
+writes later from this run's table — is written for a measured source until the
+table exists, and each such value **cites the row it came from**. A prescription
+the table does not cover was read off an image by eye, which is the failure this
+mode exists to prevent; the trap note is in
+`references/live-source-inspection.md`. On the wireframe-absent path below the
+table is the page-level one measured from the screens that *do* exist: a row
+carried in from a sibling names that sibling's selector and is disclosed under
+**EXTRAPOLATED**, never presented as measured on this screen.
+
+Four situations this mode has to answer, three met on the 2026-08-27 v2 run and
+the fourth on its 2026-08-30 fidelity pass:
 
 - **A multi-screen mockup.** One page routinely holds every screen of the app,
   while this skill is **one screen per run** (scope guard). Before Step 2, select
@@ -364,7 +379,8 @@ Three situations this mode has to answer, all of which the v2 run met:
   product than the approved PRD — the v2 mockup carried AI assistant panels,
   credentials screens and a multi-restaurant switcher the PRD had no room for. The
   rule is **adopt visually, reject scope**: the mockup is authority on visual
-  language, the PRD is authority on what the product contains. Run one explicit
+  language — with the deliberate-deviation exception below — and the PRD is
+  authority on what the product contains. Run one explicit
   **decision round** that lists each conflict with a recommendation, then record
   the outcome where it outlives the chat. Two different records, because two
   different owners: **this run's own output** carries the decision and every
@@ -381,6 +397,21 @@ Three situations this mode has to answer, all of which the v2 run met:
   records the decision where later runs inherit it. A conflict is **never silently
   absorbed** (adopting the extra scope) and never silently dropped (designing past
   it without saying so).
+- **A deliberate deviation.** Not a scope conflict — the conflict round decides
+  whether a thing ships and lets the PRD win; a deviation decides how an agreed
+  element renders and lets a correctness constraint (locale, accessibility, what
+  the ODC block actually does) win against the mockup on its own turf. **If the
+  answer changes what the product contains it is a conflict** and takes the
+  once-per-app round above; **if it changes only how an agreed element looks or
+  reads it is a deviation**, settled in the round it arises. Measured on the
+  2026-08-30 fidelity pass: the mockup priced items `€3.84` while the app keeps
+  the pt-PT `12,50 €`, because locale correctness beats mockup fidelity.
+  Deviating is allowed and is **stated in the round's what-changed statement**,
+  on the same records an adopted scope decision uses; deviating silently is not.
+  The rule is **symmetric** — taking the mockup's treatment over one this app had
+  already established is the same decision as keeping ours over the mockup's. A
+  deviation nobody can find later is indistinguishable from a region the mapping
+  simply missed.
 
 ### Step 2 — Inference pass
 
@@ -553,7 +584,12 @@ On approval, fill the OMI enriched blueprint at
   rows through one template is an `IList`.** Nine identical cards bound to nine
   records need no block.
 - `design_system` — colors, typography, spacing, visual rules, **seeded from the
-  wireframe's observed colors and any brand input from Step 1**.
+  wireframe's observed colors and any brand input from Step 1**. When Step 1 read
+  a live URL or an HTML file, the seed is that run's **measured token table** —
+  no value read by eye — with a brand colour the operator declared at Step 1
+  still overriding the measured accent, recorded as a deliberate deviation.
+  Typography carries family, size, weight, letter-spacing and colour per role as
+  measured, never a page-level font stack plus assumptions.
 - `screens` — the approved region tree; every repeated-content region names its
   data producer. **The Step 2 secondary-text sweep runs *before* approval**, so
   every hint line, count, caption and disclaimer it finds is already in the tree

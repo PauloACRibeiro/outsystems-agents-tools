@@ -204,6 +204,20 @@ loop's design artifacts are the enriched `blueprint.json`
   `--strict`, so through the gate an unresolved ref fails the
   `requirement-coverage` clause — supply the artifact, write the story's
   design cell as an explicit `none`, or waive the clause with a reason.
+- With `--inventory`: every destination reachable from a screen the plan
+  builds must itself be built by the plan. The inventory names both ends —
+  a `navigation[]` edge's `trigger` is the control and its `to` is the
+  destination, and a `record_actions` entry resolving to a screen name is the
+  same binding for a record action. Each unbuilt one is reported as an
+  **unbuilt destination** and fails the run. "The plan builds screen X" is
+  "the plan names X somewhere", deliberately generous: a screen can be built
+  by an item that owns no traceability row, and keying this on the Design
+  column alone accused a screen the plan really did build. An action declared
+  `inline` or `out-of-scope` names no destination and is not checked — the
+  second is the author's recorded statement that the control is not built.
+  Without `--inventory` there is nothing to compare and the check does not
+  run; a plan citing `inventory:<Screen>` refs without supplying the file is
+  already failed by the unresolved-ref rule above.
 - Verdict: `READY` only when every set is empty; otherwise `NOT READY`.
 
 ### Migration note — plans without a Traceability table

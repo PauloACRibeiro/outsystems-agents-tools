@@ -152,3 +152,40 @@ stance, and a skill would either trivialise them or bloat.
 This skill covers 1–4 and stops. Wireframing is `outsystems-ui-design`'s job,
 one run per screen, and the design there starts from a wireframe the human
 brings — not from anything generated here.
+
+## R10 — A record action needs somewhere to happen (2026-08-30).
+
+Two apps shipped list screens whose "add" button and per-row "edit" control
+opened screens nobody had put in the inventory. The controls were built and
+rendered; clicking them did nothing. The first app lost four screens that way
+and had no data-entry path at all; the one before it lost two, which had to be
+built after the fact.
+
+Nothing upstream was wrong-shaped, and that is the point. Navigation endpoints
+are already held to real screens, so a *written* edge can never dangle. The
+edge was never written — and an absent edge is the one thing no check of the
+edges could see. The gap was between an interaction the screen declared and a
+destination nobody had to name.
+
+Prose does not close it. On the app that paid for this, the `behavior` field
+said the mutation happened on the list screen ("Dishes are created, edited and
+retired here") while the build produced navigation controls to screens that did
+not exist; the app before it wrote "Create/edit a dish inline or via a form",
+which is the decision itself left unmade and shipped as if it were a
+specification. So the closure is a declaration, not a sentence: a list screen
+that offers create, edit or detail answers in `record_actions`, per action —
+the screen it opens (and then the edge exists too), `inline`, or `out-of-scope`
+with a reason, which means the control is not built — and the interaction that
+offered it is withdrawn, because an inventory that describes an action while
+declaring its control unbuilt has said both things at once.
+
+The rule fires narrowly on purpose, and each narrowing was measured rather
+than guessed. `list-table` and `gallery-grid` lay out one row per record;
+`master-detail` is excluded because its editor is on the same screen by
+definition. And an action is discharged by an edge into the kind of
+screen it opens — `edit-form` or `wizard` for create and edit, `detail-view`
+for detail — whatever the edge's trigger says. That route is not a
+convenience: a trigger names a gesture as often as an action ("select an item
+row", "the + button"), and matching the trigger alone accused four inventories
+whose row-open was already closed by a real edge to a real screen. A warning
+that accuses correct rows is the one AH-2026-08-26-015 deleted.

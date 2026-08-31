@@ -259,6 +259,28 @@ and the cross-screen edges with what triggers each. Where an edge hands
 something to the target screen, name the payload and add it to that screen's
 `accepts` (R7).
 
+**Close every record action you offer** (R10). A screen that lists records and
+lets the user create, edit or open one has to say **where** that happens — in
+`record_actions`, per action, as one of three answers: the name of the screen
+it opens (add the edge too), `inline` when it happens on this screen, or
+`out-of-scope` with a reason, which means **the control is not built** — and
+then withdraw the interaction that offers it, because a screen cannot both
+describe an action and say its control does not exist. Do not leave it to the
+behaviour prose. Two apps described the mutation as happening
+on the list screen and were built with controls that opened screens nobody had
+put in the inventory: they rendered, did nothing, and the second app had no
+data-entry path at all. "Create or edit a dish inline or via a form" is not a
+specification — it is the decision, unmade, shipped.
+
+An action is already closed — and needs no entry — when an outgoing edge
+reaches the kind of screen it opens: an `edit-form` or `wizard` for create and
+edit, a `detail-view` for detail. That route is structural on purpose. A
+trigger names a gesture as often as an action ("select an item row", "the +
+button"), so reading it alone accused four inventories here whose row-open was
+already correctly closed. It answers for **one** action only: create and edit
+open the same kinds of screen, so where a screen offers both, one edge into a
+form says nothing about which — name the action in the trigger, or declare it.
+
 **Present all of it and stop for approval** (hard gate 5). Name your
 least-confident fusion explicitly and say why — that is the one most likely to
 come back.
@@ -345,11 +367,12 @@ at the moment you hand the inventory over:
 python3 scripts/validate_screen_inventory.py design/screen-inventory.json --handoff
 ```
 
-The graduating warnings — here, a data binding with no `behavior_notes` — then
-print under `HANDOFF BLOCKED:` and exit 1 instead of advising. The finding text
-is identical; only the channel and the exit code change. A warning graduates
-only if you can always clear it by editing the inventory, so there is no waiver
-and none is needed; a warning that can be a legitimate final state (an inventory
+The graduating warnings — a data binding with no `behavior_notes`, and a list
+screen that offers a record action without saying where it happens — then print
+under `HANDOFF BLOCKED:` and exit 1 instead of advising. The finding text is
+identical; only the channel and the exit code change. A warning graduates only
+if you can always clear it by editing the inventory, so there is no waiver and
+none is needed; a warning that can be a legitimate final state (an inventory
 that genuinely is one screen per candidate) stays advisory under the flag.
 **Without `--handoff` the report is byte-for-byte what it was before the flag
 existed** — nothing changes for a run that does not ask.
@@ -473,6 +496,7 @@ Errors (exit 1) — every one traceable to the method or the trial:
 | `layout_block` is exactly one of the five ODC layouts; `app_title` present; menu-bearing layouts have a menu and `LayoutBlank` has none | hard gate 3, and OUD gate 1's vocabulary |
 | Every menu target names a real screen | a menu entry pointing nowhere ships as a dead link |
 | Navigation endpoints are real screens; a payload edge finds its payload in the target's `accepts` | R7 / trial F-12 |
+| Where `record_actions` is declared: `action` is one of `create`/`edit`/`detail` and appears once per screen; `resolves_to` names a real screen that an edge from here reaches, or `inline`, or `out-of-scope` with a `reason` and no key interaction still offering it | R10 — a control that opens a screen is an edge, and a screen cannot describe an action while declaring its control unbuilt |
 | Every screen is reachable — in the menu or the target of an edge | a screen nothing leads to is built and never seen |
 | `assertions` keys are only `links`, `buttons`, `inputs`, non-negative integers | shared vocabulary; see below |
 | `introduced_here` is boolean and marks entities only; `design_tokens_source` is non-empty text | G-05 — the brief's delegation line and design-tokens pointer key on them; a new action's name is born in the plan, never here (R8's greenfield asymmetry) |
@@ -482,9 +506,10 @@ Errors (exit 1) — every one traceable to the method or the trial:
 | Where `access_classification` is declared: it is one of the five values, an `unresolved` screen is refused, a `role` screen names its `access_role`, and no other classification carries one. An `access_role` with **no** classification is refused too | see below — the field is optional, but a declared one is held to its rules, and a lone role name asserts a gate nothing declared |
 
 Warnings (do not block): a binding with no `behavior_notes` (F-11's exact
-shape), and an inventory where **every** screen absorbs exactly one candidate —
-which means the source's structure was restated rather than an architecture
-decided (R1).
+shape), a list-family screen that offers a record action and says nowhere it
+happens (R10), and an inventory where **every** screen absorbs exactly one
+candidate — which means the source's structure was restated rather than an
+architecture decided (R1).
 
 **The template-screen check is deliberately not one of them.** It shipped
 briefly as an advisory warning keyed on the screen name and was removed the

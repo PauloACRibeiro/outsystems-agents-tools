@@ -60,6 +60,62 @@ PRESENTATION_PATTERNS = (
 # recompute_assertions.py. Do not extend without changing all three.
 ASSERTION_KEYS = ("links", "buttons", "inputs")
 
+# --- record actions: where a list screen's create/edit/detail happens --------
+#
+# The gap this closes (2026-08-30): two apps shipped list screens whose "add"
+# and per-row "edit" controls pointed at screens nobody had put in the
+# inventory. The controls were built, rendered, and did nothing; a human found
+# them by clicking. The first app lost four screens that way, the one before it
+# two. Nothing upstream was wrong-shaped: `navigation` endpoints are already
+# held to real screens, so a WRITTEN edge can never dangle. The edge was never
+# written, and an absent edge is what no check could see.
+#
+# `archetype` values that lay out one row per record someone acts on. Narrower
+# than "shows a collection" on purpose, and measured on three real inventories:
+# `master-detail` is excluded because its editor is on the same screen by
+# definition, and `dashboard` because it summarises rather than lists. Widening
+# to the nine collection-ish archetypes fired on two worked-example screens
+# that were correct - the accusing-correct-rows shape AH-2026-08-26-015 removed
+# a warning for. Read-only use of the borrowed enum; nothing here extends it.
+RECORD_LIST_ARCHETYPES = ("list-table", "gallery-grid")
+
+# The record actions that need somewhere to happen. Bounded deliberately.
+RECORD_ACTIONS = ("create", "edit", "detail")
+
+# The archetypes each action legitimately opens. An outgoing edge into one of
+# these discharges that action WHATEVER its trigger says, and the route is not
+# optional: a trigger is prose describing a gesture ("select an item row", "the
+# + button") and no bounded vocabulary covers gestures. Measured - demanding an
+# `open`-shaped trigger for `detail` accused four inventories in this repo
+# whose row-open was already correctly closed by a real edge to a real screen,
+# which is the accusing-correct-rows shape AH-2026-08-26-015 deleted a warning
+# for. Structural, so wording cannot defeat it and wording cannot satisfy it.
+RECORD_ACTION_DESTINATIONS = {
+    "create": ("edit-form", "wizard"),
+    "edit": ("edit-form", "wizard"),
+    "detail": ("detail-view",),
+}
+
+# The two resolutions that answer "where" without naming a screen.
+RECORD_ACTION_INLINE = "inline"
+RECORD_ACTION_OUT_OF_SCOPE = "out-of-scope"
+
+# The verb that OPENS a key_interaction is the action it offers: interactions
+# are authored as imperative phrases ("Create a dish in one of the five
+# sections"), so the first word is the action. Narrative `behavior` prose is
+# deliberately NOT read - scanning it matched "land on the run it created" and
+# invented a create form that was never there, and on the evidence app it
+# actively asserted the wrong answer ("Dishes are created, edited and retired
+# here" on a screen whose build produced navigation controls). Portuguese sits
+# beside English because that inventory described a Portuguese UI and the next
+# one may be written in it.
+RECORD_ACTION_OPENERS = (
+    ("create", r"(create|add|new|register|criar|adicionar|novo|nova|registar)"),
+    ("edit", r"(edit|update|change|rename|configure|editar|alterar|"
+             r"atualizar|configurar)"),
+    ("detail", r"(open|view|inspect|abrir|ver|consultar)"),
+)
+
 # The requirement-ID grammar. outsystems-plan-to-mentor OWNS it
 # (scripts/check_requirement_coverage.py, ID_PATTERN); this is a deliberate
 # duplicate rather than a shared module, because the two skills ship in
@@ -777,6 +833,167 @@ def _check_navigation(inv, screens_by_name, errors):
     return edges
 
 
+def _offered_record_actions(screen):
+    """The record actions a screen's `key_interactions` open with, in order.
+
+    Anchored at the start of each interaction because that is where the verb
+    is; an unanchored scan reads "the run it created" as a create form.
+    """
+    offered = []
+    for item in _as_list(screen.get("key_interactions")):
+        if not _is_text(item):
+            continue
+        text = item.strip().lower()
+        for action, verbs in RECORD_ACTION_OPENERS:
+            if action in offered:
+                continue
+            if re.match(rf"^{verbs}\b", text):
+                offered.append(action)
+    return [a for a in RECORD_ACTIONS if a in offered]
+
+
+def _record_actions_declared(screen):
+    """`{action: resolves_to}` for the well-formed entries only.
+
+    Malformed ones are reported by `_check_record_actions`; skipping them here
+    keeps one defect to one message.
+    """
+    declared = {}
+    for entry in _as_list(screen.get("record_actions")):
+        if not isinstance(entry, dict):
+            continue
+        action, resolves = entry.get("action"), entry.get("resolves_to")
+        if action in RECORD_ACTIONS and _is_text(resolves):
+            declared.setdefault(action, resolves)
+    return declared
+
+
+def _actions_reached_by_an_edge(inv, screens_by_name, screen_name, offered):
+    """The offered actions an existing outgoing edge already accounts for.
+
+    Two ways, because one is not enough. A trigger is a phrase ("open a stored
+    query"), so its verb is matched anywhere in it rather than anchored - but
+    a trigger may name the gesture instead of the action ("the + button"), so
+    an edge into a form archetype discharges on shape alone. Without the
+    second, wording defeats the check; without the first, a form screen that
+    is archetyped as something else escapes it.
+    """
+    edges = [e for e in _as_list(inv.get("navigation"))
+             if isinstance(e, dict) and e.get("from") == screen_name]
+    triggers = [e["trigger"].lower() for e in edges if _is_text(e.get("trigger"))]
+    archetypes = {(screens_by_name.get(e.get("to")) or {}).get("archetype")
+                  for e in edges}
+    reached = []
+    for action, verbs in RECORD_ACTION_OPENERS:
+        if action not in offered:
+            continue
+        if any(re.search(verbs, t) for t in triggers):
+            reached.append(action)
+            continue
+        group = RECORD_ACTION_DESTINATIONS[action]
+        if not archetypes & set(group):
+            continue
+        # Archetype evidence is not action-specific: create and edit open the
+        # same kinds of screen, so one edge into an `edit-form` cannot say
+        # which of the two it serves. Letting it answer for both is how a
+        # screen offering create AND edit with only an edit route passed
+        # silently - the missing create destination IS the incident (Codex,
+        # AH-2026-08-30-012 round 1). So this route discharges only when
+        # exactly one offered action shares the destination group; where two
+        # do, the trigger has to name one or the author has to declare.
+        if len([a for a in offered
+                if RECORD_ACTION_DESTINATIONS[a] == group]) == 1:
+            reached.append(action)
+    return reached
+
+
+def _check_record_actions(inv, screens_by_name, errors):
+    """The field is optional; a declared entry is held to its rules.
+
+    Same bargain as `presentation_pattern` and `access_classification`: an
+    inventory written before the field existed is untouched, and one that
+    declares has said something a build will act on.
+    """
+    for name, screen in screens_by_name.items():
+        entries = screen.get("record_actions")
+        if entries is None:
+            continue
+        if not isinstance(entries, list) or not entries:
+            errors.append(
+                f"screen '{name}': 'record_actions' must be a non-empty list - "
+                "omit the key rather than declaring nothing")
+            continue
+        seen = set()
+        for i, entry in enumerate(entries):
+            where = f"screen '{name}': record_actions[{i}]"
+            if not isinstance(entry, dict):
+                errors.append(f"{where}: must be an object")
+                continue
+            action = entry.get("action")
+            if action not in RECORD_ACTIONS:
+                errors.append(
+                    f"{where}: 'action' must be one of "
+                    f"{', '.join(RECORD_ACTIONS)}, not {action!r}")
+                continue
+            if action in seen:
+                errors.append(
+                    f"{where}: '{action}' is declared twice on this screen - "
+                    "one action resolves one way")
+                continue
+            seen.add(action)
+            resolves = entry.get("resolves_to")
+            if not _is_text(resolves):
+                errors.append(
+                    f"{where}: 'resolves_to' required - name the screen this "
+                    f"action opens, or '{RECORD_ACTION_INLINE}', or "
+                    f"'{RECORD_ACTION_OUT_OF_SCOPE}'")
+                continue
+            if resolves == RECORD_ACTION_OUT_OF_SCOPE:
+                if not _is_text(entry.get("reason")):
+                    errors.append(
+                        f"{where}: '{RECORD_ACTION_OUT_OF_SCOPE}' requires a "
+                        "'reason' - the control must not be built, and the "
+                        "next reader has to know that was decided")
+                # Out-of-scope says the control is NOT built. A screen still
+                # advertising the action in `key_interactions` then says both
+                # things at once, and the design run reads the interactions.
+                # Codex, AH-2026-08-30-012 round 1: allowing this to clear the
+                # offer finding would make "clearing it is always right" false,
+                # because one of the doors out left the artifact contradicting
+                # itself. Withdrawing the interaction is the honest edit.
+                elif action in _offered_record_actions(screen):
+                    errors.append(
+                        f"{where}: '{action}' is {RECORD_ACTION_OUT_OF_SCOPE}, "
+                        f"but this screen still lists a key interaction that "
+                        f"offers it - the inventory says the control is not "
+                        "built and describes it in the same breath. Withdraw "
+                        "the interaction, or resolve the action to a screen "
+                        f"or '{RECORD_ACTION_INLINE}'")
+                continue
+            if resolves == RECORD_ACTION_INLINE:
+                continue
+            if resolves not in screens_by_name:
+                errors.append(
+                    f"{where}: '{action}' resolves to {resolves!r}, which is "
+                    "not a screen in this inventory - the destination behind a "
+                    "control has to exist before the build assumes it")
+                continue
+            if resolves == name:
+                errors.append(
+                    f"{where}: '{action}' resolves to this screen itself - "
+                    f"say '{RECORD_ACTION_INLINE}' when it happens here")
+                continue
+            if not any(
+                    isinstance(e, dict) and e.get("from") == name
+                    and e.get("to") == resolves
+                    for e in _as_list(inv.get("navigation"))):
+                errors.append(
+                    f"{where}: '{action}' resolves to screen {resolves!r} with "
+                    f"no navigation edge from '{name}' to it - a control that "
+                    "opens a screen is an edge, and the edge is what carries "
+                    "the trigger and the payload")
+
+
 def requirements_for_screen(inv, screen_name):
     """The requirement provenance one design run needs. Returns three lists:
 
@@ -1017,6 +1234,7 @@ def collect_errors(inv, source_text=None, notes=None):
     _check_candidates(inv, screen_names, errors, require_ids)
     screens_by_name = _screens_by_name(inv)
     edges = _check_navigation(inv, screens_by_name, errors)
+    _check_record_actions(inv, screens_by_name, errors)
     _check_open_decisions(inv, set(screen_names), errors)
 
     # Reachability is a graph walk from the app's real entry surface, not a
@@ -1113,6 +1331,42 @@ def collect_warnings(inv):
                     # decision no valid value to write and no way to hand off.
                     graduating=False,
                 ))
+    # CRUD closure: a list screen that offers create/edit/detail has to say
+    # where that happens. Two apps shipped "add" and per-row "edit" controls
+    # whose destination screens were in nobody's inventory; they rendered and
+    # did nothing, and the second app had no data-entry path at all. Prose is
+    # not read here and is not trusted to settle it: on the evidence app the
+    # `behavior` field asserted "Dishes are created, edited and retired here"
+    # while the build produced navigation controls to screens that did not
+    # exist. Graduating, because it is always clearable by editing the
+    # inventory - name the screen, say `inline`, or say `out-of-scope` with a
+    # reason - which is the same bargain `behavior_notes` makes, not a waiver.
+    screens = _screens_by_name(inv)
+    for name, screen in screens.items():
+        if screen.get("archetype") not in RECORD_LIST_ARCHETYPES:
+            continue
+        offered = _offered_record_actions(screen)
+        if not offered:
+            continue
+        declared = _record_actions_declared(screen)
+        reached = _actions_reached_by_an_edge(inv, screens, name, offered)
+        unresolved = [a for a in offered
+                      if a not in declared and a not in reached]
+        if not unresolved:
+            continue
+        warnings.append(Finding(
+            f"screen '{name}': offers {', '.join(unresolved)} on a record but "
+            "does not say where that happens - no 'record_actions' entry and "
+            "no outgoing navigation edge whose trigger names it. Declare each "
+            f"one as a screen name, '{RECORD_ACTION_INLINE}', or "
+            f"'{RECORD_ACTION_OUT_OF_SCOPE}' with a reason (the control is "
+            "then not built). A control whose destination was never in the "
+            "inventory is still built, renders, and does nothing",
+            # Always clearable by editing the inventory: every action has one
+            # of three true answers. That is the graduation test, and the
+            # third answer is what keeps a genuinely inline screen valid.
+            graduating=True,
+        ))
     for name, screen in _screens_by_name(inv).items():
         for binding in _as_list(screen.get("data_bindings")):
             if isinstance(binding, dict) and not _is_text(binding.get("behavior_notes")):
@@ -1166,6 +1420,36 @@ def format_brief(inv, screen_name):
         "key interactions:",
     ]
     lines += [f"  - {x}" for x in _as_list(screen.get("key_interactions"))]
+
+    # Same reason as the open decisions above: a disposition that reaches the
+    # validation report and not the brief is unenforceable by construction,
+    # because the brief is all a design run reads. All three kinds print
+    # together so the run sees them in one place rather than inferring two of
+    # them from silence, and `out-of-scope` prints as an instruction - it is
+    # the one that says a control the interactions describe must NOT be built.
+    declared_actions = _record_actions_declared(screen)
+    if declared_actions:
+        lines.append("record actions - where each one happens:")
+        for action in RECORD_ACTIONS:
+            resolves = declared_actions.get(action)
+            if resolves is None:
+                continue
+            if resolves == RECORD_ACTION_INLINE:
+                lines.append(
+                    f"  - {action}: on THIS screen - build it here, do not "
+                    "navigate away")
+            elif resolves == RECORD_ACTION_OUT_OF_SCOPE:
+                reason = next(
+                    (e.get("reason") for e in _as_list(screen.get("record_actions"))
+                     if isinstance(e, dict) and e.get("action") == action
+                     and _is_text(e.get("reason"))), "no reason recorded")
+                lines.append(
+                    f"  - {action}: OUT OF SCOPE - DO NOT BUILD the control "
+                    f"this screen's interactions describe ({reason})")
+            else:
+                lines.append(
+                    f"  - {action}: navigates to '{resolves}' - build the "
+                    "control, not the destination; that screen has its own run")
 
     # The brief is the only thing a per-screen design run reads. Provenance
     # recorded on candidates and never carried here would leave the design run

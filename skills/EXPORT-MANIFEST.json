@@ -67,7 +67,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-      "sha256": "0bc0b60d13d66c316c826468c371413b74aa0a51557ac80eee6e51425708f988"
+      "sha256": "159fd77784ffa61ac495671647d58f184c9ea685fde3a1c1fc350c4b18f8c318"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -75,11 +75,11 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
-      "sha256": "e0ef2f5132ec11f7cd9ede2cf2c40316ade05b55932bcf9c993f45f0aba45d99"
+      "sha256": "313a90875581c0aafc06619cf972c5261206554f4c05d15a2745f363e4c0c2ca"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/live-mentor-campaign-guidance.md",
-      "sha256": "fe1c4e9aaae50dc4a467eff231e64e0bfe6124fc43085050938870372edc728f"
+      "sha256": "a22435e02332672ecb614aac77adff459944a63d66386f488f80f5982ea5f228"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/live-target-evidence-matrix.md",
@@ -103,7 +103,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-mentor-hardening.md",
-      "sha256": "3bfd170fe37e9b4f9a9796ff6f0f91c0537f14e27460cdd7b7e4bcdd319f2349"
+      "sha256": "9bb3fc6fbeb240c578d8ff31d04f0c2d56b31456a4fceed81060127107461da6"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-modelapi-code-application-surface.md",
@@ -163,7 +163,7 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/odc-visual-source-ui-discipline.md",
-      "sha256": "68be7d54fdf8dbb65b0020441f5736e2efeb859bc742f7e22ee3e0931b63edf9"
+      "sha256": "45a7bdb0ed7c30b1f6fa6d5202e1d2a71117df7c3e11c2c2138d3ebdf329b696"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/omi-evidence-status.md",
@@ -219,11 +219,11 @@
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
-      "sha256": "01e03c8af77c8452ec8c0ffaeb99c81d20eae71aaf8aa6677e262b7a4745633d"
+      "sha256": "de10fbbdc96cde4c235ffe1ae51ff3e49c9a53fe09e44964d3f0425d35262434"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/source-map.md",
-      "sha256": "8e60a82c67fb1f0b242eb090b7a22e250d15966d784bebb42f445fd0b47b70ca"
+      "sha256": "5c5f6119085bd7cb4aad2eacdc4fe4bf0ccd8e8d29aa75167e01dd2815f957d6"
     },
     {
       "path": "skills/outsystems-mentor-implementation/references/structured-intent-mode.md",
@@ -311,11 +311,11 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/README.md",
-      "sha256": "073b0e00866a4292941490794deca200272651f9595eab091d10ce80e62b2da2"
+      "sha256": "deb16e7344d22795458227e1cb91584c4827d7abcdcd44b591121e8328355f8f"
     },
     {
       "path": "skills/outsystems-plan-to-mentor/SKILL.md",
-      "sha256": "bf2f2dba29d1fa00194a24508397ce57ab2fc138f1b0240850616957a1200e22"
+      "sha256": "5994988fabdea5667b851753597f092beb6e103a49a4bdbde459f365949b7c0e"
     },
     {
       "path": "skills/outsystems-plan-to-mentor/agents/openai.yaml",
@@ -323,11 +323,11 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/capability-plan-brief.md",
-      "sha256": "396cacc4c77dcbba65d3db3c96b3bbf0a73b53abe8d61a59f8d2b5d0eecb74e4"
+      "sha256": "b7a48bcd01164188c8033229467c39da3c1321197929d870077e3c5f9f5c7bba"
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-      "sha256": "f437b758714bcf10485931d24004fe7fdd9c0b97bbdc58c118e0788465838379"
+      "sha256": "02b8e05c7d539c4341eee0c43b00dfbc4a12b9715e6e44f84a88ece225b4d6f1"
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
@@ -359,7 +359,7 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/references/requirement-id-conventions.md",
-      "sha256": "842268e73ce4af85ed290e21cf2de6273524fbaf1ab2e964a343872e94ebfa9d"
+      "sha256": "52aa8a5c5cebeca8992259ecee6c3e26cfd5a451abf3a4aa8de8201431f07a74"
     },
     {
       "path": "skills/outsystems-plan-to-mentor/schemas/handoff-waivers.schema.json",
@@ -367,7 +367,7 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/scripts/check_handoff_gate.py",
-      "sha256": "274f9874ccb91b6059a9db4d020a47d4620f144bfb62fd2507184c631f31910d"
+      "sha256": "cee04c356032726d5c5e360b5f6f4637447d7b1aa2c673b22d0873d71b0b080e"
     },
     {
       "path": "skills/outsystems-plan-to-mentor/scripts/check_outcome_coverage.py",
@@ -379,7 +379,7 @@
     },
     {
       "path": "skills/outsystems-plan-to-mentor/scripts/check_requirement_coverage.py",
-      "sha256": "53543e9465a6e76659025362b1e805e949bc415b3bb626ecb3ba69a8fdd872a1"
+      "sha256": "fd363d81535796343d14693f68a3efd2beebcd00c4dc0f813c68ff14bd928f77"
     },
     {
       "path": "skills/outsystems-runtime-ui-audit/SKILL.md",
@@ -411,7 +411,7 @@
     },
     {
       "path": "skills/outsystems-screen-inventory/SKILL.md",
-      "sha256": "639765a9e6e3622aa5d543e91b090fdf56bbd3576ae3f3457f4a4187bad5946e"
+      "sha256": "be0d60d5cdda9f93795b5ae5b82dc6f7a94509f7204458ea90a13ab136954007"
     },
     {
       "path": "skills/outsystems-screen-inventory/references/ask-or-settle.md",
@@ -419,19 +419,19 @@
     },
     {
       "path": "skills/outsystems-screen-inventory/references/examples/elastic-sandbox-inventory.json",
-      "sha256": "c2010018fac6e36b9e6587666797606991a528f5f12056702acf125ae038c239"
+      "sha256": "a8bddf7e05a39aa79a7ca54d7ce03af4b17be0d517e8f7f800156ff29ac4466e"
     },
     {
       "path": "skills/outsystems-screen-inventory/references/method.md",
-      "sha256": "aa42128ed0199f4eb47673a2250a56bee8669e5be1b81ef01394f130a3258bf7"
+      "sha256": "7a072cec0f62eeebe24d39824f3b35edfb970dd29d0c886b5bf79af777125668"
     },
     {
       "path": "skills/outsystems-screen-inventory/schemas/screen-inventory.schema.json",
-      "sha256": "4d5668d766042e73503803bb64cbe3edaae7bde24815f88efdc0d2dbf75f0fde"
+      "sha256": "9ccf751c277223a297a7f0185d19ed85e4f98c36585ead1b8adce2ca05607ff4"
     },
     {
       "path": "skills/outsystems-screen-inventory/scripts/validate_screen_inventory.py",
-      "sha256": "1d4fc5364fdf3f4426a4346fe797ef4c081798a85b56c1eeca3f209c94aa7568"
+      "sha256": "8334cf33f299e8d307e1dd84262311776148798be73bdcc97cb8c1af75712ba3"
     },
     {
       "path": "skills/outsystems-ui-design/README.md",
@@ -439,7 +439,7 @@
     },
     {
       "path": "skills/outsystems-ui-design/SKILL.md",
-      "sha256": "3bb726aaa2093f1b7d302aeb89033d9fa40c2e412f305739e5798cb4fe609d2e"
+      "sha256": "0677956c60dc559e6ff036a0089618bb8cdd0e2e3148af72d49e2a3c94256d8e"
     },
     {
       "path": "skills/outsystems-ui-design/references/atomic-design.md",
@@ -491,7 +491,7 @@
     },
     {
       "path": "skills/outsystems-ui-design/references/live-source-inspection.md",
-      "sha256": "64f5db1efb2c1c2a928c3bd39ca3aa222b08a131f0799abae4f9629114080f9f"
+      "sha256": "f8f31684583213f4a26fec681855a6a07643d78ac79d0a484a9ddcd5ad9b806c"
     },
     {
       "path": "skills/outsystems-ui-design/references/maps.md",
@@ -657,7 +657,7 @@
   "manifest_version": 2,
   "packs": [
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 72,
       "files": [
         {
@@ -690,7 +690,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-          "sha256": "0bc0b60d13d66c316c826468c371413b74aa0a51557ac80eee6e51425708f988"
+          "sha256": "159fd77784ffa61ac495671647d58f184c9ea685fde3a1c1fc350c4b18f8c318"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -698,11 +698,11 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
-          "sha256": "e0ef2f5132ec11f7cd9ede2cf2c40316ade05b55932bcf9c993f45f0aba45d99"
+          "sha256": "313a90875581c0aafc06619cf972c5261206554f4c05d15a2745f363e4c0c2ca"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-mentor-campaign-guidance.md",
-          "sha256": "fe1c4e9aaae50dc4a467eff231e64e0bfe6124fc43085050938870372edc728f"
+          "sha256": "a22435e02332672ecb614aac77adff459944a63d66386f488f80f5982ea5f228"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-target-evidence-matrix.md",
@@ -726,7 +726,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-mentor-hardening.md",
-          "sha256": "3bfd170fe37e9b4f9a9796ff6f0f91c0537f14e27460cdd7b7e4bcdd319f2349"
+          "sha256": "9bb3fc6fbeb240c578d8ff31d04f0c2d56b31456a4fceed81060127107461da6"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-modelapi-code-application-surface.md",
@@ -786,7 +786,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-visual-source-ui-discipline.md",
-          "sha256": "68be7d54fdf8dbb65b0020441f5736e2efeb859bc742f7e22ee3e0931b63edf9"
+          "sha256": "45a7bdb0ed7c30b1f6fa6d5202e1d2a71117df7c3e11c2c2138d3ebdf329b696"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/omi-evidence-status.md",
@@ -842,11 +842,11 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
-          "sha256": "01e03c8af77c8452ec8c0ffaeb99c81d20eae71aaf8aa6677e262b7a4745633d"
+          "sha256": "de10fbbdc96cde4c235ffe1ae51ff3e49c9a53fe09e44964d3f0425d35262434"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/source-map.md",
-          "sha256": "8e60a82c67fb1f0b242eb090b7a22e250d15966d784bebb42f445fd0b47b70ca"
+          "sha256": "5c5f6119085bd7cb4aad2eacdc4fe4bf0ccd8e8d29aa75167e01dd2815f957d6"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/structured-intent-mode.md",
@@ -950,11 +950,11 @@
         }
       ],
       "pack_name": "omi-colleague-pack",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 65,
       "files": [
         {
@@ -983,7 +983,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-          "sha256": "0bc0b60d13d66c316c826468c371413b74aa0a51557ac80eee6e51425708f988"
+          "sha256": "159fd77784ffa61ac495671647d58f184c9ea685fde3a1c1fc350c4b18f8c318"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -991,11 +991,11 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
-          "sha256": "e0ef2f5132ec11f7cd9ede2cf2c40316ade05b55932bcf9c993f45f0aba45d99"
+          "sha256": "313a90875581c0aafc06619cf972c5261206554f4c05d15a2745f363e4c0c2ca"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-mentor-campaign-guidance.md",
-          "sha256": "fe1c4e9aaae50dc4a467eff231e64e0bfe6124fc43085050938870372edc728f"
+          "sha256": "a22435e02332672ecb614aac77adff459944a63d66386f488f80f5982ea5f228"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-target-evidence-matrix.md",
@@ -1019,7 +1019,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-mentor-hardening.md",
-          "sha256": "3bfd170fe37e9b4f9a9796ff6f0f91c0537f14e27460cdd7b7e4bcdd319f2349"
+          "sha256": "9bb3fc6fbeb240c578d8ff31d04f0c2d56b31456a4fceed81060127107461da6"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-modelapi-code-application-surface.md",
@@ -1079,7 +1079,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-visual-source-ui-discipline.md",
-          "sha256": "68be7d54fdf8dbb65b0020441f5736e2efeb859bc742f7e22ee3e0931b63edf9"
+          "sha256": "45a7bdb0ed7c30b1f6fa6d5202e1d2a71117df7c3e11c2c2138d3ebdf329b696"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/omi-evidence-status.md",
@@ -1135,11 +1135,11 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
-          "sha256": "01e03c8af77c8452ec8c0ffaeb99c81d20eae71aaf8aa6677e262b7a4745633d"
+          "sha256": "de10fbbdc96cde4c235ffe1ae51ff3e49c9a53fe09e44964d3f0425d35262434"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/source-map.md",
-          "sha256": "8e60a82c67fb1f0b242eb090b7a22e250d15966d784bebb42f445fd0b47b70ca"
+          "sha256": "5c5f6119085bd7cb4aad2eacdc4fe4bf0ccd8e8d29aa75167e01dd2815f957d6"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/structured-intent-mode.md",
@@ -1219,20 +1219,20 @@
         }
       ],
       "pack_name": "outsystems-mentor-implementation",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 18,
       "files": [
         {
           "path": "skills/outsystems-plan-to-mentor/README.md",
-          "sha256": "073b0e00866a4292941490794deca200272651f9595eab091d10ce80e62b2da2"
+          "sha256": "deb16e7344d22795458227e1cb91584c4827d7abcdcd44b591121e8328355f8f"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/SKILL.md",
-          "sha256": "bf2f2dba29d1fa00194a24508397ce57ab2fc138f1b0240850616957a1200e22"
+          "sha256": "5994988fabdea5667b851753597f092beb6e103a49a4bdbde459f365949b7c0e"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/agents/openai.yaml",
@@ -1240,11 +1240,11 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/capability-plan-brief.md",
-          "sha256": "396cacc4c77dcbba65d3db3c96b3bbf0a73b53abe8d61a59f8d2b5d0eecb74e4"
+          "sha256": "b7a48bcd01164188c8033229467c39da3c1321197929d870077e3c5f9f5c7bba"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-          "sha256": "f437b758714bcf10485931d24004fe7fdd9c0b97bbdc58c118e0788465838379"
+          "sha256": "02b8e05c7d539c4341eee0c43b00dfbc4a12b9715e6e44f84a88ece225b4d6f1"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
@@ -1276,7 +1276,7 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/requirement-id-conventions.md",
-          "sha256": "842268e73ce4af85ed290e21cf2de6273524fbaf1ab2e964a343872e94ebfa9d"
+          "sha256": "52aa8a5c5cebeca8992259ecee6c3e26cfd5a451abf3a4aa8de8201431f07a74"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/schemas/handoff-waivers.schema.json",
@@ -1284,7 +1284,7 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/scripts/check_handoff_gate.py",
-          "sha256": "274f9874ccb91b6059a9db4d020a47d4620f144bfb62fd2507184c631f31910d"
+          "sha256": "cee04c356032726d5c5e360b5f6f4637447d7b1aa2c673b22d0873d71b0b080e"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/scripts/check_outcome_coverage.py",
@@ -1296,15 +1296,15 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/scripts/check_requirement_coverage.py",
-          "sha256": "53543e9465a6e76659025362b1e805e949bc415b3bb626ecb3ba69a8fdd872a1"
+          "sha256": "fd363d81535796343d14693f68a3efd2beebcd00c4dc0f813c68ff14bd928f77"
         }
       ],
       "pack_name": "outsystems-plan-to-mentor",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 7,
       "files": [
         {
@@ -1337,16 +1337,16 @@
         }
       ],
       "pack_name": "outsystems-runtime-ui-audit",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 6,
       "files": [
         {
           "path": "skills/outsystems-screen-inventory/SKILL.md",
-          "sha256": "639765a9e6e3622aa5d543e91b090fdf56bbd3576ae3f3457f4a4187bad5946e"
+          "sha256": "be0d60d5cdda9f93795b5ae5b82dc6f7a94509f7204458ea90a13ab136954007"
         },
         {
           "path": "skills/outsystems-screen-inventory/references/ask-or-settle.md",
@@ -1354,27 +1354,27 @@
         },
         {
           "path": "skills/outsystems-screen-inventory/references/examples/elastic-sandbox-inventory.json",
-          "sha256": "c2010018fac6e36b9e6587666797606991a528f5f12056702acf125ae038c239"
+          "sha256": "a8bddf7e05a39aa79a7ca54d7ce03af4b17be0d517e8f7f800156ff29ac4466e"
         },
         {
           "path": "skills/outsystems-screen-inventory/references/method.md",
-          "sha256": "aa42128ed0199f4eb47673a2250a56bee8669e5be1b81ef01394f130a3258bf7"
+          "sha256": "7a072cec0f62eeebe24d39824f3b35edfb970dd29d0c886b5bf79af777125668"
         },
         {
           "path": "skills/outsystems-screen-inventory/schemas/screen-inventory.schema.json",
-          "sha256": "4d5668d766042e73503803bb64cbe3edaae7bde24815f88efdc0d2dbf75f0fde"
+          "sha256": "9ccf751c277223a297a7f0185d19ed85e4f98c36585ead1b8adce2ca05607ff4"
         },
         {
           "path": "skills/outsystems-screen-inventory/scripts/validate_screen_inventory.py",
-          "sha256": "1d4fc5364fdf3f4426a4346fe797ef4c081798a85b56c1eeca3f209c94aa7568"
+          "sha256": "8334cf33f299e8d307e1dd84262311776148798be73bdcc97cb8c1af75712ba3"
         }
       ],
       "pack_name": "outsystems-screen-inventory",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 4,
       "files": [
         {
@@ -1395,11 +1395,11 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-docs",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 156,
       "files": [
         {
@@ -1464,7 +1464,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/execution-gates.md",
-          "sha256": "0bc0b60d13d66c316c826468c371413b74aa0a51557ac80eee6e51425708f988"
+          "sha256": "159fd77784ffa61ac495671647d58f184c9ea685fde3a1c1fc350c4b18f8c318"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/knowledge-provider-contract.md",
@@ -1472,11 +1472,11 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-execution-intake.md",
-          "sha256": "e0ef2f5132ec11f7cd9ede2cf2c40316ade05b55932bcf9c993f45f0aba45d99"
+          "sha256": "313a90875581c0aafc06619cf972c5261206554f4c05d15a2745f363e4c0c2ca"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-mentor-campaign-guidance.md",
-          "sha256": "fe1c4e9aaae50dc4a467eff231e64e0bfe6124fc43085050938870372edc728f"
+          "sha256": "a22435e02332672ecb614aac77adff459944a63d66386f488f80f5982ea5f228"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/live-target-evidence-matrix.md",
@@ -1500,7 +1500,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-mentor-hardening.md",
-          "sha256": "3bfd170fe37e9b4f9a9796ff6f0f91c0537f14e27460cdd7b7e4bcdd319f2349"
+          "sha256": "9bb3fc6fbeb240c578d8ff31d04f0c2d56b31456a4fceed81060127107461da6"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-modelapi-code-application-surface.md",
@@ -1560,7 +1560,7 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/odc-visual-source-ui-discipline.md",
-          "sha256": "68be7d54fdf8dbb65b0020441f5736e2efeb859bc742f7e22ee3e0931b63edf9"
+          "sha256": "45a7bdb0ed7c30b1f6fa6d5202e1d2a71117df7c3e11c2c2138d3ebdf329b696"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/omi-evidence-status.md",
@@ -1616,11 +1616,11 @@
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/session-packaging-hardening.md",
-          "sha256": "01e03c8af77c8452ec8c0ffaeb99c81d20eae71aaf8aa6677e262b7a4745633d"
+          "sha256": "de10fbbdc96cde4c235ffe1ae51ff3e49c9a53fe09e44964d3f0425d35262434"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/source-map.md",
-          "sha256": "8e60a82c67fb1f0b242eb090b7a22e250d15966d784bebb42f445fd0b47b70ca"
+          "sha256": "5c5f6119085bd7cb4aad2eacdc4fe4bf0ccd8e8d29aa75167e01dd2815f957d6"
         },
         {
           "path": "skills/outsystems-mentor-implementation/references/structured-intent-mode.md",
@@ -1684,11 +1684,11 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/README.md",
-          "sha256": "073b0e00866a4292941490794deca200272651f9595eab091d10ce80e62b2da2"
+          "sha256": "deb16e7344d22795458227e1cb91584c4827d7abcdcd44b591121e8328355f8f"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/SKILL.md",
-          "sha256": "bf2f2dba29d1fa00194a24508397ce57ab2fc138f1b0240850616957a1200e22"
+          "sha256": "5994988fabdea5667b851753597f092beb6e103a49a4bdbde459f365949b7c0e"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/agents/openai.yaml",
@@ -1696,11 +1696,11 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/capability-plan-brief.md",
-          "sha256": "396cacc4c77dcbba65d3db3c96b3bbf0a73b53abe8d61a59f8d2b5d0eecb74e4"
+          "sha256": "b7a48bcd01164188c8033229467c39da3c1321197929d870077e3c5f9f5c7bba"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/coverage-review-prompt.md",
-          "sha256": "f437b758714bcf10485931d24004fe7fdd9c0b97bbdc58c118e0788465838379"
+          "sha256": "02b8e05c7d539c4341eee0c43b00dfbc4a12b9715e6e44f84a88ece225b4d6f1"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/delivery-modes.md",
@@ -1732,7 +1732,7 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/references/requirement-id-conventions.md",
-          "sha256": "842268e73ce4af85ed290e21cf2de6273524fbaf1ab2e964a343872e94ebfa9d"
+          "sha256": "52aa8a5c5cebeca8992259ecee6c3e26cfd5a451abf3a4aa8de8201431f07a74"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/schemas/handoff-waivers.schema.json",
@@ -1740,7 +1740,7 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/scripts/check_handoff_gate.py",
-          "sha256": "274f9874ccb91b6059a9db4d020a47d4620f144bfb62fd2507184c631f31910d"
+          "sha256": "cee04c356032726d5c5e360b5f6f4637447d7b1aa2c673b22d0873d71b0b080e"
         },
         {
           "path": "skills/outsystems-plan-to-mentor/scripts/check_outcome_coverage.py",
@@ -1752,7 +1752,7 @@
         },
         {
           "path": "skills/outsystems-plan-to-mentor/scripts/check_requirement_coverage.py",
-          "sha256": "53543e9465a6e76659025362b1e805e949bc415b3bb626ecb3ba69a8fdd872a1"
+          "sha256": "fd363d81535796343d14693f68a3efd2beebcd00c4dc0f813c68ff14bd928f77"
         },
         {
           "path": "skills/outsystems-runtime-ui-audit/SKILL.md",
@@ -1784,7 +1784,7 @@
         },
         {
           "path": "skills/outsystems-screen-inventory/SKILL.md",
-          "sha256": "639765a9e6e3622aa5d543e91b090fdf56bbd3576ae3f3457f4a4187bad5946e"
+          "sha256": "be0d60d5cdda9f93795b5ae5b82dc6f7a94509f7204458ea90a13ab136954007"
         },
         {
           "path": "skills/outsystems-screen-inventory/references/ask-or-settle.md",
@@ -1792,19 +1792,19 @@
         },
         {
           "path": "skills/outsystems-screen-inventory/references/examples/elastic-sandbox-inventory.json",
-          "sha256": "c2010018fac6e36b9e6587666797606991a528f5f12056702acf125ae038c239"
+          "sha256": "a8bddf7e05a39aa79a7ca54d7ce03af4b17be0d517e8f7f800156ff29ac4466e"
         },
         {
           "path": "skills/outsystems-screen-inventory/references/method.md",
-          "sha256": "aa42128ed0199f4eb47673a2250a56bee8669e5be1b81ef01394f130a3258bf7"
+          "sha256": "7a072cec0f62eeebe24d39824f3b35edfb970dd29d0c886b5bf79af777125668"
         },
         {
           "path": "skills/outsystems-screen-inventory/schemas/screen-inventory.schema.json",
-          "sha256": "4d5668d766042e73503803bb64cbe3edaae7bde24815f88efdc0d2dbf75f0fde"
+          "sha256": "9ccf751c277223a297a7f0185d19ed85e4f98c36585ead1b8adce2ca05607ff4"
         },
         {
           "path": "skills/outsystems-screen-inventory/scripts/validate_screen_inventory.py",
-          "sha256": "1d4fc5364fdf3f4426a4346fe797ef4c081798a85b56c1eeca3f209c94aa7568"
+          "sha256": "8334cf33f299e8d307e1dd84262311776148798be73bdcc97cb8c1af75712ba3"
         },
         {
           "path": "skills/outsystems-ui-design/README.md",
@@ -1812,7 +1812,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/SKILL.md",
-          "sha256": "3bb726aaa2093f1b7d302aeb89033d9fa40c2e412f305739e5798cb4fe609d2e"
+          "sha256": "0677956c60dc559e6ff036a0089618bb8cdd0e2e3148af72d49e2a3c94256d8e"
         },
         {
           "path": "skills/outsystems-ui-design/references/atomic-design.md",
@@ -1864,7 +1864,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/live-source-inspection.md",
-          "sha256": "64f5db1efb2c1c2a928c3bd39ca3aa222b08a131f0799abae4f9629114080f9f"
+          "sha256": "f8f31684583213f4a26fec681855a6a07643d78ac79d0a484a9ddcd5ad9b806c"
         },
         {
           "path": "skills/outsystems-ui-design/references/maps.md",
@@ -2028,11 +2028,11 @@
         }
       ],
       "pack_name": "outsystems-sprint-loop-pack",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     },
     {
-      "build_date_utc": "2026-08-30",
+      "build_date_utc": "2026-08-31",
       "file_count": 51,
       "files": [
         {
@@ -2041,7 +2041,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/SKILL.md",
-          "sha256": "3bb726aaa2093f1b7d302aeb89033d9fa40c2e412f305739e5798cb4fe609d2e"
+          "sha256": "0677956c60dc559e6ff036a0089618bb8cdd0e2e3148af72d49e2a3c94256d8e"
         },
         {
           "path": "skills/outsystems-ui-design/references/atomic-design.md",
@@ -2093,7 +2093,7 @@
         },
         {
           "path": "skills/outsystems-ui-design/references/live-source-inspection.md",
-          "sha256": "64f5db1efb2c1c2a928c3bd39ca3aa222b08a131f0799abae4f9629114080f9f"
+          "sha256": "f8f31684583213f4a26fec681855a6a07643d78ac79d0a484a9ddcd5ad9b806c"
         },
         {
           "path": "skills/outsystems-ui-design/references/maps.md",
@@ -2241,8 +2241,8 @@
         }
       ],
       "pack_name": "outsystems-ui-design",
-      "source_commit": "62a396daa4277c5cd3c956161d469f52dee05ed2",
-      "version": "2026-08-30.2"
+      "source_commit": "0f3b48431fb3ee5221807ccd1f9380c755af7779",
+      "version": "2026-08-31"
     }
   ]
 }

@@ -63,7 +63,15 @@ inventory and the source spec while the package is generated:
   containment is `Index(...) >= 0`, because ODC `Index` is zero-based and
   returns `-1` when absent, so `> 0` silently drops position-0 matches.
   Expressions ported from an existing app carry this trap unflagged —
-  ported code gets the same grounding as new code.
+  ported code gets the same grounding as new code. A corrected instance is
+  not a closed finding: the shape gets pasted, so when one site is fixed,
+  have Mentor sweep the whole app for the `Index(...) > 0` pattern — across
+  aggregate filters and sort expressions, calculated attributes, action
+  assignments, widget bindings, and displayed expressions — and **report**
+  the other sites rather than fixing one in isolation. Nothing in the happy
+  path surfaces the rest: `> 0` still matches mid-string, so a search tests
+  fine on every term tried from the middle of a word and fails on every
+  prefix, which is how people actually search.
 - **Product-vocabulary trap** — for an ODC target, name the forbidden widget
   and its replacement explicitly; naming only the widget you want is not
   enough. Verified O11-only name: `ListRecords` — use `List`, or

@@ -79,6 +79,18 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
     that predate the rule. Where an action changes a status or state, the spec
     also declares a **transition table** (`| from-state | action | to-state |`);
     state names are capability vocabulary, not element design.
+  - Beside the result sentence, write an **inputs sentence** in the same
+    grammar — ``Inputs are `RestaurantId` (internal), `MenuDate`.`` Each input
+    is then accounted for by the plan or the screen inventory naming it where
+    a user supplies it, or by `(internal)` (no interface can supply it: a
+    session binding, a constant), or by `(waived: <reason>)` (one could and
+    this build does not offer one, on purpose). Naming the inputs is capability
+    intent for the same reason declaring the results is — it says what the
+    caller must decide — and it does not breach the element boundary below:
+    data types, shapes and logic steps all stay downstream.
+    restaurant-app-v2 paid for this: `OpenMenuForDate` was date-parameterised
+    and the only control ever built was "Criar ementa de hoje", so tomorrow's
+    menu — the product's core claim — could not be created at all.
   - In the **plan**, give every **non-success** value at least one `V<N>`
     verification row that reaches it by executing the action. The row grammar is
     machine-checkable and defined in `references/coverage-review-prompt.md` —
@@ -143,7 +155,10 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
   `Business Logic`, or `Screen Aggregates`.
 - Do not list entity attributes, server action inputs, client actions,
   aggregates, screen widgets, role folders, TrueChange checks, publish checks,
-  or browser checks.
+  or browser checks. Server action inputs are declared in the **source spec**,
+  in its inputs sentence above — that is the one sanctioned place, and it is
+  not this file. A plan that names an input in passing is not in breach; a plan
+  that carries a signature list is.
 - Do not include Studio-native pseudocode of any kind. Element-level detail
   belongs to `outsystems-mentor-implementation`; if the plan seems to need an
   ODC element map to feel complete, stop at capability intent and leave the

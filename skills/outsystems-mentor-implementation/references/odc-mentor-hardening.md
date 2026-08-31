@@ -77,6 +77,9 @@ Mentor to rely on these patterns for proof or edits:
   property set.
 - Speculative inspection code that treats missing properties as proof of
   absence.
+- Behaviour questions used as binding proof — asking what a control *does*
+  and reading the answer as evidence that its event is wired. See
+  `## Ask What The Event Points At, Not What The Action Does`.
 
 Preferred fallback:
 
@@ -1604,6 +1607,48 @@ Real session: eye toggle was present in the Claude Design prototype but complete
 
 ---
 
+### A Dropdown Inside A Slim Fixed Header Clips Unless It Escapes The Bar
+
+**Failure pattern**
+
+Putting a results panel, suggestion list, or any other expanding overlay inside a header bar and relying on the bar to grow around it:
+
+```text
+Container HeaderSearch (inside the 56px header bar)
+  Input SearchTerm
+  Container SearchResults (list of matches)
+```
+
+The bar is sized for one row — 56px in the observed case — and does not grow to fit the panel, which in flow was lost at the bar's edge, usually to a sliver of the first result. A short parent does not clip a child on its own, so the instrument is taking the panel out of flow and painting it over the page, not making the bar taller.
+
+**Preferred pattern**
+
+Anchor the panel to the bar and take it out of flow, so it paints over the page below:
+
+```text
+Container HeaderSearch:
+  Extended Properties:
+    style = "position:relative;"
+
+Container SearchResults (child of HeaderSearch):
+  Extended Properties:
+    style = "position:absolute; top:100%; left:0; z-index:100; max-height:60vh; overflow-y:auto;"
+```
+
+**Why**
+
+This is the mirror of the decorative overlay above, and the two must not be confused. That one is `pointer-events:none` and stays inside its parent's box, so where it lands in the paint order costs nothing; this one is interactive, must render *above* the page, and must extend past its parent's box — which is why it carries an explicit `z-index` rather than relying on child order, since a positioned element already paints above its in-flow siblings whatever its position in the tree. It is also not the LayoutBlank height problem: nothing here is failing to fill a parent — the child is larger than a parent that is correctly small, so `height:100vh` is the wrong instrument.
+
+**When to ask**
+
+When the design puts any expanding control — search results, a filter menu, a notification list — inside a fixed bar, confirm the intended overlay behaviour before emitting, and say in the prompt that the panel overlays the page content rather than expanding the bar.
+
+**Evidence**
+
+Real session (restaurant-app v2, 2026-08-30): search results built inside a 56px fixed header clipped at the bar until the panel was absolutely positioned against a relative parent. Field-observed over the Mentor MCP, not a documented platform rule.
+
+---
+
 ## Button Widget Rules
 
 ### Button OnClick Is Required — Never Leave It Empty
@@ -1650,6 +1695,46 @@ When no appropriate existing action exists and the correct action name is unclea
 **Evidence**
 
 Real session: `Btn_RevealPwd` prompt said "leave OnClick empty." Mentor self-recovered by creating `TogglePasswordVisibility`, but the prompt was wrong and burned an extra `applyModelApiCode` pass.
+
+---
+
+## Ask What The Event Points At, Not What The Action Does
+
+**Failure pattern**
+
+Auditing an already-built screen by asking Mentor what a control does, and accepting an answer about the action:
+
+```text
+# Wrong: the answer describes the action and assumes the binding
+"What does the digital switch's OnChange do?"
+-> "OnChange runs ToggleAvailability, which updates the record and
+    refreshes the list."
+```
+
+Every word of that can be true while the switch's OnChange is still unset. Mentor describes the action it believes is wired and infers the wiring from the action's existence — the action exists, its body is correct, and the widget-to-event pointer was never set.
+
+**Preferred pattern**
+
+Ask for the binding as a property of the widget, and require the value per widget:
+
+```text
+"For each interactive widget on this screen, report the value of the
+ widget's own event property — the action or screen it points at, or
+ empty. Do not describe what any action does. Answer in the form:
+ <widget> <event> = <value|empty>."
+```
+
+**Why**
+
+The handler is a settable pointer on the widget's event, stored separately from the action it names (`references/odc-modelapi-code-application-surface.md` → `## 11. Events`). A question phrased about behaviour is answered from the action, so the one field in doubt is the one field the answer never reads. The rule above bounds how far that can travel: On Click is mandatory on Button, Link and List Item, so an unset pointer there fails TrueChange and never publishes, and the audit question on those three is *which* action the pointer names rather than whether it is set. On a widget whose event the platform does not require — a Switch or Checkbox `OnChange`, a Container or Icon click handler — nothing at build time asks the question at all, so the control publishes, renders, and does nothing.
+
+**When to ask**
+
+Whenever a control renders and does nothing, and before reporting any built control as wired on the strength of a description. Enumerate every interactive widget and require an explicit `empty` rather than silence — an omitted row is not a wired control. When three fix turns have not closed it, escalate per `references/execution-gates.md` → `### Escalate to ODC Studio after three failed fix turns`, which carries the measured case.
+
+**Evidence**
+
+Real session (restaurant-app v2, 2026-08-30): audits phrased as "what does this control's event contain" returned correct action descriptions for controls whose bindings were unset. The v2 digital-switch defect is the same failure seen from the other end — Mentor's summaries asserted the binding existed across three separate turns while the runtime showed the handler never running (`references/execution-gates.md` → `### Escalate to ODC Studio after three failed fix turns`). Field-observed over the Mentor MCP.
 
 ---
 
@@ -2390,6 +2475,44 @@ Real session (RequestPulse navigation session bf89f0ff, 2026-06-25): Mentor corr
 
 ---
 
+### Block Chrome Must Be Real Block Content, Not Placeholder Default Content
+
+**Failure pattern**
+
+Sending the new chrome to the layout block's placeholder, or leaving the destination conditional so Mentor picks one:
+
+```text
+# Wrong: a placeholder is a slot, not a home
+"On the Menu block, add a search bar to the Header placeholder
+ (use a placeholder if one exists)."
+```
+
+The widget is created, the turn reports success, TrueChange is clean — and the search bar renders on no screen. A block still showing "Use this placeholder to…" after the turn is the same failure displaying its own default text.
+
+**Preferred pattern**
+
+Name a container inside the block that renders the block's own content, and name it unconditionally:
+
+```text
+"On the Menu block (the layout's navigation web block), add the search bar
+ inside the existing empty navigation container in the block's header
+ element, as a child of that container. Do not place it in a placeholder."
+```
+
+**Why**
+
+The propagation rule above — every screen using the layout inherits a block change because they share the block instance — holds for the block's **own** widgets. It does not hold for placeholder content. Each consuming screen supplies its own `PlaceholdersContent` for a placeholder (`### Screen Content Widgets Live Inside PlaceholdersContent, Not Directly on the Screen`), so what the block puts there is a default that screen overwrites. Chrome authored as a placeholder default is therefore built correctly and rendered nowhere, and no build-time signal can tell you: the widget exists, the block exists, and nothing errored.
+
+**When to ask**
+
+When the block's internal structure is unknown, read it before choosing the destination — `getWebBlockNames → getWebBlock` for the model, or the rendered DOM for a deployed app — and ask which container is meant when more than one is a candidate. Never settle it with a conditional in the prompt: the conditional is how the placeholder gets chosen.
+
+**Evidence**
+
+Real session (restaurant-app v2, 2026-08-30): a search bar placed as placeholder default content did not survive to any screen; the round was repeated against the block's empty `header-navigation` container and rendered. Field-observed over the Mentor MCP, not a documented platform rule.
+
+---
+
 ## `getTrueChangeErrors` Mid-Session Is A Positive Signal
 
 ### Do Not Treat `getTrueChangeErrors` Step As A Risk Indicator
@@ -2549,10 +2672,10 @@ Lessons from a full agentic-app build (PlayRight "Member Support") driven end-to
 
 - Scope: any prompt specifying a Client Action that calls a mutating Server Action which returns an outcome/result. Ruled by Codex 2026-08-13 (`AH-2026-08-13-018`) from the LoanDesk run, where **three of five client actions were built with no failure branch at all**.
 - Failure pattern: writing the failure half as prose — `else -> show the reason on that row`. A branch described in prose is a branch that may not exist. The two actions in that run that *did* get a failure branch were exactly the two whose spec named a concrete message widget; the three that named none ran `Refresh Data` unconditionally and discarded every refusal the server returned.
-- Preferred pattern: for every mutating call, the prompt must state four things — (1) the returned outcome **is consumed**, by a branch that reads it; (2) every **user-visible refusal or error path** names its **UI sink or message mechanism** and the **value/output bound to it**; (3) which downstream **success effects must not run** on that path — refresh, navigation, success messaging; (4) how the intended state change is **verified on an independent surface** afterwards.
+- Preferred pattern: for every mutating call, the prompt must state six things — (1) the returned outcome **is consumed**, by a branch that reads it; (2) every **user-visible refusal or error path** names its **UI sink or message mechanism** and the **value/output bound to it**; (3) which downstream **success effects must not run** on that path — refresh, navigation, success messaging; (4) how the intended state change is **verified on an independent surface** afterwards; (5) when the action can return more than two outcomes, **each one gets its own message** and there is **no catch-all `else`** covering the remainder — a catch-all shows one outcome's sentence for another outcome's failure, which is worse than no message because it is a confident wrong answer and sends diagnosis down the wrong path; (6) a screen action that **stores** the outcome in a variable must **read and branch on** it in the same action — storing it is not consuming it, and a stored-but-unread outcome is a refusal the server issued correctly and the screen discarded in silence. Items (5) and (6) are field-observed (restaurant-app v2, 2026-08-30); the `AH-2026-08-13-018` ruling named the first four.
 - Why safer: the user-visible symptom of a missing failure branch is not an ugly message, it is **no message** — the screen refreshes, the row is unchanged, and nothing says why. That is indistinguishable from success to the user and invisible to an enumeration gate, because the action, its call, and its signature all exist.
 - When to ask: before accepting any client-action spec whose failure half is a sentence rather than a step, and before reporting a refusal path as built on the strength of the Server Action alone.
-- Minimal example: not `else -> show the reason`, but `False -> Assign LocalMessage = <mapped sentence> ; show in MessageContainer above the form ; do NOT Refresh Data ; do NOT navigate`.
+- Minimal example: for a Boolean outcome, not `else -> show the reason`, but `False -> Assign LocalMessage = <mapped sentence> ; show in MessageContainer above the form ; do NOT Refresh Data ; do NOT navigate`. Past two outcomes the binary shape is itself the trap, because the second branch becomes the remainder branch: `Outcome = TranslationRefused -> "<its own sentence>" ; Outcome = PageOverflow -> "<its own sentence>" ; Outcome = Success -> Refresh Data ; navigate` — one branch per outcome the action declares, and no remainder.
 
 ## A Paginated List Refreshes Through Its Bound Variables
 
@@ -2580,3 +2703,4 @@ Lessons from a full agentic-app build (PlayRight "Member Support") driven end-to
 - Why safer: it removes the timing dependence by construction rather than racing it, which is what the prose was trying to say. It is also the difference between a rule a reviewer nods at and one a generator can implement.
 - When to ask: whenever a spec sentence contains *once*, *after*, *when*, or *has resolved* **and** the subject is fetched data. This is not a blanket rewrite of every timing word — the rule applies where a fetch is involved.
 - Minimal example: not "assign the local variable once the fetch has resolved", but `GetItem.On After Fetch: If ItemId = NullIdentifier() -> End ; Else If GetItem.List.Empty -> Assign LocalItem.Id = ItemId ... ; Else -> Assign LocalItem = GetItem.List.Current.Item`. Do not call `GetUserId()` inside On After Fetch — the platform documents it can return empty there.
+- Bounded exception — **render-time visibility flags**: On After Fetch is the right home for logic that *consumes* fetched data and the wrong home for a flag that a widget's `Visible` reads on the **first** render. The documented timing is "after data arrives, before widgets bind" (Language-elements handbook, `Current official`) and that is the timing relative to *that aggregate's own* binding; what a reactive screen does overall is paint first and fill in as each fetch resolves, so a flag assigned in a fetch handler is set after the render that needed it, and the section flashes or renders in the wrong state before correcting itself. Do not derive a render-time visibility flag from a fetch handler at all — give the widget a condition the platform re-evaluates when the data changes. For "is this section empty", that is a per-section aggregate with `Max. Records = 1`: it looks like an extra query sitting beside the main one, and the widget reads it directly, so the platform re-evaluates the condition whenever that data changes instead of leaving a handler-assigned flag stale. The probe does not resolve any sooner than the flag did — an unfetched aggregate reports `.List.Empty` as True — so bind the condition as `<Probe>.IsDataFetched and <Probe>.List.Empty` (Language-elements handbook, Aggregate runtime outputs), never on emptiness alone, or the first paint shows the empty state and corrects itself. This does **not** overturn the emptiness rule in the Language-elements handbook. That rule governs an aggregate you have already fetched, where `.List.Empty` beats `.Count = 0` and a second query buys nothing; here no such aggregate is in scope for that section, and a bounded one-row probe is cheaper than the full fetch it stands in for. The post-action half of the same persisted-state doctrine is `### Gate Post-Action Affordances On Persisted State`. Field-observed (restaurant-app v2, 2026-08-30), scoped to render-time visibility flags only.

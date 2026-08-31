@@ -344,6 +344,10 @@
         "Delete a profile, with confirmation",
         "Start a run from a profile and follow it into the Migration Console"
       ],
+      "record_actions": [
+        {"action": "create", "resolves_to": "inline"},
+        {"action": "edit", "resolves_to": "inline"}
+      ],
       "data_bindings": [],
       "accepts": []
     }

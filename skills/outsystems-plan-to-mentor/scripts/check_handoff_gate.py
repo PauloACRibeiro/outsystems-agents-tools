@@ -363,6 +363,12 @@ def build_clauses(args: argparse.Namespace) -> list[ClauseResult]:
         coverage_args += ["--blueprint", str(args.blueprint)]
     if args.inventory is not None:
         coverage_args += ["--inventory", str(args.inventory)]
+    # The design file reaches TWO clauses. `outcome-coverage` reads its result
+    # declarations; the coverage checker reads its input declarations for the
+    # contract-reachability note. Forwarding it cannot change this clause's
+    # state -- that note never fails -- so the gate's own contract is unmoved.
+    if args.design is not None:
+        coverage_args += ["--design", str(args.design)]
     # Unconditional, and it belongs here rather than behind a gate flag of its
     # own. A design ref the coverage checker cannot resolve is a check that did
     # not run, which is rule 2 above; a --strict the operator has to remember

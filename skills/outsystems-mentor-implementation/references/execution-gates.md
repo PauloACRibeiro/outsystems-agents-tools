@@ -1,6 +1,6 @@
 ---
 name: omi-execution-gates
-description: The three runtime gates that cover what build-time signals cannot see — execute an action before building on it, render a screen as a principal who can reach it, and never close a fix on the model's report. Use during any live build or fix iteration.
+description: The runtime gates that cover what build-time signals cannot see — execute an action before building on it, check the durable row rather than the badge, render a screen as a principal who can reach it, baseline roles and rendered output before a turn changes them, and never close a fix on the model's report. Ends in the failure-shapes catalog: ten defect shapes that all validated clean, each with the probe that discriminates it. Use during any live build or fix iteration.
 ---
 
 # Execution gates
@@ -44,6 +44,36 @@ correct; they ran at the end.
 result the design declares must have a verification row that reaches it. That
 checker proves the tests were *written*; this gate is what makes them *run in
 time*.
+
+## 1b. Post-mutation state check — the durable row, not the badge
+
+**When a mutating action reports success, verify the DURABLE state — a
+`db_query` against the record, or a full reload — never the on-screen label.**
+§1 is about executing an action before anything is built on it; this row is what
+"it executed successfully" is allowed to mean afterwards. The visible label is
+not the state: it is a copy of the state, made at some earlier moment, by code
+that may never have read the state at all.
+
+**What this catches, and it fails in both directions.** Both measured on
+restaurant-app-v2, 2026-08-30:
+
+- **Success reported, nothing written.** An approval returned HTTP 200 and
+  changed no row. The guard had inverted, so `UpdateMenu` sat on a branch
+  execution never reached; the action returned a result code anyway; and the
+  screen action that called it stored that code in a local variable and never
+  tested it. Three parts each behaved plausibly and the record stayed
+  `Rascunho`. This is shapes 3 and 4 of §6 stacked on one path — which is why
+  the durable check is the probe for both.
+- **Failure reported over a state that was already correct.** Later, the same
+  app reported *"menu cannot be approved"* for a menu whose row was already
+  `Aprovada`. Nothing was wrong with the data. The status badge had not
+  refreshed, and the screen was arguing from the badge.
+
+One `db_query` on the record the turn claims to have changed settles both, and
+costs a single call. **Re-rendering the widget is not a reload** — where the
+screen holds the value in a local variable, only re-fetching proves anything,
+and the second incident above is what a widget refresh looks like when it
+convinces you the write failed.
 
 ## 2. Render gate — per screen
 
@@ -292,6 +322,70 @@ there is no element tree to inspect before the revision lands. `--oml` needs the
 internal extraction CLI (`OML_EXTRACT_CLI`) and there is no portable substitute —
 the MCP `context_screens` payload carries no widget data at all.
 
+## 2d. Role-inventory baseline and per-turn diff
+
+**At session start, enumerate every screen's deployed roles (`context_screens`)
+and keep that as the baseline. After ANY turn that touches roles, re-enumerate
+and diff against it.** §2c(a) compares one screen against the spec; this is the
+session-level control that catches what a per-screen read cannot — a change
+aimed at one screen removing a role from screens the turn never named.
+
+**Never accept Mentor's prose account of prior state while a baseline exists.**
+Asked about a screen that had lost its role, Mentor reported the screen *"was
+already in this state before this session"*. It was not: the baseline showed
+the role present, and the regression had been published by an earlier turn of
+that same session. Prose about prior state is not a reading of prior state — §6's
+meta-rule, in its most expensive form, because it converts a live regression
+into a closed question.
+
+**The lore that makes this a gate rather than a nicety: removing a role's last
+assignment can delete the role OBJECT tenant-wide.** Not the assignment — the
+role. The cascade is total and it is silent:
+
+- **every screen holding that role loses it at once**, including screens the
+  turn never mentioned and the diff is the only thing that names them;
+- **the auto-generated login-time gate logic goes with it** — the `CheckXRole`
+  action, its `HasRole` output, and the `If` node in the login flow that reads
+  it are all deleted together;
+- the turn validates clean, publishes, and reports success.
+
+The full blast radius appeared only in an OML revision diff. No MCP read, no
+turn summary, and no validation message named anything beyond the one screen
+the turn was pointed at.
+
+**So treat a "Missing roles" validation warning as a stop-and-verify signal,
+not something to explain away.** It is the one signal that fires at the moment
+of the deletion, and it fires while the turn is still cheap to abandon:
+re-enumerate against the baseline **before** that turn's publish, not after.
+
+## 2e. Rendered-output baseline — before any refactor of a rendering path
+
+**A turn that refactors a rendering path requires the affected rendered output
+captured BEFORE the turn and compared after.** "Pure performance cleanup" is
+not an exemption from this; it is the case the gate was written from.
+
+**What this catches.** A cleanup on restaurant-app-v2 (2026-08-30) replaced
+five per-section `MaxRecords = 1` aggregates with flags computed in
+`OnAfterFetch`. Structurally it was the better-looking code and it validated
+clean. It silently dropped a dish from the customer-facing A4 print sheet:
+`OnAfterFetch` fires **after the first paint**, so at render time every flag was
+still `False`. `error_count` was 0, the screen rendered, nothing logged, and the
+missing dish sat in a page that otherwise looked entirely normal. Only the
+before/after comparison of the printed content found it.
+
+**The ODC rule underneath it: in the reactive model, never derive render-time
+flags in `OnAfterFetch`.** For per-section emptiness the correct pattern is
+exactly the per-section `MaxRecords = 1` aggregate the cleanup removed — the
+fetch *is* the flag, and it resolves before paint. A performance argument that
+moves a decision from fetch time to post-paint time is not an optimisation; it
+is a behaviour change wearing one.
+
+The baseline is cheap and specific: the rendered text or DOM of the affected
+region, saved before the turn fires. A screenshot pair suffices where the
+content is short; where it is a document — a print sheet, an export, a
+generated list — **diff the content**, because one missing row inside a
+plausible-looking page is precisely what an eye skims past.
+
 ## 3. Remedy gate — per fix
 
 **A fix is not closed on the model's report that it was applied.** Hold a remedy
@@ -409,6 +503,10 @@ demonstrably fails to carry them (each bullet carries its own provenance):**
   for headroom and trim to load-bearing nouns (entity/screen/action names plus
   the one-line why) rather than restating Mentor's summary. Rediscovered the
   hard way twice on 2026-08-11; until then the limit lived only in the runbook.
+  **Re-confirmed nine times in one run** (restaurant-app-v2, 2026-08-30): the
+  limit is enforced tenant-side, so every over-long draft bounces the call
+  before it fires and costs a whole round trip. Draft the message short; do not
+  trim it after a rejection.
 - **The `operation_id` a gateway `publish_start` returns is not the key the
   log tools take.** `publish_logs` and `deploy_messages` both return HTTP 404
   for it. For the per-line error trail, find the app's record in
@@ -587,6 +685,7 @@ RECONCILIATION — three existing OMI rules stay binding; this section calibrate
 - **Hang tell:** a `nextCursor` unchanged for ~7–10 minutes is the cursor-side signature of the §4 wedge classes (stalled event ids / no events). One `details: true` poll to confirm, then apply the cancel calibration above.
 - **Earlier hang tell: no `currentStep` at all — but only when it PERSISTS.** Upstream plugin 0.16.0 states plainly that `currentStep` and `message` are **optional** fields and that when neither moved you should restate `status` rather than assert progress, so a single poll without `currentStep` proves nothing and must not be read as a wedge. The cursor-side tell above needs ~7–10 minutes; the narration-side tell is readable in about two. A healthy run reports a `currentStep` (`runQuery`, `applyModelApiCode`, `message`, `complete`) within ~60s and keeps advancing it. Measured 2026-08-23 (Elastic Search Sandbox): a wedged turn returned `status: running` with the `currentStep` field **absent entirely** and `events: []` even under `details: true`, for ~15 minutes — while two sibling turns on the **same app and same session** had each reported a step inside 60s, which is the control that makes the absence diagnostic rather than merely slow. `mentor_cancel` then held in `cancelling` for >4 minutes and never reached terminal, so the >3-minute settle figure above is a floor, not a bound: do not wait for a cancel to go terminal before acting.
 - **The wedge escape the resume rule does not cover: check publish state, not the error code.** SKILL.md routes a failed turn to "resume the same session", starting fresh only on `session_not_found`. A wedged run never goes terminal, so it emits **no error `code` at all** and that rule has no exit. Decide on unpublished work instead: if the session's edits are already published, a fresh `app_key` session costs nothing — it re-downloads the pristine OML and loses no state (the identical prompt then completed in ~2 minutes). Fight for the wedged session only when unpublished edits are genuinely at stake. One correlation, recorded as correlation and not cause: the wedged turn was the only one in that sequence started with `fresh_context: true`.
+- **After any MCP re-authorization, verify the status of in-flight runs rather than assuming they survived.** Survival is not a property of the run. Measured 2026-08-30 (restaurant-app-v2): one run outlived a token expiry mid-flight and went on to finish normally, while a later run on the same app died mid-run when the agent's own connection 401'd — terminal `status: failed`, reason `unauthorized`. Two runs, two outcomes, so neither is the rule. Poll every `runId` you hold once the new credentials are in place and read the terminal state before resuming work on the assumption a turn is still building. The adjacent hazard is §4c's principal binding: a re-auth landing on a **different** subject does not fail the run, it makes it unreadable — `run_not_found`, which is not a state you can resume from.
 - **Copy `mentor_session_token` verbatim — never retype it.** One mistyped character returns `signature_invalid`. Read the rejection's reason before choosing a recovery path: the server emits `signature_invalid`, `expired` or `malformed` as three distinct reasons under the single `mentor_session_token_rejected` code, and it re-tries the previous signing key before reporting `signature_invalid` — so that reason means transcription, or a token minted before a key rotation older than the previous-key window, and never expiry. Mechanism and citations: §4c.
 - **Cancelled-run token recovery — payload token first, last-successful as fallback, established sessions only.** On a failed or cancelled run the terminal `error` payload carries the same `mentor_session_id` plus a freshly minted `mentor_session_token`; resume an established session — one that has already reached at least one successful turn — with those credentials, per the SKILL.md driving contract (verified against upstream 0.13.x; the rule is unchanged in 0.16.0). Keep your last SUCCESSFUL token as the fallback for exactly one case: that established session's freshly minted token is rejected as `signature_invalid`. That rejection has two causes — a hand-transcribed character (see the verbatim rule above) and a payload token the server will not accept — so re-check transcription before concluding the minted token is bad. **This fallback does not apply to a bare first-turn `app_key` init failure**: that error carries no token at all, and by definition no turn in this session has ever succeeded, so no last-successful token can exist to fall back to — SKILL.md routes that case to starting fresh, not to any token fallback. The external source for this section states the last-successful rule unconditionally but names no server version; this estate's version-anchored measurement takes precedence, and the unconditional form is narrowed to the established-session `signature_invalid` case only.
 
@@ -830,3 +929,38 @@ conclusions.
 > stop-at-hypothesis rule are theirs; **not measured by us.** Steps 3 and 6 are
 > corroborated by our own §4/§4b measurements. Claims table and provenance detail
 > are in the mining disposition under `docs/adoption/`.
+
+## 6. The failure-shapes catalog — ten shapes, none of which validation could see
+
+A single day of UI review on restaurant-app-v2 (2026-08-30) produced ten
+distinct defect shapes. **Every one passed Mentor validation with
+`error_count: 0`**, and most also passed publish, the digest gate and
+enumeration. So the useful column is the third one: these shapes are not
+distinguishable from one another by any build-time signal — only by the probe
+that discriminates them. Reach for the probe, not for another screenshot.
+
+| # | Shape | The probe that discriminates it |
+|---|---|---|
+| 1 | Handler empty or missing — the control renders, nothing sits behind it | Network log while the control is activated: no request, no navigation, no console error. §2c(c) mechanizes this |
+| 2 | Handler exists, but the control's event is not bound to it | Network log, then a Mentor read-back of the **binding**, not the action. Asking about the action returns the action — it exists; ask what the widget's event points at |
+| 3 | Logic on an unreachable branch — the guard is inverted | Durable-state check after the reported success (§1b): the action returns, the row is unchanged |
+| 4 | A result code nothing reads, behind a catch-all message covering every outcome | Read the **screen action that stores the result**: the variable is assigned and never tested |
+| 5 | A style class that does not exist in the theme — a silent no-op | **Computed style** in the running app, never a screenshot: the element looks deliberate either way (§2b caches this answer per run) |
+| 6 | Logic that runs at the wrong moment — `OnAfterFetch`, i.e. after first paint | Rendered-content baseline compared before and after (§2e) |
+| 7 | A widget built into a block no screen instantiates — `LayoutTopMenu` while the screens use `LayoutSideMenu`, or a placeholder default the consuming screen replaces | **DOM presence** of the widget on the running screen; its presence in the model proves only that it was built |
+| 8 | Off-by-one inside a well-formed expression — zero-based `Index()` tested with `> 0` | Vary the input's **position**: prefix, mid-string, and no-match. A mid-string match passes and hides it |
+| 9 | Two computations of the same business fact disagreeing — a stored status flag against a live count | Compare both paths **on the same record** |
+| 10 | An expression entered as a literal string — the caption renders the raw `If(...)` | Look at the rendered text |
+
+**The meta-rule the day proved: structured fields are fact; prose is
+hypothesis.** Mentor's structured fields — `error_count`, the validation
+messages, `publish_status` — and the runtime probes — network log, computed
+style, DOM, `db_query` — were right **every time**. Mentor's prose was wrong
+three times in the same day: it reported a change applied that had not
+persisted, it described a turn as clean while the validation block beside it
+carried two errors, and it described a prior state it had never read (§2d).
+
+That is not a reason to stop reading summaries — §5 is why you must, since
+their admissions are load-bearing. It is a rule about what a summary can
+settle: read the fields, and treat the narrative around them as a hypothesis
+that costs one probe to check.

@@ -131,6 +131,16 @@ that runner. Do not start Mentor, publish, or continue a tenant-changing row
 until `auth_status` succeeds in the same execution context that will run the
 row.
 
+Those are two separate token caches, and knowing that changes the plan rather
+than only the verdict. A command-line tenant login keeps its own token store and
+authenticates through a browser, so no agent can perform it, and a healthy
+runner authorization says nothing about whether that login is current. When a
+row will need an OML or `.opc` snapshot, decide it before the run starts and
+fold that login into the same pause that collects the runner's authorization:
+one interruption for the person at the keyboard rather than two, several minutes
+apart, with the run stalled in between. A snapshot discovered to be needed after
+the run is a second pause the plan could have spent once.
+
 Historical evidence is context only. It can explain why a row exists or what
 previously happened, but it does not prove the current app identity, current
 environment, current revision, current build, current deployment, runtime route,

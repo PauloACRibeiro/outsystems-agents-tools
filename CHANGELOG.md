@@ -8,6 +8,23 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Export 2026-08-31 (PAS `0f3b4843`)
+
+Publishes four exports at once: the three cut on 2026-08-30 were committed
+locally and never pushed, so this is the first push carrying any of them.
+
+- **Build skill** — four new execution gates plus a failure-shapes catalog, and
+  the Mentor-prompting lore from the restaurant-app-v2 run.
+- **Design skill** — every token prescription now has to come from the measured
+  token table.
+- **Screen inventory + plan review** — the CRUD-closure rule (a record action
+  must say where it happens) and the contract-reachability check (an action
+  input no UI can supply).
+
+Also removes `skills/outsystems-mentor-implementation 2/`, a macOS conflict-copy
+of the build skill swept into the 2026-08-30 export commit by `git add skills/`.
+It was never pushed, so no published tree ever carried it.
+
 ## v37 — 2026-08-09
 
 The first release shaped by its own audience: every change below traces to a

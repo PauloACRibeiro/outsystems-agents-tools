@@ -246,6 +246,21 @@ only for the named operation set, such as `mentor_start` and `mentor_get_run`
 for an in-memory edit. Do not touch Claude-private config, plugin cache,
 command files, OAuth callback storage, or private MCP data.
 
+Re-authorizing the OutSystems MCP connection — in any runner, not only the
+bounded route above — does not carry an in-flight run across with it. After any
+re-auth, re-poll every run started before it and read the status before assuming
+continuity: one run came back `failed` with an unauthorized status on an HTTP
+401 against the agent's own connection (restaurant-app v2, 2026-08-30), while a
+run earlier in the same session had survived a token expiry untouched. Survival
+of the earlier one proved nothing about the later one, so do not generalize from
+it. This is a
+different failure from polling a run belonging to another principal, which
+returns the opaque `run_not_found` and is explicitly not a permission error
+(`references/execution-gates.md` §4c); a 401 on your own connection names
+itself. Treat any run that cannot be confirmed terminal after a re-auth as
+unknown rather than as still running, and re-establish what happened from the
+app rather than from the run's own account of itself.
+
 ## Publish Gate
 
 Before publishing a Mentor session, recheck:
@@ -256,6 +271,10 @@ Before publishing a Mentor session, recheck:
 - current deployed revision/build/deployment
 - approved source Mentor run/session
 - allowed operation is publish to the named Development environment only
+- drafted publish message under ~480 characters — the call carries a hard
+  500-character limit and rejects outright above it, so a message written as
+  the run's narrative bounces repeatedly (`references/execution-gates.md` §3b
+  for the mechanics and what to trim to)
 
 After publish, poll the publish operation until terminal, inspect publish
 messages/logs when available, then recheck the deployed app. Record the final

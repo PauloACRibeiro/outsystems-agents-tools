@@ -80,6 +80,63 @@ python3 scripts/check_outcome_coverage.py <design-file> <plan-under-review>
 
 **Scope note, because getting it wrong makes the check useless in the most dangerous direction:** the checker reads only the `V<N>` verification rows, not the whole plan. A plan also carries the Mentor prompts, which name every outcome because they instruct the build to return them -- so a whole-plan scan reports full coverage for a plan whose matrix tests nothing, and can only ever say READY.
 
+## Contract Reachability
+
+An action's declared outcomes say what it can return. Its **inputs** say what a
+caller must supply — and an input no interface can supply is a capability the
+app does not have, however correctly the action is built.
+
+Measured on restaurant-app-v2 (2026-08-30). The spec's contract for menu
+creation was `OpenMenuForDate`, "opens the menu for a restaurant and date",
+explicitly date-parameterised and with duplicate-date handling. The UI as
+planned and as built offered one control, "Criar ementa de hoje". No date
+input existed anywhere, so tomorrow's menu could not be created and the
+product's core carry-over claim was untestable until an unplanned Mentor turn
+added a date field. Every gate said READY: nothing compared action contracts
+against UI affordances.
+
+So, in the **source spec**, beside each action's result declaration, write one
+sentence naming its inputs — same grammar as the result sentence, every name
+backticked, the list stopping at the first period:
+
+```text
+#### `OpenMenuForDate`
+
+Opens the menu for a restaurant and date, creating a draft when none exists.
+Inputs are `RestaurantId` (internal), `MenuDate`.
+Result is one of `Created`, `DuplicateDate`, `NoRestaurantInScope`.
+```
+
+Each input is accounted for in one of three ways. Either the **plan or the
+screen inventory names it** where a user supplies it (`screens[].accepts` — the
+route or query parameter —, `navigation[].payload`, or
+`screens[].key_interactions`); or it carries `(internal)`, meaning no interface
+can supply it by construction — a session binding, a constant; or it carries
+`(waived: <reason>)`, meaning one could and this build does not offer one, on
+purpose. A `waived` with no reason is refused, exactly as a terminal
+disposition with no reason is.
+
+The checker reports anything left over as a **note**, never a failure, and
+`--strict` does not escalate it. Two reasons, and the second is the load-bearing
+one. It matches on the name, which is evidence of naming and not of a control:
+an affordance spelled in the product's own language (the v2 inventory carries
+the payload as `menu date`, not `MenuDate`) reads as unaccounted-for. And the
+`Inputs are` sentence is opt-in while the handoff gate always passes
+`--strict`, so a blocking form would let a spec that declares nothing keep
+READY while a spec that declares its inputs can lose it — honesty must not be
+the expensive option.
+
+Read the note as a question to answer in this pass, not as a formatting slip to
+patch out. Record each finding in the matrix's Patch / Risk column, and answer
+it in the spec: name the affordance that supplies the value, add the affordance
+to the plan, or write down that nothing supplies it and why. On the incident
+the true answer was "always today" — the sentence nobody in that run ever
+wrote, and writing it is where the product gap becomes visible.
+
+The check runs when the coverage checker is given `--design`; a design that
+declares no inputs prints nothing, so artifacts written before this grammar
+keep their output unchanged.
+
 ## Traceability Table
 
 The plan must carry a `## Traceability` section in the shape the requirement
@@ -145,7 +202,7 @@ Audit these in the same pass and record findings in the matrix's Patch / Risk co
 
 Then:
 
-1. Run `python3 scripts/check_requirement_coverage.py <inventory-or-prd> <plan-under-review>` (on Windows PowerShell, `python` — `python3` is not a command there) and copy its full output verbatim into the review artifact. The coverage numbers, the uncovered and dangling lists, and the `coverage verdict:` line are computed, never hand-authored; do not restate them as your own estimate. The checker proves every ID is cited; the Evidence column stays the judgement check that each citation is honest.
+1. Run `python3 scripts/check_requirement_coverage.py <inventory-or-prd> <plan-under-review> --design <design-file>` (on Windows PowerShell, `python` — `python3` is not a command there) and copy its full output verbatim into the review artifact. `--design` adds the contract-reachability note above; add `--inventory <screen-inventory.json>` so the note can read the screen's affordances too. The coverage numbers, the uncovered and dangling lists, and the `coverage verdict:` line are computed, never hand-authored; do not restate them as your own estimate. The checker proves every ID is cited; the Evidence column stays the judgement check that each citation is honest.
 2. List the **top gaps** (uncovered IDs, Partial rows, or unclear assumptions), prioritized by impact.
 3. Produce a **patched version of the plan** that closes those gaps with **minimal changes**, preserving the original structure where possible (add/adjust sections rather than rewriting everything). The patched plan cites each requirement ID inline where it is addressed. The patched version must be the full plan text after edits. Do not write a summary-only patched artifact.
 
