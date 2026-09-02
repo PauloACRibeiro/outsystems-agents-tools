@@ -111,7 +111,18 @@ PLAN_TO_MENTOR_SUBSECTIONS = [
     "### Verification Pseudocode",
 ]
 
-MUTATION_TOOL_IDENTIFIERS = ["app_create", "mentor_start", "publish_start", "deploy_start"]
+# Session-based Mentor surface (measured live 2026-09-02): mentor_start and
+# publish_start are no longer exposed, but they stay in this list so the check
+# still fires on older drafts that name them.
+MUTATION_TOOL_IDENTIFIERS = [
+    "app_create",
+    "mentor_create_asset",
+    "mentor_prompt",
+    "mentor_publish",
+    "mentor_start",
+    "publish_start",
+    "deploy_start",
+]
 TOOL_NAME_FORBIDDEN_MODES = {"visual-source-ui"}
 
 # Unresolved-output markers. TBD/TODO/FIXME require a trailing colon (the

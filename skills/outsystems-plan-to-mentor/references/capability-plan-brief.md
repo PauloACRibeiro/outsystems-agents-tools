@@ -111,7 +111,10 @@ ODC Studio element recipe. Studio-native conversion happens downstream:
       first success row runs the configuration the app ships with, before any
       special setup.
     - Absence checks (no prices, no PII) pair with a **presence** check of the
-      legitimate content; an empty page passes every absence check.
+      legitimate content; an empty page passes every absence check. With the
+      spec marker present, the checker enforces this mechanically for any
+      criterion or V-row naming a payload or projection and prints
+      `containment coverage: k/n`.
   - Declaring result values is capability intent: it says which outcomes the
     business rules distinguish, which is the same kind of statement as a
     business rule. It is not element design and does not breach the boundary

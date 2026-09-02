@@ -310,8 +310,9 @@ Keep the technical-content tool details in the bundle owner: `check_health`,
 `explain_filters`, `list_collections`, `include_full_content`, `page_url`,
 `visibility`, unpublished reference boundaries, and the rule to not pass
 collection names as a `collection` argument. If a `content_source='model'`
-query returns no results, run `get_status` (not a bare `check_health` call,
-which is rejected) and retry without `content_source`; the empty filtered result does not prove `model-functions` or
+query returns no results, run `get_status` (it reports indexed collections and
+chunk counts; `check_health` takes no arguments and reports liveness only) and
+retry without `content_source`; the empty filtered result does not prove `model-functions` or
 `model-truechange` has no relevant coverage. If the selected bundle cannot
 ground exact signatures, widget rules, TrueChange errors, live Mentor behavior,
 security roles, or tenant-specific facts, stop rather than speculate.

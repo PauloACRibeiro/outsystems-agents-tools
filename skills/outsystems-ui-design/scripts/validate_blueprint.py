@@ -61,13 +61,40 @@ O11_ONLY_BLOCKS = {
     "ListRecords": "List (or TableRecords for a tabular layout)",
 }
 _O11_ONLY_RE = re.compile(r"\b(" + "|".join(O11_ONLY_BLOCKS) + r")\b")
-# Both registers: a ProgressBar bound to an `Integer` attribute is as numeric as
-# one bound to an `integer`. Widening the data_type vocabulary without widening
-# this set would have turned a spurious warning into a common one.
-NUMERIC_TYPES = {
-    "integer", "longInteger", "decimal", "currency",
-    "Integer", "Long Integer", "Decimal", "Currency",
+# One register, as of 2026-09-01. `outsystems-mentor-implementation` is the
+# semantic authority for this vocabulary - this schema is its projection, and on
+# conflict the projection is what changes - and OMI's contract states the ODC
+# literal DataType string, never a camelCase spelling. Two structural facts
+# agree: the relationship form `<Target> Identifier` cannot be spelled in
+# camelCase at all, and the length-bearing form is `Text(200)` in every one of
+# its occurrences. See docs/adoption/data-type-register-unification.md.
+ODC_BASIC_TYPES = (
+    "Binary Data", "Boolean", "Currency", "Date", "Date Time", "Decimal",
+    "Email", "Integer", "Long Integer", "Phone Number", "Text", "Time",
+)
+
+# The producer spellings this skill's own fixtures used to write. Retained ONLY
+# so a legacy value is diagnosed by name, with the string to write instead,
+# rather than reported as an unknown type.
+LEGACY_CAMEL_REGISTER = {
+    "binaryData": "Binary Data", "boolean": "Boolean", "currency": "Currency",
+    "date": "Date", "dateTime": "Date Time", "decimal": "Decimal",
+    "email": "Email", "integer": "Integer", "longInteger": "Long Integer",
+    "phoneNumber": "Phone Number", "text": "Text", "time": "Time",
 }
+
+# All three are spellings of an ordinary auto-number primary key, and OMI's rule
+# for one is the literal `Long Integer`. This mapping is deliberately NOT a case
+# split: `longIntegerIdentifier` must never become `Long Integer Identifier`,
+# which is in RESERVED_IDENTIFIER_TYPES below and fails every publish.
+LEGACY_IDENTIFIER_TOKENS = {
+    "integerIdentifier": "Long Integer",
+    "longIntegerIdentifier": "Long Integer",
+    "platformDefaultIdentifier": "Long Integer",
+}
+
+# A ProgressBar bound to a non-numeric attribute is the warning this drives.
+NUMERIC_TYPES = {"Integer", "Long Integer", "Decimal", "Currency"}
 
 # Shaped like the relationship form and fatal at publish. `Integer Identifier`
 # and `Text Identifier` match the schema's `<Target> Identifier` pattern, so the
@@ -79,6 +106,39 @@ RESERVED_IDENTIFIER_TYPES = (
     "Identifier", "Integer Identifier", "Long Integer Identifier",
     "Text Identifier",
 )
+
+_TEXT_LENGTH_RE = re.compile(r"^Text\([1-9][0-9]*\)$")
+_LEGACY_TEXT_LENGTH_RE = re.compile(r"^text\([1-9][0-9]*\)$")
+_RELATIONSHIP_TYPE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]* Identifier$")
+
+
+def canonical_data_type(value):
+    """The canonical spelling of `value`, or None if it is outside the closed
+    vocabulary.
+
+    Register-aware by design: a legacy spelling canonicalises to the same string
+    as the ODC literal it spells, so two blueprints that declare the same type
+    in different registers compare equal rather than reading as a conflicting
+    declaration of the same attribute.
+    """
+    if not isinstance(value, str):
+        return None
+    value = value.strip()
+    if value in RESERVED_IDENTIFIER_TYPES:
+        return None
+    if value in ODC_BASIC_TYPES:
+        return value
+    if value in LEGACY_CAMEL_REGISTER:
+        return LEGACY_CAMEL_REGISTER[value]
+    if value in LEGACY_IDENTIFIER_TOKENS:
+        return LEGACY_IDENTIFIER_TOKENS[value]
+    if _TEXT_LENGTH_RE.match(value):
+        return value
+    if _LEGACY_TEXT_LENGTH_RE.match(value):
+        return "T" + value[1:]
+    if _RELATIONSHIP_TYPE_RE.match(value):
+        return value
+    return None
 _NUMERIC_WIDGET_RE = re.compile(r"\b(ProgressBar|Counter)\b")
 # (?!\s*=) - F-E: don't match HTML property syntax like "AdvancedHtml Tag=p".
 _STATUS_WIDGET_RE = re.compile(r"\b(Tag|Badge)\b(?!\s*=)")
@@ -259,7 +319,7 @@ def placeholder_fields(bp):
     for i, screen in enumerate(_as_list(bp.get("screens"))):
         if not isinstance(screen, dict):
             continue
-        for key in ("name", "type", "description"):
+        for key in ("name", "display_name", "type", "description"):
             yield from _pf(f"screens[{i}].{key}", screen.get(key))
         # A render-gate label names a row and a selector is executed, so both
         # are gate-bearing in the strictest sense. `contains`/`equals`/`reason`
@@ -354,6 +414,100 @@ def _as_list(value):
     return value if isinstance(value, list) else []
 
 
+def _as_dict(value):
+    """The same for the object-valued sections. `.get(key, {})` and
+    `(x.get(key) or {})` both still break on a key holding a NON-dict - `7` and
+    `"x"` reach `.get` and raise - and the warning walkers read `app_chrome`,
+    `target_context` and `outsystems_hints` before anything has checked them."""
+    return value if isinstance(value, dict) else {}
+
+
+def _hint_block(region):
+    """The catalog block this region maps to, or None when it names none.
+
+    `outsystems_hints` and its `block` are both UNTYPED: under `main_content[]`
+    the schema types only `reuse` and `items`, so `_check_schema` clears a
+    region holding `7` there and the early return in `collect_errors` never
+    fires. Every walker below then reads the hint as if it had been checked.
+
+    A non-string block reads as ABSENT rather than as a node to skip, and that
+    is the load-bearing half. Skipping it would trade a traceback for a silent
+    pass - the region would clear the Block Mapping Gate while mapping to
+    nothing. Absent instead keeps the gate reporting it, which is what an
+    unreadable hint deserves: a block is a NAME, and `7` is not one.
+    """
+    block = _as_dict(region.get("outsystems_hints")).get("block")
+    return block if isinstance(block, str) else None
+
+
+def _nominated_source(node):
+    """`data_source.entity` as written, or None. `node` may be None: the group
+    of an ungrouped region.
+
+    Untyped for the same reason as the block hint, so this is the read every
+    walker wants when it only formats the value into a message - it keeps the
+    message naming what the author actually wrote.
+    """
+    return _as_dict(_as_dict(node).get("data_source")).get("entity")
+
+
+def _source_entity(node):
+    """The same value when it is a NAME, for the walkers that use it as one.
+
+    `_datasource_entities` puts this in a set that is later `sorted()`, so a
+    non-string is not merely unusable here - a list raises `unhashable type`
+    and an int raises inside `sorted` against the strings beside it, in both
+    cases before any finding is recorded. A value that is not a name is not
+    an entity, so it drops out rather than propagating.
+    """
+    entity = _nominated_source(node)
+    return entity if isinstance(entity, str) else None
+
+
+_ELEMENT_NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
+
+
+def _check_screen_name_is_element_name(bp, errors):
+    """`screens[].name` is the ODC element name, never the human title.
+
+    Every downstream consumer resolves a screen by matching this string against
+    the built model's `Name` EXACTLY - outsystems-mentor-implementation's
+    `recompute_assertions.py` (`_screen_id`), and the render-gate spec this
+    validator emits, which carries the same string into `screens[].name` of the
+    gate's own contract. Measured 2026-09-02 on restaurant-app-v3 rev 7:
+    6 of 7 screens came back SCREEN_MISSING from a build that contained all
+    seven, because the blueprints held display names ("A4 Print Preview") and
+    the model holds element names (`A4PrintPreview`).
+
+    The repair is here rather than in the matcher on Codex's recommendation
+    (AH-2026-09-02-006): fuzzy matching would resolve `A4 Print Preview` and
+    `A4PrintPreview` to the same screen and hide a genuine collision between
+    two screens whose element names differ only by the characters it ignores.
+
+    Runs AHEAD of the schema check, which short-circuits, for the same reason
+    the identifier checks above do: the schema refuses the value with "does not
+    match the pattern", which names the defect and not the repair. This says
+    which field the title belongs in.
+    """
+    for i, screen in enumerate(_as_list(_as_dict(bp).get("screens"))):
+        if not isinstance(screen, dict):
+            continue
+        name = screen.get("name")
+        if not isinstance(name, str) or _ELEMENT_NAME_RE.match(name):
+            continue
+        suggested = re.sub(r"[^A-Za-z0-9_]", "", name)
+        hint = (f" (element name: {suggested!r})"
+                if _ELEMENT_NAME_RE.match(suggested) else "")
+        errors.append(
+            f"screens[{i}].name {name!r} is not an ODC element name - letters, "
+            "digits and underscore only, first character a letter"
+            f"{hint}. Downstream consumers match this string against the built "
+            "model's screen Name exactly, so a display name here reports the "
+            "screen as missing from a build that contains it. Put the human "
+            "title in screens[].display_name"
+        )
+
+
 def _check_reserved_identifier_types(bp, errors):
     """The four `Identifier`-shaped strings that pass every gate and fail at
     publish. Two of them (`Integer Identifier`, `Text Identifier`) have exactly
@@ -389,6 +543,115 @@ def _check_reserved_identifier_types(bp, errors):
                 "relationship is '<TargetEntity> Identifier'. A genuine 64-bit "
                 "key requirement is a Mentor/publish-path limitation to raise "
                 "in evidence_boundary.review_notes, never silently narrowed"
+            )
+
+
+def _iter_attributes(bp):
+    """Every (entity, attribute) pair, defensively. Runs on UNVALIDATED input:
+    skip what cannot be read, never stop reading."""
+    if not isinstance(bp, dict):
+        return
+    for entity in _as_list(bp.get("entities")):
+        if not isinstance(entity, dict):
+            continue
+        for attribute in _as_list(entity.get("attributes")):
+            if isinstance(attribute, dict):
+                yield entity, attribute
+
+
+def _check_data_type_register(bp, errors):
+    """One register. Ahead of the schema check for the same reason the reserved
+    strings are: the schema now refuses a legacy spelling, and left downstream
+    the reader would be told the string matches none of the permitted forms
+    rather than which string to write instead.
+
+    The identifier tokens are handled by _check_primary_key_data_type, which
+    owns the whole class and gives it the primary-key diagnosis it needs.
+    """
+    for entity, attribute in _iter_attributes(bp):
+        value = attribute.get("data_type")
+        if not isinstance(value, str):
+            continue
+        value = value.strip()
+        if value in LEGACY_IDENTIFIER_TOKENS:
+            continue
+        canonical = LEGACY_CAMEL_REGISTER.get(value)
+        if canonical is None and _LEGACY_TEXT_LENGTH_RE.match(value):
+            canonical = "T" + value[1:]
+        if canonical is None:
+            continue
+        errors.append(
+            f"entity '{entity.get('name', '?')}' attribute "
+            f"'{attribute.get('name', '?')}': data_type {value!r} is the legacy "
+            f"camelCase register - write {canonical!r}. The vocabulary carries "
+            "one register, the ODC literal names, because that is what "
+            "outsystems-mentor-implementation states and what is rendered "
+            "verbatim into the Mentor prompt"
+        )
+
+
+PRIMARY_KEY_TYPE = "Long Integer"
+
+
+def _check_primary_key_data_type(bp, errors):
+    """A primary key is the literal `Long Integer`.
+
+    Stated by OMI's contract and by SKILL.md, and enforced before this change by
+    a single test asserting one string was absent from one fixture - which is
+    exactly why `integerIdentifier`, the same forbidden class, sat unnoticed in
+    OMI's own canonical asset. It is now a predicate over every attribute of
+    every blueprint.
+
+    The rule is stated for "an ordinary auto-number primary key", and the
+    blueprint carries no auto-number flag, so it cannot narrow itself to that
+    case. It does not need to. A static entity's key is the other case, and
+    OMI's rule 6 gives it the same shape - an `Id` with `IsAutoNumber = No` and
+    an explicit non-null integer, with the display value in a SEPARATE `Label`
+    attribute - so a Text primary key is not the natural-key escape it looks
+    like, it is a static entity modelled wrongly. Measured 2026-09-01: all 31
+    primary keys in the live set are `Long Integer`, static and transaction
+    alike, so the estate already writes one rule.
+
+    A design that genuinely needs otherwise says so in
+    `evidence_boundary.review_notes`, which is the same escape hatch the 64-bit
+    key rule already uses - never a silently different type.
+    """
+    for entity, attribute in _iter_attributes(bp):
+        value = attribute.get("data_type")
+        if not isinstance(value, str):
+            continue
+        value = value.strip()
+        where = (f"entity '{entity.get('name', '?')}' attribute "
+                 f"'{attribute.get('name', '?')}'")
+        if value in LEGACY_IDENTIFIER_TOKENS:
+            errors.append(
+                f"{where}: data_type {value!r} is a legacy spelling of an "
+                f"auto-number primary key - write {PRIMARY_KEY_TYPE!r}. It is "
+                "not a case variant of a permitted string: 'Long Integer "
+                "Identifier' validates cleanly and then fails every publish "
+                "(OS-RDBS-GEN-40002, masked as OS-DPL-50203)"
+            )
+        elif not attribute.get("is_primary_key"):
+            continue
+        elif _RELATIONSHIP_TYPE_RE.match(value):
+            errors.append(
+                f"{where}: data_type {value!r} is the relationship form, which "
+                f"belongs on a foreign key. A primary key is the literal "
+                f"{PRIMARY_KEY_TYPE!r}; an Identifier-suffixed type on a "
+                "primary key fails at publish (OS-RDBS-GEN-40002, masked as "
+                "OS-DPL-50203)"
+            )
+        elif value != PRIMARY_KEY_TYPE:
+            errors.append(
+                f"{where}: data_type {value!r} on a primary key - a primary key "
+                f"is the literal {PRIMARY_KEY_TYPE!r}. An ordinary auto-number "
+                "key is stated that way by OMI's contract, and a static "
+                "entity's key is an `Id` with IsAutoNumber = No and an explicit "
+                "integer, with the display value in a separate `Label` "
+                "attribute - so a Text key is a static entity modelled wrongly, "
+                "not a natural key. If this design genuinely needs another key "
+                "type, say so in evidence_boundary.review_notes as a "
+                "Mentor/publish-path limitation, never silently"
             )
 
 
@@ -428,11 +691,16 @@ def _check_region_shapes(bp, errors):
 
 
 def _leaf_regions(screen, with_group=False):
-    for region in screen.get("main_content", []):
+    # Reached from the WARNING walkers too, which run on input the schema check
+    # has not cleared (see `_as_list`): skip what cannot be read, never stop
+    # reading.
+    if not isinstance(screen, dict):
+        return
+    for region in _as_list(screen.get("main_content")):
         if not isinstance(region, dict):
             continue
         if region.get("type") == "group":
-            for item in region.get("items", []):
+            for item in _as_list(region.get("items")):
                 if not isinstance(item, dict) or item.get("type") == "group":
                     continue
                 yield (item, region, screen.get("name", "?")) if with_group \
@@ -463,7 +731,7 @@ def _existing_app_mode(bp):
 def _check_region_mapping(bp, errors):
     for screen in bp.get("screens", []):
         for region, screen_name in _leaf_regions(screen):
-            block = (region.get("outsystems_hints") or {}).get("block")
+            block = _hint_block(region)
             if "reuse" in region:
                 # Bound to an existing app block - that IS the mapping. A
                 # malformed binding is reported once, by the reuse check.
@@ -495,7 +763,7 @@ def _check_no_container(bp, errors):
     for screen in bp.get("screens", []):
         for region, screen_name in _leaf_regions(screen):
             probe = {
-                "block": (region.get("outsystems_hints") or {}).get("block", ""),
+                "block": _hint_block(region) or "",
                 "content": region.get("content", []),
             }
             for text in _iter_strings(probe):
@@ -542,7 +810,7 @@ def _check_block_name_granularity(bp, errors):
     """
     for screen in bp.get("screens", []):
         for region, screen_name in _leaf_regions(screen):
-            block = (region.get("outsystems_hints") or {}).get("block")
+            block = _hint_block(region)
             if not block:
                 continue
             if (
@@ -571,7 +839,7 @@ def _check_block_name_bare(bp, errors):
     """
     for screen in bp.get("screens", []):
         for region, sname in _leaf_regions(screen):
-            block = (region.get("outsystems_hints") or {}).get("block")
+            block = _hint_block(region)
             if block and not _BARE_BLOCK_RE.match(block):
                 label = region.get("name") or region.get("id") or "?"
                 errors.append(
@@ -629,7 +897,7 @@ def _check_product_vocabulary(bp, errors):
     for screen in bp.get("screens", []):
         for region, screen_name in _leaf_regions(screen):
             texts = list(_iter_strings({
-                "block": (region.get("outsystems_hints") or {}).get("block", ""),
+                "block": _hint_block(region) or "",
                 "content": region.get("content", []),
             }))
             seen = []
@@ -669,16 +937,15 @@ def _check_dropdown_option_expressions(bp, errors):
     """
     for screen in bp.get("screens", []):
         for region, group, screen_name in _leaf_regions(screen, with_group=True):
-            entity = ((region.get("data_source") or {}).get("entity")
-                      or ((group or {}).get("data_source") or {}).get("entity"))
+            entity = _nominated_source(region) or _nominated_source(group)
             if not entity:
                 continue
-            for item in region.get("content", []):
+            for item in _as_list(region.get("content")):
                 if not isinstance(item, dict):
                     continue
                 if not _BARE_DROPDOWN_RE.search(str(item.get("element", ""))):
                     continue
-                if (item.get("binds") or {}).get("attribute"):
+                if _as_dict(item.get("binds")).get("attribute"):
                     continue
                 label = region.get("name") or region.get("id") or "?"
                 errors.append(
@@ -696,14 +963,12 @@ def _check_repeat_producer(bp, errors):
     for screen in bp.get("screens", []):
         for region, group, screen_name in _leaf_regions(screen, with_group=True):
             texts = list(_iter_strings({
-                "block": (region.get("outsystems_hints") or {}).get("block", ""),
+                "block": _hint_block(region) or "",
                 "content": region.get("content", []),
             }))
             if not any(_REPEAT_RE.search(t) for t in texts):
                 continue
-            own = (region.get("data_source") or {}).get("entity")
-            inherited = ((group or {}).get("data_source") or {}).get("entity")
-            entity = own or inherited
+            entity = _nominated_source(region) or _nominated_source(group)
             label = region.get("name") or region.get("id") or "?"
             if not entity:
                 errors.append(
@@ -711,7 +976,11 @@ def _check_repeat_producer(bp, errors):
                     "(List/TableRecords/Table/Gallery/...) without a data producer - "
                     "set data_source.entity on the region or its group"
                 )
-            elif entity not in _declared_entities(bp):
+            # A value that is not a name cannot be a DECLARED name, and is
+            # reported as one rather than skipped - the author nominated a
+            # producer, and naming what they wrote is the useful half. The
+            # isinstance test is also what stops `in` raising on a list.
+            elif not isinstance(entity, str) or entity not in _declared_entities(bp):
                 errors.append(
                     f"screen '{screen_name}' region '{label}': data_source.entity "
                     f"{entity!r} is not a declared entity"
@@ -719,27 +988,45 @@ def _check_repeat_producer(bp, errors):
 
 
 def _declared_entities(bp):
-    """entity name -> {attribute name -> attribute object}."""
+    """entity name -> {attribute name -> attribute object}.
+
+    Also read by the warning path on UNVALIDATED input. Names are restricted to
+    strings rather than taken as-is: the schema requires `name` on both levels
+    and types it `string`, so nothing post-schema changes, and a name holding a
+    list would otherwise raise `unhashable type` as a dict key.
+    """
     out = {}
-    for ent in bp.get("entities", []):
+    if not isinstance(bp, dict):
+        return out
+    for ent in _as_list(bp.get("entities")):
         if not isinstance(ent, dict):
             continue
         attrs = {}
-        for a in ent.get("attributes", []):
-            if isinstance(a, dict) and "name" in a:
+        for a in _as_list(ent.get("attributes")):
+            if isinstance(a, dict) and isinstance(a.get("name"), str):
                 attrs[a["name"]] = a
-        out[ent.get("name")] = attrs
+        name = ent.get("name")
+        out[name if isinstance(name, str) else None] = attrs
     return out
 
 
 def _iter_binds(bp):
-    """Yield (screen_name, element, binds) for every content item carrying binds."""
-    for screen in bp.get("screens", []):
+    """Yield (screen_name, element, binds) for every content item carrying binds.
+
+    `element` is normalised to a string because both warning walkers match it
+    with a regex; the schema types it `string`, so no post-schema text moves.
+    """
+    if not isinstance(bp, dict):
+        return
+    for screen in _as_list(bp.get("screens")):
+        if not isinstance(screen, dict):
+            continue
         sname = screen.get("name", "?")
         for region, _sn in _leaf_regions(screen):
-            for item in region.get("content", []) or []:
+            for item in _as_list(region.get("content")):
                 if isinstance(item, dict) and isinstance(item.get("binds"), dict):
-                    yield sname, item.get("element", ""), item["binds"]
+                    element = item.get("element", "")
+                    yield sname, element if isinstance(element, str) else "", item["binds"]
 
 
 def _check_binding_existence(bp, errors):
@@ -747,11 +1034,15 @@ def _check_binding_existence(bp, errors):
     for sname, _element, binds in _iter_binds(bp):
         ent = binds.get("entity")
         attr = binds.get("attribute")
-        if ent not in declared:
+        # `binds` is untyped, and both names are dict KEYS below - a list raises
+        # `unhashable type` before either error is recorded. A non-string name
+        # is not a declared name, so it falls to the same error rather than
+        # being skipped: the reader still learns which binding is wrong.
+        if not isinstance(ent, str) or ent not in declared:
             errors.append(
                 f"screen '{sname}': binds.entity {ent!r} is not a declared entity"
             )
-        elif attr not in declared[ent]:
+        elif not isinstance(attr, str) or attr not in declared[ent]:
             errors.append(
                 f"screen '{sname}': binds.attribute {attr!r} does not exist on entity "
                 f"{ent!r} (declared: {sorted(declared[ent])})"
@@ -761,6 +1052,12 @@ def _check_binding_existence(bp, errors):
 def _check_binding_type_fit(bp, warnings):
     declared = _declared_entities(bp)
     for sname, element, binds in _iter_binds(bp):
+        # Both are dict KEYS below, and the schema types them `string`; an
+        # unvalidated blueprint can put a list there and raise `unhashable
+        # type` before any finding is recorded.
+        if not (isinstance(binds.get("entity"), str)
+                and isinstance(binds.get("attribute"), str)):
+            continue
         attr = declared.get(binds.get("entity"), {}).get(binds.get("attribute"))
         if not attr:
             continue  # existence gate already errors
@@ -794,10 +1091,13 @@ _ASSERTION_WIDGETS = {"links": "Link", "buttons": "Button", "inputs": "Input"}
 def _derive_counts(screen):
     counts = {k: 0 for k in _ASSERTION_WIDGETS}
     for region, _sn in _leaf_regions(screen):
-        for item in region.get("content", []) or []:
+        for item in _as_list(region.get("content")):
             if not isinstance(item, dict):
                 continue
             element = item.get("element", "")
+            # `element` is untyped too, and these are regex operands.
+            if not isinstance(element, str):
+                continue
             for key, word in _ASSERTION_WIDGETS.items():
                 if re.search(rf"\b{word}\b", element):
                     counts[key] += 1
@@ -821,8 +1121,10 @@ _ASSERTION_REQUIRED_BLOCKS = {"Tabs", "ButtonGroup", "BlankSlate", "EmptyState"}
 def _assertion_forcing_blocks(screen):
     found = []
     for region, _sn in _leaf_regions(screen):
-        hints = region.get("outsystems_hints") or {}
-        reuse = region.get("reuse") or {}
+        # `or {}` covers a MISSING key, not one holding a non-dict, and both
+        # are untyped under `main_content[]` (see `_hint_block`).
+        hints = _as_dict(region.get("outsystems_hints"))
+        reuse = _as_dict(region.get("reuse"))
         # `reuse` first - the SHARED precedence with OMI's region diff
         # (check_control_wiring.py). Reading the hint first let a region
         # carrying both be matched there as Tabs while evading this control
@@ -900,9 +1202,15 @@ def _check_enum_on_non_fk(bp, errors):
 
 
 def _existing_entities(bp):
-    """Entity names flagged `exists: true` - already in the target app."""
-    return {e.get("name") for e in bp.get("entities", [])
-            if isinstance(e, dict) and e.get("exists") is True}
+    """Entity names flagged `exists: true` - already in the target app.
+
+    String names only. Both callers `sorted()` this set, and a set mixing None
+    with strings raises before either can report anything; the schema types
+    `name` `string`, so no post-schema name is dropped.
+    """
+    return {e.get("name") for e in _as_list(_as_dict(bp).get("entities"))
+            if isinstance(e, dict) and e.get("exists") is True
+            and isinstance(e.get("name"), str)}
 
 
 def _check_existing_asset_channel(bp, errors):
@@ -931,8 +1239,7 @@ def _check_existing_asset_channel(bp, errors):
                     f"app block that already exists, but target_mode is {mode!r} - the "
                     "existing-asset channel is valid only under 'existing-app'"
                 )
-            elif (region.get("outsystems_hints") or {}).get("block") or \
-                    region.get("custom_block_needed"):
+            elif _hint_block(region) or region.get("custom_block_needed"):
                 errors.append(
                     f"screen '{sname}' region '{label}': reuse.block {block!r} coexists "
                     "with outsystems_hints.block or custom_block_needed - reuse satisfies "
@@ -950,7 +1257,7 @@ def _check_existing_asset_channel(bp, errors):
 def _check_existing_asset_announcement(bp, warnings):
     """Advisory: a bound asset should also be announced in existing_assets, so
     the target boundary stays readable without walking every region."""
-    declared = bp.get("target_context", {}).get("existing_assets") or []
+    declared = _as_list(_as_dict(_as_dict(bp).get("target_context")).get("existing_assets"))
     known = set()
     for entry in declared:
         if isinstance(entry, str) and entry.strip():
@@ -968,12 +1275,13 @@ def _check_existing_asset_announcement(bp, warnings):
                 known.add(lead.group(0))
                 known.add(lead.group(0).rsplit("/", 1)[-1])
     bound = []
-    for screen in bp.get("screens", []):
+    for screen in _as_list(_as_dict(bp).get("screens")):
         for region, _sn in _leaf_regions(screen):
             block = _reused_block(region)
             if block:
                 bound.append(("reused block", block))
-    bound.extend(("existing entity", n) for n in sorted(_existing_entities(bp)) if n)
+    bound.extend(("existing entity", n)
+                 for n in sorted(n for n in _existing_entities(bp) if n))
     for kind, name in bound:
         if name not in known and name.rsplit("/", 1)[-1] not in known:
             warnings.append(Finding(
@@ -991,8 +1299,7 @@ def _datasource_entities(bp):
     for screen in bp.get("screens", []):
         for region, group, _sn in _leaf_regions(screen, with_group=True):
             for holder in (region, group):
-                ent = (holder or {}).get("data_source", {}).get("entity") \
-                    if isinstance((holder or {}).get("data_source"), dict) else None
+                ent = _source_entity(holder)
                 if ent:
                     names.add(ent)
     return names
@@ -1165,18 +1472,22 @@ def _check_static_datasource_unpopulated(bp, errors, extra_targets=None):
 
 
 def _check_repeat_prose_columns(bp, warnings):
-    for screen in bp.get("screens", []):
+    for screen in _as_list(_as_dict(bp).get("screens")):
+        if not isinstance(screen, dict):
+            continue
         sname = screen.get("name", "?")
         for region, group, _sn in _leaf_regions(screen, with_group=True):
-            own = region.get("data_source") if isinstance(region.get("data_source"), dict) else {}
-            grp = (group or {}).get("data_source") if isinstance((group or {}).get("data_source"), dict) else {}
-            entity = (own or {}).get("entity") or (grp or {}).get("entity")
+            own = _as_dict(region.get("data_source"))
+            grp = _as_dict(_as_dict(group).get("data_source"))
+            entity = own.get("entity") or grp.get("entity")
             if not entity:
                 continue
-            for item in region.get("content", []) or []:
+            for item in _as_list(region.get("content")):
                 if not isinstance(item, dict):
                     continue
                 element = item.get("element", "")
+                if not isinstance(element, str):
+                    continue
                 if _REPEAT_RE.search(element) and not isinstance(item.get("binds"), dict):
                     label = region.get("name") or region.get("id") or "?"
                     warnings.append(Finding(
@@ -1269,7 +1580,7 @@ def _nfc(text):
 
 def _render_gate_entries(bp):
     """(screen_index, screen_name, entry_index, entry) for every declared entry."""
-    for si, screen in enumerate(_as_list(bp.get("screens"))):
+    for si, screen in enumerate(_as_list(_as_dict(bp).get("screens"))):
         if not isinstance(screen, dict):
             continue
         for ei, entry in enumerate(_as_list(screen.get("render_gate"))):
@@ -1285,7 +1596,7 @@ def _render_gate_labels(bp):
 def _disclosure_lines(bp):
     """(path, text) for every disclosure line, in emission order."""
     for section, key in DISCLOSURE_CHANNELS:
-        holder = bp.get(section)
+        holder = _as_dict(bp).get(section)
         if not isinstance(holder, dict):
             continue
         for i, line in enumerate(_as_list(holder.get(key))):
@@ -1340,7 +1651,8 @@ def cited_requirement_ids(bp):
     """Requirement ids the blueprint itself cites, from every prose channel."""
     found = set()
     sources = [line for _p, line in _disclosure_lines(bp)]
-    sources += [s for s in _as_list(bp.get("acceptance_checklist")) if isinstance(s, str)]
+    sources += [s for s in _as_list(_as_dict(bp).get("acceptance_checklist"))
+                if isinstance(s, str)]
     for line in sources:
         for match in _REQ_ID_RE.finditer(line):
             if _is_requirement_id(match):
@@ -1502,7 +1814,7 @@ def _check_render_gate_coverage(bp, warnings):
     requirement discharge below, because both are triggered by something the
     author themselves wrote.
     """
-    bare = [s.get("name", "?") for s in _as_list(bp.get("screens"))
+    bare = [s.get("name", "?") for s in _as_list(_as_dict(bp).get("screens"))
             if isinstance(s, dict) and not _as_list(s.get("render_gate"))]
     if not bare:
         return
@@ -1654,6 +1966,15 @@ def collect_errors(bp, extra_seed_targets=None, extra_declared=None):
     # answer the same defect with a diagnosis in one half of the cases and a
     # generic "matches none of the permitted forms" in the other.
     _check_reserved_identifier_types(bp, errors)
+    # Same reason: the schema's pattern refuses a display name with "does
+    # not match", which names the defect and not the repair - and the
+    # repair is a different field, not a different spelling of this one.
+    _check_screen_name_is_element_name(bp, errors)
+    # Same reason: the schema refuses a legacy spelling, so left downstream the
+    # reader would be told the string matches none of the permitted forms rather
+    # than which string to write instead. Both walk unvalidated input.
+    _check_data_type_register(bp, errors)
+    _check_primary_key_data_type(bp, errors)
     # Same reason, and now load-bearing: `data_type` is a closed vocabulary, so
     # a marker like "TBD" written there is rejected by the schema first and
     # would be reported as an unknown type rather than as the unresolved
@@ -1688,7 +2009,16 @@ def collect_errors(bp, extra_seed_targets=None, extra_declared=None):
 
 
 def collect_warnings(bp):
-    """Advisory findings that never affect the VALID/INVALID verdict."""
+    """Advisory findings that never affect the VALID/INVALID verdict.
+
+    Runs on UNVALIDATED input, unlike the second half of `collect_errors`.
+    `collect_errors` returns early when the schema check fails, so its later
+    walkers only ever see a conforming blueprint; there is no such gate here -
+    `_validate_one` calls this unconditionally, by design (see the note at that
+    call site). Every walker below therefore obeys the same rule the pre-schema
+    error checks do: skip what cannot be read, never stop reading. A validator
+    that raises reports no findings at all, which is worse than a wrong one.
+    """
     warnings = []
     _check_binding_type_fit(bp, warnings)
     _check_repeat_prose_columns(bp, warnings)
@@ -1714,9 +2044,9 @@ def _check_buttongroup_onchange(bp, warnings):
     one unreproduced report would reject correct blueprints.
     """
     screens = []
-    for screen in bp.get("screens", []):
+    for screen in _as_list(_as_dict(bp).get("screens")):
         for region, sname in _leaf_regions(screen):
-            block = (region.get("outsystems_hints") or {}).get("block")
+            block = _as_dict(region.get("outsystems_hints")).get("block")
             if block in ("ButtonGroup", "ButtonGroupItem") and sname not in screens:
                 screens.append(sname)
     if not screens:
@@ -1740,7 +2070,7 @@ def _check_menu_chrome(bp, warnings):
     """Advisory (soak-1 G4): a menu-bearing layout should carry its menu content
     so OMI's Chrome Batch Discipline can review shared chrome - never an error,
     because chrome content may legitimately be absent from the wireframe."""
-    chrome = bp.get("app_chrome", {})
+    chrome = _as_dict(_as_dict(bp).get("app_chrome"))
     if chrome.get("layout_block") in MENU_BEARING_LAYOUTS and not chrome.get("menu"):
         warnings.append(Finding(
             "app_chrome: layout %r has no 'menu' content - OMI reviews shared "
@@ -1752,21 +2082,40 @@ def _check_menu_chrome(bp, warnings):
         ))
 
 
+def _compare_key(data_type):
+    """What two declarations of the same attribute are compared ON.
+
+    The canonical spelling, so a type declared in the legacy register and the
+    same type declared in the ODC literal register are one declaration rather
+    than a conflict. A string outside the vocabulary has no canonical form and
+    falls back to itself, so genuinely unknown types still compare literally
+    instead of collapsing into one another.
+    """
+    return canonical_data_type(data_type) or data_type
+
+
 def _entity_decls(bp, source):
     for e in bp.get("entities", []):
         if not isinstance(e, dict):
             continue
-        pk_name = pk_type = None
+        pk_name = pk_type = pk_type_raw = None
         attrs = {}
+        attrs_raw = {}
         for a in e.get("attributes", []):
             if not isinstance(a, dict) or "name" not in a:
                 continue
-            attrs[a["name"]] = (a.get("data_type"), bool(a.get("is_foreign_key")))
+            attrs[a["name"]] = (_compare_key(a.get("data_type")),
+                                bool(a.get("is_foreign_key")))
+            attrs_raw[a["name"]] = (a.get("data_type"),
+                                    bool(a.get("is_foreign_key")))
             if a.get("is_primary_key"):
-                pk_name, pk_type = a["name"], a.get("data_type")
+                pk_name = a["name"]
+                pk_type = _compare_key(a.get("data_type"))
+                pk_type_raw = a.get("data_type")
         records = e.get("records") if isinstance(e.get("records"), list) else None
         yield e.get("name"), {"source": source, "pk_name": pk_name,
-                              "pk_type": pk_type, "attrs": attrs,
+                              "pk_type": pk_type, "pk_type_raw": pk_type_raw,
+                              "attrs": attrs, "attrs_raw": attrs_raw,
                               "records": records}
 
 
@@ -1806,12 +2155,15 @@ def collect_cross_blueprint_errors(named_blueprints):
         # declarations (not just vs the first one).
         pk_groups = defaultdict(list)
         for d in ds:
-            pk_groups[(d["pk_name"], d["pk_type"])].append(d["source"])
+            # Grouped on the canonical form, reported as the file writes it -
+            # the reader has to be able to find the string.
+            pk_groups[(d["pk_name"], d["pk_type"])].append(
+                (d["source"], d["pk_name"], d["pk_type_raw"]))
         if len(pk_groups) > 1:
             parts = [
-                f"{src} (PK {pk_name}:{pk_type})"
-                for (pk_name, pk_type), srcs in pk_groups.items()
-                for src in srcs
+                f"{src} (PK {pk_name}:{pk_type_raw})"
+                for srcs in pk_groups.values()
+                for src, pk_name, pk_type_raw in srcs
             ]
             errors.append(
                 f"entity '{name}' has conflicting declarations across blueprints: "
@@ -1829,12 +2181,13 @@ def collect_cross_blueprint_errors(named_blueprints):
             sig_groups = defaultdict(list)
             for d in ds:
                 if attr in d["attrs"]:
-                    sig_groups[d["attrs"][attr]].append(d["source"])
+                    sig_groups[d["attrs"][attr]].append(
+                        (d["source"], d["attrs_raw"][attr]))
             if len(sig_groups) > 1:
                 parts = [
-                    f"{src} {sig}"
-                    for sig, srcs in sig_groups.items()
-                    for src in srcs
+                    f"{src} {raw_sig}"
+                    for srcs in sig_groups.values()
+                    for src, raw_sig in srcs
                 ]
                 errors.append(
                     f"entity '{name}' attribute '{attr}' has conflicting types "
@@ -2087,6 +2440,121 @@ def _check_inventory_assertions(inv_screens, source, bp, errors):
             )
 
 
+# `opens` - the destination slot on a control. Optional and per control, so a
+# blueprint authored before it existed is the same artifact it was; checked only
+# here, because the inventory is the only artifact that knows which screen names
+# are real.
+#
+# Measured on restaurant-app-v2 (2026-08-30): six screens were never built
+# because no artifact named them. The inventory tier has since closed its half
+# (outsystems-screen-inventory's R10, `record_actions`). The blueprint tier had
+# NOWHERE to say it - every control that opened a screen described its
+# destination in prose inside `data` ("Abre a configuracao do restaurante"), and
+# prose is resolved against nothing. Two of those buttons were called inert for
+# a day before the deployed screen list showed the destinations did not exist.
+#
+# Both rules below are mechanical and language-independent on purpose. The
+# verb-reading the inventory does upstream is anchored on English openers, and
+# the blueprints that paid for this rule are written in Portuguese: a prose
+# reader would have found nothing on the very artifact that motivated it.
+OPENS_INLINE = "inline"
+
+# Mirrors outsystems-screen-inventory's RECORD_ACTION_INLINE / _OUT_OF_SCOPE.
+# Duplicated rather than imported, for the same reason `_inventory_menu_for_screen`
+# is: the two skills ship in different export packs and neither may depend on the
+# other being installed.
+_RECORD_ACTION_NON_DESTINATIONS = (OPENS_INLINE, "out-of-scope")
+
+
+def _screen_opens(screen):
+    """`(path, value)` for every control on a screen that declares `opens`.
+
+    Walks leaf regions, so the per-row controls inside a group are covered -
+    that is where the incident's "Editar" and "Configurar" buttons sat, not at
+    the top of `main_content`.
+    """
+    for region, _sn in _leaf_regions(screen):
+        rid = region.get("id", "?")
+        for i, item in enumerate(_as_list(region.get("content"))):
+            if isinstance(item, dict) and "opens" in item:
+                yield f"region {rid!r} content[{i}]", item.get("opens")
+
+
+def _check_inventory_opens(inv_screens, source, bp, errors):
+    """N1: a named destination has to name a real screen.
+
+    `inline` is accepted verbatim - the same third answer `record_actions`
+    takes, meaning the action happens on this screen and there is no
+    destination to resolve.
+    """
+    for screen in _as_list(bp.get("screens")):
+        if not isinstance(screen, dict):
+            continue
+        name = screen.get("name")
+        for where, target in _screen_opens(screen):
+            if not isinstance(target, str) or not target.strip():
+                errors.append(
+                    f"{source}: screen {name!r} {where}: 'opens' must be a "
+                    f"non-empty screen name, or {OPENS_INLINE!r} when the "
+                    f"control acts on this screen - got {target!r}")
+                continue
+            target = target.strip()
+            if target == OPENS_INLINE:
+                continue
+            if target == name:
+                errors.append(
+                    f"{source}: screen {name!r} {where}: 'opens' points at this "
+                    f"screen itself - say {OPENS_INLINE!r} when the control "
+                    "acts here rather than opening somewhere")
+                continue
+            if target not in inv_screens:
+                known = ", ".join(sorted(inv_screens)) or "(none)"
+                errors.append(
+                    f"{source}: screen {name!r} {where}: 'opens' names "
+                    f"{target!r}, which is not a screen in the inventory - a "
+                    "control whose destination was never in the inventory is "
+                    "still built, renders, and does nothing. Inventory "
+                    f"screens: {known}")
+
+
+def _check_inventory_record_action_doors(inv_screens, source, bp, errors):
+    """N2: the inventory promised a door, so the blueprint has to draw it.
+
+    N1 alone only catches a destination named WRONG. The blueprints that paid
+    for this rule named no destination at all, so N1 would have passed them.
+    This is the rule that fires on silence.
+
+    Malformed `record_actions` entries are skipped rather than reported: their
+    shape is the inventory validator's R10 to own, and one defect deserves one
+    message.
+    """
+    for screen in _as_list(bp.get("screens")):
+        if not isinstance(screen, dict):
+            continue
+        name = screen.get("name")
+        inv_screen = inv_screens.get(name)
+        if not isinstance(inv_screen, dict):
+            continue  # reported by `_check_inventory_screen_names`
+        drawn = {t.strip() for _w, t in _screen_opens(screen)
+                 if isinstance(t, str)}
+        for entry in _as_list(inv_screen.get("record_actions")):
+            if not isinstance(entry, dict):
+                continue
+            action, resolves = entry.get("action"), entry.get("resolves_to")
+            if not isinstance(action, str) or not isinstance(resolves, str):
+                continue
+            if resolves in _RECORD_ACTION_NON_DESTINATIONS:
+                continue
+            if resolves in drawn:
+                continue
+            errors.append(
+                f"{source}: screen {name!r} has no control with "
+                f"'opens': {resolves!r}, but the inventory resolves its "
+                f"{action!r} record action to that screen - the door the "
+                "inventory settled is missing from the design that has to "
+                "draw it")
+
+
 def collect_inventory_agreement_errors(inv, named_blueprints):
     """Flag every place a blueprint contradicts the inventory it was built from.
 
@@ -2094,14 +2562,21 @@ def collect_inventory_agreement_errors(inv, named_blueprints):
     definitionally authoritative on all three. Entity bindings are advisory and
     live in `collect_inventory_agreement_warnings`.
     """
-    if not isinstance(inv, dict):
-        return ["inventory: top level must be a JSON object"]
-    inv_screens = _inventory_screens(inv)
     errors = []
+    if not isinstance(inv, dict):
+        # Appended rather than returned as a literal, so the rule census can see
+        # it: a finding that never goes through `errors.append` is not counted,
+        # and an uncounted rule can be deleted with every test still green. This
+        # one was uncounted until 2026-09-01.
+        errors.append("inventory: top level must be a JSON object")
+        return errors
+    inv_screens = _inventory_screens(inv)
     for source, bp in named_blueprints:
         _check_inventory_screen_names(inv_screens, source, bp, errors)
         _check_inventory_chrome(inv, inv_screens, source, bp, errors)
         _check_inventory_assertions(inv_screens, source, bp, errors)
+        _check_inventory_opens(inv_screens, source, bp, errors)
+        _check_inventory_record_action_doors(inv_screens, source, bp, errors)
     return errors
 
 
@@ -2185,6 +2660,16 @@ def _validate_one(bp_path, report_path, extra_seed_targets=None,
         return 2, None
     errors = collect_errors(bp, extra_seed_targets=extra_seed_targets,
                             extra_declared=extra_declared)
+    # Deliberately UNCONDITIONAL, decided rather than inherited. Skipping this
+    # when `errors` is non-empty would be the cheap way to keep a malformed
+    # blueprint out of the warning walkers, and it is the wrong one: the common
+    # invalid blueprint is entirely readable - one missing `outsystems_hints`,
+    # one undeclared bind - and its advisory findings are worth printing in the
+    # same pass, which is what every INVALID report has always done. The
+    # graduating subset below is computed from this list too, so a `--handoff`
+    # run would lose its blocking findings the moment any contract error
+    # appeared. Robustness against unreadable input belongs in the walkers, and
+    # that is where `collect_errors` already put it.
     warnings = collect_warnings(bp)
     # Graduation. Two regimes over one finding set: while the design is being
     # drawn every warning advises, and at handoff the graduating subset blocks

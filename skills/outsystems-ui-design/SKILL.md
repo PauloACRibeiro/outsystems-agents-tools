@@ -622,6 +622,21 @@ On approval, fill the OMI enriched blueprint at
   asset on this field — imitate the rule.** `scripts/validate_blueprint.py` now
   rejects class syntax, so a wrong value fails loudly instead of reaching OMI
   unpatched (Phase 3 GAP-6, where it did exactly that across eight screens).
+- `screens[].name` — **the ODC element name, never the human title**. This
+  artifact requires letters, digits and underscore, first character a letter —
+  `A4PrintPreview`, not `A4 Print Preview`. That grammar is **this contract's**,
+  a deliberate safe subset of the vocabulary ODC publishes for names it derives
+  itself; no screen-element grammar is published. The human title goes in the optional
+  **`screens[].display_name`**, which no consumer matches against anything.
+  This is not cosmetic: every downstream consumer resolves a screen by matching
+  this string against the built model's `Name` **exactly** — OMI's
+  `recompute_assertions.py`, and the render-gate spec `--emit-render-gate-spec`
+  projects. On restaurant-app-v3 rev 7 (2026-09-02) six of seven screens came
+  back `SCREEN_MISSING` from a build that contained all seven, for this reason
+  alone. Matching stays exact by decision (Codex, AH-2026-09-02-006): a matcher
+  that ignored spaces and case would resolve two different screens to one node
+  and hide the collision. `validate_blueprint.py` rejects a display title here
+  and names the element name to write instead.
 - `screens[].render_gate` — **the one gate-bearing channel for a runtime
   claim**, and the section this step is most likely to skip. Every disclosure
   about what the screen must SHOW, and every requirement the blueprint cites,
@@ -769,22 +784,23 @@ full, using OMI's exact field names:
   validator. An open string here is unvalidatable, and what it hides is a
   certain publish failure rather than a style slip (see the class rule below).
   Three admitted forms:
-  1. **A basic type.** Either the ODC literal names — `Text`, `Integer`,
+  1. **A basic type**, in the ODC literal register — `Text`, `Integer`,
      `Long Integer`, `Decimal`, `Currency`, `Boolean`, `Date`, `Time`,
-     `Date Time`, `Email`, `Phone Number`, `Binary Data` — or this skill's
-     camelCase spelling of the same twelve (`text`, `integer`, `longInteger`,
-     `decimal`, `currency`, `boolean`, `date`, `time`, `dateTime`, `email`,
-     `phoneNumber`, `binaryData`), plus the identifier tokens in circulation:
-     `integerIdentifier`, `longIntegerIdentifier`, `platformDefaultIdentifier`.
-     Both registers are admitted because both are measurably in use — this
-     skill's fixtures write camelCase, OMI's contract writes the ODC literal.
-     **Write one register per blueprint**: the cross-blueprint check compares
-     type strings literally, so `text` in one and `Text` in another reads as a
-     conflicting declaration of the same attribute.
+     `Date Time`, `Email`, `Phone Number`, `Binary Data`. One register, because
+     `outsystems-mentor-implementation` is the semantic authority for this
+     vocabulary and its contract states the literal `DataType` string, which is
+     what gets rendered verbatim into the Mentor prompt. The camelCase register
+     this skill's fixtures used to write (`text`, `longInteger`, `dateTime`) and
+     the three identifier tokens (`integerIdentifier`, `longIntegerIdentifier`,
+     `platformDefaultIdentifier`) were admitted alongside it between 2026-08-27
+     and 2026-09-01 and are now refused, each with a message naming the string
+     to write instead.
   2. **A `Text` with its length** — `Text(200)`, `Text(50)`. State it on any
      Text attribute whose content can exceed 50: an unstated length silently
      *chooses* 50 and truncates.
   3. **A relationship** — `"<TargetEntity> Identifier"`, single-token target.
+     Note this form has no camelCase spelling, and neither does `Text(200)`:
+     a camelCase register could never have covered the whole vocabulary.
 
   Not members, and refused: the App Generator's engine-side kinds that have no
   ODC basic type (`url`, `percentage`, `rating`, `imageUrl`, `multiLineText`,
@@ -792,9 +808,21 @@ full, using OMI's exact field names:
   a near-miss is read as a Text attribute named after a type, which publishes
   cleanly and is wrong.
 
-  **Ordinary auto-number primary keys: declare the literal `Long Integer`** —
-  with auto-number, mandatory and primary-key set — **not any
-  `Identifier`-suffixed type.** `Integer Identifier`, `Long Integer Identifier`
+  **Every primary key is the literal `Long Integer`** — for an ordinary
+  auto-number key, with auto-number, mandatory and primary-key set — **and never
+  any `Identifier`-suffixed type.** This is a validator predicate over every
+  attribute of every blueprint, not advice: any primary key that is not
+  `Long Integer` is an error.
+
+  The rule covers static entities too, and a `Text` primary key is the case
+  worth naming, because it looks like a legitimate natural key and is not: a
+  static entity's key is an `Id` with `IsAutoNumber = No` and an explicit
+  non-null integer, with the display value in a **separate `Label` attribute**
+  (OMI rule 6) — so a Text key is a static entity modelled wrongly. A design
+  that genuinely needs another key type says so in
+  `evidence_boundary.review_notes`, never silently.
+
+  `Integer Identifier`, `Long Integer Identifier`
   and `Identifier` all validate cleanly and then fail every publish
   (`OS-RDBS-GEN-40002 Unknown OsAttributeTypes`, masked as `OS-DPL-50203` via the
   MCP path). **The class rule, scoped to the path it was measured on — an
@@ -1067,7 +1095,7 @@ needs two blueprints to compare, so one screen on its own could drop the whole
 menu, or pick a different `layout_block`, and still exit 0. `--inventory` is the
 anchor a lone blueprint never had.
 
-Three things are **errors**, because the inventory is definitionally
+Five things are **errors**, because the inventory is definitionally
 authoritative on them:
 
 - **Screen name.** A blueprint screen with no inventory entry has no recorded
@@ -1086,6 +1114,35 @@ authoritative on them:
   upstream: either the design is missing something the requirement asked for
   (add it to the screen and re-derive), or the inventory's count was wrong (fix
   the inventory and re-run its validator). The error message says so.
+- **A named destination that names nothing real.** Any control's `opens` must
+  be a screen in the inventory, or the literal `inline`.
+- **A door the inventory settled and the design did not draw.** Where the
+  inventory's `record_actions` resolves a screen's create, edit or detail to
+  *another screen*, some control on that screen must carry `opens` naming it.
+  `inline` and `out-of-scope` ask for no control and are silent here.
+
+**Name the destination on the control: `opens`.** A control that opens another
+screen carries `opens` alongside `element` and `data` — the screen's element
+name, or the literal `inline` when the control acts on this screen instead:
+
+```json
+{ "element": "Button", "data": "\"+ Add dish\"", "opens": "DishCreate" }
+```
+
+It is optional and per control, so a blueprint written before it existed
+validates exactly as it did, and it is resolved only under `--inventory`,
+because the inventory is the only artifact that knows which screen names are
+real. Write it wherever a control opens a screen — including the per-row
+buttons inside a group region, which is where the incident's controls sat.
+
+Six screens of one app were never built because no artifact named them
+(2026-08-30). Every control that opened one described its destination in prose
+inside `data` — "opens the restaurant's configuration" — and prose is resolved
+against nothing. Two of the buttons were called inert for a day before the
+deployed screen list showed the destinations did not exist. Both rules read
+only typed fields, never the prose: the upstream verb-reading in
+`outsystems-screen-inventory` is anchored on English openers, and the
+blueprints that paid for this rule are written in Portuguese.
 
 One thing is a **warning** and never blocks: an entity the inventory listed as a
 data binding for this screen that the blueprint does not declare. A screen may

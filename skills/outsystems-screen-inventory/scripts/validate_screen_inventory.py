@@ -272,6 +272,12 @@ def placeholder_fields(inv):
 
     EXCLUDED on purpose: `source.grounding_notes` - the channel for recording
     what is not yet settled. A deferral note belongs there.
+
+    Runs on UNVALIDATED input - `collect_errors` walks straight through with no
+    schema gate ahead of it - so every list here is read through `_as_list`.
+    `.get(key, [])` covers an ABSENT key and `or []` covers a null one, but
+    neither covers a key holding `7`, which is what `{"screens": 7}` reached
+    before it raised out of the CLI.
     """
     if not isinstance(inv, dict):
         return
@@ -286,30 +292,30 @@ def placeholder_fields(inv):
     if isinstance(chrome, dict):
         for key in ("layout_block", "app_title"):
             yield from _pf(f"app_chrome.{key}", chrome.get(key))
-        for i, entry in enumerate(chrome.get("menu", []) or []):
+        for i, entry in enumerate(_as_list(chrome.get("menu"))):
             if isinstance(entry, dict):
                 for key in ("label", "target"):
                     yield from _pf(f"app_chrome.menu[{i}].{key}", entry.get(key))
 
-    for i, cand in enumerate(inv.get("candidates", []) or []):
+    for i, cand in enumerate(_as_list(inv.get("candidates"))):
         if isinstance(cand, dict):
             for key in ("id", "source_ref", "rationale", "dissolved_into",
                         "resolves_to"):
                 yield from _pf(f"candidates[{i}].{key}", cand.get(key))
 
-    for i, screen in enumerate(inv.get("screens", []) or []):
+    for i, screen in enumerate(_as_list(inv.get("screens"))):
         if not isinstance(screen, dict):
             continue
-        for key in ("name", "purpose", "archetype", "behavior",
+        for key in ("name", "display_name", "purpose", "archetype", "behavior",
                     "key_interactions", "accepts"):
             yield from _pf(f"screens[{i}].{key}", screen.get(key))
-        for j, binding in enumerate(screen.get("data_bindings", []) or []):
+        for j, binding in enumerate(_as_list(screen.get("data_bindings"))):
             if isinstance(binding, dict):
                 for key in ("name", "usage", "behavior_notes"):
                     yield from _pf(f"screens[{i}].data_bindings[{j}].{key}",
                                    binding.get(key))
 
-    for i, edge in enumerate(inv.get("navigation", []) or []):
+    for i, edge in enumerate(_as_list(inv.get("navigation"))):
         if isinstance(edge, dict):
             for key in ("from", "to", "trigger", "payload"):
                 yield from _pf(f"navigation[{i}].{key}", edge.get(key))
@@ -389,8 +395,12 @@ def _as_dict(value):
 
 
 def _screens_by_name(inv):
+    """Read through `_as_dict` because `format_brief` reaches here with the raw
+    parsed document: `collect_errors` and `collect_warnings` both check the root
+    first, and the brief - printed after the report whatever the verdict - does
+    not."""
     return {
-        s["name"]: s for s in _as_list(inv.get("screens"))
+        s["name"]: s for s in _as_list(_as_dict(inv).get("screens"))
         if isinstance(s, dict) and _is_text(s.get("name"))
     }
 
@@ -461,6 +471,41 @@ def _check_chrome(inv, screen_names, errors):
                 "a menu entry that points nowhere ships as a dead link")
 
 
+_ELEMENT_NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
+
+
+def _check_element_name(name, where, errors):
+    """`screens[].name` is the ODC element name, never the human title.
+
+    The inventory's names are the ones every design run carries into its
+    blueprint - the ui-design validator errors when they disagree - and from
+    there into the built model, where outsystems-mentor-implementation's
+    `recompute_assertions.py` matches them against the screen node's `Name`
+    EXACTLY. Measured 2026-09-02 on restaurant-app-v3 rev 7: 6 of 7 screens
+    reported SCREEN_MISSING against a build that contained all seven, because
+    the names were display titles ("A4 Print Preview") and the model holds
+    element names (`A4PrintPreview`).
+
+    Exact matching is retained downstream on Codex's recommendation
+    (AH-2026-09-02-006): a matcher that ignored spaces and case would hide a
+    real collision between two screens whose element names differ only there.
+    The human title has its own field, `display_name`.
+    """
+    if _ELEMENT_NAME_RE.match(name):
+        return
+    suggested = re.sub(r"[^A-Za-z0-9_]", "", name)
+    hint = (f" (element name: {suggested!r})"
+            if _ELEMENT_NAME_RE.match(suggested) else "")
+    errors.append(
+        f"{where}: name {name!r} is not an ODC element name - letters, digits "
+        "and underscore only, first character a letter"
+        f"{hint}. Every design run carries this string into its blueprint and "
+        "from there into a match against the built model's screen Name, so a "
+        "display title here reports the screen as missing from a build that "
+        "contains it. Put the human title in screens[].display_name"
+    )
+
+
 def _check_screens(inv, errors):
     """Returns the ordered screen-name list (may contain duplicates on error)."""
     screens = inv.get("screens")
@@ -483,6 +528,13 @@ def _check_screens(inv, errors):
                 errors.append(f"{where}: duplicate screen name")
             seen.add(name)
             names.append(name)
+            _check_element_name(name, f"screens[{i}]", errors)
+        display = screen.get("display_name")
+        if display is not None and not _is_text(display):
+            errors.append(
+                f"{where}: 'display_name' is optional, but once written it is "
+                "a non-empty string - the human title of the screen. Omit the "
+                "key rather than carry an empty one")
         if not _is_text(screen.get("purpose")):
             errors.append(f"{where}: 'purpose' required non-empty string")
         archetype = screen.get("archetype")
@@ -881,8 +933,23 @@ def _actions_reached_by_an_edge(inv, screens_by_name, screen_name, offered):
     edges = [e for e in _as_list(inv.get("navigation"))
              if isinstance(e, dict) and e.get("from") == screen_name]
     triggers = [e["trigger"].lower() for e in edges if _is_text(e.get("trigger"))]
-    archetypes = {(screens_by_name.get(e.get("to")) or {}).get("archetype")
-                  for e in edges}
+    # Both reads are restricted to strings, and both restrictions are a crash
+    # rather than a taste: `to` is a dict KEY here and `archetype` a SET member,
+    # so a list at either raises `unhashable type` before this walker can say
+    # anything. Neither drops a real answer - `screens_by_name` is keyed by
+    # string names and `RECORD_ACTION_DESTINATIONS` holds archetype names, so a
+    # non-string could never have matched. It reads as absent instead, which
+    # leaves the action UNDISCHARGED and the CRUD-closure warning firing: the
+    # fail-closed direction, and the value itself is reported by
+    # `_check_navigation` and `_check_screens`.
+    archetypes = set()
+    for edge in edges:
+        destination = edge.get("to")
+        if not isinstance(destination, str):
+            continue
+        archetype = _as_dict(screens_by_name.get(destination)).get("archetype")
+        if isinstance(archetype, str):
+            archetypes.add(archetype)
     reached = []
     for action, verbs in RECORD_ACTION_OPENERS:
         if action not in offered:
@@ -1205,7 +1272,8 @@ def collect_errors(inv, source_text=None, notes=None):
     errors = []
     notes = notes if notes is not None else []
     if not isinstance(inv, dict):
-        return ["inventory: top level must be a JSON object"]
+        errors.append("inventory: top level must be a JSON object")
+        return errors
     for field in TOP_LEVEL:
         if field not in inv:
             errors.append(f"missing required top-level field '{field}'")
@@ -1241,9 +1309,16 @@ def collect_errors(inv, source_text=None, notes=None):
     # has-an-incoming-edge check: two screens pointing at each other with no
     # path from any menu entry are still an island no user can land on
     # (Codex AH-2026-08-08-011 finding 3).
+    # String targets only. A target is a screen NAME and the keys of
+    # `screens_by_name` are strings, so a non-string could never root the walk
+    # anyway - but it is a SET MEMBER here, and a list raises `unhashable type`
+    # before any finding is recorded. Dropping it reads the target as absent,
+    # which is what `_check_chrome` already reports ('target' required
+    # non-empty string) and leaves whatever it would have rooted correctly
+    # unreachable.
     menu_targets = {
         e.get("target") for e in _as_list(_as_dict(inv.get("app_chrome")).get("menu"))
-        if isinstance(e, dict)
+        if isinstance(e, dict) and isinstance(e.get("target"), str)
     }
     roots = {t for t in menu_targets if t in screens_by_name}
     for name, screen in screens_by_name.items():
@@ -1287,7 +1362,11 @@ def collect_warnings(inv):
         if not isinstance(cand, dict) or cand.get("disposition") != "mapped":
             continue
         for target in _as_list(cand.get("resolves_to")):
-            if target in absorbed:
+            # A dict KEY, so a list raises `unhashable type` before the
+            # information-architecture finding below can be recorded. Screen
+            # names are strings, so a non-string was never going to be absorbed;
+            # `_check_candidates` is where the malformed entry is reported.
+            if isinstance(target, str) and target in absorbed:
                 absorbed[target] += 1
     one_to_one = [n for n in screen_names if absorbed.get(n) == 1]
     if one_to_one and len(one_to_one) == len(screen_names):
@@ -1383,7 +1462,17 @@ def collect_warnings(inv):
 
 
 def format_brief(inv, screen_name):
-    """The per-screen kickoff facts for one outsystems-ui-design run."""
+    """The per-screen kickoff facts for one outsystems-ui-design run.
+
+    `main()` prints this AFTER the report and whatever the verdict was - by
+    design, so that blocking a handoff does not hide what was about to be handed
+    over - which means it walks the same unvalidated document `collect_errors`
+    just reported on, and it is the only entry point with no root check of its
+    own. Normalising once here covers every read below and every helper it
+    calls; a document that is not an object holds no screens, so the answer is
+    the same 'no screen named X' an empty inventory gives.
+    """
+    inv = _as_dict(inv)
     screens = _screens_by_name(inv)
     if screen_name not in screens:
         known = ", ".join(sorted(screens)) or "(none)"
@@ -1449,7 +1538,11 @@ def format_brief(inv, screen_name):
             else:
                 lines.append(
                     f"  - {action}: navigates to '{resolves}' - build the "
-                    "control, not the destination; that screen has its own run")
+                    "control, not the destination; that screen has its own "
+                    f"run. Name it on the control: \"opens\": \"{resolves}\" - "
+                    "outsystems-ui-design resolves that against this inventory "
+                    "and fails the design when the door is missing or names a "
+                    "screen that does not exist")
 
     # The brief is the only thing a per-screen design run reads. Provenance
     # recorded on candidates and never carried here would leave the design run
@@ -1478,18 +1571,32 @@ def format_brief(inv, screen_name):
                 f"  - {', '.join(found)} from candidate '{cand_id}', "
                 f"dissolved into '{destination}'")
 
+    # The readable bindings, once: a binding that is not an object has nothing
+    # to print and is reported by `_check_bindings`. Deriving `(none)` from this
+    # list rather than from the raw one keeps an unreadable binding reading as
+    # an absent one - `data_bindings: [null]` and no `data_bindings` at all both
+    # print `(none)` rather than an empty section.
+    bindings = [b for b in _as_list(screen.get("data_bindings"))
+                if isinstance(b, dict)]
     lines.append("data bindings:")
-    for binding in _as_list(screen.get("data_bindings")):
+    for binding in bindings:
         note = binding.get("behavior_notes")
         suffix = f" [{note}]" if _is_text(note) else ""
         lines.append(
             f"  - {binding.get('name')} ({binding.get('kind')}): "
             f"{binding.get('usage')}{suffix}")
-    if not _as_list(screen.get("data_bindings")):
+    if not bindings:
         lines.append("  (none)")
+    # Strings only, because these are joined into one line. Deliberately
+    # `isinstance` and not `_is_text`: an EMPTY name is a contract error
+    # `_check_bindings` already reports, and it joins fine, so excluding it here
+    # would drop the R8 paragraph on a document that used to print it - a
+    # behaviour change hiding inside a robustness fix. Measured: it is the only
+    # drift the mutation walk found, which is why the weaker test is the right
+    # one.
     born_here = [
-        b.get("name") for b in _as_list(screen.get("data_bindings"))
-        if isinstance(b, dict) and b.get("introduced_here") is True
+        b.get("name") for b in bindings
+        if b.get("introduced_here") is True and isinstance(b.get("name"), str)
     ]
     if born_here:
         # Trial G-05: with no other author available, the design run typed the
@@ -1511,7 +1618,11 @@ def format_brief(inv, screen_name):
         lines.append(
             f"  menu: {{\"label\": \"{entry['label']}\", "
             f"\"active\": {str(entry['active']).lower()}}}{mark}")
-    assertions = screen.get("assertions")
+    # `_as_dict` rather than a truthiness test: `assertions: 7` is truthy and
+    # has no `.items()`. An unreadable one carries nothing into the blueprint,
+    # which is the same line an absent one prints - none - and `_check_assertions`
+    # reports the value itself.
+    assertions = _as_dict(screen.get("assertions"))
     if assertions:
         pairs = ", ".join(f"{k}={v}" for k, v in sorted(assertions.items()))
         lines.append(f"declared assertions (carry into the blueprint): {pairs}")
@@ -1536,7 +1647,9 @@ def format_brief(inv, screen_name):
         for edge in incoming:
             payload = f" carrying {edge['payload']}" if _is_text(edge.get("payload")) else ""
             lines.append(f"  - {edge.get('from')} on {edge.get('trigger')}{payload}")
-    accepts = _as_list(screen.get("accepts"))
+    # Joined into one line, so an entry that is not a string cannot be printed;
+    # `_check_screens` reports the list itself.
+    accepts = [a for a in _as_list(screen.get("accepts")) if isinstance(a, str)]
     if accepts:
         lines.append(f"accepts from other screens: {', '.join(accepts)}")
     tokens = inv.get("design_tokens_source")

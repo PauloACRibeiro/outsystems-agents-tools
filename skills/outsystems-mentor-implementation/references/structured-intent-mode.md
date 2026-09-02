@@ -42,10 +42,10 @@ For built-in function and TrueChange queries, use `content_source='model'` to ta
 `model-functions` and `model-truechange`. Do not add `version='odc'` to
 model-reference queries unless results prove it helps — built-in functions are
 platform-generic. No `collection` parameter exists on `search_outsystems_content`.
-If a `content_source='model'` query returns no results, run `get_status` (the
-working health probe — a bare `check_health` call is rejected with "Invalid
-request parameters") and retry without `content_source` before declaring a
-source gap. The empty filtered
+If a `content_source='model'` query returns no results, run `get_status` (it
+reports indexed collections and chunk counts; `check_health` takes no arguments
+and reports liveness only) and retry without `content_source` before declaring
+a source gap. The empty filtered
 result does not prove `model-functions` or `model-truechange` has no relevant
 coverage; surface the implementation-authority gap in the evidence breakdown
 when broader fallback evidence is all you have.

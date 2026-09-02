@@ -332,21 +332,39 @@ Use `content_source='model'` to target `model-functions` and
 TrueChange/platform errors. For widget catalog refresh, widget nesting rules,
 or UI pattern APIs, omit `content_source` unless the bundle says otherwise.
 There is no `collection` parameter. Use `version`, `content_source`,
-`authority_level`, `owner`, and `visibility` filters instead. When
-`outsystems-tech-content` discovery tools are present, use `check_health`,
-`explain_filters`, `list_collections`, and `include_full_content` according to
-the bundle. Do not pass collection names as a `collection` argument. Cite
-`page_url` when present; when `page_url` is missing, treat the hit as
-unpublished reference material and keep that boundary explicit.
+`authority_level`, and `owner` filters instead. Leave `visibility` unset by
+default: the server derives a per-deployment visibility envelope, and omitting
+the argument searches every tier that deployment allows, while naming one tier
+narrows to it and drops the rest. Name a tier only to deliberately exclude the
+others. `explain_filters` may state that omitting `visibility` short-circuits
+to an empty result; measured against the live server 2026-08-31, omitting it
+returns results blended across the served tiers, and the server's own
+zero-result message tells the caller to drop the argument. Trust the measured
+behavior over that sentence. When `outsystems-tech-content` discovery tools are
+present, use `check_health`, `explain_filters`, `list_collections`, and
+`include_full_content` according to the bundle. Do not pass collection names as
+a `collection` argument. Cite `page_url` when present; when `page_url` is
+missing, treat the hit as unpublished reference material and keep that boundary
+explicit.
 
-If a `content_source='model'` query returns no results, run `get_status` (the
-working health probe; a bare `check_health` call is rejected with "Invalid
-request parameters") and retry without `content_source` before declaring a
-source gap. An empty
+If a `content_source='model'` query returns no results, run `get_status` (it
+reports the indexed collections and their chunk counts, so it separates a thin
+collection from a bad filter; `check_health` takes no arguments and reports
+liveness only) and retry without `content_source` before declaring a source
+gap. An empty
 model-filtered result does not prove `model-functions` or `model-truechange` has no relevant coverage; surface the implementation-authority gap in the final
-Evidence Status or degraded-quality note. For degraded checks that control exact
-signatures, widget rules, TrueChange errors, live Mentor behavior, security
-roles, or tenant-specific facts, stop rather than speculate.
+Evidence Status or degraded-quality note.
+
+A reachable provider can still return nothing for an instrument reason. Before
+declaring any source gap, check whether the call passed `visibility`: a value
+outside the deployment's envelope returns a zero-result message naming the
+tiers actually served and telling the caller to drop the argument. That is an
+instrument artifact, not missing coverage. Retry with `visibility` unset
+before recording the gap.
+
+For degraded checks that control exact signatures, widget rules, TrueChange
+errors, live Mentor behavior, security roles, or tenant-specific facts,
+stop rather than speculate.
 
 ## Degraded retrieval behavior
 

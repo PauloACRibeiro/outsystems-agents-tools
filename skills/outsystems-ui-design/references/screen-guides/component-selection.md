@@ -1,7 +1,7 @@
 # Component Selection Guide
 
 
-> **Harvested from:** a curated OutSystems UI screen-guide reference set (`component-selection.md`) (read-only source, harvested 2026-07-13; the tabular-data row was locally corrected 2026-08-19 and the accordion-detail row added 2026-08-27 — see Merge-preserved table).
+> **Harvested from:** a curated OutSystems UI screen-guide reference set (`component-selection.md`) (read-only source, harvested 2026-07-13; the tabular-data row was locally corrected 2026-08-19, the accordion-detail row added 2026-08-27, and the master-detail and list-with-popup rows plus the entity-dependents eligibility gate added 2026-09-01 — see Merge-preserved table).
 > **Upstream origin:** OutSystems UI pattern reference, curated upstream reference (no further upstream repo cited in source).
 > **Merge note:** local corrections preserved where noted in `maintenance/refresh-checklist.md`.
 > See `maintenance/refresh-checklist.md` for the refresh procedure.
@@ -23,6 +23,27 @@ Choose the right UI component for the content and interaction pattern. Using the
 
 ## Navigation & Organization
 
+**Three rows below reveal a record's detail in place, and one question settles
+before any of them: does the entity have dependents?** An entity that has
+dependents — another entity holds a single foreign key reference to it — **cannot
+use the list-with-popup or master-detail patterns at all**, so the size gates on
+those two rows never come up. Rule them out first, then choose among what is left.
+
+> **Source for the eligibility gate above, and for the same gate in the
+> `MasterDetail` and `Popup` rows below** (official ODC documentation, checked
+> 2026-09-01 at live upstream `879ee91b`): `docs-odc`
+> `src/eap/agentic-development/mentor-web/prompts.md`, "Pattern constraints" —
+> *"Entities with dependents: Cannot use popup or master-detail patterns"* — with
+> the same two exclusions repeated in its "Select a pattern" rows (*"entities with
+> dependents"*; *"Entities with more than 5 attributes or dependent entities"*).
+> The definition is the one the same repository's linked requirement-document
+> generator prompt gives (`.../mentor-web/resources/mentor-prompt-generator.txt`):
+> *"Dependent entities have a single foreign key reference to the target entity."*
+> Unlike the attribute ceilings in the rows, this is not a limit the page says
+> Mentor resolves by switching pattern — that sentence is scoped to an entity
+> exceeding a pattern's *attribute* limit — so the exclusion is stated and nothing
+> is claimed about what a dependent entity yields instead.
+
 | Pattern | Correct Component | Wrong Choice |
 |---|---|---|
 | Mutually exclusive content sections | Tabs (Tabs block) | Stacked accordions (forces users to manage open/close state) |
@@ -32,14 +53,23 @@ Choose the right UI component for the content and interaction pattern. Using the
 | Date selection | Date picker (DatePicker block) | Free text input (error-prone formatting) |
 | Date range selection | Date range picker (DatePickerRange block) | Two separate date pickers (disconnected UX) |
 | Compact record browsing with the detail revealed in place | Card list with an `Accordion` detail — only where the detail is at most **5 detail fields**, with `Accordion.MultipleItems` left at its `False` default so one item is open at a time | Accordion detail with more than 5 fields, or a comparison that needs several details open at once — use a sidebar or master-detail layout instead |
+| Browsing a list and inspecting the selected record beside it | `MasterDetail` split — where the list portion is a table, at most **5 attributes** in it (see `references/screen-guides/master-detail.md`) | A table list portion carrying more than 5 attributes — make the list portion a card list or gallery instead; or an entity with dependents, which cannot use this pattern at all |
+| Viewing or editing a record over the list, without navigating away | `Popup` widget over the list — only for entities with **5 or fewer non-ID attributes** | A popup over an entity with more non-ID attributes than that — such entities use the table pattern instead; or an entity with dependents, which cannot use this pattern at all |
 
-> **Source for the accordion-detail row** (official ODC documentation, checked 2026-08-27):
-> `docs-odc` `src/eap/agentic-development/mentor-web/prompts.md` — the "Select a pattern"
-> table ("max 5 fields in detail" / "Avoid when … more than 5 detail fields or multiple
-> sections need to be open"), its "Pattern constraints" list, and the same page's
-> "Only one accordion item expands at a time to avoid visual clutter". The
-> one-open-at-a-time half is also the block's own default: `Accordion.MultipleItems`
-> is `False` (`references/patterns/content.md`).
+> **Source for the three pattern-limit rows above** — accordion detail, master-detail
+> list portion, and list-with-popup (official ODC documentation; the accordion row was
+> checked 2026-08-27, the other two 2026-09-01 at upstream `879ee91b`): `docs-odc`
+> `src/eap/agentic-development/mentor-web/prompts.md`. Its "Select a pattern" table
+> carries all three ("max 5 fields in detail" / "Avoid when … more than 5 detail fields
+> or multiple sections need to be open"; "Browse and inspect a record (max 5 attributes
+> in table view)"; "Entities with 5 or fewer non-ID attributes"), and its "Pattern
+> constraints" list states two of them as limits Mentor enforces — *"Popup and
+> accordion: Max 5 non-ID attributes"* and *"Master detail table view: Max 5 attributes
+> in list portion"* — by switching an entity that exceeds a limit to a compatible
+> pattern rather than by failing. The accordion's one-open-at-a-time half comes from the
+> same page ("Only one accordion item expands at a time to avoid visual clutter") and is
+> also the block's own default: `Accordion.MultipleItems` is `False`
+> (`references/patterns/content.md`).
 
 ## Form Controls
 

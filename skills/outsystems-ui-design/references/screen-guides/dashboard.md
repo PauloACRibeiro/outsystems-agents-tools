@@ -37,8 +37,23 @@ Sections, top to bottom:
    - Label describing the metric
    - Optional trend indicator (up/down arrow + percentage change)
 3. **Charts row**: 1-2 charts showing trends or distributions (bar, line, donut). Place in a 2-column layout or full-width depending on chart count
-4. **Summary list**: Recent or top items (5-10 rows), sorted by recency or priority. Use a compact data table (TableRecords) or card list (List widget)
-5. **Optional filter bar**: Date range selector, category dropdown, status filter — placed above the KPI row or in the header
+4. **Summary list**: Recent or top items — **at most 5 records**, sorted by recency or priority, with no filters or pagination on the list itself. Use a compact data table (TableRecords) or card list (List widget)
+
+> **Source for the summary-list record ceiling** (official ODC documentation,
+> re-checked 2026-09-01 at upstream `879ee91b`): `docs-odc`
+> `src/eap/agentic-development/mentor-web/prompts.md` — its "Pattern constraints" list
+> states *"Dashboard lists: Max 5 records, no filters or pagination"*. This guide
+> previously allowed a wider row range, which was this bundle's own judgement rather
+> than a cited fact; the ceiling above is the product's stated constraint.
+>
+> **There is no filter-bar section above, and that is the ruling, not an omission**
+> (2026-09-01). The cited rule settles it: a dashboard list carries no filters, so a
+> date-range, category or status filter narrowing it is not a section this guide
+> offers. The same page's data-model prompts do mention that deleting a static entity
+> record "also removes dashboard counters and filters that reference the deleted
+> value" — that describes what a deletion cascades to, not a section to add. Nothing
+> is lost by leaving it out: a wireframe showing one still wins, as a design source
+> does everywhere in this guide.
 
 ## Layout
 
@@ -61,7 +76,7 @@ Sections, top to bottom:
 
 - Each KPI counter needs its own data source (aggregate or data action) — do not share data sources between counters
 - Charts need aggregated/grouped data — typically a separate data source per chart with appropriate grouping
-- Summary list: sorted by date descending or by priority, limited to 5-10 rows (no pagination needed)
+- Summary list: sorted by date descending or by priority, limited to at most 5 records — no filters and no pagination (see the source note under Anatomy)
 - Optional: auto-refresh timer or manual refresh button to keep data current
 
 ## How to Decide What to Show — **prompt-only, no design source**
@@ -80,7 +95,7 @@ where the data model supports them. Use the data model to decide:
    - A `Status`, `State`, `Type`, `Category`, `Priority`, or `Level` attribute → Bar or Donut chart grouping records by that attribute's values
    - A `CreatedAt`, `Date`, `DueDate`, or datetime attribute → Line chart showing records over time (grouped by month/week)
    - Pick the 1-2 most meaningful groupings. Prefer Status-based charts (they show operational health)
-3. **Summary list**: Pick the entity with a date/time attribute and show the 5-10 most recent records. Display: primary name/title + status + date + assigned user (if applicable). This gives users a "what happened recently" view.
+3. **Summary list**: Pick the entity with a date/time attribute and show its most recent records, at most 5 (the ceiling under Anatomy). Display: primary name/title + status + date + assigned user (if applicable). This gives users a "what happened recently" view.
 
 ## Responsive Behavior
 

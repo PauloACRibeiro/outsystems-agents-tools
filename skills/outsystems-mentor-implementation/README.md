@@ -455,7 +455,7 @@ Context:
 Tasks:
 1. Check for the public-provider role under either `workspace-knowledge-cc` or `outsystems-public-knowledge`; use whichever is available. If neither is installed, set up `outsystems-public-knowledge` — this is the baseline path and the only step most machines need.
 2. Verify the public provider with one harmless read-only `search_outsystems_public` query for ODC documentation, then `fetch_doc` on a returned `doc_id`.
-3. Only if I am an OutSystems employee who can connect to the VPN: check whether the session exposes `outsystems-tech-content` tools such as `check_health`, `list_collections`, `explain_filters`, and `search_outsystems_content`. If they are missing and I want the upgrade, tell me to connect VPN and configure the MCP using this agent host's normal MCP setup flow with the internal endpoint from the employee setup note (deliberately not published here), then start a fresh agent session if this host only loads MCP tools at startup. Verify with `get_status` (a bare `check_health` call is rejected — "Invalid request parameters"), then `list_collections`, then one harmless read-only `search_outsystems_content` query.
+3. Only if I am an OutSystems employee who can connect to the VPN: check whether the session exposes `outsystems-tech-content` tools such as `check_health`, `list_collections`, `explain_filters`, and `search_outsystems_content`. If they are missing and I want the upgrade, tell me to connect VPN and configure the MCP using this agent host's normal MCP setup flow with the internal endpoint from the employee setup note (deliberately not published here), then start a fresh agent session if this host only loads MCP tools at startup. Verify with `get_status` (`check_health` takes no arguments and reports liveness only), then `list_collections`, then one harmless read-only `search_outsystems_content` query.
 4. If neither provider is available, clone or locate the public repos `OutSystems/docs-odc`, `OutSystems/docs-howtos`, `OutSystems/docs-product`, and `OutSystems/outsystems-ui`, and record their local root so the agent can use source-backed `rg`/file reads as an explicitly degraded fallback. Do not rely on model memory alone.
 5. Explain clearly whether the machine has full-quality retrieval, degraded retrieval, or is blocked. Public-provider-only is a supported working setup, not a degraded one — report it as `provider: public-grounded`, not as a failure.
 ```
@@ -554,10 +554,17 @@ TrueChange errors and widget-library rules beyond the catalogs fail closed as
 Use the MCP discovery helpers to keep this guidance current:
 
 - `get_status`: verify the service before declaring a source gap after errors
-  or unexpectedly weak search results (a bare `check_health` call is rejected
-  with "Invalid request parameters")
+  or unexpectedly weak search results; it reports the indexed collections and
+  their chunk counts, while `check_health` takes no arguments and reports
+  liveness only
 - `explain_filters`: confirm valid `version`, `content_source`,
-  `authority_level`, `owner`, and `visibility` values before choosing filters
+  `authority_level`, and `owner` values before choosing filters, and read this
+  deployment's visibility envelope there — but leave `visibility` itself unset
+  unless you are deliberately narrowing to one tier. `explain_filters` may
+  state that omitting `visibility` short-circuits to an empty result; measured
+  against the live server 2026-08-31, omitting it returns results blended
+  across the served tiers, and the server's own zero-result message tells the
+  caller to drop the argument. Trust the measured behavior over that sentence
 - `list_collections`: discover available evidence families; Do not pass
   collection names as a `collection` argument to `search_outsystems_content`
 - `include_full_content`: request only when exact wording or parameter tables

@@ -6,8 +6,10 @@ prompt-only request from drifting into live tenant work.
 
 Every mode is read-only unless the user gives explicit current approval for a
 specific tenant target and action. This reference authorizes no tenant mutation:
-no `app_create`, no `mentor_start`, no `publish_start`, no deploy, no rollback,
+no `app_create`, no `mentor_create_asset`, no `mentor_prompt`, no `mentor_publish`, no `mentor_start`, no `publish_start`, no deploy, no rollback,
 no cleanup, and no live write action.
+
+> **Tool names, 2026-09-02:** the Mentor tools are session-based. The prohibitions here name both surfaces — `mentor_prompt` / `mentor_create_asset` / `mentor_publish` are the current calls; `mentor_start` and `publish_start` are the pre-2026-09 names, kept so the same prohibition still reads against older transcripts and prompts. A prohibition naming only the retired tools would leave the live ones unforbidden.
 
 ## Shared Classification Rules
 
@@ -49,7 +51,7 @@ no cleanup, and no live write action.
 | required evidence labels | Use exactly one main OMI evidence label, commonly `Current official`, `Catalog-backed official`, `OutSystems-public implementation evidence`, or `Unverified gap`. |
 | stop and ask conditions | Stop and ask when the runtime boundary is ambiguous, an existing screen or action name is unverifiable, a source requirement cannot be assigned to a block without losing meaning, or implementation authority is degraded and would affect exact syntax. |
 | fallback behavior | Fall back to review-only guidance or an `Unverified gap` pseudocode draft with explicit substitutions; do not convert uncertainty into confident Studio structure. |
-| disallowed tenant actions | no tenant mutation: do not call `app_create`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action from this mode. |
+| disallowed tenant actions | no tenant mutation: do not call `app_create`, `mentor_create_asset`, `mentor_prompt`, `mentor_publish`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action from this mode. |
 
 ## mode: mentor-studio-prompt
 
@@ -61,7 +63,7 @@ no cleanup, and no live write action.
 | required evidence labels | Use the main OMI evidence label plus prompt coverage evidence; use `Unverified gap` for target names or exact widget/action wiring that is not confirmed. |
 | stop and ask conditions | Stop and ask when the target app or shell is missing, approval is required for shell creation or live Mentor execution, a named existing screen cannot be verified, or the block mixes unrelated requirements that cannot be safely pasted together. |
 | fallback behavior | Emit a review-only decomposition, a shell-first handoff, or a narrowed prompt for the next safe block; do not make Mentor Studio responsible for creating a no-shell app target. |
-| disallowed tenant actions | no tenant mutation: writing a prompt is allowed, but do not call `mentor_start`, `app_create`, `publish_start`, deploy, rollback, cleanup, or any live write action without explicit current approval. |
+| disallowed tenant actions | no tenant mutation: writing a prompt is allowed, but do not call `mentor_prompt`, `mentor_create_asset`, `mentor_publish`, `mentor_start`, `app_create`, `publish_start`, deploy, rollback, cleanup, or any live write action without explicit current approval. |
 
 ## mode: mentor-web-orientation
 
@@ -73,9 +75,9 @@ no cleanup, and no live write action.
 | required evidence labels | Prefer `Current official` for Mentor Web workflow claims when grounded in current docs; otherwise use `Unverified gap` for unsupported product-contract claims. |
 | stop and ask conditions | Stop and ask when the user asks OMI to create a tenant asset, when app name/environment approval is missing, or when Mentor Studio prompt output would require a verified app shell that does not exist. |
 | fallback behavior | Fall back to a requirement-document outline, a shell-first approval gate, or review-only comparison of Mentor Web versus Mentor Studio routes. |
-| disallowed tenant actions | no tenant mutation: do not call `app_create`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action from orientation output. |
+| disallowed tenant actions | no tenant mutation: do not call `app_create`, `mentor_create_asset`, `mentor_prompt`, `mentor_publish`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action from orientation output. |
 
-For no-shell new-app asks such as "create a new app", "generate an app from requirements", or "build app from scratch", do not pretend Mentor Studio can create the app target by itself — it edits an existing shell. Since ODC MCP 0.14.0 the shell-first path is the normal answer rather than a workaround: `app_create` mints a template-backed shell (Studio new-app-wizard parity), and Mentor Studio then scaffolds it. Offer that path first, with Mentor Web as the alternative when the user wants prompt-to-app or requirement-document-to-blueprint generation instead. If the user wants OMI to create the shell, ask for the readable app name, the `kind` or `template` being requested, environment context when needed, and the exact create action; create only after explicit approval, then run the Shell Provenance Gate in `odc-app-shell-first-scaffold.md` and verify the returned canonical app key before continuing. Do not call `app_create`, `mentor_start`, `publish_start`, or mutate a tenant without exact current approval for the readable app name, canonical app key once known, and action.
+For no-shell new-app asks such as "create a new app", "generate an app from requirements", or "build app from scratch", do not pretend Mentor Studio can create the app target by itself — it edits an existing shell. Since ODC MCP 0.14.0 the shell-first path is the normal answer rather than a workaround: `app_create` mints a template-backed shell (Studio new-app-wizard parity), and Mentor Studio then scaffolds it. Offer that path first, with Mentor Web as the alternative when the user wants prompt-to-app or requirement-document-to-blueprint generation instead. If the user wants OMI to create the shell, ask for the readable app name, the `kind` or `template` being requested, environment context when needed, and the exact create action; create only after explicit approval, then run the Shell Provenance Gate in `odc-app-shell-first-scaffold.md` and verify the returned canonical app key before continuing. Do not call `app_create`, `mentor_start`, `publish_start`, or mutate a tenant without exact current approval (nor their session-surface equivalents `mentor_create_asset`, `mentor_prompt`, `mentor_publish`) for the readable app name, canonical app key once known, and action.
 
 ## mode: visual-source-ui
 
@@ -87,7 +89,7 @@ For no-shell new-app asks such as "create a new app", "generate an app from requ
 | required evidence labels | Use `Current official`, `Catalog-backed official`, `OutSystems-public implementation evidence`, or `Unverified gap` based on the weakest material UI evidence. |
 | stop and ask conditions | Stop and ask when the target shell is not verified, the visual source lacks enough structure to preserve intent, the requested UI framework is unsupported, or exact widget facts are not grounded enough for confident prompt output. |
 | fallback behavior | Fall back to an enriched-blueprint gap list first — name the Visual-Source Enriched Blueprint and its missing or assumed fields explicitly in the visible answer — then review-only UI decomposition or a prompt for the next verified block; do not infer exact widget trees from screenshots or cached summaries. |
-| disallowed tenant actions | no tenant mutation: do not call `mentor_start`, create apps, publish, deploy, rollback, cleanup, or perform live writes while classifying or preparing visual-source UI output. In the visible answer, do not name tenant-mutation tool identifiers (`app_create`, `mentor_start`, `publish_start`, `deploy_start`); state execution boundaries in plain words such as "do not run Mentor against this prompt until the target is confirmed" or "not published". Before sending, scan the visible draft for those four identifiers and rewrite any hit in plain words — knowing this rule while composing is not enough; the leak happens in boundary prose. |
+| disallowed tenant actions | no tenant mutation: do not call `mentor_prompt`, `mentor_publish` (or the pre-2026-09 `mentor_start` / `publish_start`), create apps, publish, deploy, rollback, cleanup, or perform live writes while classifying or preparing visual-source UI output. In the visible answer, do not name tenant-mutation tool identifiers (`app_create`, `mentor_create_asset`, `mentor_prompt`, `mentor_publish`, `mentor_start`, `publish_start`, `deploy_start`); state execution boundaries in plain words such as "do not run Mentor against this prompt until the target is confirmed" or "not published". Before sending, scan the visible draft for those four identifiers and rewrite any hit in plain words — knowing this rule while composing is not enough; the leak happens in boundary prose. |
 
 ## mode: existing-app-grounding
 
@@ -99,7 +101,7 @@ For no-shell new-app asks such as "create a new app", "generate an app from requ
 | required evidence labels | Use the main OMI evidence labels for product and implementation claims; describe tenant observations or user-provided target facts separately, and use `Unverified gap` for exact Studio internals that tenant summaries do not expose. |
 | stop and ask conditions | Stop and ask when app identity or freshness is unclear, a named existing screen/action/variable cannot be verified, scope expands across many apps, or a shared producer impact strategy is missing. |
 | fallback behavior | Fall back to review-only grounding, a Tenant Context Packet request, or a new-screen/new-element assumption question; do not emit confident existing-app prompts from weak evidence. |
-| disallowed tenant actions | no tenant mutation: tenant context is read-only and does not authorize `mentor_start`, app creation, publish, deploy, rollback, cleanup, or any live write action. |
+| disallowed tenant actions | no tenant mutation: tenant context is read-only and does not authorize `mentor_prompt`, `mentor_publish` (nor the pre-2026-09 `mentor_start` / `publish_start`), app creation, publish, deploy, rollback, cleanup, or any live write action. |
 
 ## mode: live-validation
 
@@ -111,7 +113,7 @@ For no-shell new-app asks such as "create a new app", "generate an app from requ
 | required evidence labels | Preserve `Current official` for product claims, describe live observations separately from the main evidence label, and use `Unverified gap` for unconfirmed assumptions or failed retrieval. |
 | stop and ask conditions | Stop and ask before any tenant-changing action; stop when approval is stale, target identity is missing, production impact is possible, rollback/cleanup boundaries are unclear, or live validation is unnecessary for the static task. |
 | fallback behavior | Fall back to read-only review, fixture design, or a validation handoff artifact; never silently convert a prompt request into live execution. |
-| disallowed tenant actions | no tenant mutation without explicit current approval: do not call `app_create`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action unless the approved live-validation gate names the exact action and target. |
+| disallowed tenant actions | no tenant mutation without explicit current approval: do not call `app_create`, `mentor_create_asset`, `mentor_prompt`, `mentor_publish`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action unless the approved live-validation gate names the exact action and target. |
 
 ## mode: review-only
 
@@ -123,7 +125,7 @@ For no-shell new-app asks such as "create a new app", "generate an app from requ
 | required evidence labels | Use the weakest material evidence label and name any missing authority explicitly. |
 | stop and ask conditions | Stop and ask when the requested next step would mutate a tenant, when a route decision has non-obvious consequences, or when the user must choose between Mentor Web, shell-first Mentor Studio, or manual Studio work. |
 | fallback behavior | Stay review-only, propose the smallest next evidence-gathering step, or ask for the missing artifact; do not generate executable prompt blocks from unsupported assumptions. |
-| disallowed tenant actions | no tenant mutation: review-only mode never calls `app_create`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action. |
+| disallowed tenant actions | no tenant mutation: review-only mode never calls `app_create`, `mentor_create_asset`, `mentor_prompt`, `mentor_publish`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or any live write action. |
 
 ## Output Shape Matrix
 

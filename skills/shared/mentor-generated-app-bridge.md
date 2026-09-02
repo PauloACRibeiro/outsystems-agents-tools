@@ -84,8 +84,11 @@ could change the regenerate-vs-Studio decision.
 
 Do not use tenant-changing tools unless the user explicitly approves a separate
 action. This includes `publish_start`, `deploy_start`, `extlib_upload`, and
-`mentor_start`. If those tools are needed, stop and ask for approval before
-running them.
+`mentor_start`, and equally their session-surface equivalents `mentor_publish`,
+`mentor_prompt` and `mentor_create_asset` — the Mentor tools became
+session-based on 2026-09-02, and a rule naming only the retired calls would
+leave the live ones unguarded. If those tools are needed, stop and ask for
+approval before running them.
 
 Record every tool actually used in `mcp_evidence.tools_used`. Record missing
 tool coverage and incomplete pagination in `mcp_evidence.missing_capabilities`.

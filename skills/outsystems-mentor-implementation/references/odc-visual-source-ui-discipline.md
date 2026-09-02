@@ -109,6 +109,55 @@ output summary that carries forward the blueprint decisions into prompt
 generation and review. Do not treat it as a mandatory fifth visible section
 before `### Mentor Studio Prompt`.
 
+## Every Interactive Control Ships Its Behaviour
+
+Prompt packet item 1 inventories interactions; this section says what the emitted
+prompt must then contain for each one. **For every interactive control in the
+blueprint's interaction inventory, the screen prompt states the event, the action
+it calls, its input arguments, and the observable result.
+A prompt that names a control without its behaviour is incomplete** — it has
+transcribed the region tree,
+which is a list of widgets that exist, and nothing in it instructs a wiring. Emit
+the block in
+[prompt-templates/control-behaviour-contract.md](prompt-templates/control-behaviour-contract.md)
+verbatim, filling its placeholders, once per screen.
+
+Two prohibitions belong in the same prompt, both measured on restaurant-app-v2
+(2026-08-30 to 08-31):
+
+- **A `Container` event carries no build-time protection — prefer Button, Link or
+  the List Item's own On Click.** On Click is mandatory on those three, so an unset
+  pointer fails TrueChange and never publishes; a Container's click event is
+  supported but optional, so an unset or unbuilt one publishes, renders, and does
+  nothing with no build-time signal at all (`references/execution-gates.md` §6
+  shapes 1, 2 and 12). This is not a prohibition: a Container event used
+  deliberately must pass its values as explicit input arguments and have its
+  binding named in the turn's read-back.
+- **No `.List.Current` read inside a handler that is not bound to the row's own
+  event.** Pass the row's values as input arguments on the widget's event
+  (`references/odc-mentor-hardening.md` → `` ## Pass The Clicked Row As Arguments,
+  Not As `.Current` ``).
+
+The turn that emits this block ends by reading the new action bodies back node by
+node; the verdict that read-back reaches is owned by
+`references/execution-gates.md` §2c row (e), beside the post-publish wiring check
+whose verdict it duplicates one turn earlier.
+
+Give every interactive control a stable widget name in the prompt — `BtnAddSopa`,
+`SwtDigital`, `TabsLanguage` — and reuse that exact name in the read-back and in
+any downstream verification spec. A control named only by its caption cannot be
+targeted later. Scope the claim: these are model and read-back identifiers, and a
+runtime selector for a rendered control still needs an interaction-spec mapping
+that no skill emits today.
+
+**Blueprint schema gap, recorded as a question rather than a change.** The enriched
+blueprint schema (`outsystems-ui-design/schemas/enriched-blueprint.schema.json`)
+declares no per-control event, action, argument or widget-name field: a screen's
+`main_content` items carry layout, data and `reuse`, so the behaviour above is
+supplied by the prompt author from the reviewed source, not read out of the
+artifact. Whether those fields should become blueprint fields is open and belongs
+to that skill's own gates; do not add them from here.
+
 ## State Coverage Checklist
 
 Before prompt emission, explicitly review:

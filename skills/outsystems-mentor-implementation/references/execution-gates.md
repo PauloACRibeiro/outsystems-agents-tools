@@ -9,6 +9,20 @@ description: The runtime gates that cover what build-time signals cannot see —
 
 > Mentor operation cadence: see `../../shared/reference/mentor-operations-registry.md` for the canonical index.
 
+> **Mentor MCP surface, measured live 2026-09-02 — read this before any tool
+> name below.** The Mentor tools are session-based. `mentor_start`,
+> `mentor_cancel`, `publish_start` and `mentor_get_event` are **no longer
+> exposed by the server**. The sequence is `mentor_start_session()` ->
+> `mentor_load_asset` / `mentor_create_asset` -> `mentor_prompt` ->
+> `mentor_get_run(sessionId, runId)` -> `mentor_publish` -> `publish_status`
+> -> `mentor_close_session`. Sections 4b and 4c below are **incident
+> evidence**: they keep the old names because the names are what the incidents
+> were recorded against, and renaming them would make the record claim things
+> were measured that were not. §4d states which of those rules still bind and
+> what now enforces them. Every gate in this file otherwise stands unchanged —
+> the gates are about what a build-time signal cannot see, which no transport
+> change affects.
+
 > **Why these exist.** Every other gate in this skill — digest, enumeration,
 > assertion recompute — is a **build-time** signal. Each describes whether the
 > right *shapes* exist. None can observe whether the logic inside those shapes
@@ -341,6 +355,77 @@ whose token names no asset the model holds are reported `UNSUPPORTED` and do
 there is no element tree to inspect before the revision lands. `--oml` needs the
 internal extraction CLI (`OML_EXTRACT_CLI`) and there is no portable substitute —
 the MCP `context_screens` payload carries no widget data at all.
+
+### (c1) Seed demo data before any UI verification — REQUIRED
+
+After the first full publish, seed through the app's own create screens with a
+discriminating dataset, before this skill or any downstream skill renders,
+tests, or audits a screen. This is a pointer, not a restatement — follow
+`docs/sprint-loop-manual.md`'s Seed demo data step and
+`docs/superpowers/workflows/outsystems-ui-delivery-chain.md` step 6 for the
+procedure and the evidence this rule is measured against.
+
+### (d) Get the published `.oml` yourself — never ask the operator to export it
+
+Both post-publish checks above, the `.opc` snapshot and the retrospective
+diff read the published model. The agent fetches it; the operator does not
+open ODC Studio. The internal `odc` CLI downloads the latest published
+revision in one command, run from the project folder (the one holding
+`outsystems.toml`), **pinned to the revision the digest gate just read** —
+`<N>` is the tip `app_revisions` / `app_info` reported after the publish,
+never "latest", so a concurrent publish cannot slide a different model under
+the gates:
+
+```
+odc app download --revision <N> <app-key> --quiet   # writes <app-key>.oml, prints {"revision": N, ...}
+mv <app-key>.oml ../sprint-history/<slug>/rev-<N>.oml
+```
+
+`.oml` bytes never enter a project repo — `projects/sprint-history/<slug>/`
+only. Its login is separate from the MCP's: on `Token expired and refresh
+failed. Run odc auth login`, run `odc auth login` (browser OAuth; the
+operator only clicks consent) and retry the download. Confirm the printed
+`revision` equals the `<N>` you asked for before running a gate on it.
+
+Measured twice — restaurant-app-v2 (2026-08-28) and restaurant-app-v3
+(2026-09-02): the phase was reported as "gates pending, operator must
+export the `.oml`" when the download was one command away. Fall back to a
+manual Studio export only when `odc` is absent from the machine.
+
+### (e) Read the new action bodies back before the turn ends — per screen-creating turn
+
+Row (c) is post-publish and needs the internal extraction CLI. This row is the
+per-turn form of the same question, costs one instruction, and runs inside the
+turn that built the control.
+
+**Every screen-creating or screen-editing turn ends by asking Mentor to read back
+the body of each new or changed client and server action node by node, and to
+report the value each named widget's event property now holds. A read-back that
+shows an empty body, or a widget with no bound event, means the turn is not clean
+regardless of `error_count`.** That is the same verdict row (c) reaches after the
+publish — an unwired control is a failed phase — reached one turn earlier, so the
+two cannot drift apart.
+
+Ask for the binding as a property of the widget, never for a description of the
+action. A question phrased about behaviour is answered from the action, which
+exists and is usually correct, so the one field in doubt — the widget's pointer —
+is the field the answer never reads (`references/odc-mentor-hardening.md` →
+`## Ask What The Event Points At, Not What The Action Does`). Require an explicit
+`empty`: an omitted widget is not a wired one.
+
+The prompt-side contract that stops the empty body being built in the first place
+— event, action, input arguments, observable result and a stable widget name per
+interactive control — is
+`references/prompt-templates/control-behaviour-contract.md`, owned by
+`references/odc-visual-source-ui-discipline.md` → `## Every Interactive Control
+Ships Its Behaviour`. This row is the check; that block is the instruction.
+
+Measured on restaurant-app-v2, 2026-08-27 to 08-31: "+ Adicionar", the reorder
+arrows, language promote/remove, the dispatch retry, the digital switch, the
+language tabs' `OnTabChange` and a suggestion row all rendered and did nothing,
+every one with `error_count: 0`, and each was found by a human clicking it. The
+question that found the empty bodies fastest, every time, was asking Mentor to
+read the new action's body back node by node. Shapes 1 and 2 in §6.
 
 ## 2d. Role-inventory baseline and per-turn diff
 
@@ -705,7 +790,8 @@ RECONCILIATION — three existing OMI rules stay binding; this section calibrate
 - **Hang tell:** a `nextCursor` unchanged for ~7–10 minutes is the cursor-side signature of the §4 wedge classes (stalled event ids / no events). One `details: true` poll to confirm, then apply the cancel calibration above.
 - **Earlier hang tell: no `currentStep` at all — but only when it PERSISTS.** Upstream plugin 0.16.0 states plainly that `currentStep` and `message` are **optional** fields and that when neither moved you should restate `status` rather than assert progress, so a single poll without `currentStep` proves nothing and must not be read as a wedge. The cursor-side tell above needs ~7–10 minutes; the narration-side tell is readable in about two. A healthy run reports a `currentStep` (`runQuery`, `applyModelApiCode`, `message`, `complete`) within ~60s and keeps advancing it. Measured 2026-08-23 (Elastic Search Sandbox): a wedged turn returned `status: running` with the `currentStep` field **absent entirely** and `events: []` even under `details: true`, for ~15 minutes — while two sibling turns on the **same app and same session** had each reported a step inside 60s, which is the control that makes the absence diagnostic rather than merely slow. `mentor_cancel` then held in `cancelling` for >4 minutes and never reached terminal, so the >3-minute settle figure above is a floor, not a bound: do not wait for a cancel to go terminal before acting.
 - **The wedge escape the resume rule does not cover: check publish state, not the error code.** SKILL.md routes a failed turn to "resume the same session", starting fresh only on `session_not_found`. A wedged run never goes terminal, so it emits **no error `code` at all** and that rule has no exit. Decide on unpublished work instead: if the session's edits are already published, a fresh `app_key` session costs nothing — it re-downloads the pristine OML and loses no state (the identical prompt then completed in ~2 minutes). Fight for the wedged session only when unpublished edits are genuinely at stake. One correlation, recorded as correlation and not cause: the wedged turn was the only one in that sequence started with `fresh_context: true`.
-- **After any MCP re-authorization, verify the status of in-flight runs rather than assuming they survived.** Survival is not a property of the run. Measured 2026-08-30 (restaurant-app-v2): one run outlived a token expiry mid-flight and went on to finish normally, while a later run on the same app died mid-run when the agent's own connection 401'd — terminal `status: failed`, reason `unauthorized`. Two runs, two outcomes, so neither is the rule. Poll every `runId` you hold once the new credentials are in place and read the terminal state before resuming work on the assumption a turn is still building. The adjacent hazard is §4c's principal binding: a re-auth landing on a **different** subject does not fail the run, it makes it unreadable — `run_not_found`, which is not a state you can resume from.
+- **Call `auth_status` before starting a turn you expect to run past ~5 minutes — as a liveness snapshot, not as protection.** The bearer's lifetime is shorter than the work it has to cover: measured across the restaurant-app-v2 run (2026-08-26 to 09-02) it expired roughly hourly while turns routinely ran 5–20 minutes, so a turn started late in a bearer's life is a turn that expires inside itself. What the call buys is bounded and worth stating exactly: `auth_status` reports whether the bearer is alive **now** and carries no remaining-lifetime field, so it rules out starting a long turn on one that has **already** lapsed and tells you nothing about whether this one survives the next twenty minutes. It therefore cannot prevent a mid-turn expiry, and no client-side discipline can — only a longer bearer or a refresh the client can drive would. Make the call anyway: it is one call against the unpredictable cost of the next rule, and it is the only part of this that is in the client's hands.
+- **After any MCP re-authorization, verify the status of in-flight runs rather than assuming they survived.** Survival is not a property of the run. Measured on two separate days (restaurant-app-v2): on 2026-08-28 a run outlived a token expiry mid-flight, kept executing server-side and finished normally, because the Mentor session token is independent and long-lived; on 2026-08-30 at 19:43 a run on the same app died mid-run when the agent's own connection 401'd — terminal `status: failed`, reason `unauthorized`, and the edit it was applying never landed. Two runs, two outcomes, so neither is the rule. Poll every `runId` you hold once the new credentials are in place and read the terminal state before resuming work on the assumption a turn is still building. The adjacent hazard is §4c's principal binding: a re-auth landing on a **different** subject does not fail the run, it makes it unreadable — `run_not_found`, which is not a state you can resume from.
 - **Copy `mentor_session_token` verbatim — never retype it.** One mistyped character returns `signature_invalid`. Read the rejection's reason before choosing a recovery path: the server emits `signature_invalid`, `expired` or `malformed` as three distinct reasons under the single `mentor_session_token_rejected` code, and it re-tries the previous signing key before reporting `signature_invalid` — so that reason means transcription, or a token minted before a key rotation older than the previous-key window, and never expiry. Mechanism and citations: §4c.
 - **Cancelled-run token recovery — payload token first, last-successful as fallback, established sessions only.** On a failed or cancelled run the terminal `error` payload carries the same `mentor_session_id` plus a freshly minted `mentor_session_token`; resume an established session — one that has already reached at least one successful turn — with those credentials, per the SKILL.md driving contract (verified against upstream 0.13.x; the rule is unchanged in 0.16.0). Keep your last SUCCESSFUL token as the fallback for exactly one case: that established session's freshly minted token is rejected as `signature_invalid`. That rejection has two causes — a hand-transcribed character (see the verbatim rule above) and a payload token the server will not accept — so re-check transcription before concluding the minted token is bad. **This fallback does not apply to a bare first-turn `app_key` init failure**: that error carries no token at all, and by definition no turn in this session has ever succeeded, so no last-successful token can exist to fall back to — SKILL.md routes that case to starting fresh, not to any token fallback. The external source for this section states the last-successful rule unconditionally but names no server version; this estate's version-anchored measurement takes precedence, and the unconditional form is narrowed to the established-session `signature_invalid` case only.
 
@@ -769,6 +855,19 @@ event, so an actively-emitting run keeps them alive
 outlives that window goes invisible to `mentor_get_run` while still running.
 This is why the SKILL.md rule is "pass an explicit `max_turn_time`" and not
 "pass a small one" — too low a ceiling is its own failure mode.
+
+**That formula now has a ceiling of its own, so the window cannot be bought
+arbitrarily long.** Read 2026-08-31 in the same service repository: `max_turn_time`
+is clamped server-side to `MCP_MENTOR_MAX_TURN_TIME_CAP_SECS` (chart default
+7200s) *before* the TTL formula runs, and the `mentor_start` schema now advertises
+that bound as its `maximum` alongside a `minimum` of 1, with the parameter's own
+description stating that larger values are clamped. Two consequences: the
+pollability window tops out around 7500s, and a caller who asks for more than the
+cap gets a **shorter** window than the one they computed, with only a server-side
+log to say so. Nothing this skill advises reaches the cap — the retry ceilings
+named in the driving contract are 2700/3600 — so this bounds the formula, not the
+advice. Chart figure, therefore dated and not a code invariant, per this section's
+header.
 
 **Sessions are bound to the principal that created them.** The session key is the
 triple `(TenantId, UserId, SessionId)` (`http/mentor_session.rs:50-55`, hashtag
@@ -851,6 +950,74 @@ debt asserted by tests. The two above are recorded because they each change one.
 Where a limit already has an OMI rule — the tenant-wide session cap and its ~24h
 reap, in `odc-mentor-hardening.md` — that rule is now corroborated at source and
 stands unchanged.
+
+## 4d. Pre-2026-09 Mentor contract fields — what replaced each rule
+
+Four fields the driving contract in `SKILL.md` relied on through upstream
+0.16.0 have **no counterpart** on the session-based surface (schemas read and
+behaviour measured live 2026-09-02). None of the rules they served was dropped;
+each is restated here in terms the current surface can express, with the old
+evidence pinned so a later reader can tell a migrated rule from an invented one.
+
+| Field (pre-2026-09) | What it was for | Status | What enforces the rule now |
+|---|---|---|---|
+| `max_turn_time` | Server-side turn ceiling, so a wedged turn had a terminal state to reach. L20, first live colleague run 2026-08-09: the one unbounded session sat on the same internal step for 26 minutes, then returned `run_not_found` — no status, no code, nothing to resume. | **Unverified gap.** `mentor_prompt` accepts only `sessionId`, `message`, `attachmentRefs`. Nothing server-side bounds a turn. | Client-side budget. Decide the turn's budget before sending, watch elapsed wall-clock against the size bands (§4, and healthy 1–5 min / heavy 8–12 min), and call `mentor_cancel_prompt(sessionId, runId)` at the budget. Turn size stays the lever: split the work rather than wait longer. |
+| `internal_retry_count` | Friction flag: `>= 3` fired the `submit_feedback` `agent_observation` categorical `builder_retry_friction`, and served as a prompt/platform mismatch detector. | **Unverified gap.** The terminal payload exposes no counter. | Nothing reports friction directly. Terminal *time* was always the health signal and still is. The stuck signature is the event stream: no new events across two consecutive drained polls spanning ~7–10 minutes with `status` still `working`. `builder_retry_friction` is **suspended** — it has no observable field to fire from. Never synthesise a count from event text. |
+| `fresh_context: true` | Resume-only flag that started a new conversation over the session's *already-edited* OML — recovering from `OS-AISA-40001` max conversation length, from hallucinated elements, or a task switch — while keeping the session's unpublished edits. | **Unverified gap.** No flag on any session tool does this. | Publish first, then reset. The only reset available is `mentor_close_session` -> `mentor_start_session` -> `mentor_load_asset`, which reloads the *published* asset, so unpublished edits are lost unless published first. The publish keeps its own approval and §3d still binds. If the work is not publishable yet, stop and say so — the loss the flag existed to avoid is now paid every time. |
+| `no_changes_detected`, `indeterminate`, `state` (gateway `publish_start` payload) | `no_changes_detected` claimed a publish landed nothing; `indeterminate: true` was the server admitting it never observed the outcome, and the rule was: never re-publish on it. | **Unverified gap.** `publish_status` on a `mentor_publish` key returns `{key, applicationKey, applicationRevision, outcome, status}` and nothing else — measured `outcome: "in_progress"` / `status: "Running"`, then `"success"` / `"Finished"`. (`publish_status`'s own description still documents all three; that half describes the gateway path, which is gone.) | The never-re-publish rule **broadens** rather than weakens: since the server no longer labels which outcomes were unobserved, treat *every* ambiguous publish that way — on any non-`success` outcome, any error, or any lost response, re-poll `publish_status` with the same `publicationKey` or verify with `env_app`, and never publish again. The no-change question falls entirely to the digest gate (§3b), which is the stronger signal anyway: `no_changes_detected` was only ever a self-report with recorded false negatives. |
+
+Two further session-surface facts the gates depend on, both measured 2026-09-02:
+
+- **`app_info` still serves `modelDigest`**, so §3b's digest gate and §3d's
+  stale-base gate are intact for any app reached with `mentor_load_asset`.
+- **An asset created by `mentor_create_asset` does not exist to `app_info`
+  until its first publish** — the call returned HTTP 404 for a created-but-
+  unpublished asset. That first publish therefore has no pre-publish baseline
+  and no stale-base question to ask. Grade it by the `revision` `mentor_publish`
+  returns plus the enumeration gate, and report `DIGEST: not applicable (first
+  publish of a session-created asset)` rather than implying a pass. Every later
+  publish, and every `mentor_load_asset` flow, is gated normally.
+
+Also renamed, not lost: the terminal result object is camelCase
+(`result.changeApplied`, `result.validation.errorCount`), `currentStep` is gone,
+and `result.attemptedChange` is new — `attemptedChange: false` on a turn that was
+meant to build something is a failed step, not a no-op to accept. The served
+poll-interval key is `pollIntervalMs` (was `pollAfterMs`), and the cursor is a
+re-read control, so every `mentor_get_run` poll is bare.
+
+### The cursor reversal — the server's own `mentor_get_run` description, quoted
+
+Our polling rule reversed on 2026-09-02: every `mentor_get_run` poll is bare,
+where the pre-2026-09 rule threaded the previous response's `nextCursor`. That
+reversal contradicts `outsystems-mentor-polling-behavior` (not part of the colleague sprint-loop pack), whose Tier 3 section says "Always pass `nextCursor` from the previous response." The authority for the change is the
+**server's own tool description**, read from the live MCP tool schema on
+2026-09-02 and quoted here verbatim so a later reader — or a reviewer with no
+live MCP surface — can check the claim against its source rather than against
+our restatement of it:
+
+> Read buffered progress events and current status for a Mentor Web run started
+> via mentor_prompt. The run must belong to the supplied session. Status is one
+> of working / succeeded / failed / cancelled / not_found. Reading a run on a
+> session that has been closed fails with a session-closed error. Keep polling
+> until status is terminal AND nextCursor is null. **Each poll without a cursor
+> returns only events not yet delivered; pass an explicit cursor (the previous
+> nextCursor, or 0 for the start) to re-read already-delivered events, e.g.
+> after a rejected response.** When hasMore is true there are more events to
+> page through. Oversized events arrive as truncation markers
+> (_truncated/_eventId); fetch the full body with mentor_get_event.
+
+(Emphasis added; the rest is the description as served.) The `cursor` parameter
+carries the same rule in its own text: *"Omit to receive only events not yet
+delivered (recommended). Pass the nextCursor from a previous poll to re-read
+from that position, or 0 to re-read from the start."* — the server itself marks
+omitting the cursor as the recommended behaviour.
+
+Two caveats this quote also settles. The description still names
+`mentor_get_event` for oversized-event bodies, but that tool is **not exposed**
+by the server (tool list read the same day), so a `_truncated` marker currently
+has no documented way to be resolved — `Unverified gap`. And "keep polling until
+status is terminal AND nextCursor is null" matches what was measured: the
+terminal poll carried no `nextCursor` key at all.
 
 ## 5. Summary admissions — the confession is in the fine print, never the headline
 

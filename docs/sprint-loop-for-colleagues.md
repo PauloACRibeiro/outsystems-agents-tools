@@ -33,13 +33,24 @@ Read this once end to end before your first run, then use it as the checklist.
   just been refused. The skill's `skills/outsystems-ui-design/references/built-in-widgets-regeneration.md`
   carries the procedure, including the SSO authorization step people miss and the
   trap where regenerating a token silently drops that authorization.
-- **The six skills in this pack**, installed into your agent's skills
-  directory: `outsystems-screen-inventory`, `outsystems-ui-design`,
+- **The seven skills in this pack**, installed into your agent's skills
+  directory, in loop order: `outsystems-sprint-init` (step 0, run once per new
+  app folder — it checks the rest of this list is actually installed and wired,
+  and tells you the next step whenever you lose your place),
+  `outsystems-screen-inventory`, `outsystems-ui-design`,
   `outsystems-plan-to-mentor`, `outsystems-mentor-implementation`,
   `outsystems-bdd-tests`, and `outsystems-runtime-ui-audit`. Follow
   the bundled release install document for your OS
   (`INSTALL-SPRINT-LOOP-MACOS.md` / `INSTALL-SPRINT-LOOP-WINDOWS.md`, attached
   to the same release you downloaded this pack from).
+  **Testing is a required step, not an optional one** — see Step 7 below.
+  The quick-start manual's full step order also carries a seeding step after
+  the build and a render gate step after testing; the render gate skill is
+  `outsystems-render-gate` (not part of the colleague sprint-loop pack) — without it,
+  click every control on every screen by hand before grading.
+   Between publish and the first test — no skill owns this — you seed demo
+   data yourself through the app's own create screens; see "Between steps 6
+   and 7 — Seed demo data" below.
 - **An OutSystems knowledge server for step 5.** The build skill refuses to
   produce pseudocode ungrounded: before any output it checks for a knowledge
   provider, and if none is reachable it stops and waits. The **OutSystems
@@ -65,9 +76,10 @@ the Public Knowledge server stands in for the VPN-only internal one.
 | Steps | Owned by | How you get it |
 |---|---|---|
 | 1–2 | The public **Superpowers** plugin | Installed separately — see below. Not redistributed here. |
-| 3, 4, 5, 7, grading | The six skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
+| 0, 3, 4, 5, 7, grading | The seven skills in **this pack** | Install per the bundled `INSTALL-SPRINT-LOOP-<OS>.md`. |
 | 5 (knowledge) | The **OutSystems Public Knowledge MCP server** | Same release as this pack, own install docs — see below. |
 | 5 (direct mode), 6 | The public **OutSystems MCP** plugin | Optional — paste mode needs no tenant. `outsystems@outsystems` — see below. |
+| Between 6 and 7 | You, through the app's own create screens | No skill owns this — see "Between steps 6 and 7 — Seed demo data" below. |
 
 ### Steps 1–2 — install Superpowers yourself
 
@@ -310,7 +322,9 @@ Two routes feed it, and they stay separate:
 - **Route A — logic and capabilities.** Driven by the patched plan from step 4,
   turned into ODC Studio-native pseudocode and Mentor prompts.
 - **Route B — screens.** Consumes each `blueprint.json` directly: typed
-  entities, seeded records, region-to-block mapping.
+  entities, seeded records, region-to-block mapping. These are the blueprint's
+  own design-time seed values, not the discriminating dataset you add after
+  publish — see "Between steps 6 and 7 — Seed demo data" below.
 
 **Build order across both routes, and it is dependency-safe rather than
 cosmetic:** entities and data prerequisites first, then the plan logic and server
@@ -349,15 +363,55 @@ Practical habits from real runs:
 - **Route errors by their category, not their message text.** A validation error
   means your prompt or plan is wrong — fix it, do not blind-retry. Upstream or
   internal errors get one retry, then a pause. An auth error means re-authenticate.
+- **Check the auth status before a long turn, but do not expect it to save
+  you.** Your tenant token expires on a shorter cycle than a heavy build turn
+  takes — about hourly against turns of five to twenty minutes on the run behind
+  these notes — so expiry lands mid-turn more often than between turns. The auth
+  status is a snapshot of whether the token is alive at that moment; it does not
+  report how much life is left, so it can stop you starting a twenty-minute turn
+  on a token that has already lapsed and it cannot tell you whether a live one
+  will last the turn. Ask for it before a big turn anyway — it is the only part
+  of this you control — and plan on the interruption arriving regardless.
+- **After re-authenticating, ask what happened to the run in flight.** A turn
+  interrupted by an expiry has been measured going both ways: once it kept
+  building on the server and finished with nothing lost, once the agent's own
+  connection dropped with a 401 and the edit was never applied. Neither is the
+  rule, so the run's own status is the only answer — never the agent's
+  recollection of what it was doing.
 - **Do not cancel a slow Mentor run casually.** One to ten minutes is normal;
   investigate at twenty rather than cancelling. A cancelled run still consumes
   the session.
 - **Three consecutive failed iterations means stop the run**, not push harder.
 
+### Between steps 6 and 7 — Seed demo data
+
+Before any UI verification — the render checks inside step 6, step 7's tests,
+or the grading step — seed demo data through the app's own create screens.
+That also proves those screens work: on a real run the "+ Add" buttons on
+two screens turned out to be inert, and it surfaced only when seeding was
+finally attempted (restaurant-app-v2, 2026-08-28/29, after two days of
+verification against one restaurant, zero dishes and zero subscribers — the
+dispatch run reached zero recipients and the product's core feature never
+executed).
+
+Seed a **discriminating** dataset, not one record per entity: for every
+filter or per-record behaviour, add records whose expected results differ
+per filter value (that run used subscribers with near-complement weekday
+patterns, and dishes split standing versus daily). One record of each type
+cannot show a filter working. Log the seeded record ids into
+`docs/seed-log.md` so step 7 and the grading step can cite them, and so the
+doctor's next-step line (step 0) stops pointing here once it is done. If a
+create screen genuinely does not exist yet, seed through a data script or
+test harness instead and say so in the log — do not skip seeding to work
+around a missing screen.
+
 ### Step 7 — Test it, and get a real pass/fail
 
-**Skill: `outsystems-bdd-tests`.** Optional, and it needs two Forge components a
-human installs — see the skill's Prerequisites.
+**Skill: `outsystems-bdd-tests`.** Required, not optional — a run of the
+sprint loop found controls that rendered but did nothing, passed by every gate
+before this step because nothing before it exercises app logic. **Prerequisite:**
+two Forge components a human installs on the tenant first — see the skill's
+Prerequisites; the skill's preflight names them and stops if they are missing.
 
 Everything before this point checks that the app was *built*. This is the only
 step that executes the app's own logic and tells you whether it *works*. It sits
@@ -457,7 +511,9 @@ These are the ones that bite when skipped.
    the requirements — then feed the blueprints' entity names into the plan.
 2. **Entities before screens in the build.** Mentor builds the typed data model,
    seeded records included, and only then the screens that bind to it. Every
-   clean end-to-end run has followed this order.
+   clean end-to-end run has followed this order. That build-time seed is not
+   enough on its own to verify the app against — add the discriminating
+   dataset from "Between steps 6 and 7 — Seed demo data" once it publishes.
 3. **One design run per screen.** N screens is N runs sharing one screen
    inventory and one navigation decision made up front.
 4. **Theme is its own step.** Ask for it explicitly during step 5.

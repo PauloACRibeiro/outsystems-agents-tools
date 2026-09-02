@@ -72,21 +72,21 @@
       "attributes": [
         {
           "name": "Id",
-          "data_type": "integerIdentifier",
+          "data_type": "Long Integer",
           "is_primary_key": true,
           "is_foreign_key": false,
           "enum_values": null
         },
         {
           "name": "QueryText",
-          "data_type": "text",
+          "data_type": "Text",
           "is_primary_key": false,
           "is_foreign_key": false,
           "enum_values": null
         },
         {
           "name": "RunAt",
-          "data_type": "dateTime",
+          "data_type": "Date Time",
           "is_primary_key": false,
           "is_foreign_key": false,
           "enum_values": null
@@ -107,14 +107,14 @@
       "attributes": [
         {
           "name": "Id",
-          "data_type": "integerIdentifier",
+          "data_type": "Long Integer",
           "is_primary_key": true,
           "is_foreign_key": false,
           "enum_values": null
         },
         {
           "name": "Label",
-          "data_type": "text",
+          "data_type": "Text",
           "is_primary_key": false,
           "is_foreign_key": false,
           "enum_values": null

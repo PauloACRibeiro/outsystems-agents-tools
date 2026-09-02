@@ -1,5 +1,7 @@
 # Tenant Context Guardrails
 
+> **Tool names, 2026-09-02:** the Mentor tools are session-based. The prohibitions here name both surfaces — `mentor_prompt` / `mentor_create_asset` / `mentor_publish` are the current calls; `mentor_start` and `publish_start` are the pre-2026-09 names, kept so the same prohibition still reads against older transcripts and prompts. A prohibition naming only the retired tools would leave the live ones unforbidden.
+
 Use this reference when OMI output uses tenant inventory, app list evidence,
 cached tenant evidence, existing app target resolution, verified app-shell
 identity, reusable asset discovery, tenant-backed dependency inventory,
@@ -136,7 +138,7 @@ evidence is stale, missing, or ambiguous, keep the prompt blocked and use
 Tenant Context Packet evidence is read-only discovery. It can improve target
 selection and dependency naming, but it does not authorize `app_create`, does
 not authorize `mentor_start`, does not authorize `publish_start`, and does not
-authorize deploy, rollback, cleanup, or tenant mutation.
+authorize deploy, rollback, cleanup, or tenant mutation. The same boundary covers the session-surface equivalents `mentor_prompt`, `mentor_create_asset` and `mentor_publish` (2026-09-02); `mentor_start` and `publish_start` are the retired names.
 
 Any tenant-changing action still needs OMI's current explicit approval gate for
 the readable target name, canonical id when known, environment, and exact
@@ -150,7 +152,7 @@ actions in another mode.
 | Mode | Allowed work | Approval and artifact boundary |
 |---|---|---|
 | `prompt-only` | Produce Studio-native pseudocode, paste-ready prompts, audits, and unknowns. | No tenant-changing action. Evidence gaps stay in `Unknowns And Fallback Behavior`. |
-| `read-only tenant discovery` | Use read-only inventory to build a Tenant Context Packet, dependency inventory, freshness labels, or advisory impact notes. | Does not authorize `app_create`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or tenant mutation. |
+| `read-only tenant discovery` | Use read-only inventory to build a Tenant Context Packet, dependency inventory, freshness labels, or advisory impact notes. | Does not authorize `app_create`, `mentor_create_asset`, `mentor_prompt`, `mentor_publish`, `mentor_start`, `publish_start`, deploy, rollback, cleanup, or tenant mutation. |
 | `Mentor execution` | Send an approved prompt through Mentor for a named target. | Requires exact current approval for readable target name, canonical id when known, environment, action, and prompt. Record a project-local evidence artifact when the run matters for later decisions. |
 | `publish/deploy handoff` | Prepare advisory readiness notes, deployment preview evidence, or publish handoff text. | Requires published source revision evidence before any safe-to-promote wording. ODC Portal impact analysis remains the decision boundary. |
 | `tenant mutation` | Create apps, publish, deploy, rollback, cleanup, or change tenant configuration. | Requires exact current approval for the specific target and action. OMI must stop before mutation when approval is absent or ambiguous. |

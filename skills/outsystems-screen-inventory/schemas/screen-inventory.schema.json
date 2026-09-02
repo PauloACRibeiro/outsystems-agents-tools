@@ -187,7 +187,13 @@
         ],
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+            "description": "The ODC ELEMENT name of the screen. This artifact requires letters, digits and underscore only, first character a letter - a contract of this schema, deliberately a safe subset of the naming vocabulary ODC publishes for the names it derives itself, since no screen-element grammar is published: `A4PrintPreview`, never `A4 Print Preview`. Every design run carries this string into its blueprint unchanged, and outsystems-mentor-implementation/scripts/recompute_assertions.py matches it against the built model's screen `Name` EXACTLY, so a display title here reports the screen as missing from a build that contains it (measured 2026-09-02 on restaurant-app-v3 rev 7: 6 of 7 screens). `app_chrome.menu[].target` and `navigation[].from`/`.to` name screens by this same string. The human title belongs in `display_name`."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Optional. The human title of the screen, free-form and translatable - `A4 Print Preview`. Carried for the reader and for copy; no consumer matches it against the model. Omit it when the element name already reads as the title."
           },
           "purpose": {
             "type": "string"

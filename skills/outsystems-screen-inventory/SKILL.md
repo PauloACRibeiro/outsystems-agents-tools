@@ -588,6 +588,22 @@ These vocabularies are deliberately not this skill's own:
   and a wrong count declared here propagates.
 - **`archetype`** is one of the 14 archetypes `outsystems-ui-design` confirms
   at its Step 1.
+- **`name`** is the **ODC element name** of the screen, never the human title.
+  This artifact requires letters, digits and underscore, first character a
+  letter — `A4PrintPreview`, not `A4 Print Preview`. That grammar is **this
+  contract's**, a deliberate safe subset of the vocabulary ODC publishes for
+  names it derives itself; no screen-element grammar is published. `app_chrome.menu[].target` and `navigation[].from` /
+  `.to` name screens by this same string, and every design run carries it into
+  its blueprint unchanged, where
+  `outsystems-mentor-implementation/scripts/recompute_assertions.py` matches it
+  against the built model's `Name` **exactly** after publish. A display title
+  here reports the screen as missing from a build that contains it — six of
+  seven screens on restaurant-app-v3 rev 7, 2026-09-02. Matching stays exact by
+  decision (Codex, AH-2026-09-02-006): ignoring spaces and case would resolve
+  two different screens to one node and hide the collision.
+- **`display_name`** is **optional** and holds that human title, free-form and
+  translatable. Nothing matches it against anything. Omit it where the element
+  name already reads as the title.
 - **`presentation_pattern`** is **optional**, and refines `archetype` with the
   ODC block the screen's main collection is laid out in — one of `TableRecords`,
   `Gallery`, `IList+Card`, `MasterDetail`, `Accordion`, named in

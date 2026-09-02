@@ -14,7 +14,7 @@ not published here.
 
 ## Install the OutSystems sprint loop pack
 
-Six skills that take an OutSystems screen from an idea to a published, graded
+Seven skills that take an OutSystems screen from an idea to a published, graded
 revision. Paste this into Claude Code or Codex:
 
 ```text

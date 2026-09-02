@@ -129,31 +129,42 @@ a flow that does not exist.
 
 Then, mirroring the delivery gate in `outsystems-plan-to-mentor`:
 
-1. Where the OutSystems MCP is available, pass the prompt to `mentor_start` and
-   **approve each edit**.
+1. Where the OutSystems MCP is available, open a session
+   (`mentor_start_session`), load the target app (`mentor_load_asset`), pass the
+   prompt to `mentor_prompt` and **approve each edit**. Close the session
+   (`mentor_close_session`) when the sequence ends. The Mentor tools are
+   session-based as of 2026-09-02; `mentor_start` and `publish_start` are the
+   pre-2026-09 names and are no longer exposed.
 2. Where it is not, hand the prompt to whoever drives Mentor. Colleagues without
    the plugin are not stranded.
 
 ### The publish is the commit
 
-**A Mentor turn writes into the session, and `publish_start` takes the OML from
+**A Mentor turn writes into the session, and `mentor_publish` takes the OML from
 that session.** There is no separate save. So after a Mentor turn, four things
 all look like "nothing happened" and all four are correct behaviour:
-`change_applied: true` means applied to the *session*, no app revision appears,
-ODC Studio shows nothing, and the Context Service shows nothing.
+`result.changeApplied: true` (camelCase as of 2026-09-02; the snake_case
+`change_applied` is gone) means applied to the *session*, no app revision
+appears, ODC Studio shows nothing, and the Context Service shows nothing.
 
-**Publish before concluding anything.** Then check the publish's own
-`no_changes_detected` before believing it landed.
+**Publish before concluding anything.** `Unverified gap`: the publish's own
+`no_changes_detected` flag has no counterpart on this surface — `publish_status`
+now returns `{key, applicationKey, applicationRevision, outcome, status}` and
+nothing else (measured 2026-09-02). It was only ever a self-report with recorded
+false negatives, so use the digest gate — `app_info`'s `modelDigest` before and
+after the approved publish — to decide whether anything landed.
 
-**Two publish outcomes are not failures to retry** (upstream plugin 0.16.0). If
-`publish_start` *refuses* the session, the refusal names the reason and the fix,
-and the remedy is another Mentor turn that finishes the test module — never a
-second publish; a `succeeded` turn carrying `turn_error` is the usual cause, and
-it is not a finished task. If `publish_status` reaches `failed` carrying
-`indeterminate: true`, the server lost sight of the publish and it may still be
-building: re-poll with the `publication_key` in the payload, or verify with
-`env_app`. Re-publishing there is what wedges an app — and a wedged app means no
-test module to run at all.
+**Two publish outcomes are not failures to retry.** If `mentor_publish`
+*refuses* the session, the refusal names the reason and the fix, and the remedy
+is another Mentor turn that finishes the test module — never a second publish; a
+`succeeded` turn that did not finish its task is the usual cause, and it is not a
+finished task. And `Unverified gap`: the `indeterminate: true` marker — the
+server's own admission that it never observed the outcome — has no counterpart
+on this surface. So the rule it served now applies to *every* ambiguous publish:
+on any non-`success` outcome, any error, or any lost response, re-poll
+`publish_status` with the same `publicationKey` or verify with `env_app` —
+never publish again. Re-publishing there is what wedges an app, and a wedged app
+means no test module to run at all.
 
 **And check the tip revision BEFORE publishing.** Record the tip revision from
 `app_revisions` when the Mentor session starts — that baseline is what the
@@ -161,8 +172,10 @@ pre-publish check compares against. A publish deploys the session's full OML
 snapshot — last-writer-wins, no merge (vendor-confirmed 2026-08-24). If
 `app_revisions` shows the tip moved past that baseline — Studio, a colleague,
 another agent — publishing now silently erases those revisions. Don't publish
-from a stale session: start a fresh `app_key` session (it reads the new tip as
-its base) and replay the prompt. `fresh_context` does not rebase.
+from a stale session: `mentor_close_session`, open a fresh one and
+`mentor_load_asset` the new tip as its base, then replay the prompt. The
+pre-2026-09 `fresh_context` flag did not rebase either, and is now gone
+entirely (`Unverified gap` — no counterpart flag exists).
 
 ### Then run the readback gate
 

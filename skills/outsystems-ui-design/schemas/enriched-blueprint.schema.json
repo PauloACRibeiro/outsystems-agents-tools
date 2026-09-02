@@ -73,17 +73,12 @@
                     {"enum": [
                       "Binary Data", "Boolean", "Currency", "Date", "Date Time",
                       "Decimal", "Email", "Integer", "Long Integer",
-                      "Phone Number", "Text", "Time",
-                      "binaryData", "boolean", "currency", "date", "dateTime",
-                      "decimal", "email", "integer", "longInteger",
-                      "phoneNumber", "text", "time",
-                      "integerIdentifier", "longIntegerIdentifier",
-                      "platformDefaultIdentifier"
+                      "Phone Number", "Text", "Time"
                     ]},
-                    {"type": "string", "pattern": "^[Tt]ext\\([1-9][0-9]*\\)$"},
+                    {"type": "string", "pattern": "^Text\\([1-9][0-9]*\\)$"},
                     {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]* Identifier$"}
                   ],
-                  "description": "CLOSED VOCABULARY. An open string here is unvalidatable and the failure it hides is a certain publish failure, not a style slip: the model API accepts any string as an entity-attribute DataType, validation checks shape rather than membership in the platform's closed enum, and the enum is only enforced by the publish-time migration-script generator (OS-RDBS-GEN-40002, masked as OS-DPL-50203). Three admitted forms. (1) A basic type, in either of the two registers measurably in circulation - the ODC literal names from the docs (Text, Long Integer, Date Time), which OMI's contract prose and tests write, or this skill's camelCase spelling of the same twelve types, which its own fixtures write; plus the three identifier tokens in circulation. (2) A Text with its length, Text(200) - odc-studio-language-elements.md requires stating it, because an unstated length silently chooses 50 and truncates. (3) The relationship form '<TargetEntity> Identifier', single-token entity name. NOT members: the seven App Generator VirtualTypeKind values with no ODC basic type (url, percentage, rating, imageUrl, multiLineText, foreignKey, and foreignKey's spec-level kin), and near-miss spellings such as DateTime for Date Time, which are read as a Text attribute named after a type. The bare strings 'Identifier', 'Integer Identifier', 'Long Integer Identifier' and 'Text Identifier' have the shape of form (3) but are rejected by the validator: all four validate cleanly and then fail every publish."
+                  "description": "CLOSED VOCABULARY, ONE REGISTER. An open string here is unvalidatable and the failure it hides is a certain publish failure, not a style slip: the model API accepts any string as an entity-attribute DataType, validation checks shape rather than membership in the platform's closed enum, and the enum is only enforced by the publish-time migration-script generator (OS-RDBS-GEN-40002, masked as OS-DPL-50203). Three admitted forms. (1) A basic type, in the ODC literal register - the twelve names above, as the platform docs spell them. This file is a projection whose semantic authority is outsystems-mentor-implementation, whose contract states the literal DataType string ('For an ordinary auto-number primary key, state the literal DataType string Long Integer'), and the string is rendered verbatim into the Mentor prompt. (2) A Text with its length, Text(200) - odc-studio-language-elements.md requires stating it, because an unstated length silently chooses 50 and truncates. (3) The relationship form '<TargetEntity> Identifier', single-token entity name, which by construction has no camelCase spelling. NOT members: the legacy camelCase register (text, longInteger, dateTime) and the three legacy identifier tokens (integerIdentifier, longIntegerIdentifier, platformDefaultIdentifier), all admitted between 2026-08-27 and 2026-09-01 and now refused with a message naming the canonical replacement - the identifier tokens all mean an auto-number primary key and canonicalise to 'Long Integer', never to a case-split of themselves; the seven App Generator VirtualTypeKind values with no ODC basic type (url, percentage, rating, imageUrl, multiLineText, foreignKey, and foreignKey's spec-level kin); and near-miss spellings such as DateTime for Date Time, which are read as a Text attribute named after a type. The bare strings 'Identifier', 'Integer Identifier', 'Long Integer Identifier' and 'Text Identifier' have the shape of form (3) but are rejected by the validator: all four validate cleanly and then fail every publish."
                 },
                 "is_primary_key": {"type": "boolean"},
                 "is_foreign_key": {"type": "boolean"},
@@ -104,7 +99,15 @@
         "type": "object",
         "required": ["name", "type", "description", "main_content"],
         "properties": {
-          "name": {"type": "string"},
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+            "description": "The ODC ELEMENT name of the screen - what the built model's node carries as `Name` - not the human title. This artifact requires letters, digits and underscore only, first character a letter - a contract of this schema, deliberately a safe subset of the naming vocabulary ODC publishes for the names it derives itself, since no screen-element grammar is published: `A4PrintPreview`, never `A4 Print Preview`. Every downstream consumer matches this string against the model exactly (outsystems-mentor-implementation/scripts/recompute_assertions.py `_screen_id`, and the render-gate spec this validator emits), so a display name here reports the screen as absent from a build that contains it. Measured 2026-09-02 on restaurant-app-v3: 6 of 7 screens SCREEN_MISSING for this reason alone. Put the human title in `display_name`."
+          },
+          "display_name": {
+            "type": "string",
+            "description": "Optional. The human title of the screen, free-form and translatable - `A4 Print Preview`. Carried for the reader and for copy; no consumer matches it against the model. Omit it when the element name already reads as the title."
+          },
           "render_gate": {
             "type": "array",
             "description": "Optional, and the ONE gate-bearing channel for a runtime claim. Each entry is a named assertion a render gate can execute, or an explicit declaration that no assertion is derivable. This is where a disclosure about what the screen must SHOW stops being prose: the acceptance_checklist stays advisory by design, so a claim that must be checked belongs here, exactly as an enforced count belongs in the screen's `assertions` object. SKILL-LOCAL EXTENSION, added 2026-08-30: the OMI contract this file projects does not carry this key and ignores it, exactly as it ignores `assertions`. It is per-screen and optional so the divergence stays bounded - the top-level `required` list is untouched, and a blueprint without it is the same artifact it was before. Cross-field rules the shape cannot express are in scripts/validate_blueprint.py.",

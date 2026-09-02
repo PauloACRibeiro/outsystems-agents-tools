@@ -176,7 +176,7 @@ index and receipt usable; it does not report partial success.
 
 ## OMI skill-pack setup (standalone OMI colleague pack only)
 
-**Sprint-loop pack users: skip this whole section.** Your six skills install
+**Sprint-loop pack users: skip this whole section.** Your seven skills install
 via the release's own `INSTALL-SPRINT-LOOP-<OS>.md` documents; this section
 covers only the standalone `omi-colleague-pack-*` channel, whose archive ships
 with a root `install.py` consumed by the repository's `install_skill_pack.py` installer.

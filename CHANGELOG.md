@@ -8,6 +8,22 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Export 2026-09-02.6 (PAS `527399e9`) — released as v42
+
+Nine packs re-exported for the v42 cut. Ship set frozen at `320a648f`; the
+exported tip differs only in maintainer evidence files.
+
+- **`outsystems-sprint-init` ships** as manual step 0 (the doctor, colleague
+  profile); the pack is seven skills.
+- **Mentor contract on the session-based OutSystems MCP surface** — the old
+  `mentor_start`/`publish_start` names were removed server-side on 2026-09-02.
+- Test phase required before grading; control-behaviour contract in screen
+  prompts; navigation destinations named in the inventory; seed-demo-data step
+  with a doctor-read log; containment rows paired by requirement ID.
+- Install documents: seven skills; executed on a clean Windows 11 VM (9/9).
+- OPK component unchanged (`8644fd60`); the refresh-trap check-3 failure is
+  carried forward and disclosed in the release notes.
+
 ### Export 2026-08-31.1 (PAS `63311456`)
 
 Build skill only — three reference files. Retrospective #6 from the

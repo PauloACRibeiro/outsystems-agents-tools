@@ -2,6 +2,19 @@
 
 > ODC error codes: see `../../shared/reference/odc-error-registry.md` for the canonical index of every code named below.
 
+> **Mentor MCP surface, measured live 2026-09-02.** The Mentor tools are
+> session-based: `mentor_start_session()` -> `mentor_load_asset` /
+> `mentor_create_asset` -> `mentor_prompt` -> `mentor_get_run(sessionId, runId)`
+> -> `mentor_publish` -> `publish_status` -> `mentor_close_session`.
+> `mentor_start`, `mentor_cancel`, `publish_start` and `mentor_get_event` are no
+> longer exposed. The operational patterns below name the current calls. The
+> `Evidence` blocks and the incident payloads (`internal_retry_count: 40`,
+> `change_applied: true`, and similar) keep their **pre-2026-09 field names** —
+> those are what was recorded at the time, and renaming them would make the
+> record claim things were measured that were not. Where such a field has no
+> counterpart today, `../SKILL.md` and `execution-gates.md` §4d say what now
+> enforces the rule it served.
+
 Use this guide before generating ODC Studio or Mentor Studio output that includes SQL, data writes, JSON parsing, status or enum values, dependency-sensitive paste blocks, or any pattern known to be fragile in Mentor Studio.
 
 This guide captures real corrections from the Recording Music Elasticsearch Bulk PoC and turns them into reusable generation rules. Apply these rules to future output. Do not silently rewrite historical plans unless the user explicitly asks for plan reconciliation.
@@ -2231,7 +2244,7 @@ Real session correction (RequestPulse CreateRequest screen, 2026-06-24): Mentor 
 
 ## One Server Action Per Mentor Session
 
-### Never Batch Multiple Server Actions In A Single `mentor_start` Call
+### Never Batch Multiple Server Actions In A Single `mentor_prompt` Call
 
 **Failure pattern**
 
@@ -2243,7 +2256,7 @@ Create Server Actions CreateSupplyRequest and ReviewRequest. [both in one prompt
 
 **Preferred pattern**
 
-One SA per `mentor_start` call. Publish and confirm before starting the next SA session.
+One SA per `mentor_prompt` call. Publish and confirm before starting the next SA session.
 
 ```text
 Session 1: Create Server Action CreateSupplyRequest → publish → confirm Finished
@@ -2264,7 +2277,7 @@ Real session (RequestPulse implementation, 2026-06-24): confirmed across all 5 S
 
 ---
 
-## Session Isolation — Each `mentor_start` Reads From Last Published Revision
+## Session Isolation — Each Session's `mentor_load_asset` Reads From Last Published Revision
 
 ### Mentor Sessions Do Not Inherit Prior Session State
 
@@ -2279,16 +2292,16 @@ Assuming a new Mentor session continues from where a previous session left off �
 
 **Preferred pattern**
 
-Each `mentor_start` reads from the **last successfully published revision**. A failed or unpublished session leaves no trace. Plan accordingly:
+Each session's `mentor_load_asset` reads from the **last successfully published revision** (it defaults to the latest revision). A failed or unpublished session leaves no trace. Plan accordingly:
 
 - If a publish fails, the next session's baseline is the revision before the failure.
 - Publish gates are required between sessions when later sessions depend on earlier ones.
 - If multiple sessions can be independent of each other, they can run in parallel (see parallel publish pattern below).
 
 ```text
-Published rev 12 → mentor_start session A (reads rev 12) → publish → rev 13
-                                                              ↓
-                                             mentor_start session B (reads rev 13) → publish → rev 14
+Published rev 12 → session A loads rev 12 → mentor_publish → rev 13
+                                                    ↓
+                            session B loads rev 13 → mentor_publish → rev 14
 ```
 
 **When to ask**
@@ -2311,8 +2324,8 @@ After `publish_status` returns `Finished` but the actual result is OS-APPS-40028
 
 ```text
 # publish failed with OS-APPS-40028
-# attempting to continue the same mentor_session_id
-mentor_start(resume: true, mentor_session_id: "...")  # not valid
+# attempting to reuse the same session after the failed publish
+mentor_prompt(sessionId="...", message="retry the same edit")  # not a recovery
 ```
 
 **Preferred pattern**
@@ -2321,7 +2334,7 @@ When publish returns OS-APPS-40028:
 
 1. Identify the element that caused invalid OML (List widget, Identifier Input, SA naming conflict, etc.).
 2. Strip or replace that element from the prompt.
-3. Start a fresh `mentor_start` — new session, reads from the last successful publish.
+3. Start a fresh session — `mentor_close_session`, then `mentor_start_session` + `mentor_load_asset`, which reads from the last successful publish.
 4. Publish the new session.
 
 There is no resume or patch path. The broken OML binary is discarded automatically.
@@ -2330,8 +2343,9 @@ There is no resume or patch path. The broken OML binary is discarded automatical
 # Step 1: identify root cause from failure pattern
 # Step 2: remove offending element from prompt
 # Step 3:
-mentor_start(app_key=..., prompt="[corrected prompt without offending element]")
-# Step 4: poll until succeeded, then publish_start
+mentor_start_session() -> mentor_load_asset(sessionId, assetKey=...)
+mentor_prompt(sessionId, message="[corrected prompt without offending element]")
+# Step 4: poll mentor_get_run until succeeded, then mentor_publish
 ```
 
 **When to ask**
@@ -2595,24 +2609,24 @@ Real session (RequestPulse implementation, 2026-06-24): early hypothesis that `g
 Waiting for publish to complete before starting the next Mentor session:
 
 ```text
-publish_start → poll until Finished → mentor_start (next)
+mentor_publish → poll publish_status until Finished → mentor_prompt (next)
 # Sequential: publish time + Mentor time for every revision
 ```
 
 **Preferred pattern**
 
-Start the next Mentor session immediately after `publish_start` returns, while polling `publish_status` in parallel:
+Start the next Mentor session immediately after `mentor_publish` returns, while polling `publish_status` in parallel:
 
 ```text
-publish_start(session A) → [parallel]
-  ├── poll publish_status until Finished
-  └── mentor_start(session B) → poll mentor_get_run until succeeded
+mentor_publish(session A) → [parallel]
+  ├── poll publish_status(publish_key=<publicationKey>) until Finished
+  └── session B: mentor_prompt → poll mentor_get_run until succeeded
 
 # When publish Finished AND session B succeeded:
-publish_start(session B)
+mentor_publish(session B)
 ```
 
-This works because each `mentor_start` reads from the last **published** revision — as long as session B does not depend on changes introduced in session A's publish, the parallel start is safe.
+This works because each session's `mentor_load_asset` reads from the last **published** revision — as long as session B does not depend on changes introduced in session A's publish, the parallel start is safe.
 
 **Safety constraint**
 
@@ -2640,10 +2654,11 @@ External field evidence: an internal OutSystems project (adopted 2026-08-14); fi
 
 External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
-- Mentor session slots are scarce: the cap is **tenant-wide**, and a used slot stays pinned for **~24 hours after last use**. `mentor_cancel` does **not** free a slot.
+- Mentor session slots are scarce: the cap is **tenant-wide**, and a used slot stays pinned for **~24 hours after last use**. `mentor_cancel` does **not** free a slot. (2026-09-02: the cancel call is now `mentor_cancel_prompt`, which likewise only ends the run and leaves the session open; `mentor_close_session` is what tears a session down. Whether closing a session releases its slot early is **unverified**.)
 - On `per_tenant_cap_reached`: resume an existing session (`mentor_session_id` + `mentor_session_token`, optionally `fresh_context: true`) — never retry-hammer `mentor_start` hoping a slot opens.
-- On `run_already_in_flight`: a run is already active on that session — poll that `runId` to terminal; never fire another `mentor_start` at it.
-- Operating policy: **one session per app, one conversation per edit** — `fresh_context: true` opens a fresh, small conversation over the session's current OML without burning a new slot (see the SKILL.md driving contract for the flag's typing and fallback rules).
+  - **Session surface (2026-09-02):** the rule is unchanged, the call is not. Resume by sending the next `mentor_prompt` on the same `sessionId`, and never retry-hammer `mentor_start_session`. There is no session token to pass and no `fresh_context` flag — a single opaque `sessionId` replaces the pair, and a conversation reset now costs a publish (`execution-gates.md` §4d).
+- On `run_already_in_flight`: a run is already active on that session — poll that `runId` to terminal; never fire another `mentor_prompt` at a **live** in-flight run — a second prompt while one is running is silently ignored (measured 2026-09-02), so it does not even fail loudly. One conditional exception (source-scoped: a 2026-08 upstream server change adds a liveness lease to the in-flight lock — internal-repo evidence, not field-observed): **if** the deployed catalog confirms lease-based recovery **and** the run's driving process may have died (the run never advances and never reaches terminal), do not poll indefinitely — wait until the configured lease could have lapsed, then make **one** non-hammering `mentor_prompt` retry. Codex-approved wording, AH-2026-08-31-012.
+- Operating policy: **one session per app, one conversation per edit.** Pre-2026-09 `fresh_context: true` opened a fresh, small conversation over the session's current OML without burning a new slot. `Unverified gap`: no such flag exists on the session surface, so a conversation reset now costs a publish plus a new session — publish, `mentor_close_session`, `mentor_start_session`, `mentor_load_asset`. Budget conversations accordingly and keep edits small (see the SKILL.md driving contract and `execution-gates.md` §4d).
 
 ## Directive Prompting — Mentor Audits And Skips
 

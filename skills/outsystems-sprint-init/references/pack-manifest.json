@@ -1,0 +1,34 @@
+{
+  "schema": "sprint-loop-pack-manifest/v2",
+  "required_skills": [
+    "outsystems-sprint-init",
+    "outsystems-screen-inventory",
+    "outsystems-ui-design",
+    "outsystems-plan-to-mentor",
+    "outsystems-mentor-implementation",
+    "outsystems-runtime-ui-audit",
+    "outsystems-bdd-tests"
+  ],
+  "estate_skills": [
+    "outsystems-oml-pseudocode",
+    "outsystems-retrospective",
+    "outsystems-ui-review",
+    "outsystems-render-gate"
+  ],
+  "optional_skills": [
+    "mentor-app-generator",
+    "outsystems-code-quality-score"
+  ],
+  "required_cli_subcommands": [
+    "xre",
+    "query",
+    "diff"
+  ],
+  "root_convention_marker": "sprint-loop-project-layout:v1",
+  "accepted_root_convention_markers": [
+    "sprint-loop-project-layout:v1",
+    "sprint-loop-project-layout:v2",
+    "sprint-loop-project-layout:v3"
+  ],
+  "notes": "required_skills = the colleague sprint-loop pack ship set (outsystems-agents-tools EXPORT-MANIFEST + sprint-loop-for-colleagues.md), listed in loop order: outsystems-sprint-init is step 0, run once per new project. It ships because it is the first thing a colleague runs and the doctor is what tells them their install is actually wired; keeping it estate-only made step 0 invisible in the manual and in the repo skill list (maintainer decision, 2026-09-01). estate_skills = internal-only skills needed for the full end-to-end loop on the operator estate (snapshots, retrospective, source review, render gate); checked only under --profile estate, which also requires the extraction CLI."
+}

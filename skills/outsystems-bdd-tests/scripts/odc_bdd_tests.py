@@ -646,7 +646,8 @@ def cmd_generate(args, echo=print) -> int:
             echo("")
             echo("COVERAGE GAP - no scenario in: " + ", ".join(gaps))
     echo("")
-    echo("Pass this to mentor_start, approving each edit. Then PUBLISH - the")
+    echo("Pass this to mentor_prompt on a loaded session, approving each edit.")
+    echo("Then PUBLISH with mentor_publish - the")
     echo("publish is the commit, and Mentor's work is not in the app until it")
     echo("lands. Then run `verify` before trusting the summary.")
     return 0

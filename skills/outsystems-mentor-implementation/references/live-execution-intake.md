@@ -107,8 +107,13 @@ Minimum live-campaign tool set for broad OMI live execution:
 - Context facts: `context_screens`, `context_actions`, `context_entities`,
   `context_roles`.
 - Environment facts: `env_list`, `env_app`.
-- Mentor execution: `mentor_start`, `mentor_get_run`, `mentor_cancel`.
-- Publish execution: `publish_start`, `publish_status`, `publish_logs`.
+- Mentor execution (session-based, measured 2026-09-02): `mentor_start_session`,
+  `mentor_load_asset` / `mentor_create_asset`, `mentor_prompt`,
+  `mentor_get_run`, `mentor_cancel_prompt`, `mentor_close_session`. The
+  pre-2026-09 `mentor_start` / `mentor_cancel` are no longer exposed.
+- Publish execution: `mentor_publish`, `publish_status`, `publish_logs`. The
+  gateway `publish_start` is no longer exposed; pass `mentor_publish`'s
+  returned `publicationKey` to `publish_status` as `publish_key`.
 - Deploy observation: `deploy_status`, `deploy_messages`.
 - Rollback execution, only for explicitly approved rollback rows:
   `deploy_rollback`.
@@ -220,6 +225,11 @@ run.
 
 - `mentor_start requires explicit current approval`.
 - `publish_start requires explicit current approval`.
+- `mentor_prompt requires explicit current approval`.
+- `mentor_create_asset requires explicit current approval`.
+- `mentor_publish requires explicit current approval`.
+  (The first two are the pre-2026-09 names; both surfaces are listed so an
+  approval row written against either one still reads as a gate.)
 - `deploy_start requires explicit current approval`.
 - `rollback requires explicit current approval`.
 - `app_create requires explicit current approval`.
@@ -251,7 +261,8 @@ the user has explicitly accepted the degraded path for a read-only evidence
 question.
 
 The manual path must remain read-only. You must not use manual MCP-over-HTTP for
-`mentor_start`, `publish_start`, `deploy_start`, rollback, `app_create`,
+`mentor_prompt`, `mentor_create_asset`, `mentor_publish` (or the pre-2026-09
+`mentor_start` / `publish_start`), `deploy_start`, rollback, `app_create`,
 external-library upload, cleanup, promotion, dependency mutation, or any other
 tenant mutation.
 
@@ -277,8 +288,8 @@ headers, cookies, raw session payloads, or unrelated app content.
 
 Boundary phrase: no publish or deploy by default. OMI may prepare handoff
 guidance, readiness notes, or read-only evidence, but it must not call
-`publish_start`, `deploy_start`, rollback, `app_create`, external-library
-upload, or any other tenant-changing tool unless explicit current approval
+`mentor_publish` (or the pre-2026-09 `publish_start`), `deploy_start`,
+rollback, `app_create`, external-library upload, or any other tenant-changing tool unless explicit current approval
 names the exact target and action.
 
 Publish/deploy-adjacent evidence is advisory unless the approved workflow also
@@ -297,12 +308,19 @@ advisory`, `rollback-unavailable`, `blocked-approval-required`, or
 
 ### Publish Advisory Contract
 
-When `publish_status` returns `no_changes_detected=true`, record it as a
-publish advisory. Do not use the publish operation alone as proof that behavior
-landed.
+**`Unverified gap` (2026-09-02): `no_changes_detected=true` can no longer be
+returned.** On the session surface `publish_status` returns `{key,
+applicationKey, applicationRevision, outcome, status}` and nothing else
+(measured), so the publish never reports that it landed nothing. The advisory contract below is
+therefore **unconditional**: treat EVERY publish as a publish advisory, and
+never use the publish operation alone as proof that behavior landed. Where the
+flag used to select which rows needed independent proof, the digest gate
+(`app_info`'s `modelDigest` before and after) now answers the landed-or-not
+question, and it was always the stronger signal — `no_changes_detected` was a
+self-report with recorded false negatives.
 
-A row with `no_changes_detected=true` can be terminal only when independent
-post-publish proof supports the expected result, such as:
+Any publish row can be terminal only when independent post-publish proof
+supports the expected result, such as:
 
 - `env_app` revision/build/deployment facts that match the approved target;
 - context proof for the expected element or preserved contract;
@@ -311,8 +329,9 @@ post-publish proof supports the expected result, such as:
 - Studio visual proof for the exact hidden branch or node;
 - runtime browser proof for the inspected route or event behavior.
 
-If `no_changes_detected=true` appears and post-publish proof does not show the
-expected result, stop and classify the row as blocked or not deployed. Keep the
+If post-publish proof does not show the expected result — or the digest is
+unchanged across the publish — stop and classify the row as blocked or not
+deployed. Keep the
 phrase `publish advisory` attached to the result so later summaries do not
 overclaim a clean deployed-change proof.
 

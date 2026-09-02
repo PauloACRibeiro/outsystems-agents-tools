@@ -5,10 +5,22 @@ server (the two prompts in the README). This page is the shortest honest path
 from there to a published app: one paste-ready prompt per step, and what to
 expect back.
 
-Two things to know before you start:
+Three things to know before you start:
 
 - **The loop is human-in-the-loop.** It stops and waits for you at six points —
   a stop is the design working, not a malfunction. Do not plan an unattended run.
+- **Your tenant sign-in expires faster than a build step takes.** On the run
+  these instructions were written from, the OutSystems token expired about once
+  an hour while single build turns ran five to twenty minutes — so an expiry
+  lands in the middle of a turn more often than between turns. There is no way
+  to prevent this from your side: the auth status says whether the token is
+  alive right now, not how long it has left. What you can do is not *start* a
+  long step on a token that has already lapsed, so it is worth asking the agent
+  to check the status before a big build turn and doing the `/mcp` round then.
+  Expect the interruption anyway. A turn interrupted by an expiry may keep
+  running on the server and finish, or it may die and lose its edit; both have
+  been measured, so after any re-authentication ask the agent to read the run's
+  status rather than assume.
 - **This page is authoritative on step ORDER** (the screen inventory runs
   before the capability plan). The full companion —
   [`sprint-loop-for-colleagues.md`](sprint-loop-for-colleagues.md), installed on
@@ -18,7 +30,7 @@ Two things to know before you start:
 ## One-time setup that the install prompts did not cover
 
 1. **Connect your OutSystems tenant** — needed for direct tenant execution
-   (steps 6–8). Steps 1–5 are local and also run without it, as does step 6's
+   (steps 6–10). Steps 1–5 are local and also run without it, as does step 6's
    paste mode. In a terminal (replace the hostname with your tenant's):
 
    ```
@@ -34,34 +46,49 @@ Two things to know before you start:
 
 3. **Prove the wiring** with the first three prompts of
    [`post-install-checks.md`](post-install-checks.md) in a **new** conversation.
+   Step 0 of the loop re-checks most of this per folder, so if you skip ahead
+   and something is missing, step 0 will name it.
    If check 1 fails, the most common cause is the knowledge server's
    registration step — re-run the registration verification from its install
    document.
 
 ## The loop, one prompt per step
 
-Work in an empty folder — one folder per app. After each step, read what came
-back before moving on; the artifacts build on each other.
+Work in an empty folder — one folder per app. Step 0 runs once, when the folder
+is new; steps 1–10 are the loop. After each step, read what came back before
+moving on; the artifacts build on each other.
 
 | # | Step | Paste this (adapt the bracketed parts) | You get, and the gate |
 |---|---|---|---|
+| 0 | Set up the folder *(once per app)* | `Use the outsystems-sprint-init skill to run its doctor with --profile colleague on this folder, for [app name].` | A readiness table: the skills you have installed, git and python, and — probed by the agent — your tenant, your knowledge tier, and whether demo data exists. **Gate: fix anything BLOCKED before step 1.** Say `--profile colleague`: without it the check defaults to the internal profile and reports problems you are not meant to have. It also prints the next step from what the folder already holds, so you can re-run it any time you lose your place. |
 | 1 | Requirements | `Use superpowers:brainstorming — I want to build [two sentences about your app].` | A PRD after structured questions. **Gate: you approve it.** |
 | 2 | Screen list | `Use the outsystems-screen-inventory skill on the PRD we just wrote.` | `screen-inventory.json` — every screen, its purpose, and the shared chrome decision. |
 | 3 | Plan | `Use superpowers:writing-plans to write the capability plan from the PRD and screen inventory.` | An ordered build plan. **Gate: you approve it.** |
 | 4 | Screen design | `Use the outsystems-ui-design skill for the [name] screen.` — once per screen | An HTML preview to react to, then a blueprint. **Gate: you approve each screen.** |
 | 5 | Plan review | `Use the outsystems-plan-to-mentor skill to review the plan against the PRD.` | A coverage review; real gaps block until fixed or waived. |
 | 6 | Build | `Use the outsystems-mentor-implementation skill to execute the patched plan on my tenant.` | Mentor builds phase by phase on your tenant. **Gates: every publish asks you first.** |
-| 7 | Test *(optional)* | `Use the outsystems-bdd-tests skill to generate and run the test suite.` | Generated BDD tests executed against the running app — real pass/fail per scenario. **Prerequisite:** two Forge components installed on the tenant by a human first; the skill's preflight names them and stops if they are missing. |
-| 8 | Grade | `Use the outsystems-runtime-ui-audit skill on [the app's runtime URL].` | A 16-criterion scored UI audit of the deployed app. |
+| 7 | Seed demo data | `Seed demo data through the app's own create screens — this also proves those screens work. Use a discriminating dataset: for every filter or per-record behaviour, add records whose expected results differ per filter value. Log the seeded record ids into docs/seed-log.md.` | Real records reachable through the app's own UI, spanning the cases step 8's tests, step 9's render gate and step 10's audit need to tell apart. **Gate: do this before any UI verification — an app with one record of each type cannot show filter or per-record behaviour working.** |
+| 8 | Test | `Use the outsystems-bdd-tests skill to generate and run the test suite.` | Generated BDD tests executed against the running app — real pass/fail per scenario. **Required — not optional.** **Prerequisite:** two Forge components installed on the tenant by a human first; the skill's preflight names them and stops if they are missing. |
+| 9 | Render gate | `Use the outsystems-render-gate skill to verify every screen renders and every control on it responds, signed in.` *(estate profile only — not part of the colleague sprint-loop pack)* | Verification rows plus a screenshot packet proving screens render **and their controls work**, not just that they draw. Without this skill installed, click every control on every screen by hand before grading — a control that renders but does nothing has passed every gate before this one. |
+| 10 | Grade | `Use the outsystems-runtime-ui-audit skill on [the app's runtime URL].` | A 16-criterion scored UI audit of the deployed app. |
 
 Each step verifies its own output in its own way: steps 4–5 validate local
 artifacts against the PRD; step 6's build gates require the deployed screens to
 be **seeded with data and exercised signed-in** before any phase is called done
 — if an agent reports a screen "done" that nobody has ever rendered or clicked,
-that is a skipped gate, not a finished screen; step 7 runs generated tests
-against the live app; step 8 audits the deployed UI from its runtime URL (it
-needs a reachable URL and stops at a login wall — audit a screen an anonymous
-visitor can reach, or capture evidence signed-in via step 6's gates instead).
+that is a skipped gate, not a finished screen; step 7 seeds the app with a
+discriminating demo dataset once the build is published, so steps 8 to 10
+have real behaviour to check instead of an app with one restaurant, zero
+dishes and zero subscribers (restaurant-app-v2, 2026-08-28/29 — the dispatch
+run reached zero recipients, the print sheet never showed an empty section,
+and the product's core feature never executed); step 8 runs generated tests against the live app;
+step 9 verifies every screen renders and, via its `--interact` walk, that the
+controls the design declared respond for a signed-in principal — a plain
+render gate proves only that screens render, so this walk is the required
+check that a control was not simply left inert; step 10 audits the deployed
+UI from its runtime URL (it needs a reachable URL and
+stops at a login wall — audit a screen an anonymous visitor can reach, or
+capture evidence signed-in via step 6's gates instead).
 
 ## When something goes wrong
 

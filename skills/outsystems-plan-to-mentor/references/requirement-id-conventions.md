@@ -170,9 +170,14 @@ loop's design artifacts are the enriched `blueprint.json`
   from the source's story list — not a rewrite of the plan.
 - The Design cell carries comma-separated `blueprint:<ScreenName>` or
   `inventory:<ScreenName>` refs (the `<ScreenName>` is the artifact's
-  `screens[].name` value verbatim — spaces allowed, e.g.
-  `inventory:Search Console`), or an explicit `none` for a story with no
-  drawn surface. An empty cell fails; silence is the only failure mode.
+  `screens[].name` value verbatim, e.g. `inventory:SearchConsole`), or an
+  explicit `none` for a story with no drawn surface. Since 2026-09-02 both
+  upstream artifacts hold the ODC **element** name there — letters, digits and
+  underscore, the human title having moved to `display_name`
+  (AH-2026-09-02-006) — so a spaced ref means the upstream artifact is wrong,
+  not the plan. The checker still parses a spaced cell rather than choking on
+  it, so the failure is reported by the artifact's own validator, where the
+  repair is. An empty cell fails; silence is the only failure mode.
 
 ## What the checker computes
 

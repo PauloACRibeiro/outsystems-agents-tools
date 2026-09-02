@@ -201,8 +201,13 @@ def recompute(blueprint, source):
         if not source.screen_exists(name):
             results.append(AssertionResult(
                 name, None, None, None, "SCREEN_MISSING",
-                "the blueprint declares assertions for a screen the built model "
-                "does not contain"))
+                "the blueprint declares assertions for a screen the built "
+                "model does not contain. Matching is exact and stays exact "
+                "(AH-2026-09-02-006): a matcher that ignored spaces and case "
+                "would hide a collision between two screens that differ only "
+                "there. `screens[].name` is the ODC element name "
+                "(A4PrintPreview); a human title belongs in "
+                "`screens[].display_name`"))
             continue
         counts = source.screen_widget_counts(name)
         for kind in sorted(assertions):

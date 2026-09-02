@@ -230,6 +230,104 @@ def _success_reached(text: str, actions: set[str]) -> set[str]:
     return reached
 
 
+# A requirement ID, including the namespaced multi-segment form the loop's own
+# convention uses for business rules (BR-DM-001, BR-SEC-004, ...), not just the
+# plain two-segment form (C-003, UC-009). Round 2 review (AH-2026-09-02-014)
+# found the plain `[A-Za-z]+-[\w.]+` form truncates "BR-DM-001" to "BR-DM" --
+# `\w` does not include the second "-" -- so a namespaced absence row either
+# fell through to the "payload" bucket or paired against a truncated key that
+# a same-namespace but different-number row could collide with.
+_REQ_ID = r"[A-Za-z]+(?:-[A-Za-z0-9]+)+"
+
+# A design's requirement-inventory table row, e.g. "| C-003 | Criterion | ... |".
+_TABLE_ROW = re.compile(rf"^\|\s*{_REQ_ID}\s*\|")
+_TABLE_ROW_ID = re.compile(rf"^\|\s*({_REQ_ID})\s*\|")
+
+# The ID(s) a V-row cites, right after the "V<N>" token: "V3  C-003, BR-X-001  ...".
+_V_ROW_IDS = re.compile(rf"^V\d+\s+((?:{_REQ_ID}\s*,\s*)*{_REQ_ID})")
+
+# The subject this rule governs (references/coverage-review-prompt.md rule 4):
+# a row about anything OTHER than a public payload or projection is out of
+# scope, so an unrelated "no" sentence elsewhere in the design never counts.
+_PAYLOAD_SUBJECT = re.compile(r"\b(?:payload|projection)\b", re.IGNORECASE)
+
+# Explicit absence phrasing, or a denial word governing a containment verb --
+# "No ... contains", "never emits" -- within the same row.
+_ABSENCE_ASSERTION = re.compile(
+    r"\bmust\s+not\s+contain\b|\bomits?\b|\bexcludes?\b"
+    r"|\b(?:no|never|none)\b.{0,100}?\b(?:contains?|carries|emits?|includes?|holds|"
+    r"price|prices|pii)\b",
+    re.IGNORECASE,
+)
+
+# A positive containment verb, or an explicit count -- "one row per item",
+# "a count of N".
+_PRESENCE_ASSERTION = re.compile(
+    r"\bone\s+row\s+per\b|\ba\s+count\s+of\b|\b(?:contains?|carries|includes?|holds)\b",
+    re.IGNORECASE,
+)
+
+
+def _containment_rows(design_text: str, plan_text: str) -> list[str]:
+    """Design requirement-table rows and plan V-rows that mention a payload or
+    projection -- the scope rule 4 governs (see module docstring)."""
+    rows = [line for line in design_text.splitlines()
+            if _TABLE_ROW.match(line) and _PAYLOAD_SUBJECT.search(line)]
+    rows += [row for row in _logical_rows(plan_text) if _PAYLOAD_SUBJECT.search(row)]
+    return rows
+
+
+def _containment_bucket(row: str, actions: set[str]) -> str:
+    """The pairing key for a containment row.
+
+    Requirement ID first: a design table row carries the ID in its own
+    column, and a V-row cites it right after "V<N>" by the same convention
+    every other row in this file already uses -- so a design criterion and
+    the plan row that exercises it share this key even though the design row
+    never names the Studio action. Round 1 review (AH-2026-09-02-014) found
+    the false failure this produces when bucketing by action name only: a
+    correctly action-named V-row and its own unnamed design criterion landed
+    in different buckets and could never pair.
+
+    Action name is the fallback for a row that cites no ID (a V-row without
+    one, or free-form design prose). A shared "payload" bucket is the last
+    resort when neither is present. That bucket is a real blind spot: two
+    unrelated payload criteria with no ID and no named action can still
+    cancel each other out in it, and a row's OWN id is compared as opaque
+    text, so two IDs that mean the same requirement in different casing or
+    a synonymous phrasing that cites no ID at all still miss each other.
+    Traded deliberately -- see the module docstring's stance on being
+    conservative in one direction only.
+    """
+    table_id = _TABLE_ROW_ID.match(row)
+    if table_id:
+        return table_id.group(1)
+    v_ids = _V_ROW_IDS.match(row)
+    if v_ids:
+        return v_ids.group(1).split(",")[0].strip()
+    return next((a for a in actions if re.search(rf"\b{re.escape(a)}\b", row)), "payload")
+
+
+def _containment_subjects(
+    design_text: str, plan_text: str, actions: set[str]
+) -> tuple[set[str], list[str]]:
+    """(all payload/projection subjects seen, subjects with an absence
+    assertion but no paired presence assertion) -- rule 4: "no price" pairs
+    with "contains N items", or an empty payload passes every absence check.
+    """
+    subjects: set[str] = set()
+    absent: set[str] = set()
+    present: set[str] = set()
+    for row in _containment_rows(design_text, plan_text):
+        bucket = _containment_bucket(row, actions)
+        subjects.add(bucket)
+        if _ABSENCE_ASSERTION.search(row):
+            absent.add(bucket)
+        elif _PRESENCE_ASSERTION.search(row):
+            present.add(bucket)
+    return subjects, sorted(absent - present)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("design", type=Path, help="Design file declaring action results")
@@ -289,7 +387,24 @@ def main(argv: list[str] | None = None) -> int:
             for action in missing_success:
                 print(f"- {action}.Success")
 
-    if unexercised or missing_success:
+        subjects, containment_gaps = _containment_subjects(
+            design_text, plan_text, set(declared)
+        )
+        print(
+            f"containment coverage: {len(subjects) - len(containment_gaps)}/{len(subjects)} "
+            f"payload/projection subject(s) with a paired presence row"
+        )
+        if containment_gaps:
+            print(
+                "missing containment pairs (an absence assertion about a payload or "
+                "projection has no row asserting the legitimate content is present):"
+            )
+            for subject in containment_gaps:
+                print(f"- {subject}: absence asserted, no presence row found")
+
+    if unexercised or missing_success or (
+        _SUCCESS_MARKER.search(design_text) and containment_gaps
+    ):
         print("outcome verdict: NOT READY")
         return 1
 

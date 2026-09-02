@@ -20,13 +20,13 @@
     "menu": [
       {"label": "Start", "target": "Start"},
       {"label": "Setup", "target": "Setup"},
-      {"label": "Query Library", "target": "Query Library"},
-      {"label": "Search", "target": "Search Console"},
-      {"label": "Custom Scoring", "target": "Custom Scoring"},
-      {"label": "Indexes", "target": "Index Console"},
-      {"label": "Documents", "target": "Document Console"},
-      {"label": "Migration", "target": "Migration Console"},
-      {"label": "Migration Profiles", "target": "Migration Profiles"}
+      {"label": "Query Library", "target": "QueryLibrary"},
+      {"label": "Search", "target": "SearchConsole"},
+      {"label": "Custom Scoring", "target": "CustomScoring"},
+      {"label": "Indexes", "target": "IndexConsole"},
+      {"label": "Documents", "target": "DocumentConsole"},
+      {"label": "Migration", "target": "MigrationConsole"},
+      {"label": "Migration Profiles", "target": "MigrationProfiles"}
     ]
   },
   "candidates": [
@@ -48,140 +48,140 @@
       "id": "Reference",
       "source_ref": "fusion-map §3 row 3 — holds 50 queries, not the 33 first reported",
       "disposition": "mapped",
-      "resolves_to": ["Query Library"],
+      "resolves_to": ["QueryLibrary"],
       "rationale": "A catalogue OVER the consoles. Folding it into one console would privilege that console over the others."
     },
     {
       "id": "Search_Query",
       "source_ref": "fusion-map §2 — code companion populated and correct",
       "disposition": "mapped",
-      "resolves_to": ["Search Console"],
+      "resolves_to": ["SearchConsole"],
       "rationale": "Single-query mode of one console. Near-clone of Search_Multiple, minus a labelled index field and the query-notes panel."
     },
     {
       "id": "Search_Multiple",
       "source_ref": "fusion-map §1 — the app's most mature screen",
       "disposition": "mapped",
-      "resolves_to": ["Search Console"],
+      "resolves_to": ["SearchConsole"],
       "rationale": "Multi-query mode of the same console, and the pattern donor: it already carries the live-console-beside-code-companion arrangement the redesign propagates."
     },
     {
       "id": "Search_Template",
       "source_ref": "fusion-map §2 — code companion present but empty",
       "disposition": "mapped",
-      "resolves_to": ["Search Console"],
+      "resolves_to": ["SearchConsole"],
       "rationale": "Template mode of the same console. Three screens differing by which query shape is submitted is one screen with a mode selector."
     },
     {
       "id": "Adv_FunctionScore",
       "source_ref": "fusion-map §3 row 4b — added at the gate",
       "disposition": "mapped",
-      "resolves_to": ["Custom Scoring"],
+      "resolves_to": ["CustomScoring"],
       "rationale": "Stays standalone: storing a scoring script is a different job from running a query. This was the fusion flagged as least confident, and the gate split it back out."
     },
     {
       "id": "Index_Create",
       "source_ref": "fusion-map §3 row 5",
       "disposition": "mapped",
-      "resolves_to": ["Index Console"],
+      "resolves_to": ["IndexConsole"],
       "rationale": "One index operation among six. The operations differ by payload, not by screen."
     },
     {
       "id": "Index_Delete",
       "source_ref": "fusion-map §3 row 5",
       "disposition": "mapped",
-      "resolves_to": ["Index Console"],
+      "resolves_to": ["IndexConsole"],
       "rationale": "One index operation among six; destructive treatment is a state of the console, not a screen."
     },
     {
       "id": "Index_GetList",
       "source_ref": "fusion-map §3 row 5",
       "disposition": "mapped",
-      "resolves_to": ["Index Console"],
+      "resolves_to": ["IndexConsole"],
       "rationale": "Listing indexes is the console's own resting state — it is what you see before choosing an operation."
     },
     {
       "id": "Index_SetAlias",
       "source_ref": "fusion-map §3 row 5",
       "disposition": "mapped",
-      "resolves_to": ["Index Console"],
+      "resolves_to": ["IndexConsole"],
       "rationale": "One index operation among six."
     },
     {
       "id": "Adv_Dictionary",
       "source_ref": "fusion-map §3 row 5 — 'neither was ever advanced'",
       "disposition": "mapped",
-      "resolves_to": ["Index Console"],
+      "resolves_to": ["IndexConsole"],
       "rationale": "Index creation with mappings. The Adv_ prefix said advanced; the job is index creation."
     },
     {
       "id": "Adv_RealTimeIndexing",
       "source_ref": "fusion-map §3 row 5 — 'neither was ever advanced'",
       "disposition": "mapped",
-      "resolves_to": ["Index Console"],
+      "resolves_to": ["IndexConsole"],
       "rationale": "Index settings. Same prefix, same misfiling."
     },
     {
       "id": "Index_LoadData",
       "source_ref": "fusion-map §3 rows 2 and 5 — split across both",
       "disposition": "mapped",
-      "resolves_to": ["Setup", "Index Console"],
+      "resolves_to": ["Setup", "IndexConsole"],
       "rationale": "Two different jobs on one page. 'How do I bulk-load' (Kibana upload, Logstash, programmatic) is documentation and belongs in onboarding; actually loading data is an index operation and belongs in the console."
     },
     {
       "id": "CRUD_Create",
       "source_ref": "fusion-map §2 — code companion populated but text wrong",
       "disposition": "mapped",
-      "resolves_to": ["Document Console"],
+      "resolves_to": ["DocumentConsole"],
       "rationale": "One of four near-clones. The proof they are clones is in the defects: three carry Create's notes verbatim."
     },
     {
       "id": "CRUD_Retrieve",
       "source_ref": "fusion-map §2 — carries Create's NOTES verbatim",
       "disposition": "mapped",
-      "resolves_to": ["Document Console"],
+      "resolves_to": ["DocumentConsole"],
       "rationale": "Copy-paste sibling of CRUD_Create; retrieval is a mode, not a destination."
     },
     {
       "id": "CRUD_Update",
       "source_ref": "fusion-map §2 — carries Create's NOTES verbatim",
       "disposition": "mapped",
-      "resolves_to": ["Document Console"],
+      "resolves_to": ["DocumentConsole"],
       "rationale": "Copy-paste sibling; needs the request-body region, which the console shows conditionally."
     },
     {
       "id": "CRUD_Delete",
       "source_ref": "fusion-map §2 — carries Create's NOTES verbatim",
       "disposition": "mapped",
-      "resolves_to": ["Document Console"],
+      "resolves_to": ["DocumentConsole"],
       "rationale": "Copy-paste sibling; the only difference that matters is destructive treatment, which is a state."
     },
     {
       "id": "MigrationDashboard",
       "source_ref": "fusion-map §4 — 'a thin form over a deep engine'",
       "disposition": "mapped",
-      "resolves_to": ["Migration Console"],
+      "resolves_to": ["MigrationConsole"],
       "rationale": "The operational half of migration. The screen the redesign's biggest win sits on."
     },
     {
       "id": "Avd_ReIndex",
       "source_ref": "fusion-map §3 row 7",
       "disposition": "mapped",
-      "resolves_to": ["Migration Console"],
+      "resolves_to": ["MigrationConsole"],
       "rationale": "Re-indexing IS migration, and it returns an async task with no link to the screen that polls it. Fusing closes that loop."
     },
     {
       "id": "Adv_TaskManagement",
       "source_ref": "fusion-map §3 row 7",
       "disposition": "mapped",
-      "resolves_to": ["Migration Console"],
+      "resolves_to": ["MigrationConsole"],
       "rationale": "The screen that polls the async task ReIndex returns. It is the other end of a loop that was never connected."
     },
     {
       "id": "MigrationProfiles",
       "source_ref": "fusion-map §3 row 8",
       "disposition": "mapped",
-      "resolves_to": ["Migration Profiles"],
+      "resolves_to": ["MigrationProfiles"],
       "rationale": "Stays standalone: admin CRUD over a different entity. Configuring a migration is a different job from operating one."
     },
     {
@@ -219,7 +219,8 @@
       "accepts": []
     },
     {
-      "name": "Query Library",
+      "name": "QueryLibrary",
+      "display_name": "Query Library",
       "purpose": "Browse the stored query catalogue and open any of them in the right console.",
       "archetype": "gallery-grid",
       "behavior": "A filterable card grid over the stored queries, one card per query with its snippet visible, deep-linking into the console that runs it. Activates the tag taxonomy the old screen carried but never used.",
@@ -239,7 +240,8 @@
       "accepts": []
     },
     {
-      "name": "Search Console",
+      "name": "SearchConsole",
+      "display_name": "Search Console",
       "purpose": "Run any search shape against an index and show the request beside the result.",
       "archetype": "edit-form",
       "behavior": "One console with a Single / Multi / Template mode selector, replacing three near-identical screens. Every mode shows the live request beside the OUTSYSTEMS CODE companion panel — the pattern the app already invented on Search_Multiple and denied to everything else — and returns a tabbed response.",
@@ -261,7 +263,8 @@
       "accepts": ["query_id"]
     },
     {
-      "name": "Custom Scoring",
+      "name": "CustomScoring",
+      "display_name": "Custom Scoring",
       "purpose": "Store and manage Painless scoring scripts, and show which queries use each.",
       "archetype": "master-detail",
       "behavior": "Lists the stored scripts and edits one at a time. Closes a loop the old screen left open by showing, per script, which queries consume it and linking back into the Search Console.",
@@ -282,7 +285,8 @@
       "accepts": ["script_id"]
     },
     {
-      "name": "Index Console",
+      "name": "IndexConsole",
+      "display_name": "Index Console",
       "purpose": "Perform every index-level operation from one place.",
       "archetype": "edit-form",
       "behavior": "Lists existing indexes as its resting state, then performs a chosen operation against one: create, create-with-mappings, delete, set alias, adjust real-time settings, or load data. Six former screens become an operation selector because they differ by payload, not by task.",
@@ -297,7 +301,8 @@
       "accepts": ["index_name"]
     },
     {
-      "name": "Document Console",
+      "name": "DocumentConsole",
+      "display_name": "Document Console",
       "purpose": "Create, retrieve, update and delete a single document against an index.",
       "archetype": "edit-form",
       "behavior": "One console with a CRUD mode selector, replacing four screens that were one screen copy-pasted four times. The request-body region appears only for Create and Update; Delete carries destructive treatment.",
@@ -311,7 +316,8 @@
       "accepts": ["index_name"]
     },
     {
-      "name": "Migration Console",
+      "name": "MigrationConsole",
+      "display_name": "Migration Console",
       "purpose": "Tell an operator whether a migration run is alive, progressing, or stuck — and act on it.",
       "archetype": "dashboard",
       "behavior": "Surfaces the migration engine the old screen hid: run status as a badge rather than raw text, progress against expected-vs-indexed, the per-record failure log, retry and attempt tracking, and the heartbeat/stale-bucket signal that answers 'is the worker dead?'. Absorbs re-index (which starts a run) and task management (which polls it), closing a loop that had no link between its ends.",
@@ -334,7 +340,8 @@
       "accepts": ["run_id", "profile_id"]
     },
     {
-      "name": "Migration Profiles",
+      "name": "MigrationProfiles",
+      "display_name": "Migration Profiles",
       "purpose": "Manage the reusable configurations migration runs are started from.",
       "archetype": "list-table",
       "behavior": "Admin CRUD over migration profiles. Configuration only — starting and watching a run is the Migration Console's job, and keeping the two apart is why this screen was not fused into it.",
@@ -353,18 +360,18 @@
     }
   ],
   "navigation": [
-    {"from": "Start", "to": "Search Console", "trigger": "select the search capability card"},
-    {"from": "Start", "to": "Index Console", "trigger": "select the index capability card"},
-    {"from": "Start", "to": "Document Console", "trigger": "select the document capability card"},
-    {"from": "Start", "to": "Migration Console", "trigger": "select the migration capability card"},
+    {"from": "Start", "to": "SearchConsole", "trigger": "select the search capability card"},
+    {"from": "Start", "to": "IndexConsole", "trigger": "select the index capability card"},
+    {"from": "Start", "to": "DocumentConsole", "trigger": "select the document capability card"},
+    {"from": "Start", "to": "MigrationConsole", "trigger": "select the migration capability card"},
     {"from": "Start", "to": "Setup", "trigger": "select the getting-started card"},
-    {"from": "Start", "to": "Query Library", "trigger": "select the query catalogue card"},
-    {"from": "Setup", "to": "Index Console", "trigger": "continue once an index exists", "payload": "index_name"},
-    {"from": "Query Library", "to": "Search Console", "trigger": "open a stored query", "payload": "query_id"},
-    {"from": "Search Console", "to": "Custom Scoring", "trigger": "open the scoring script a query uses", "payload": "script_id"},
-    {"from": "Custom Scoring", "to": "Search Console", "trigger": "follow a usage link back to the query", "payload": "query_id"},
-    {"from": "Index Console", "to": "Document Console", "trigger": "work with documents in the selected index", "payload": "index_name"},
-    {"from": "Migration Console", "to": "Migration Profiles", "trigger": "open the profile a run was configured from"},
-    {"from": "Migration Profiles", "to": "Migration Console", "trigger": "start a run from this profile", "payload": "profile_id"}
+    {"from": "Start", "to": "QueryLibrary", "trigger": "select the query catalogue card"},
+    {"from": "Setup", "to": "IndexConsole", "trigger": "continue once an index exists", "payload": "index_name"},
+    {"from": "QueryLibrary", "to": "SearchConsole", "trigger": "open a stored query", "payload": "query_id"},
+    {"from": "SearchConsole", "to": "CustomScoring", "trigger": "open the scoring script a query uses", "payload": "script_id"},
+    {"from": "CustomScoring", "to": "SearchConsole", "trigger": "follow a usage link back to the query", "payload": "query_id"},
+    {"from": "IndexConsole", "to": "DocumentConsole", "trigger": "work with documents in the selected index", "payload": "index_name"},
+    {"from": "MigrationConsole", "to": "MigrationProfiles", "trigger": "open the profile a run was configured from"},
+    {"from": "MigrationProfiles", "to": "MigrationConsole", "trigger": "start a run from this profile", "payload": "profile_id"}
   ]
 }

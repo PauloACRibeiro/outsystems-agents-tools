@@ -25,6 +25,17 @@ LIVE_MCP_KEYS = [
 ]
 
 
+# Mentor tool names that denote a tenant mutation. The session-based surface
+# (measured live 2026-09-02) replaced mentor_start/publish_start with
+# mentor_create_asset / mentor_prompt / mentor_publish; the old names stay so
+# drafts written against the pre-2026-09 surface still score.
+SESSION_MENTOR_MUTATION_TOOL_NAMES = (
+    "mentor_create_asset",
+    "mentor_prompt",
+    "mentor_publish",
+)
+MENTOR_MUTATION_TOOL_NAMES = ("mentor_start",) + SESSION_MENTOR_MUTATION_TOOL_NAMES
+
 def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
@@ -186,15 +197,24 @@ def build_report(
         "deploy" in normalize(generated_blocks.get("DQ-B07", {}).get("evidence_line", "")),
         "rollback" in normalize(generated_blocks.get("DQ-B07", {}).get("evidence_line", "")),
         "app_create" in normalize(generated_blocks.get("DQ-B07", {}).get("evidence_line", "")),
-        "mentor_start" in normalize(generated_blocks.get("DQ-B07", {}).get("evidence_line", "")),
+        any(
+            name in normalize(generated_blocks.get("DQ-B07", {}).get("evidence_line", ""))
+            for name in MENTOR_MUTATION_TOOL_NAMES
+        ),
         "read-only first" in normalize(expected_scorecard.get("live_mcp_future_start", "")),
         "app_info" in normalize(expected_scorecard.get("live_mcp_future_start", "")),
         "env_app" in normalize(expected_scorecard.get("live_mcp_future_start", "")),
         "search/list calls" in normalize(expected_scorecard.get("live_mcp_future_start", "")),
         "not needed" in normalize(expected_scorecard.get("live_mcp_decision", "")),
         "unresolved" in normalize(expected_scorecard.get("live_mcp_decision", "")),
-        "no app_create, mentor_start, publish_start, deploy_start, rollback, or mutating tool"
-        in normalize(expected_scorecard.get("live_mcp_mutation_denial", "")),
+        (
+            "no app_create, mentor_start, publish_start, deploy_start, rollback, or mutating tool"
+            in normalize(expected_scorecard.get("live_mcp_mutation_denial", ""))
+            or any(
+                name in normalize(expected_scorecard.get("live_mcp_mutation_denial", ""))
+                for name in SESSION_MENTOR_MUTATION_TOOL_NAMES
+            )
+        ),
     ]
 
     scores = {
