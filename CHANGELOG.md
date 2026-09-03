@@ -8,6 +8,43 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Pending v43 (PAS `main` after `527399e9`; export not yet cut)
+
+What has landed upstream since the v42 export and will ship with the next
+pack. Written before the cut; the export line and OPK decision are added when
+it happens.
+
+- **Agent Plugins manifests.** `plugin.json` and `mcp.json` ship at the pack
+  root per the Agent Plugins 1.0.0 specification, so the extracted archive
+  installs as one plugin in Codex, Cursor, GitHub Copilot, Kiro and VS Code.
+  Claude Code ignores both and keeps auto-discovering `skills/`.
+- **Tenant MCP registered per project by step 0.** `outsystems-sprint-init`
+  writes a project `.mcp.json` naming the server `outsystems-<slug>` from the
+  project's `outsystems.toml`, and its doctor rejects a generic `outsystems`
+  registration. One user-scope credential shared by concurrent sessions forced
+  a re-login every 30–90 minutes, because ODC rotates refresh tokens and
+  revokes the family on reuse. The manual, the entry doc and both install
+  documents no longer instruct `claude mcp add -s user`; login is
+  `claude mcp login outsystems-<slug>`.
+- **Retired Mentor tool names closed out.** The v42 migration to the
+  session-based Mentor surface covered the files it enumerated; this pass
+  rewrote the remaining shipped references that still named only
+  `mentor_start`/`publish_start` in prohibitions and approval gates, where a
+  stale name silently weakens the rule instead of failing.
+- **ODC platform rules adopted in the build and plan references.** The
+  generated entity-action family is six names and a colliding Server Action is
+  renamed, not refused; an aggregate `Count` is a Long Integer; SQL
+  `Max. Records` applies in the app, not the statement, and `.Count` on a SQL
+  node re-executes it; a credential-bearing Setting is `Is Secret = Yes`; the
+  `Length()` prohibition is about the Text function, not a list's `.Length`;
+  a library producer must be released with a version, not merely published,
+  before its consumer can resolve it.
+- **Blueprint and inventory contract.** An `exists: true` entity can gain
+  attributes through an attribute-level `create: true` channel instead of
+  being recreated; sample content carries no real personal data; data-flow
+  prose carries no expression or API syntax; screen-inventory approval uses
+  the Confirm/Correct/Missing vocabulary.
+
 ### Export 2026-09-02.6 (PAS `527399e9`) — released as v42
 
 Nine packs re-exported for the v42 cut. Ship set frozen at `320a648f`; the

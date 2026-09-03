@@ -6,7 +6,7 @@ not published here.
 
 > **Status: published.** Two things ship here, and they install separately: the
 > **OutSystems Public Knowledge MCP server** (a local documentation server) and
-> the **OutSystems sprint loop pack** (six agent skills). Both are Release
+> the **OutSystems sprint loop pack** (seven agent skills). Both are Release
 > assets, and every link below resolves to the
 > [latest release](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest)
 > rather than to a fixed version — so the prompts stay correct as new versions
@@ -141,7 +141,7 @@ breaks, open an issue; it may or may not be picked up.
 | Area | Contents | Source of truth |
 |---|---|---|
 | [Releases](../../releases/latest) | Both products' assets — the `outsystems-public-knowledge` component (ZIP + `.sha256`) and the sprint loop pack (`.tgz` + `.sha256`), each with its own per-OS install instructions | Component built from `workspace-knowledge-cc`; pack built from `portable-agent-skills` |
-| [`skills/`](skills/) | Browsable source for the six published skills | Derived from `portable-agent-skills` |
+| [`skills/`](skills/) | Browsable source for the seven published skills | Derived from `portable-agent-skills` |
 | [`docs/`](docs/) | The sprint loop manual, the entry doc, the feedback kit, and the knowledge-provider setup notes | Derived from `portable-agent-skills` |
 
 Every release carries **both** products' assets, so `/releases/latest/download/…`
@@ -176,6 +176,7 @@ outsystems-agents-tools/
 ├── docs/                             # generated — entry doc + feedback kit
 └── skills/                           # generated — one directory per skill
     ├── EXPORT-MANIFEST.json          # per-pack provenance + per-file sha256
+    ├── outsystems-sprint-init/
     ├── outsystems-screen-inventory/
     ├── outsystems-ui-design/
     ├── outsystems-plan-to-mentor/
@@ -186,3 +187,10 @@ outsystems-agents-tools/
 ```
 
 Each Release carries its own component ZIP, checksum and per-OS install instructions. The prompt always resolves `/releases/latest`, so it never needs a version in it.
+
+From v43 the pack archive is also an [Agent Plugins](https://agent-plugins.org/specification)
+directory: `plugin.json` and `mcp.json` sit at the pack root next to `skills/`,
+so clients that implement that format (Codex, Cursor, GitHub Copilot, Kiro,
+VS Code) can install the extracted archive as one plugin. Claude Code ignores
+both files and discovers `skills/` as before; the tenant URL in `mcp.json` is a
+placeholder, and step 0 of the loop registers the real tenant per project.
