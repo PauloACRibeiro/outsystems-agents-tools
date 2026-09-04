@@ -12,6 +12,33 @@ not published here.
 > rather than to a fixed version — so the prompts stay correct as new versions
 > ship, and there is nothing for you to keep in sync by hand.
 
+## Before you paste anything: how the downloads reach you
+
+Today this repository is public and every prompt below downloads anonymously.
+It is planned to move inside the OutSystems GitHub organization, after which
+downloads need a signed-in GitHub account: any OutSystems employee, or an
+external person who received an invite. Nothing in the prompts changes on that
+day, because the install documents already carry a fallback chain: anonymous
+download first, then the GitHub CLI, then files you downloaded by hand.
+
+To be ready, do this once per machine (harmless now, required later):
+
+1. Install the GitHub CLI: `brew install gh` on macOS, `winget install GitHub.cli`
+   on Windows.
+2. Sign in with the account that can see this repository:
+
+   ```bash
+   gh auth login --web
+   ```
+
+   The agent must never run this for you; it needs your browser.
+
+If you cannot install the CLI, download the three files for your OS from the
+[Releases page](https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest)
+into one folder (the `INSTALL-*.md` for your OS, the archive, and its
+`.sha256`), and tell the agent where that folder is. The documents accept files
+that are already present.
+
 ## Install the OutSystems sprint loop pack
 
 Seven skills that take an OutSystems screen from an idea to a published, graded
@@ -24,9 +51,11 @@ Detect my OS, then download and follow the matching instructions:
   macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md
   Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md
 
-Follow that document literally. Confirm with me which agents to install for
-before you write anything to disk. When you are done, verify it and tell me the
-pack version, the skills roots you installed into, and where you put the docs.
+Follow that document literally. If its download step fails, use the fallback
+routes written in that step; do not improvise another way to fetch the files.
+Confirm with me which agents to install for before you write anything to disk.
+When you are done, verify it and tell me the pack version, the skills roots you
+installed into, and where you put the docs.
 ```
 
 **The pack alone is not the whole loop.** Its build step (step 5) refuses to
@@ -63,8 +92,10 @@ instructions:
   Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md
 
 Follow that document literally — an update is a per-skill replacement, never a
-merge. When you are done, tell me the version I moved from and to, and remind
-me that the updated skills are only picked up in a NEW conversation.
+merge. If its download step fails, use the fallback routes written in that
+step; do not improvise another way to fetch the files. When you are done, tell
+me the version I moved from and to, and remind me that the updated skills are
+only picked up in a NEW conversation.
 ```
 
 Updating the pack does not touch the Public Knowledge server — refresh that
