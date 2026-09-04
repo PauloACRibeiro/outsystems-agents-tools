@@ -17,9 +17,15 @@ not published here.
 Today this repository is public and every prompt below downloads anonymously.
 It is planned to move inside the OutSystems GitHub organization, after which
 downloads need a signed-in GitHub account: any OutSystems employee, or an
-external person who received an invite. Nothing in the prompts changes on that
-day, because the install documents already carry a fallback chain: anonymous
-download first, then the GitHub CLI, then files you downloaded by hand.
+external person who received an invite.
+
+The **sprint loop pack** prompts and documents are ready for that day: the
+prompt tells the agent how to fetch the install document with the GitHub CLI or
+read it from a folder you name, and the document's own download step tries, in
+order, files already present in your folder, then anonymous download, then the
+GitHub CLI, and stops with instructions otherwise. The **Public Knowledge MCP
+server** prompts are NOT ready yet: its install documents still download
+anonymously only, and they will be updated before the move.
 
 To be ready, do this once per machine (harmless now, required later):
 
@@ -51,11 +57,15 @@ Detect my OS, then download and follow the matching instructions:
   macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md
   Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md
 
-Follow that document literally. If its download step fails, use the fallback
-routes written in that step; do not improvise another way to fetch the files.
-Confirm with me which agents to install for before you write anything to disk.
-When you are done, verify it and tell me the pack version, the skills roots you
-installed into, and where you put the docs.
+If that download is refused (404 or 401), the repository has become private:
+fetch the same file with `gh release download -R PauloACRibeiro/outsystems-agents-tools -p <that file name>`
+(I must already have run `gh auth login`); if that fails too, ask me for the
+folder where I downloaded the release files by hand and read the document from
+there. Follow that document literally. If its own download step fails, use the
+fallback routes written in that step; do not improvise another way to fetch the
+files. Confirm with me which agents to install for before you write anything to
+disk. When you are done, verify it and tell me the pack version, the skills
+roots you installed into, and where you put the docs.
 ```
 
 **The pack alone is not the whole loop.** Its build step (step 5) refuses to
@@ -91,11 +101,15 @@ instructions:
   macOS:   https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-MACOS.md
   Windows: https://github.com/PauloACRibeiro/outsystems-agents-tools/releases/latest/download/INSTALL-SPRINT-LOOP-WINDOWS.md
 
-Follow that document literally — an update is a per-skill replacement, never a
-merge. If its download step fails, use the fallback routes written in that
-step; do not improvise another way to fetch the files. When you are done, tell
-me the version I moved from and to, and remind me that the updated skills are
-only picked up in a NEW conversation.
+If that download is refused (404 or 401), the repository has become private:
+fetch the same file with `gh release download -R PauloACRibeiro/outsystems-agents-tools -p <that file name>`
+(I must already have run `gh auth login`); if that fails too, ask me for the
+folder where I downloaded the release files by hand and read the document from
+there. Follow that document literally — an update is a per-skill replacement,
+never a merge. If its own download step fails, use the fallback routes written
+in that step; do not improvise another way to fetch the files. When you are
+done, tell me the version I moved from and to, and remind me that the updated
+skills are only picked up in a NEW conversation.
 ```
 
 Updating the pack does not touch the Public Knowledge server — refresh that
