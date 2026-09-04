@@ -8,11 +8,19 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Pending v43 (PAS `main` after `527399e9`; export not yet cut)
+### Export 2026-09-04 (PAS `f6ced0aa`) — released as v43
 
-What has landed upstream since the v42 export and will ship with the next
-pack. Written before the cut; the export line and OPK decision are added when
-it happens.
+Nine packs re-exported for the v43 cut. Ship set frozen at `f6ced0aa` (pack
+`2026-09-04.3`, 164 files); the exported tip is the ship set plus maintainer
+evidence files. OPK component carried forward again (`8644fd60`).
+
+- **Install documents survive the repository going private.** Step 2 of both
+  sprint-loop install documents now tries, in order: the archive and digest
+  already present in the folder you named, anonymous download, then the
+  GitHub CLI, and stops with two instructions otherwise. The install and
+  update prompts tell the agent how to fetch the document itself with `gh` or
+  read it from your folder. The Public Knowledge server's documents are NOT
+  yet ready for that day (see the README).
 
 - **Agent Plugins manifest.** `plugin.json` ships at the pack root per the
   Agent Plugins 1.0.0 specification, so the extracted archive installs as one

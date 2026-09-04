@@ -104,7 +104,7 @@ unrelated assets.
 
 This preamble improves completion discipline for approved Mentor execution. It
 does not authorize publish. After a successful run, use the Post-Mentor Preservation Decision Gate
-before any `publish_start`.
+before any `mentor_publish` (pre-2026-09: `publish_start`).
 
 ## Live UI/Data Grid Preflight
 

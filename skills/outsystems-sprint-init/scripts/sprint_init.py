@@ -99,6 +99,7 @@ def toml_text(args, slug: str) -> str:
 hostname = "{args.tenant_hostname}"
 tenant_id = "{args.tenant_id}"
 mcp_url = "https://{args.tenant_hostname}/mcp"
+mcp_server_name = "outsystems-{slug}"
 
 [environment]
 key = "{args.env_key}"
@@ -112,6 +113,22 @@ asset_key = "{args.app_key}"
 sprint_history_slug = "{slug}"
 derivatives_remote_ok = {str(args.derivatives_remote_ok).lower()}
 """
+
+
+def mcp_server_name(slug: str) -> str:
+    return f"outsystems-{slug}"
+
+
+def mcp_json_text(args, slug: str) -> str:
+    """Project-scoped OutSystems MCP registration. One server NAME per project
+    gives Claude Code one OAuth client and one refresh-token family per
+    project: ODC rotates refresh tokens on every use and revokes the whole
+    family on reuse, so a single user-scope `outsystems` credential shared by
+    concurrent sessions forced a re-auth every 30-90 min (2026-09-02,
+    anthropics/claude-code#91641)."""
+    return json.dumps({"mcpServers": {mcp_server_name(slug): {
+        "type": "http", "url": f"https://{args.tenant_hostname}/mcp"}}},
+        indent=2) + "\n"
 
 
 def claude_md(args, slug: str) -> str:
@@ -132,15 +149,23 @@ Layout (workspace convention `sprint-loop-project-layout:v1`):
 
 ## Tenant Guard
 
-The OutSystems MCP registration is user-scoped (one per machine), so it may
-still point at another project's tenant. **Before any tenant-touching MCP
-call** (mentor sessions, publish, deploy, app/oml downloads), verify
-`auth_status.tenant_hostname` equals `[tenant].hostname` in `outsystems.toml`.
-On mismatch STOP and offer to re-register — never switch silently:
+The OutSystems MCP is registered PER PROJECT in `.mcp.json` as
+`outsystems-{slug}` (tool prefix `mcp__outsystems-{slug}__`), so each project
+holds its own OAuth client and refresh-token family. Never register a
+user-scope `outsystems` server for this tenant: ODC rotates refresh tokens on
+every use and revokes the family on reuse, so one credential shared by
+concurrent sessions forces a re-authorization every 30-90 min
+(anthropics/claude-code#91641). Two sessions in THIS folder still share the
+family — one session does tenant work at a time.
 
-- Claude: `claude mcp add -s user --transport http outsystems <mcp_url from
-  outsystems.toml>`, then re-authenticate; a mid-session URL change may need
-  a session restart.
+**Before any tenant-touching MCP call** (mentor sessions, publish, deploy,
+app/oml downloads), verify `auth_status.tenant_hostname` equals
+`[tenant].hostname` in `outsystems.toml`. On mismatch STOP and offer to fix
+`.mcp.json` — never switch silently:
+
+- Claude: `.mcp.json` must carry `[tenant].mcp_server_name` → `[tenant].mcp_url`
+  from `outsystems.toml` (the doctor checks this); re-authenticate through
+  `/mcp` after a change — a mid-session URL change may need a session restart.
 - Codex: has no `outsystems` MCP surface (standing issue) — point the PKCE
   fallback (`projects/workspace-agent-tools/scripts/outsystems_mcp_pkce_fallback.sh`)
   at the toml's `[tenant].hostname` and re-run `auth`; never edit
@@ -180,6 +205,9 @@ def cmd_scaffold(args) -> int:
     tm = proj / "outsystems.toml"
     ensure(tm.is_file(), created, existed, "outsystems.toml",
            lambda: tm.write_text(toml_text(args, slug), encoding="utf-8"))
+    mj = proj / ".mcp.json"
+    ensure(mj.is_file(), created, existed, ".mcp.json",
+           lambda: mj.write_text(mcp_json_text(args, slug), encoding="utf-8"))
     tp = proj / "docs" / "specs" / "TEMPLATE.md"
     ensure(tp.is_file(), created, existed, "docs/specs/TEMPLATE.md",
            lambda: tp.write_text(PRD_TEMPLATE.read_text(encoding="utf-8"),
@@ -551,6 +579,8 @@ def check_project(proj: Path, profile: str = "estate") -> list:
             remote_ok = data.get("sprint_loop", {}).get("derivatives_remote_ok")
     else:
         rows.append(Row("outsystems.toml", "BLOCKED", "missing — re-run scaffold"))
+
+    rows.append(_check_mcp_json(proj, data if tm.is_file() else None))
 
     # Remote gate, both directions: `false` means this repo must have NO git
     # remote (client-app derivatives stay local); `true` is an approval that
@@ -982,6 +1012,53 @@ def check_binaries() -> list:
                         "no working Python found among python3/python/py — on Windows a "
                         "`python3` that prints \"Python was not found\" is the Store alias, not an install"))
     return rows
+
+
+def _check_mcp_json(proj: Path, toml_data) -> "Row":
+    """`.mcp.json` must register exactly the per-project server the toml names,
+    at the toml's mcp_url. A user-scope `outsystems` registration shared by
+    concurrent sessions burns the ODC refresh-token family (rotation + reuse
+    revocation) — see mcp_json_text()."""
+    mj = proj / ".mcp.json"
+    if not mj.is_file():
+        return Row(".mcp.json", "BLOCKED",
+                   "missing — legacy project: re-run scaffold (it adds the "
+                   "per-project outsystems-<slug> registration) and remove any "
+                   "user-scope `outsystems` server for this tenant")
+    try:
+        cfg = json.loads(mj.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return Row(".mcp.json", "BLOCKED", "file is not valid JSON")
+    servers = cfg.get("mcpServers") if isinstance(cfg, dict) else None
+    if not isinstance(servers, dict) or not servers:
+        return Row(".mcp.json", "BLOCKED", "no mcpServers entry")
+    if not isinstance(toml_data, dict):
+        return Row(".mcp.json", "WARN", "present; toml unreadable so the server "
+                   "name/url could not be cross-checked")
+    tenant = toml_data.get("tenant", {}) if isinstance(toml_data.get("tenant"), dict) else {}
+    slug = (toml_data.get("sprint_loop", {}) or {}).get("sprint_history_slug")
+    name = tenant.get("mcp_server_name") or (mcp_server_name(slug) if slug else None)
+    url = tenant.get("mcp_url")
+    if not (isinstance(name, str) and name.startswith("outsystems-") and len(name) > len("outsystems-")):
+        return Row(".mcp.json", "BLOCKED",
+                   f"[tenant].mcp_server_name is {name!r} — must be the per-project "
+                   "'outsystems-<slug>' (a generic 'outsystems' name shares one "
+                   "refresh-token family across projects)")
+    entry = servers.get(name) if name else None
+    if entry is None:
+        return Row(".mcp.json", "BLOCKED",
+                   f"server '{name}' not registered (found: {', '.join(servers)}) "
+                   "— the name must be per project so each project owns its "
+                   "refresh-token family")
+    if not isinstance(entry, dict) or entry.get("url") != url:
+        return Row(".mcp.json", "BLOCKED",
+                   f"server '{name}' url is {entry.get('url') if isinstance(entry, dict) else entry!r}, "
+                   f"toml [tenant].mcp_url is {url!r} — fix whichever is wrong")
+    if "outsystems" in servers and name != "outsystems":
+        return Row(".mcp.json", "WARN",
+                   f"'{name}' registered, but a generic 'outsystems' server is also "
+                   "present — remove it so sessions do not share a token family")
+    return Row(".mcp.json", "PASS", f"'{name}' -> {url}")
 
 
 def cmd_doctor(args) -> int:

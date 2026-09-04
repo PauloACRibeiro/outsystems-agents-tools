@@ -147,21 +147,27 @@ For **Claude Code**, the official instructions are:
     claude plugin marketplace add OutSystems/outsystems-mcp
     claude plugin install outsystems@outsystems
 
-**Installing the plugin does not register a server.** That is a separate
-command, and it needs your own tenant hostname:
+**Installing the plugin does not register a server, and you do not register
+one by hand.** Step 0 of the loop (`outsystems-sprint-init`) writes a
+`.mcp.json` in your project folder that registers the server as
+`outsystems-<slug>`, pointing at the `mcp_url` in that project's
+`outsystems.toml` — your `<your-company>.outsystems.dev` hostname. Claude Code
+asks you once to approve that project-scope server on the next start. Each
+project gets its own OAuth client this way on purpose: ODC rotates refresh
+tokens on every use and revokes the family on reuse, so one user-scope
+`outsystems` registration shared by concurrent sessions forced a re-login
+every 30–90 minutes. The step 0 doctor rejects a generic `outsystems` name in
+the project `.mcp.json` and warns when that file also carries one. It reads
+only that file: it cannot see a user-scope registration, so if you made one
+earlier, remove it yourself with `claude mcp remove -s user outsystems`.
 
-    claude mcp add -s user --transport http outsystems https://<my-tenant>/mcp
+Add no `--client-id` and no `--callback-port` anywhere: the server supports
+OAuth Dynamic Client Registration, so Claude Code registers its own client on
+an ephemeral loopback port, and pinning either of those breaks it.
 
-Substitute your own tenant hostname — the `<your-company>.outsystems.dev` your
-ODC Portal already uses. Add no
-`--client-id` and no `--callback-port`: the server supports OAuth Dynamic
-Client Registration, so Claude Code registers its own client on an ephemeral
-loopback port, and pinning either of those breaks it.
-
-Skip this command and the next one fails with `No MCP server named
-"outsystems"`, listing whatever unrelated servers you happen to have. The
-error does not suggest registration, so it reads as a broken install when
-nothing is broken.
+If a tenant call fails with `No MCP server named "outsystems-<slug>"`, step 0
+has not run in this folder yet, or you started the conversation somewhere
+else — the registration is per project folder.
 
 The repository README has the OAuth walkthrough and best-effort recipes for
 Codex and other harnesses. Always install as `outsystems@outsystems`; the bare
@@ -169,7 +175,7 @@ plugin name is not enough to update it later.
 
 **Order matters: authenticate first, restart second.** Authentication state
 lives in your configuration, not in the session — `claude mcp login
-outsystems` (browser sign-in), confirm `claude mcp list` shows `✔ Connected`,
+outsystems-<slug>` (browser sign-in), confirm `claude mcp list` shows `✔ Connected`,
 and only then start a new conversation. A conversation started before the
 login binds an unauthenticated server and will never see the tools, however
 many times you restart the client (a real first run spent two restarts
@@ -179,7 +185,7 @@ server-side allowlist — nothing on your machine fixes it; contact OutSystems.
 **The same command is your reconnect step.** The connector token lasts roughly
 ten hours, so a full day's work outlives it — it expired twice during one real
 run. When tenant tools stop responding, or `claude mcp list` stops showing
-`✔ Connected`, run `claude mcp login outsystems` again and start a new
+`✔ Connected`, run `claude mcp login outsystems-<slug>` again and start a new
 conversation, exactly as on the first login. An expired token does not
 announce itself as an auth problem; it looks like the tenant going quiet.
 

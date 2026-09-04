@@ -399,7 +399,7 @@ This section uses the following schema whenever practical:
 | Runtime property | Meaning |
 | --- | --- |
 | `List` | Returned record list |
-| `Count` | Count query result |
+| `Count` | Count query result — a **Long Integer**, so it converts with `LongIntegerToText`, not `IntegerToText` |
 | `IsDataFetched` | Data fetch completed |
 | `HasFetchError` | Fetch failed |
 
@@ -408,7 +408,7 @@ This section uses the following schema whenever practical:
 - Use `Refresh Data` to rerun screen/block aggregates.
 - Avoid aggregates inside `For Each` cycles.
 - If a Data Action fetches all records, `Max. Records` can be left empty.
-- `Length` is a **Text** built-in function and its parameter is typed Text, so `Length(<Aggregate>.List)` is not a valid expression. When you need the total number of records use `<Aggregate>.Count`, which is not limited by `Max. Records`.
+- `Length` is a **Text** built-in function and its parameter is typed Text, so `Length(<Aggregate>.List)` is not a valid expression. When you need the total number of records use `<Aggregate>.Count`, which is not limited by `Max. Records`. That prohibition is about the **function**, not about list properties: a record list's own `Length` property (`<Aggregate>.List.Length`) is a valid expression, and ODC's own documentation uses it to display an item count. Read `.List.Length` when the list is already fetched and the question is how many rows came back; reach for `<Aggregate>.Count` when the total must ignore `Max. Records`, remembering that `.Count` is documented to run a second query.
 - To test whether a query returned nothing, use `<Aggregate>.List.Empty` rather than `<Aggregate>.Count = 0`; the documentation advises against `.Count` for the emptiness check because it runs an extra query unnecessarily. `<SQL query>.List.Empty` is the same test for an SQL element.
 
 Evidence for the two rules above: `Current official` — `OutSystems/docs-odc:src/eap/reference/built-in-functions/text.md` publishes `Length` under Text with a Text-typed parameter, and `OutSystems/docs-odc:src/eap/building-apps/ui/creating-screens/best-practices-fetch-display-data.md` gives both remedies. State the prohibition without a platform error code — no published ODC error catalogue entry covers it.
@@ -532,10 +532,12 @@ Evidence boundary: Current official for Aggregate concepts, grouping, count, and
 - Test Query against external entities can commit `INSERT`, `UPDATE`, `DELETE`, or `CALL` immediately.
 - Avoid SQL queries inside cycles.
 - Prefer Aggregates unless SQL is clearly needed.
+- `Max. Records` on a SQL element does **not** change the statement sent to the database — the limit is applied in the app, to results the database has already returned. Bound the rows in the SQL text itself when the size of the fetch is what matters. (Contrast the Aggregate, whose `Max. Records` does bound the fetch.)
+- `<SQL query>.Count` runs a **second execution of the same statement**, joins and all. OutSystems generates an optimized counting query for Aggregates but not for SQL nodes, so when a SQL result needs a total, author a second simplified SQL node whose only job is the count. The emptiness test is still `<SQL query>.List.Empty`, never `.Count = 0`.
 
 **Pseudocode Pattern**: `SQL GetOverdueInvoices(CustomerId: CustomerId)`
 **Evidence Status**: Current official
-**Sources**: [use-sql.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/sql/use-sql.md), [aggregate-or-sql-query-inside-a-cycle.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/monitor-and-troubleshoot/manage-technical-debt/performance/aggregate-or-sql-query-inside-a-cycle.md)
+**Sources**: [use-sql.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/fetch-data/sql/use-sql.md), [aggregate-or-sql-query-inside-a-cycle.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/monitor-and-troubleshoot/manage-technical-debt/performance/aggregate-or-sql-query-inside-a-cycle.md), [best-practices-fetch-display-data.md](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/ui/creating-screens/best-practices-fetch-display-data.md) (the `Max. Records` and record-counting rules above — verified live 2026-09-03)
 
 ### 3.5 Events, Timers, And JavaScript
 
@@ -1078,6 +1080,7 @@ passes its own attributes to.
 - In agentic flows, state whether action calling, structured output, or both are involved. If both are needed, describe two distinct agent calls.
 - Name a data type with the token the docs use. The documented contact-number type is `Phone Number`, not `Phone`; the documented reference type is `Identifier`. A near-miss token is read as a Text attribute named after a type.
 - **A Text attribute emitted without a length is choosing 50, not leaving the length open.** Observed on tenant 2026-08-27 (app `98c8428a` rev 3): an attribute created as Text with no length given came back as `Length` 50, read from the published model by a session that never saw the writing session. No ODC document states this default, and the measurement is of the Mentor/ModelAPI path rather than a published contract — but the consequence is the same either way, which is that an unstated length silently truncates any value past 50 characters. State the length on every Text attribute whose content can exceed it.
+- **A Long Integer does not fit in an Integer without a conversion.** Integer implicitly accepts Decimal (truncating), Boolean, Currency and an Integer identifier — not Long Integer ([Convert data types](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/convert-data-types.md), implicit-conversion table). So a Long Integer — an aggregate `.Count`, a Long Integer attribute — needs `LongIntegerToInteger` or, for display, `LongIntegerToText`, both listed on the same page. The same table also omits Long Integer from Decimal's and Currency's accepted lists, so treat this as one documented refusal and not as evidence that it is the only narrowing the platform refuses.
 - **Pick the null-identifier function from the identifier's own type.** `NullIdentifier()` returns `0` and `NullTextIdentifier()` returns `""` ([Data Conversion](https://github.com/OutSystems/docs-odc/blob/main/src/eap/reference/built-in-functions/data-conversion.md)), so a check written against the wrong one compares an identifier to a value it can never hold and the guard silently never fires. Read the referenced entity's identifier type before emitting the comparison rather than defaulting to `NullIdentifier()`. Where the identifier type is not established, say so instead of guessing — and note that a null-identifier check after an entity read is dead code regardless, for the reason in `odc-platform-guardrails.md`'s Not-Found Guard Gate.
 
 ## 8. Coverage Matrix And Verification Gaps

@@ -474,6 +474,6 @@
     "entities stay aligned with the reviewed scope and reuse verified shell assets where possible.",
     "screens preserve producer-first data flow, section ordering, and explicit permissions.",
     "Visual-Source UI Prompt Packet is emitted from this enriched blueprint rather than replacing it.",
-    "No mentor_session_id, mentor_session_token, env_key, implicit mentor_start, implicit publish, or Claude-only cache paths are added to the asset."
+    "No sessionId, mentor_session_id, mentor_session_token, env_key, implicit mentor_prompt or mentor_create_asset (pre-2026-09: mentor_start), implicit publish via mentor_publish (pre-2026-09: publish_start), or Claude-only cache paths are added to the asset."
   ]
 }

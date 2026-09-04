@@ -64,7 +64,7 @@ before prompt emission:
 8. Four-part section contract: every section has VISUAL LAYOUT, DATA FLOW, FUNCTIONAL BEHAVIOR, and PRESENTATION ORDER.
 9. Data-Flow Parity Gate: every Expression, image, URL, option, selected value, and repeated item in VISUAL LAYOUT has matching DATA FLOW and a source-like input.
 10. State plan: loading state, empty state, error state, validation state, and destructive-action confirmation when applicable. Preserve the state and feedback decisions in the enriched blueprint so the emitted prompt packet stays compact without dropping them.
-11. Polish acceptance: remove default pattern children, use typography hierarchy, preserve extracted colors/sizes, use realistic sample content, keep section spacing through OutSystems UI utilities when possible, and name manual review checks.
+11. Polish acceptance: remove default pattern children, use typography hierarchy, preserve extracted colors/sizes, use realistic but fictional sample content — never real names, email addresses, phone numbers, account numbers or government IDs, in the blueprint, the prompt packet or seed data; official ODC guidance forbids PII in prompts and requirement documents — keep section spacing through OutSystems UI utilities when possible, and name manual review checks.
 12. Evidence boundary: Current official, Catalog-backed official, OutSystems-public implementation evidence, or Unverified gap.
 
 **Items 1, 4, 7 and 9 have a deterministic form — do not re-derive them by
@@ -376,6 +376,8 @@ For every Expression, image, media URL, option, selected value, repeated item, o
 
 Do not leave DATA FLOW thinner than VISUAL LAYOUT when the section displays dynamic information. Thin data-flow instructions cause static hardcoded UI.
 
+State each value in entity/attribute and producer terms — never as OutSystems expression-language or Model API syntax (`ConvertList(...)`, `FormatCurrency(...)`, `If(...)`, `AdvancedFormat` JSON, `OptionalConfigs`, `TypeConversion`). A code fragment in a spec is read as code to reproduce, not as intent to satisfy; the official guidance for requirement documents is the same — no code snippets or technical implementation instructions. Name the block and the formatting outcome ("abbreviated currency, `$1.4M`"); leave the expression to the build.
+
 ### FUNCTIONAL BEHAVIOR
 
 Describe what the section does in user terms: display-only, filter, select, navigate, upload, save, refresh, validate, confirm, or show feedback.
@@ -633,8 +635,8 @@ generation.
 
 After an approved Mentor execution succeeds, stop and ask which preservation route the user wants:
 
-- publish to a specific environment, requiring explicit current approval before `publish_start` unless the current request already clearly approved implementation plus publish to that exact environment
-- stop with the newest Mentor session id/token details and session-expiry risk recorded
+- publish to a specific environment, requiring explicit current approval before `mentor_publish` (pre-2026-09: `publish_start`) unless the current request already clearly approved implementation plus publish to that exact environment. `mentor_publish` ships to the connected dev environment and takes no environment argument, so any other target is a separate, separately approved `deploy_start`
+- stop with the open session's `sessionId` and its idle-expiry risk recorded (pre-2026-09 this was the newest Mentor session id/token pair)
 - create a prompt-only handoff for manual ODC Studio review
 
 No mandatory publish. No implicit publish. No duplicate publish confirmation when the user already clearly approved publish to a specific environment. No production promotion from this skill.

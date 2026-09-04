@@ -49,8 +49,9 @@ Do not use `Template_*`, `template_*`, or `OutSystems Sample Data` as the shell.
 Naming a custom tenant template as the `template` argument of an `app_create` is
 a different thing and is legitimate: it clones that template into a new owned
 app rather than building inside the template itself.
-Do not call `app_create`, `mentor_start`, `publish_start`, or mutate a tenant
-without exact current approval for the action, readable target name, and
+Do not call `app_create`, `mentor_create_asset`, `mentor_prompt`,
+`mentor_publish` (or the pre-2026-09 `mentor_start` / `publish_start`), or mutate
+a tenant without exact current approval for the action, readable target name, and
 canonical id when it already exists.
 
 ## Required Gate
@@ -340,18 +341,20 @@ confirm them by reading the target:
   the Shell Provenance Gate above already keys on.
 - **Role** — exactly one persistent role, named after the app itself
   (`ElasticSearchSandbox` in the sandbox app), with the `Common` screens wired
-  to it. Both observations contradict the reported name `Template_WebApp`, but
-  a post-create rename cannot be excluded from post-Mentor snapshots, so this
-  settles nothing about the template's own spelling. Read the role name before
-  writing a prompt that references it — assume neither spelling, and do not
-  create a second app role.
+  to it. **Settled 2026-09-03** by a `context_roles` read on a freshly
+  template-scaffolded throwaway app: exactly one role, and its name was the
+  app's own name with the punctuation stripped — not `Template_WebApp`. The
+  post-create-rename doubt is closed: the template's own role IS the sanitized
+  app name. Still read the role name before writing a prompt that references it,
+  and do not create a second app role.
 
-**Unverified, treat as hypothesis** (AX-team report, 2026-08-25/26; no
-measurement available offline, and the scaffold inventory renders no theme
-element): themes `Template_WebApp` — said to carry `LayoutTopMenu` plus the
-`Menu` block and a 12-column fluid grid at `maxWidth 1280`, inheriting the
-`OutSystemsUI` base theme — and `EmailTheme`. Confirm with a live read or Studio
-inspection before naming either theme in a prompt.
+**Measured 2026-09-03** (`context_themes` on the same freshly scaffolded app;
+supersedes the AX-team report of 2026-08-25/26, which named the theme
+`Template_WebApp`): the theme is `TemplateApplication`, carrying a base theme,
+layout `LayoutTopMenu` and pre-set brand colours. A separate `EmailTheme` also
+exists. The report's `LayoutTopMenu` claim held; its theme *name* did not. Still
+confirm with a live read before naming a theme in a prompt — the name is the part
+that moved, and it is the part prompts get wrong.
 
 Consequence for a first scaffold, and it holds at every confidence level above:
 **read the target's own screens, blocks and role before prompting, and prompt
@@ -470,10 +473,13 @@ After an approved Mentor execution succeeds, stop and ask which preservation
 route the user wants:
 
 - publish to a specific environment, requiring explicit current approval before
-  `publish_start` unless the current request already clearly approved
-  implementation plus publish to that exact environment
-- stop with the newest Mentor session id/token details and session-expiry risk
-  recorded
+  `mentor_publish` (pre-2026-09: `publish_start`) unless the current request
+  already clearly approved implementation plus publish to that exact environment.
+  `mentor_publish` ships to the connected dev environment and takes no
+  environment argument, so "that exact environment" is the session's own; any
+  other target is a separate, separately approved `deploy_start`
+- stop with the open session's `sessionId` and its idle-expiry risk recorded
+  (pre-2026-09 this was the newest Mentor session id/token pair)
 - create a prompt-only handoff for manual ODC Studio review
 
 No mandatory publish. No implicit publish. No duplicate publish confirmation

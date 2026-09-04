@@ -890,6 +890,12 @@ trial F-02):
   `attributes` are the shape OMI **verifies**, not the shape it creates, and an
   existing static entity needs no `records` and no incoming FK+`enum_values`
   seed (the validator exempts it from the populable-record-path rule).
+- **Attribute-level** `"create": true`, on one attribute of an `exists: true`
+  entity — this attribute is **not yet** on the existing entity and must be
+  ADDED to it, with its declared `data_type`; every other attribute on that
+  entity stays a shape to verify, not to create. `create: true` on an
+  attribute whose entity is not `exists: true` is an error — a created entity
+  creates all of its attributes, so the flag has nothing to add to.
 
 Both are valid **only** when `target_mode` is `"existing-app"`; the validator
 hard-fails either one against any other target mode, because a greenfield target

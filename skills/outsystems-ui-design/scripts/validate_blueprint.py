@@ -1254,6 +1254,29 @@ def _check_existing_asset_channel(bp, errors):
             )
 
 
+def _check_create_attribute_channel(bp, errors):
+    """F1 (AH-2026-09-02-003 designtomodel-disposition proposal 3.1): an attribute
+    of an `exists: true` entity may carry `create: true` to say it is to be ADDED
+    to the existing entity. `create` on an entity without `exists: true` is an
+    error - a created entity creates all of its attributes already."""
+    existing = _existing_entities(bp)
+    for ent in _as_list(_as_dict(bp).get("entities")):
+        if not isinstance(ent, dict):
+            continue
+        ename = ent.get("name")
+        if ename in existing:
+            continue
+        for a in _as_list(ent.get("attributes")):
+            if isinstance(a, dict) and a.get("create") is True:
+                errors.append(
+                    f"entity '{ename}' attribute '{a.get('name')}' carries "
+                    "create: true, but the entity is not flagged exists: true "
+                    "- create is only valid on an attribute of an existing "
+                    "entity (a created entity creates all of its attributes "
+                    "already)"
+                )
+
+
 def _check_existing_asset_announcement(bp, warnings):
     """Advisory: a bound asset should also be announced in existing_assets, so
     the target boundary stays readable without walking every region."""
@@ -1997,6 +2020,7 @@ def collect_errors(bp, extra_seed_targets=None, extra_declared=None):
     _check_binding_existence(bp, errors)
     _check_enum_on_non_fk(bp, errors)
     _check_existing_asset_channel(bp, errors)
+    _check_create_attribute_channel(bp, errors)
     _check_records_on_non_static(bp, errors)
     _check_dual_seed_mismatch(bp, errors)
     _check_fk_target_declared(bp, errors, extra_declared)

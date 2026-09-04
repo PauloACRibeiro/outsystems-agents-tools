@@ -149,15 +149,21 @@ them as PENDING; probe them yourself and fill them before presenting it):**
    public-grounded (loop runs; OMI authority narrows); neither → BLOCKED for
    prompt-emitting steps. Same ladder as OMI's preflight.
 2. **Tenant-match** — `auth_status.tenant_hostname` must equal
-   `[tenant].hostname` in `outsystems.toml` (the MCP registration is
-   user-scoped, so it can still point at another project's tenant). On
-   mismatch STOP and OFFER re-registration with the toml's `mcp_url` — never
-   switch silently, and the remediation is agent-specific: Claude runs
-   `claude mcp add -s user --transport http outsystems <mcp_url>` + re-auth
-   (a mid-session change may need a session restart); Codex has no
-   `outsystems` MCP surface and uses the PKCE fallback script pointed at the
-   toml hostname, never Claude's registration. `mcp_url` is a required toml
-   field — the doctor BLOCKS a legacy project missing it. Then `app_list` must resolve the app named in the toml. The
+   `[tenant].hostname` in `outsystems.toml`. The MCP is registered PER
+   PROJECT (`.mcp.json`, server `outsystems-<slug>`, tool prefix
+   `mcp__outsystems-<slug>__`): each project owns one OAuth client and one
+   refresh-token family, because ODC rotates refresh tokens on every use and
+   revokes the family on reuse, so a user-scope `outsystems` credential
+   shared by concurrent sessions forced a re-auth every 30-90 min
+   (2026-09-02, anthropics/claude-code#91641). On mismatch STOP and OFFER to
+   fix `.mcp.json` from the toml — never switch silently; Claude
+   re-authenticates via `/mcp` (a mid-session change may need a session
+   restart); Codex has no `outsystems` MCP surface and uses the PKCE fallback
+   script pointed at the toml hostname, never Claude's registration.
+   `mcp_url` and `.mcp.json` are required — the doctor BLOCKS a legacy
+   project missing either (re-run scaffold: it is additive). Still one
+   session per project folder for tenant work — sessions in the same folder
+   share the family. Then `app_list` must resolve the app named in the toml. The
    scaffolded project CLAUDE.md carries the same guard as a standing
    instruction for EVERY sprint-loop skill run in that folder — that is what
    protects publishes and snapshots when hopping between projects targeting

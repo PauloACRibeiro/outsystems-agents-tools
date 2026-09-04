@@ -36,8 +36,15 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
    do NOT build it partially or speculatively.
 
 5. **Do NOT call `eSpace.AddDependency(globalKey)` from
-   `applyModelApiCode`.** If a referenced library is needed, surface that
-   manual prerequisite in Section 10.
+   `applyModelApiCode`.** Adding a reference is a separate host operation that
+   resolves the producer's signature itself; applied code has neither the
+   resolver nor the signature. If a public element from another app or library
+   is needed, the reliable path is to add it in ODC Studio through **Add public
+   elements** first and then name it in the prompt. Mentor can also locate an
+   element you name, ask you to confirm the producer, and add it — accept that
+   path only when the confirmation names the producer you meant. Either way,
+   surface the prerequisite in Section 10; never put a dependency-mutation call
+   inside the generated code.
 
 6. **Use the EXACT attribute types from Section 3.** Do NOT silently
    substitute `Integer` for `Long Integer` or infer different types.
@@ -65,8 +72,15 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
 9. **Respect producer-consumer order in Sections 4, 5, and 10.** Do NOT
    reference a server action, service action, screen, event, timer, agentic
    flow, or workflow node before its creation step in the same Mentor session.
-   Cross-app library producers must be published or pre-existing before the
-   consuming app uses them.
+   Cross-app producers must exist before the consuming app uses them, and a
+   **library** producer must be **released with a version** — a library's
+   elements are not consumable until its first version is released, and the
+   platform's reference tooling refuses a library that resolves without a
+   version tag (it also keeps an already-referenced library on its current
+   version unless an upgrade is asked for explicitly). (Public ODC docs state
+   the first-release rule; the reference-tooling half is source-read from the
+   platform's own agent-tool source, internal and pinned 2026-08-31, and is not
+   a documented product contract.)
 
 10. **Do NOT call a generated entity action from a screen or client action.**
     `Create<E>`, `CreateOrUpdate<E>`, `Update<E>` and `Delete<E>` are
@@ -100,6 +114,22 @@ Bounds worth designing around, split by authority.
    Resource, or runtime assignment — instead of trimming at build time.
 2. **The ODC "Test agent" flow can create a generated test app in the
    tenant** (see Runtime Verification below for the approval consequence).
+3. **A Setting that carries a credential is declared secret at design time.**
+   Any setting holding an API key, token, password or connection secret is
+   authored with **Is Secret = Yes** (ODC Studio, `Data` > `Settings`). Studio
+   then hides the value, and the value is stored encrypted in the platform's
+   secrets vault and never shown as plain text. Say it in the prompt at the
+   point the setting is specified — the property is a design-time authoring
+   choice, so nothing later in the pipeline supplies it. Two consequences
+   change the plan rather than merely warning about it. First, **a secret
+   setting has no default value**: the value is not authored in Studio at all
+   but set per stage in the ODC Portal after a publish, so a plan expecting a
+   default to make a first run work needs a different mechanism. Second, the
+   property is not freely reversible — **switching a secret back to non-secret
+   deletes the setting's value on the next publish.** Library-specific: a
+   secret property declared in a library takes its value in the settings of
+   each consuming application, and different consumers may hold different
+   values.
 
 ### Session-observed only
 
@@ -107,17 +137,17 @@ Observed live on a single tenant; require current documentation or a fresh
 bounded observation of the target before treating them as load-bearing
 platform facts:
 
-3. **The ODC agentic template shipped `LoadMemory` with no Timestamp sort and
+4. **The ODC agentic template shipped `LoadMemory` with no Timestamp sort and
    `Max. Records` 50.** Check it first in any agentic app: unsorted, memory
    loads in unspecified order; sorted ascending, a conversation past the
    record cap deterministically drops recent turns while keeping old ones.
    Review `Max. Records` explicitly on every memory or list read path rather
    than accepting aggregate defaults silently; record the accepted bound and
    its failure mode when keeping it.
-4. **Changing an agent's Response type broke consumer service actions.**
+5. **Changing an agent's Response type broke consumer service actions.**
    Check every consumer of the public entry point when the response contract
    changes, and update it in the same session.
-5. **Memory persistence needed a valid `AIMessage` assembled from a
+6. **Memory persistence needed a valid `AIMessage` assembled from a
    structured answer.** When a call returns structured output, the flow must
    build the assistant message explicitly before storing memory, or
    persistence breaks silently.

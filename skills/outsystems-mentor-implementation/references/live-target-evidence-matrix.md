@@ -7,7 +7,8 @@ Mentor Studio prompts, Studio-native pseudocode, live validation claims, visual
 inspection claims, or rollback readiness claims.
 
 This file does not authorize tenant-changing work. It is a read-only evidence
-and response-shape source owner. Approval for `mentor_start`, `publish_start`,
+and response-shape source owner. Approval for `mentor_create_asset`,
+`mentor_prompt`, `mentor_publish` (pre-2026-09: `mentor_start` / `publish_start`),
 `deploy_start`, rollback, `app_create`, cleanup, promotion, external-library
 mutation, package, push, or PR remains outside this file.
 

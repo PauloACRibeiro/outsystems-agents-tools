@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "outsystems-sprint-loop-pack",
+  "version": "42.0.0",
+  "description": "OutSystems ODC sprint loop for coding agents: scaffold a project, turn a PRD into a screen inventory and capability plan, design each screen as a validated OutSystems UI blueprint, drive ODC Mentor to implement and publish, run BDD tests, and audit the live runtime UI. Seven skills plus the shared reference set.",
+  "author": {
+    "name": "PauloACRibeiro",
+    "url": "https://github.com/PauloACRibeiro"
+  },
+  "homepage": "https://github.com/PauloACRibeiro/outsystems-agents-tools/blob/main/docs/sprint-loop-for-colleagues.md",
+  "repository": "https://github.com/PauloACRibeiro/outsystems-agents-tools",
+  "license": "MIT",
+  "keywords": [
+    "outsystems",
+    "odc",
+    "mentor",
+    "low-code",
+    "sprint-loop",
+    "ui-design",
+    "bdd",
+    "ui-audit"
+  ],
+  "extensions": {
+    "com.anthropic.claude": {
+      "note": "Claude Code auto-discovers skills/ and ignores this manifest. The OutSystems tenant MCP server is not declared here: step 0 of the loop (outsystems-sprint-init) registers it per project in that project's .mcp.json."
+    }
+  }
+}

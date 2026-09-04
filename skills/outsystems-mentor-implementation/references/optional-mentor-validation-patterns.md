@@ -31,7 +31,9 @@ publish/deploy-adjacent guidance. Use the matrix boundaries before making
 readiness claims, and keep missing proof as `Unverified gap` instead of
 inferring from nearby target evidence.
 
-No automatic `mentor_start`. No automatic `publish_start`. No implicit publish.
+No automatic `mentor_prompt` or `mentor_create_asset` (pre-2026-09:
+`mentor_start`). No automatic `mentor_publish` (pre-2026-09: `publish_start`). No
+implicit publish.
 Any live Mentor action, publish, deploy, rollback, app creation, promotion, or
 tenant mutation still requires explicit current approval for the target and
 action.

@@ -8,9 +8,9 @@ server calls, query performance, timers/background processing, or public API
 contracts.
 
 This reference is read-only prompt discipline. It does not authorize
-`app_create`, does not authorize `mentor_start`, does not authorize
-`publish_start`, and does not authorize deploy, rollback, cleanup, or tenant
-mutation. It does not replace current official docs, `outsystems-tech-content`,
+`app_create`, does not authorize `mentor_create_asset`, `mentor_prompt` or
+`mentor_publish` (nor the pre-2026-09 `mentor_start` / `publish_start`), and does
+not authorize deploy, rollback, cleanup, or tenant mutation. It does not replace current official docs, `outsystems-tech-content`,
 or ODC Portal impact analysis.
 
 Ground this guidance in current OutSystems public documentation before making
@@ -288,6 +288,55 @@ checkpoint contract is part of the design, not an implementation detail:
 This is design-level ordering and state, adopted as a pattern. The three-module
 sync architecture it comes from is not adopted.
 
+### Give an entity at most one Binary Data attribute
+
+**The actionable rule is public and unconditional**: put each binary attribute
+in its own entity. Do that and the design is right whether or not the limit
+below applies to your platform, so treat this as the instruction and the
+validation as the reason it is not merely advice.
+
+A compiler validation on file says the one-per-entity limit is hard rather than
+advisory: *"{0} can only have one attribute of 'Binary Data' data type"*
+(`Invalid Entity`). Read the scope carefully — see **Evidence** below. If it
+holds for ODC, a data model giving one entity both a photo and a signed
+document is rejected at validation time, and the cost of assuming it holds when
+it does not is zero, because the public guidance asks for the same shape.
+
+The remedy is the one the public best practice already asks for. ODC's *Best
+practices for data management* says to **"isolate binary data attributes in a
+separate entity"**, because fetching and updating an entity that carries binary
+data is heavy and the cost lands on every read of the parent
+([best-practices-for-data-management](https://success.outsystems.com/documentation/outsystems_developer_cloud/building_apps/data_management/best_practices_for_data_management/)).
+One binary attribute per entity, in its own entity, satisfies the limit and the
+performance guidance at once — so a design needing two binaries needs two
+entities, each referencing the parent, not a wider parent.
+
+Two adjacent validations worth stating in the same breath, from the same
+catalog: a `Binary Data` attribute **cannot participate in an entity index**
+(`Invalid Entity Index`), and an entity carrying one should have its **Update
+Behavior set to 'Changed Attributes'** (`Scalability Suggestion`) so an update
+that does not touch the binary does not rewrite it.
+
+**Evidence, and its one soft joint.** The isolation practice and its rationale
+are **public and ODC-specific**, cited above. The three quoted validations are
+not: they come from the `model-truechange` collection via
+`outsystems-tech-content` (retrieved 2026-09-03), which publishes no public URL,
+so they are entitled access rather than `Current official` — the same evidence
+class as the `Destination` / `Download` Screen-Action restrictions in the
+Language-elements handbook §3.7.
+
+The soft joint is the platform scope. `outsystems-tech-content`'s own catalogue
+tags that collection as applying to **both O11 and ODC**, and that tag is a
+property of the *collection*, asserted by the server — not a statement inside
+any message, and the tool exposes no per-message platform scope at this
+revision. So the ODC applicability of the limit is **reported, not
+established**, and this rule does not rest on it: the instruction above is the
+public practice, which stands either way. Do not cite the limit as a settled
+ODC platform bound elsewhere without stronger evidence. The catalogue output is
+recorded verbatim in `docs/adoption/evidence/oros-refactoring-spec-disposition/
+tech-content-collections-2026-09-03.md` so the claim can be audited without
+re-running the tool.
+
 ### Folders are per-area, so one concept name is several folders
 
 Current best-practice guidance organizes folders *"by application concept"* and
@@ -478,6 +527,16 @@ to find, because it has no guard at all: `Delete` does not raise, so the action
 reports success for a row that never existed. It fails toward success — no
 error, no log, and a test asserting `Outcome = "Success"` passes on a random id.
 
+**The platform has no null except the Entity Identifier**: every type has a default value
+assigned at creation (`""`, `0`, `False`, `#1900-01-01#`), and a missing optional input
+reads as that default — so an "unset" value is its type's zero, never something to test
+for truthiness. Existence of a row is decided by the aggregate-`Count` guard below, never
+by inspecting a returned record. **An attribute's `Is Mandatory` is validated in the UI
+only**; the column is created allowing NULL, so integrity a design relies on belongs in the
+server action, not in the flag ([Data types](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/data-types.md) for the no-null rule and the
+default-value table; [Entity](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/modeling/entity.md) for the
+mandatory-is-UI-only rule).
+
 ### The construction that works
 
 Aggregate first, guard on its `Count`, then the locking read:
@@ -643,7 +702,7 @@ Deploy-time failures that pass model validation. Route by code, never by message
 - **`OS-DPL-50205`** — "Model features validation failed": deterministic and **invisible to model validation** (zero validation errors before publish). Known field triggers: a `User`-typed attribute plus seed user-lookup (this guide's User Reference Authoring Gate, above) and a `GetUser(GetUserId()).User.Name` call inside an expression (fix: stamp a literal). Do not burn retries on it — the same publish fails the same way; remove the triggering construct.
 - **`OS-BLD-40409` + `OS-RDBS-GEN-40002` + `OS-DPL-50205`, raised together** — Mentor set **delete rules on foreign-key attributes**, which it does BY DEFAULT. `ModelFeature_DeleteRuleOnReferences` and `ModelFeature_DeleteRuleOnSystemReferences` are **removed ODC features**, so the publish reports all three codes at once: "Value provided for argument DeleteRule was not within expected values.: Invalid delete rule (`OS-RDBS-GEN-40002`)", "Using the feature ModelFeature_DeleteRuleOnReferences, a feature that has been removed. (`OS-BLD-40409`)", "Model features validation failed (`OS-DPL-50205`)". Measured 2026-08-27 (restaurant-app-v2): the authoring turn that created 17 entities — **system references such as `User` included** — returned `validation.error_count: 0` and `change_applied: true`, and the publish failed anyway (3 attempts, `indeterminate: false` — so genuinely terminal, not an unresolved publish). Fix: **one further Mentor turn on the same session** removing delete-rule configuration from every affected attribute — 83 of them on that run — then re-publish, which succeeded. Do not re-publish unchanged; the 4xx tail is deterministic. The standing prompt line that prevents it is in `odc-mentor-hardening.md`, which owns the authoring rule.
 - **`OS-BEW-CODE-50008`** — Mentor emitted a **static sort bound to a runtime value**: zero save errors, then the publish fails at "Generating database scripts", which reads like a platform outage. It is re-introduced whenever Mentor regenerates a sortable list. Standing prompt line for any sortable list: **"Implement sorting as a DYNAMIC sort (`IsDynamic = True`), never a static sort on a runtime value."**
-- **Probe-once discipline:** the first publish after a fix is a single engine probe. On failure: diagnose once against this table, report blocked with the code, and wait for an explicit retry decision — never hammer `publish_start` at a deterministic code.
+- **Probe-once discipline:** the first publish after a fix is a single engine probe. On failure: diagnose once against this table, report blocked with the code, and wait for an explicit retry decision — never hammer `mentor_publish` at a deterministic code.
 
 ## Library Release Visibility Gate
 

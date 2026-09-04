@@ -152,10 +152,31 @@ def build_intake_plan(bp):
                     f"{mode!r} - return to producer"
                 )
                 continue
-            plan["verifications"].append(
-                {"kind": "entity", "name": name,
-                 "verify": "entity and declared attributes exist in the target app"}
-            )
+            attributes = entity.get("attributes", []) or []
+            new_attributes = [
+                a for a in attributes if isinstance(a, dict) and a.get("create") is True
+            ]
+            verify_names = [
+                a.get("name", "?") for a in attributes
+                if isinstance(a, dict) and a.get("create") is not True
+            ]
+            verification = {
+                "kind": "entity", "name": name,
+                "verify": "entity and declared attributes exist in the target app",
+                "attributes": verify_names,
+            }
+            if new_attributes:
+                verification["verify"] = (
+                    "entity and declared attributes exist in the target app, "
+                    "excluding the attributes below which are ADDED to it"
+                )
+            plan["verifications"].append(verification)
+            for attribute in new_attributes:
+                plan["modifications"].append(
+                    {"kind": "add-attribute", "entity": name,
+                     "attribute": attribute.get("name", "?"),
+                     "data_type": attribute.get("data_type", "?")}
+                )
         else:
             plan["creations"]["entities"].append(name)
 

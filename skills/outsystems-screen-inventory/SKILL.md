@@ -126,10 +126,13 @@ ask, and settle what it says to settle.
    and its key interactions; every binding states its behavioural contract.
    A validator error, not a style note.
 5. **Human confirmation before emitting.** Present the candidate list, the
-   proposed fusion, and the chrome decision, and get explicit approval. In the
-   real case the human **split one fusion back apart** at this gate, moving the
-   answer from 8 screens to 9 — the gate is where the least-confident fusion
-   gets caught.
+   proposed fusion, and the chrome decision, and ask for one of three answers
+   per block — **Confirm** (it matches), **Correct** (say what is wrong,
+   inline), or **Missing** (name what was not captured). A bare "approved" is
+   a Confirm on every block; a Correct or a Missing reopens Step 3 for that
+   block only. In the real case the human **split one fusion back apart** at
+   this gate, moving the answer from 8 screens to 9 — the gate is where the
+   least-confident fusion gets caught.
 
    **Autonomous-run disclosure** (greenfield trial finding G-03,
    Codex-accepted AH-2026-08-08-012): when this gate cannot run — an
@@ -281,9 +284,10 @@ already correctly closed. It answers for **one** action only: create and edit
 open the same kinds of screen, so where a screen offers both, one edge into a
 form says nothing about which — name the action in the trigger, or declare it.
 
-**Present all of it and stop for approval** (hard gate 5). Name your
-least-confident fusion explicitly and say why — that is the one most likely to
-come back.
+**Present all of it and stop for the three-way answer** (hard gate 5:
+Confirm / Correct / Missing, per block). Name your least-confident fusion
+explicitly and say why — that is the block most likely to come back as a
+Correct.
 
 **What may be left open, and how.** A question you would put to the user and
 cannot — or one the user declines to settle now — goes into `open_decisions[]`

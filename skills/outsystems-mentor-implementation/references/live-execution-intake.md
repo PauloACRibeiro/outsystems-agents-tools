@@ -223,13 +223,12 @@ exact target and exact action. Approval must identify the readable target name,
 canonical target key when known, environment when relevant, and the action to
 run.
 
-- `mentor_start requires explicit current approval`.
-- `publish_start requires explicit current approval`.
 - `mentor_prompt requires explicit current approval`.
 - `mentor_create_asset requires explicit current approval`.
 - `mentor_publish requires explicit current approval`.
-  (The first two are the pre-2026-09 names; both surfaces are listed so an
-  approval row written against either one still reads as a gate.)
+  (An approval row written before 2026-09 against the retired names reads as
+  a gate on the session-surface tool it maps to: the old prompt-start name maps
+  to `mentor_prompt`, the old publish-start name to `mentor_publish`.)
 - `deploy_start requires explicit current approval`.
 - `rollback requires explicit current approval`.
 - `app_create requires explicit current approval`.

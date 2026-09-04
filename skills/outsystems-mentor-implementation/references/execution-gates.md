@@ -268,8 +268,10 @@ until each has an answer written down.
 
 ### (a) Enumerate the screen's deployed roles
 
-**The platform grants the app's default role — `Template_WebApp` on a
-template-scaffolded app — to every screen at creation.** Screen role checks are
+**The platform grants the app's default role — on a template-scaffolded app
+that role is the app's own name with punctuation stripped, measured 2026-09-03;
+earlier text here said `Template_WebApp`, which is wrong — to every screen at
+creation.** Screen role checks are
 **OR** semantics, so a screen the prompt asked to restrict to `PlatformAdmin`
 ships readable by anyone holding the default role, which is everyone. Mentor's
 summary said "PlatformAdmin role only"; the deployed screen carried both.
@@ -782,10 +784,10 @@ view makes the summary less trustworthy, not the tenant.
 
 External field evidence: an internal OutSystems project (adopted 2026-08-14); field-observed over the Mentor MCP, not in official docs.
 
-RECONCILIATION — three existing OMI rules stay binding; this section calibrates the *voluntary* cancel decision underneath them: (1) `max_turn_time` must still be passed explicitly on every `mentor_start` (SKILL.md driving contract) — but as a *requested* ceiling, not an enforced terminal bound: §3 records runs sailing past it, so never treat the ceiling as a guarantee that the turn will terminate; (2) the §4 `details: true` poll at 5–6 minutes is diagnostic — it is never by itself a reason to cancel; (3) §3's warning that `mentor_cancel` can wedge in `cancelling` stands — cancel is a last resort, not a recovery plan.
+RECONCILIATION — three existing OMI rules stay binding; this section calibrates the *voluntary* cancel decision underneath them: (1) the caller still bounds every turn explicitly — on the session surface that bound is the caller's own wall-clock ceiling on the `mentor_get_run` poll loop (SKILL.md driving contract), since the pre-2026-09 `max_turn_time` parameter has no counterpart there — and it is a *requested* ceiling, not an enforced terminal bound: §3 records runs sailing past it, so never treat the ceiling as a guarantee that the turn will terminate; (2) the §4 `details: true` poll at 5–6 minutes is diagnostic — it is never by itself a reason to cancel; (3) §3's warning that a cancel (`mentor_cancel_prompt` on the session surface) can wedge in `cancelling` stands — cancel is a last resort, not a recovery plan.
 
 - **A slow Mentor turn is not a wedged one.** Heavy structural turns legitimately run **8–12 minutes with silent stretches** (~7 quiet minutes is normal). Healthy small turns on this estate go terminal in 1–5 minutes — both profiles are real; judge against the turn's size.
-- **Give a heavy turn ~12–14 minutes before considering `mentor_cancel`** — and cancel only if you also intend to split the work smaller. A cancel that re-runs the same oversized prompt buys nothing.
+- **Give a heavy turn ~12–14 minutes before considering `mentor_cancel_prompt`** — and cancel only if you also intend to split the work smaller. A cancel that re-runs the same oversized prompt buys nothing.
 - **Cancel economics:** a cancel costs >3 minutes to settle, a cancelled turn commits **nothing** (failed/cancelled turns never advance OML), and a cancel against an already-succeeded run is a **no-op you will misread as a wedge** — re-poll the `runId` before concluding anything from a cancel.
 - **Hang tell:** a `nextCursor` unchanged for ~7–10 minutes is the cursor-side signature of the §4 wedge classes (stalled event ids / no events). One `details: true` poll to confirm, then apply the cancel calibration above.
 - **Earlier hang tell: no `currentStep` at all — but only when it PERSISTS.** Upstream plugin 0.16.0 states plainly that `currentStep` and `message` are **optional** fields and that when neither moved you should restate `status` rather than assert progress, so a single poll without `currentStep` proves nothing and must not be read as a wedge. The cursor-side tell above needs ~7–10 minutes; the narration-side tell is readable in about two. A healthy run reports a `currentStep` (`runQuery`, `applyModelApiCode`, `message`, `complete`) within ~60s and keeps advancing it. Measured 2026-08-23 (Elastic Search Sandbox): a wedged turn returned `status: running` with the `currentStep` field **absent entirely** and `events: []` even under `details: true`, for ~15 minutes — while two sibling turns on the **same app and same session** had each reported a step inside 60s, which is the control that makes the absence diagnostic rather than merely slow. `mentor_cancel` then held in `cancelling` for >4 minutes and never reached terminal, so the >3-minute settle figure above is a floor, not a bound: do not wait for a cancel to go terminal before acting.
@@ -984,6 +986,54 @@ and `result.attemptedChange` is new — `attemptedChange: false` on a turn that 
 meant to build something is a failed step, not a no-op to accept. The served
 poll-interval key is `pollIntervalMs` (was `pollAfterMs`), and the cursor is a
 re-read control, so every `mentor_get_run` poll is bare.
+
+### The honest-completion flags and the readback channel swapped roles
+
+Measured 2026-09-03 on a live session (`docs/adoption/mentor-session-surface-live-probe.md`,
+Q3) and recorded here because it inverts a rule this file has relied on since the old
+backend.
+
+**`changeApplied` behaved as an honest same-turn signal, on one session.** A genuine edit
+turn returned `attemptedChange: true` / `changeApplied: true` and the edit matched; a
+read-only question turn returned both `false`. On the pre-2026-09 backend these flags fired
+on read-only turns inconsistently across days, which is why the standing rule was
+"completion flags are not write signals; verify by readback".
+
+**The sample is two turns in one session, and that is not enough to retire the old rule.**
+Codex required this qualification on review of `AH-2026-09-03-002`, and it is right: two
+turns behaving correctly is consistent with an honest flag and is also consistent with the
+old backend's inconsistency, which took *days* of runs to surface. So `changeApplied` is
+**provisionally** honest — treat a `false` on a turn meant to build as a failed step, and
+treat a `true` as a reason to look for the change, never as proof it is there. Replication
+across more sessions is owed before this is a rule rather than an observation.
+
+**The `context_*` readback is now the lagging half.** Immediately after
+`changeApplied: true`, `context_entities` did not show the new entity — and still did not
+show it immediately after a **successful publish**. It caught up 3–5 minutes later.
+Context Service is eventually consistent on the order of minutes, and `app_list`'s search
+index lagged similarly for a newly published asset (`app_info` by direct key did not).
+
+**What changes is the reading of a stale readback, not the requirement to confirm.** The
+narrow, well-supported rule: **a `context_*` read that disagrees within a few minutes of
+the edit is a stale read, not a Mentor no-op.** That much follows directly from the
+measured lag, and it is the protection worth having, because applied the old way the rule
+manufactures a false negative — wait for the readback, see nothing, conclude the turn did
+nothing, and re-prompt an edit that already landed.
+
+**Confirmation stays mandatory; only its timing moves.** Do not treat `changeApplied: true`
+as discharging the readback. Where a specific change must be confirmed inside the session,
+use the Mentor conversation's own text response; where `context_*` or `app_refs` is the
+only channel, **wait and re-check** — a delayed confirmation, not a skipped one. Treating
+the first empty read as evidence is the error; treating the flag as the evidence is the
+opposite error, and both are still errors. No upper bound on the lag was established, so
+"wait and re-check" has no fixed figure yet either.
+
+Two adjacent findings from the same probe, both narrower than they look. The event stream
+did **not** carry the assistant's final answer text on the read-only turn, though it did on
+the write turn — so `mentor_get_run` events are not a dependable place to read an answer
+from. And the schema's "a second prompt while one is running is silently ignored" was
+exercised once with an ambiguous outcome (the second call returned its own `runId` with
+zero events, but the first run had already gone terminal), so it stays **unconfirmed**.
 
 ### The cursor reversal — the server's own `mentor_get_run` description, quoted
 

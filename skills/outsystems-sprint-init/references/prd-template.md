@@ -147,6 +147,16 @@ signatures. Those stay downstream with `outsystems-mentor-implementation`.
 | Role | Sees | Can change |
 |---|---|---|
 
+## Non-Functional Requirements
+
+Inferred or stated expectations the build must honour that produce no screen and
+no action: performance and paging, availability windows, security posture,
+retention, auditability, compliance. Each one is a requirement like any other —
+give it a row in the Requirement Inventory above, as a `BR-` rule with the
+surface infix that owns it (a paging rule is `BR-SC-`, a retention rule is
+`BR-DM-`) or as a `C-` criterion where it is only observable at acceptance. An
+app with none says so in one line rather than leaving this section out.
+
 ## Open Questions
 
 - <question that must be answered before the plan is written>

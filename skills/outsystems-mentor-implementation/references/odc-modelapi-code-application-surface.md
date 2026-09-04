@@ -68,7 +68,12 @@ screen-traversal sessions recorded in `odc-mentor-hardening.md` compile against
 evidence about what resolves, from real runs — but it is observed operational
 behaviour, not a documented product boundary, and it is narrower than "ODC is
 the Mobile model": it is "the code we have run against ODC apps resolved this
-way."
+way." A second, independent internal source points the same way: the platform's
+own model-reading tools address screens, blocks, themes and emails through the
+Mobile-branch signatures and walk the mobile flow collection, and their authors
+describe them as Mobile/Reactive-bound (source read 2026-09-02 at a pinned
+commit, recorded under `docs/adoption/`; still not a documented product
+boundary).
 
 It is recorded here anyway because it is load-bearing: it decides which
 interfaces resolve and which `imports` entry applied code needs, and getting it
@@ -1110,9 +1115,9 @@ session's own load parameters, so applied code cannot forge them. That makes
 them the one reliable read for telling a Mentor-authored element from a
 hand-authored one when auditing what a run actually changed — and the
 `ODCStudioMentor` / `MentorWorkspace` / `AgentExperience` values are how the
-tools are told apart. Whether the MCP `mentor_start` surface stamps
-`ODCStudioMentor` specifically is **not stated by the corpus** and has not been
-measured by this estate; do not assume a particular value without reading it
+tools are told apart. Whether the MCP Mentor surface — `mentor_prompt` today,
+`mentor_start` before 2026-09 — stamps `ODCStudioMentor` specifically is **not
+stated by the corpus** and has not been measured by this estate; do not assume a particular value without reading it
 back.
 
 ---

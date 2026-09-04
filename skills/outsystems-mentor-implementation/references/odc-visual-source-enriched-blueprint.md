@@ -107,8 +107,9 @@ states without falling back to screenshot imitation or generic container sprawl.
 ## Boundary Rules
 
 - No automatic app_create
-- No implicit mentor_start
-- No implicit publish
+- No implicit mentor_prompt or mentor_create_asset (pre-2026-09: mentor_start)
+- No implicit publish, via mentor_publish or otherwise (pre-2026-09: publish_start)
+- Do not add sessionId
 - Do not add mentor_session_id
 - Do not add mentor_session_token
 - Do not add env_key
@@ -161,6 +162,12 @@ Two fields carry the binding:
 - **Entity-level** `"exists": true` on an `entities[]` entry: this entity is
   already in the target app. Its declared `attributes` are the shape the screens
   bind against and the shape to **verify**, not to create.
+- **Attribute-level** `"create": true`, on one attribute of an `exists: true`
+  entity: this attribute is **not yet** on the existing entity and must be
+  ADDED to it, with its declared `data_type`; every other attribute on that
+  entity stays a shape to verify. `create: true` on an attribute of an entity
+  without `exists: true` is an error — a created entity creates all of its
+  attributes already.
 
 Both fields are valid **only when `target_context.target_mode` is
 `existing-app`**. In any other target mode they contradict the declared target
@@ -178,10 +185,12 @@ steps**:
 1. For a region with `reuse`, emit a step that places and binds the existing
    block on the screen. Do not emit a create-block step, and **do not add it to
    `blocks`** — that array stays the list of blocks this build creates.
-2. For an entity with `exists: true`, **do not emit create-entity or
-   create-attribute steps** for it, and do not create its relationship targets
-   on its behalf. Emit a verification step against the target app instead, then
-   treat the entity as available to the screens that consume it.
+2. For an entity with `exists: true`, do not emit create-entity steps; emit a
+   verification step for every attribute without `create: true`, and one
+   add-attribute modification step for each attribute carrying it, stated in
+   the ODC literal register (`Add attribute DigitalAdoptionScore (Integer,
+   default 0) to Customer`). Do not create its relationship targets on its
+   behalf.
 3. Ordering still applies: an existing entity satisfies the producer-before-
    consumer requirement as soon as it is verified, so it never forces a data
    model step it does not need.
@@ -277,7 +286,12 @@ steps:
    *parameter* publishes normally. A genuinely explicit 64-bit key
    requirement must not be silently narrowed to Integer Identifier: stop and
    surface it as a Mentor/publish-path limitation requiring a deliberate
-   platform or manual resolution.
+   platform or manual resolution. One attribute is the Entity Identifier —
+   there are no composite keys (an alternate or composite key is a **unique
+   index**), only one attribute per entity may be sequential (AutoNumber), and
+   **the identifier attribute cannot be changed or renamed after the first
+   publish**, so a blueprint that names it names it for the life of the app
+   ([Entity](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/modeling/entity.md)).
 3. For `is_foreign_key: true`, require `data_type` to use the relationship form
    `<TargetEntityName> Identifier`. **Instruct the delete rule away explicitly**:
    every data-model prompt carries the line **`create FK attributes with no

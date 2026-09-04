@@ -75,8 +75,15 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
    do NOT build it partially or speculatively.
 
 5. **Do NOT call `eSpace.AddDependency(globalKey)` from
-   `applyModelApiCode`.** If a referenced library is needed, surface that
-   manual prerequisite in Section 10.
+   `applyModelApiCode`.** Adding a reference is a separate host operation that
+   resolves the producer's signature itself; applied code has neither the
+   resolver nor the signature. If a public element from another app or library
+   is needed, the reliable path is to add it in ODC Studio through **Add public
+   elements** first and then name it in the prompt. Mentor can also locate an
+   element you name, ask you to confirm the producer, and add it — accept that
+   path only when the confirmation names the producer you meant. Either way,
+   surface the prerequisite in Section 10; never put a dependency-mutation call
+   inside the generated code.
 
 6. **Use the EXACT attribute types from Section 3.** Do NOT silently
    substitute `Integer` for `Long Integer` or infer different types.
@@ -104,8 +111,15 @@ Append or adapt these guardrails in Mentor-ready prompts when relevant:
 9. **Respect producer-consumer order in Sections 4, 5, and 10.** Do NOT
    reference a server action, service action, screen, event, timer, agentic
    flow, or workflow node before its creation step in the same Mentor session.
-   Cross-app library producers must be published or pre-existing before the
-   consuming app uses them.
+   Cross-app producers must exist before the consuming app uses them, and a
+   **library** producer must be **released with a version** — a library's
+   elements are not consumable until its first version is released, and the
+   platform's reference tooling refuses a library that resolves without a
+   version tag (it also keeps an already-referenced library on its current
+   version unless an upgrade is asked for explicitly). (Public ODC docs state
+   the first-release rule; the reference-tooling half is source-read from the
+   platform's own agent-tool source, internal and pinned 2026-08-31, and is not
+   a documented product contract.)
 
 10. **Do NOT call a generated entity action from a screen or client action.**
     `Create<E>`, `CreateOrUpdate<E>`, `Update<E>` and `Delete<E>` are

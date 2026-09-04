@@ -242,8 +242,10 @@ sanitized statuses only.
 
 If direct Codex OutSystems tenant tools are unavailable but the user approves a
 bounded execution route through Claude, use the Claude authenticated MCP route
-only for the named operation set, such as `mentor_start` and `mentor_get_run`
-for an in-memory edit. Do not touch Claude-private config, plugin cache,
+only for the named operation set, such as `mentor_start_session`,
+`mentor_load_asset`, `mentor_prompt` and `mentor_get_run` for an in-memory edit
+(pre-2026-09 the same set was `mentor_start` and `mentor_get_run`). Close the
+session with `mentor_close_session` when the bounded route is done. Do not touch Claude-private config, plugin cache,
 command files, OAuth callback storage, or private MCP data.
 
 Re-authorizing the OutSystems MCP connection — in any runner, not only the

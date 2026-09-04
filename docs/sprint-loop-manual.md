@@ -31,15 +31,18 @@ Three things to know before you start:
 
 1. **Connect your OutSystems tenant** — needed for direct tenant execution
    (steps 6–10). Steps 1–5 are local and also run without it, as does step 6's
-   paste mode. In a terminal (replace the hostname with your tenant's):
-
-   ```
-   claude mcp add -s user --transport http outsystems https://<your-tenant>.outsystems.dev/mcp
-   ```
-
-   Then in Claude Code type `/mcp`, pick `outsystems`, and sign in with your
-   normal OutSystems login. Confirm with one prompt: *"Check the outsystems MCP
-   auth status and tell me which tenant I am connected to."*
+   paste mode. Do **not** run `claude mcp add` yourself: step 0 writes a
+   per-project `.mcp.json` registering the server as `outsystems-<slug>` from
+   the tenant in your project's `outsystems.toml`, and its doctor rejects a
+   generic `outsystems` entry in that file (one shared credential forced a
+   re-login every 30–90 minutes; the doctor cannot see a user-scope
+   registration, so remove any you made earlier with
+   `claude mcp remove -s user outsystems`). After step 0, start a new
+   conversation in
+   the project folder, approve the server when asked, type `/mcp`, pick
+   `outsystems-<slug>`, and sign in with your normal OutSystems login. Confirm
+   with one prompt: *"Check the outsystems MCP auth status and tell me which
+   tenant I am connected to."*
 
 2. **Install Superpowers** (owns steps 1–2; not redistributed here) — see the
    "Steps 1–2" section of the companion doc for the install command.

@@ -59,7 +59,7 @@
         "properties": {
           "name": {"type": "string"},
           "type": {"type": "string"},
-          "exists": {"type": "boolean", "description": "Optional existing-asset binding: this entity is already in the target app, so its attributes are the shape to VERIFY, not to create. Valid only under target_mode 'existing-app'. Absent means create (the default)."},
+          "exists": {"type": "boolean", "description": "Optional existing-asset binding: this entity is already in the target app, so its attributes are the shape to VERIFY, not to create. Valid only under target_mode 'existing-app'. Absent means create (the default). An attribute of an `exists: true` entity may carry `create: true`: the attribute is to be ADDED to the existing entity, with its declared data_type; every other attribute stays a shape to verify. `create` on an entity without `exists` is an error - a created entity creates all of its attributes."},
           "records": {"type": "array", "items": {"type": "string"}},
           "attributes": {
             "type": "array",
@@ -86,7 +86,8 @@
                   "type": ["array", "null"],
                   "items": {"type": "string"},
                   "description": "Required on every attribute. null on a plain attribute; on a foreign key pointing at a static entity, the ordered list of that entity's record names, which seeds the target when it has no entities[] entry of its own."
-                }
+                },
+                "create": {"type": "boolean", "description": "See the entity-level `exists` description: valid only on an attribute of an `exists: true` entity, where it means this attribute is to be ADDED rather than verified."}
               }
             }
           }

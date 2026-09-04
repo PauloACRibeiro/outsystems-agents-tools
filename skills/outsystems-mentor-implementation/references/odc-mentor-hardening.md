@@ -239,17 +239,19 @@ Use AddDependency calls to fix missing library references.
 
 **Preferred pattern**
 
-Keep dependency installation explicit and manual before this generated pass:
+Route the reference through the platform's own path, never through the generated code:
 
 ```text
-If a dependency is required:
-ask user to install it manually in Studio first
-do not include dependency mutation calls in the generation prompt
+If a public element from another app or library is required:
+  the reliable path is to add it in ODC Studio through "Add public elements" first, then name it;
+  Mentor can also locate a public element you name, ask you to confirm the producer, and add it —
+  accept that path only when the confirmation names the producer you meant;
+  never put a dependency-mutation call inside the generated code itself.
 ```
 
 **Why**
 
-Dependency mutation via generated prompts is brittle and can create avoidable retries, especially in new app scaffolding workflows.
+Adding a reference is a separate operation the host performs with a producer signature it resolves itself; code applied to the model has neither the resolver nor the signature, so a dependency call inside it is not the platform's route and has been observed to wedge the turn. Public docs list dependency management among the ODC Studio operations Mentor does not perform, and describe the confirm-and-add convenience separately — both hold. (The mechanism half is source-read from the platform's own agent-tool source — internal, pinned 2026-08-31, recorded under `docs/adoption/`; the two documented halves are public ODC docs.)
 
 **When to ask**
 
@@ -1332,26 +1334,36 @@ read-back rather than in a success signal:
    reports (`runQuery`, `applyModelApiCode`, `message`, `complete`) read like host
    operations: they are. Corroborated from this estate's own measurement — see
    `execution-gates.md` §4b, where those four are the observed healthy sequence.
-2. **Each host call is its own model transaction (hypothesis).** A failing call
-   neither commits its own edits nor undoes an earlier successful call's edits,
-   and there is no grouped transaction spanning calls. **This does not contradict
-   the turn-level rule** in `execution-gates.md` §4: per-call transactions commit
-   into the session's in-memory working copy, while the turn-level checkpoint on
-   `status: succeeded` is what promotes that working copy to a revision. Mid-turn
-   work is therefore durable against a later failing call, but not against a turn
-   timeout — two granularities, both true.
-3. **A validation or restriction rejection is not classified as a tool failure
-   (hypothesis)** — nor is an early `return` inside the applied code. Both are
-   recorded as a successful tool call. If that holds, "reported success" and
-   "nothing changed" stop being contradictory observations and become the
-   expected output of a success classifier that excludes exactly those two paths.
-   Treat it as the leading candidate mechanism for a silent no-op, never as an
-   established platform rule.
+2. **Each host call is its own model transaction (hypothesis)** — read in the
+   platform's own agent-tool source (internal, pinned 2026-08-31): the
+   reference tool wraps its mutation in one named transaction, and the write
+   tool hands per-call transaction callbacks to the engine; nothing groups
+   calls. A failing call neither commits its own edits nor undoes an earlier
+   successful call's edits, and there is no grouped transaction spanning calls.
+   **This does not contradict the turn-level rule** in `execution-gates.md` §4:
+   per-call transactions commit into the session's in-memory working copy, while
+   the turn-level checkpoint on `status: succeeded` is what promotes that working
+   copy to a revision. Mid-turn work is therefore durable against a later
+   failing call, but not against a turn timeout — two granularities, both true.
+3. **A rejection is not a failure at the tool boundary, in two different shapes
+   (source-read, deployed behaviour still a hypothesis).** A compile or
+   sandbox-restriction rejection is *thrown* to the caller as a bad-request
+   fault — the agent sees an error — while the host's own reliability metric
+   records the call as a success, because the tool worked. A runtime exception
+   inside the applied code is *not thrown*: the call returns a normal result
+   whose `exceptionMessage` is set, with the stack trace withheld unless the
+   host budgets it. If the deployed agent reads the first and skips the second,
+   "reported success" and "nothing changed" are the expected output. An early
+   `return` is not visible in the source either way. Treat both shapes as the
+   leading candidate mechanism for a silent no-op, never as an established
+   platform rule.
 4. **The error the agent surfaces may not be the error that occurred.** A generic
    transport-level failure reported back to the agent can sit on top of a
    specific, named host exception. So a vague Mentor error message is weak
    evidence about cause, and the agent's own "that succeeded" is weak evidence
-   about effect.
+   about effect. The boundary keeps an unforeseen exception's message and drops
+   its type; a Model API refusal inside applied code is only explained by a
+   trace the host may not forward.
 
 **The operating consequence — unchanged, and now explained.** Prove an edit by
 reading the model back, never by reading the run's success signal. Nothing in
@@ -1382,7 +1394,10 @@ host, **not measured by us and not an OutSystems product contract** — they car
 the hypothesis label above for that reason. Point 1 is independently corroborated
 by this estate's `currentStep` measurements. Provenance, the full claims table,
 and the experiment that would settle points 2 and 3 are in the mining disposition
-under `docs/adoption/`.
+under `docs/adoption/`. Points 2–4 were re-read against the platform's own
+agent-tool source at a pinned 2026-08-31 commit in the batch record under
+`docs/adoption/`; the labels stay because Mentor's deployed build and host
+settings were not observed.
 
 ---
 
@@ -2234,11 +2249,13 @@ When Mentor creates a SA with a name that conflicts with an existing entity acti
 
 **When to ask**
 
-Before naming any Server Action, check whether the entity has an action with the same name. This commonly happens with entity actions like `CreateX`, `UpdateX`, `GetX`, `DeleteX`. If the SA must be named the same, ask the user before proceeding.
+Before naming any Server Action, check whether the entity has an action with the same name. The platform generates six actions per entity — `Create<E>`, `CreateOrUpdate<E>`, `Update<E>`, `Delete<E>`, `Get<E>` and `Get<E>ForUpdate` — and an action of yours that takes one of those names is **renamed** (`<Name>2`), not refused; every caller still naming the original then reaches the entity's action. Check all six before naming a Server Action, and add two bulk names when the entity is not an ordinary app-owned one: a **local-storage** entity also carries `CreateOrUpdateAll<E>` and `DeleteAll<E>`, and a **consumed O11 entity exposed read-write** also carries `CreateOrUpdateSome<E>` and `DeleteAll<E>` (exposed read-only it carries only `Get<E>`, so it cannot collide with anything else). If the SA must be named the same, ask the user before proceeding.
 
 **Evidence**
 
 Real session correction (RequestPulse CreateRequest screen, 2026-06-24): Mentor called `CreateSupplyRequest2` instead of `CreateSupplyRequest`. Root cause: entity action naming conflict.
+
+`Tenant-observed` for the six-name family: it is the set of non-null entity-action slots an app's own entity carries, read on tenant 2026-08-27 and recorded in `odc-platform-guardrails.md`, minus the two bulk slots — which the documentation shows materialised only for local-storage entities ([Read-only data](https://github.com/OutSystems/docs-odc/blob/main/src/eap/building-apps/data/offline/patterns/read-only-data.md)), hence the caveat rather than a longer list. **No public page enumerates the generated family for an app's own entity**, so this is an observation, not a product contract; public pages corroborate the individual forms — [Consume O11 entities](https://github.com/OutSystems/docs-odc/blob/main/src/extending-o11-odc/data-interoperability/consume-entities.md) documents the family of a **consumed O11 entity** and is `Current official` for that entity kind — `Get<Entity>` alone when *Exposed Read Only* is Yes, and otherwise `Create<Entity>`, `CreateOrUpdate<Entity>`, `Update<Entity>`, `Get<Entity>`, `Delete<Entity>`, `CreateOrUpdateSome<Entity>` and `DeleteAll<Entity>`. That page is the source of the O11 half of the caveat above; it does not enumerate an app-owned entity's family, and `Get<E>ForUpdate` does not appear on it at all. [Database transaction isolation level](https://github.com/OutSystems/docs-odc/blob/main/src/eap/reference/isolation.md) names `GetForUpdate` among the operations that open a transaction.
 
 ---
 
@@ -2648,7 +2665,7 @@ External field evidence: an internal OutSystems project (adopted 2026-08-14); fi
 
 - **Cap each publish at ~5 plan-item-sized changes — a hard ceiling, not a target.** Target cadence is ~2 plan items per publish. A "change" is one plan-item-sized edit (a new/changed entity, a screen, a server action, a bootstrap timer) — not each individual attribute. Small publishes fail loudly on a small surface: when a publish breaks it points at ≤5 things, not thirty.
 - This ceiling never relaxes stricter rules elsewhere in this guide — `## One Server Action Per Mentor Session` still binds; the ceiling governs mixed-element batches, not server-action batching.
-- **A library/reference add is a whole turn on its own.** Sequence as: reference-add turn → structure/content turn → wiring turn. The all-in-one version of that turn was observed to wedge every time it was tried. This complements (does not replace) the `## Forbidden Mentor Model-Introspection Patterns` ban on `AddDependency` calls.
+- **A library/reference add is a whole turn on its own.** Sequence as: reference-add turn → structure/content turn → wiring turn. The all-in-one version of that turn was observed to wedge every time it was tried. This complements (does not replace) the `## Forbidden Mentor Model-Introspection Patterns` ban on `AddDependency` calls. It is a separate host operation in its own transaction, which is why it cannot share a turn's code-application steps (source-read from the platform's own agent-tool source — internal, pinned 2026-08-31, recorded under `docs/adoption/`; deployed behaviour unverified).
 
 ## Session Slot Economics
 
