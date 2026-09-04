@@ -14,14 +14,17 @@ What has landed upstream since the v42 export and will ship with the next
 pack. Written before the cut; the export line and OPK decision are added when
 it happens.
 
-- **Agent Plugins manifests.** `plugin.json` and `mcp.json` ship at the pack
-  root per the Agent Plugins 1.0.0 specification, so the extracted archive
-  installs as one plugin in Codex, Cursor, GitHub Copilot, Kiro and VS Code.
-  Claude Code ignores both and keeps auto-discovering `skills/`.
+- **Agent Plugins manifest.** `plugin.json` ships at the pack root per the
+  Agent Plugins 1.0.0 specification, so the extracted archive installs as one
+  plugin in Codex, Cursor, GitHub Copilot, Kiro and VS Code. Claude Code
+  ignores it and keeps auto-discovering `skills/`. No `mcp.json` ships: the
+  specification allows no placeholder in a remote URL, and the tenant is
+  registered per project by step 0.
 - **Tenant MCP registered per project by step 0.** `outsystems-sprint-init`
   writes a project `.mcp.json` naming the server `outsystems-<slug>` from the
   project's `outsystems.toml`, and its doctor rejects a generic `outsystems`
-  registration. One user-scope credential shared by concurrent sessions forced
+  entry in that file (it cannot see a user-scope registration; remove one by
+  hand). One user-scope credential shared by concurrent sessions forced
   a re-login every 30–90 minutes, because ODC rotates refresh tokens and
   revokes the family on reuse. The manual, the entry doc and both install
   documents no longer instruct `claude mcp add -s user`; login is

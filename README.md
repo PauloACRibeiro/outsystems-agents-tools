@@ -189,8 +189,8 @@ outsystems-agents-tools/
 Each Release carries its own component ZIP, checksum and per-OS install instructions. The prompt always resolves `/releases/latest`, so it never needs a version in it.
 
 From v43 the pack archive is also an [Agent Plugins](https://agent-plugins.org/specification)
-directory: `plugin.json` and `mcp.json` sit at the pack root next to `skills/`,
-so clients that implement that format (Codex, Cursor, GitHub Copilot, Kiro,
+directory: a `plugin.json` manifest sits at the pack root next to `skills/`, so
+clients that implement that format (Codex, Cursor, GitHub Copilot, Kiro,
 VS Code) can install the extracted archive as one plugin. Claude Code ignores
-both files and discovers `skills/` as before; the tenant URL in `mcp.json` is a
-placeholder, and step 0 of the loop registers the real tenant per project.
+the manifest and discovers `skills/` as before. The pack declares no MCP
+server: the tenant is registered per project by step 0 of the loop.
